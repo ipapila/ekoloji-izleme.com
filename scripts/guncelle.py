@@ -4,7 +4,7 @@ import os
 import base64
 
 REPO_OWNER = "ipapila"
-REPO_NAME  = "Turkiye-katmanlar"
+REPO_NAME  = "ekoloji-izleme"
 FILE_PATH  = "data.json"
 
 def get_remote_data():
