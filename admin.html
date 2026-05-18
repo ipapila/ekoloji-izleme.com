@@ -115,9 +115,9 @@
     <div class="stats-row" id="statsRow"></div>
 
     <div class="tab-bar">
-      <button class="tab active" data-tab="ihlaller">İhlaller</button>
+      <button class="tab active" data-tab="ihlaller">İhlaller <span id="ihlalSayac" style="font-size:9px;background:rgba(45,158,107,.2);padding:1px 6px;border-radius:2px;margin-left:4px;">—</span></button>
       <button class="tab" data-tab="haberler">Haberler <span id="haberSayac" style="font-size:9px;background:rgba(45,158,107,.2);padding:1px 6px;border-radius:2px;margin-left:4px;">—</span></button>
-      <button class="tab" data-tab="raporlar">Raporlar</button>
+      <button class="tab" data-tab="raporlar">Raporlar <span id="raporSayac" style="font-size:9px;background:rgba(45,158,107,.2);padding:1px 6px;border-radius:2px;margin-left:4px;">—</span></button>
     </div>
 
     <!-- İHLALLER -->
@@ -511,23 +511,58 @@ function updateStats() {
 /* ════════════════════════════════════════════════
    TABLO RENDER
    ════════════════════════════════════════════════ */
-function renderIhlalTable() {
-  const data = SITE.getList("ihlaller");
-  document.getElementById("ihlalerTbody").innerHTML = data.map(i => `
-    <tr>
-      <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-      <td style="max-width:240px;">${i.baslik}</td>
-      <td>${i.konum||'—'}</td>
-      <td>${i.kategori}</td>
-      <td><span class="badge ${i.siddet}">${i.siddet}</span></td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;">${i.tarih||'—'}</td>
-      <td style="font-size:11px;">${i.lat&&i.lng?'✓':'—'}</td>
-      <td style="display:flex;gap:5px;">
-        <a class="det-btn" href="detay.html#ihlal-${i.id}" target="_blank">Gör</a>
-        <button class="del-btn" onclick="delIhlal(${i.id})">Sil</button>
-      </td>
-    </tr>
-  `).join('') || '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
+const SILINEN_IHLAL_KEY = "ekoloji_ihlal_silinen";
+
+function getSilinenihlal() {
+  try { return JSON.parse(localStorage.getItem(SILINEN_IHLAL_KEY) || "[]"); } catch { return []; }
+}
+function addSilinenIhlal(id) {
+  const liste = getSilinenihlal();
+  if (!liste.includes(String(id))) liste.push(String(id));
+  localStorage.setItem(SILINEN_IHLAL_KEY, JSON.stringify(liste));
+}
+
+function renderIhlalRow(i) {
+  return `<tr>
+    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
+    <td style="max-width:240px;font-size:13.5px;">${i.baslik}</td>
+    <td style="font-size:12px;">${i.konum||'—'}</td>
+    <td style="font-size:12px;">${i.kategori||'—'}</td>
+    <td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;">${i.tarih||'—'}</td>
+    <td style="font-size:11px;">${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td>
+    <td style="display:flex;gap:5px;">
+      ${i.kaynak_url ? `<a class="det-btn" href="${i.kaynak_url}" target="_blank" rel="noopener">Gör ↗</a>` : ''}
+      <button class="del-btn" onclick="delIhlal('${i.id}')">Sil</button>
+    </td>
+  </tr>`;
+}
+
+function renderIhlalTable(ekstraIhlaller) {
+  const silinen  = getSilinenihlal();
+  const local    = SITE.getList("ihlaller").filter(i => !silinen.includes(String(i.id)));
+  const ekstra   = (ekstraIhlaller || []).filter(i => !silinen.includes(String(i.id)));
+  const localIds = new Set(local.map(i => String(i.id)));
+  const birlesik = [...local, ...ekstra.filter(i => !localIds.has(String(i.id)))];
+  birlesik.sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
+
+  document.getElementById("ihlalerTbody").innerHTML =
+    birlesik.length
+      ? birlesik.map(renderIhlalRow).join('')
+      : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
+
+  const sayac = document.getElementById("ihlalSayac");
+  if (sayac) sayac.textContent = birlesik.length;
+}
+
+function dataJsonIhlalYukle() {
+  fetch("data.json?v=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      const ihlaller = data.ihlaller || (Array.isArray(data) ? data : []);
+      renderIhlalTable(ihlaller);
+    })
+    .catch(() => renderIhlalTable([]));
 }
 
 // Haber silme: ID'yi kalıcı listeye ekle (localStorage + SITE)
@@ -587,20 +622,36 @@ function haberlerJsonYukle() {
     .catch(() => renderHaberTable([]));
 }
 
+const SILINEN_RAPOR_KEY = "ekoloji_rapor_silinen";
+
+function getSilinenRapor() {
+  try { return JSON.parse(localStorage.getItem(SILINEN_RAPOR_KEY) || "[]"); } catch { return []; }
+}
+function addSilinenRapor(id) {
+  const liste = getSilinenRapor();
+  if (!liste.includes(String(id))) liste.push(String(id));
+  localStorage.setItem(SILINEN_RAPOR_KEY, JSON.stringify(liste));
+}
+
 function renderRaporTable() {
-  const data = SITE.getList("raporlar");
-  document.getElementById("raporlarTbody").innerHTML = data.map(i => `
+  const silinen  = getSilinenRapor();
+  const data     = SITE.getList("raporlar").filter(i => !silinen.includes(String(i.id)));
+
+  document.getElementById("raporlarTbody").innerHTML = data.length ? data.map(i => `
     <tr>
       <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-      <td style="max-width:320px;">${i.baslik}</td>
+      <td style="max-width:320px;font-size:13.5px;">${i.baslik}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${i.yil||'—'}</td>
       <td><span class="badge haber">${i.etiket||'Genel'}</span></td>
       <td style="display:flex;gap:5px;">
-        <a class="det-btn" href="detay.html#rapor-${i.id}" target="_blank">Gör</a>
-        <button class="del-btn" onclick="delRapor(${i.id})">Sil</button>
+        ${i.dosya ? `<a class="det-btn" href="${i.dosya}" target="_blank" rel="noopener">Gör ↗</a>` : ''}
+        <button class="del-btn" onclick="delRapor('${i.id}')">Sil</button>
       </td>
     </tr>
-  `).join('') || '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
+  `).join('') : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
+
+  const sayac = document.getElementById("raporSayac");
+  if (sayac) sayac.textContent = data.length;
 }
 
 /* ════════════════════════════════════════════════
@@ -643,10 +694,12 @@ function addIhlal() {
 }
 
 function delIhlal(id) {
-  if (!confirm("Bu ihlali silmek istediğinizden emin misiniz?")) return;
-  SITE.delete("ihlaller", id);
-  renderIhlalTable(); updateStats();
-  toast("Silindi.");
+  if (!confirm("Bu ihlali kalıcı olarak silmek istiyor musunuz?\n\nSilinen ihlal data.json güncellenene kadar gizlenir.")) return;
+  SITE.delete("ihlaller", String(id));
+  addSilinenIhlal(id);
+  dataJsonIhlalYukle();
+  updateStats();
+  toast("✓ İhlal silindi ve gizleme listesine eklendi.");
 }
 
 /* ════════════════════════════════════════════════
@@ -710,10 +763,12 @@ function addRapor() {
 }
 
 function delRapor(id) {
-  if (!confirm("Raporu silmek istediğinizden emin misiniz?")) return;
-  SITE.delete("raporlar", id);
-  renderRaporTable(); updateStats();
-  toast("Silindi.");
+  if (!confirm("Bu raporu kalıcı olarak silmek istiyor musunuz?")) return;
+  SITE.delete("raporlar", String(id));
+  addSilinenRapor(id);
+  renderRaporTable();
+  updateStats();
+  toast("✓ Rapor silindi.");
 }
 
 /* ════════════════════════════════════════════════
@@ -950,7 +1005,7 @@ function importSec() {
   });
   const ia = SITE.bulkImport("ihlaller", ihlaller);
   const ha = SITE.bulkImport("haberler", haberler);
-  renderIhlalTable(); renderHaberTable(); updateStats();
+  dataJsonIhlalYukle(); haberlerJsonYukle(); updateStats();
   kapat();
   toast(`✓ ${ia} ihlal + ${ha} haber içe aktarıldı.`);
 }
@@ -967,7 +1022,7 @@ function boot() {
   });
   initTabs();
   updateStats();
-  renderIhlalTable();
+  dataJsonIhlalYukle();
   haberlerJsonYukle();
   renderRaporTable();
 }
