@@ -509,149 +509,156 @@ function updateStats() {
 }
 
 /* ════════════════════════════════════════════════
-   TABLO RENDER
+   VERİ YÖNETİMİ — tek güvenilir silme mekanizması
+   ID'ler her yerde String'e normalize edilir.
    ════════════════════════════════════════════════ */
-const SILINEN_IHLAL_KEY = "ekoloji_ihlal_silinen";
 
-function getSilinenihlal() {
-  try { return JSON.parse(localStorage.getItem(SILINEN_IHLAL_KEY) || "[]"); } catch { return []; }
+// Silinen ID listesi — localStorage'da kalıcı
+const SIL_KEY = {
+  ihlaller: "ekoloji_ihlal_silinen",
+  haberler:  "ekoloji_haber_silinen",
+  raporlar:  "ekoloji_rapor_silinen",
+};
+function silGetir(col) {
+  try { return new Set(JSON.parse(localStorage.getItem(SIL_KEY[col]) || "[]").map(String)); }
+  catch { return new Set(); }
 }
-function addSilinenIhlal(id) {
-  const liste = getSilinenihlal();
-  if (!liste.includes(String(id))) liste.push(String(id));
-  localStorage.setItem(SILINEN_IHLAL_KEY, JSON.stringify(liste));
-}
-
-function renderIhlalRow(i) {
-  return `<tr>
-    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-    <td style="max-width:240px;font-size:13.5px;">${i.baslik}</td>
-    <td style="font-size:12px;">${i.konum||'—'}</td>
-    <td style="font-size:12px;">${i.kategori||'—'}</td>
-    <td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;">${i.tarih||'—'}</td>
-    <td style="font-size:11px;">${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td>
-    <td style="display:flex;gap:5px;">
-      ${i.kaynak_url ? `<a class="det-btn" href="${i.kaynak_url}" target="_blank" rel="noopener">Gör ↗</a>` : ''}
-      <button class="del-btn" onclick="delIhlal('${i.id}')">Sil</button>
-    </td>
-  </tr>`;
+function silEkle(col, id) {
+  const s = silGetir(col);
+  s.add(String(id));
+  localStorage.setItem(SIL_KEY[col], JSON.stringify([...s]));
 }
 
-function renderIhlalTable(ekstraIhlaller) {
-  const silinen  = getSilinenihlal();
-  const local    = SITE.getList("ihlaller").filter(i => !silinen.includes(String(i.id)));
-  const ekstra   = (ekstraIhlaller || []).filter(i => !silinen.includes(String(i.id)));
-  const localIds = new Set(local.map(i => String(i.id)));
-  const birlesik = [...local, ...ekstra.filter(i => !localIds.has(String(i.id)))];
-  birlesik.sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
+// In-memory birleşik veri (boot'ta doldurulur, sil günceller)
+const _veri = { ihlaller: [], haberler: [], raporlar: [] };
 
-  document.getElementById("ihlalerTbody").innerHTML =
-    birlesik.length
-      ? birlesik.map(renderIhlalRow).join('')
-      : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
-
-  const sayac = document.getElementById("ihlalSayac");
-  if (sayac) sayac.textContent = birlesik.length;
+// Tek silme fonksiyonu — her 3 koleksiyon için
+function kayitSil(col, id) {
+  if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
+  const sid = String(id);
+  
+  // 1. In-memory'den çıkar
+  _veri[col] = _veri[col].filter(x => String(x.id) !== sid);
+  
+  // 2. localStorage'dan çıkar (String karşılaştırma)
+  SITE.set(col, SITE.getList(col).filter(x => String(x.id) !== sid));
+  
+  // 3. Silinen listesine ekle (JSON kaynaklı veriler için)
+  silEkle(col, sid);
+  
+  // 4. Tablo + istatistik güncelle
+  tabloRender(col);
+  updateStats();
+  toast("✓ Kayıt silindi.");
 }
 
-function dataJsonIhlalYukle() {
+// Tabloyu in-memory'den çiz
+function tabloRender(col) {
+  const silinen = silGetir(col);
+  const data    = _veri[col].filter(x => !silinen.has(String(x.id)));
+
+  if      (col === "ihlaller") ihlalTbodyRender(data);
+  else if (col === "haberler") haberTbodyRender(data);
+  else if (col === "raporlar") raporTbodyRender(data);
+
+  // Tab sayacı
+  const ids = { ihlaller:"ihlalSayac", haberler:"haberSayac", raporlar:"raporSayac" };
+  const el  = document.getElementById(ids[col]);
+  if (el) el.textContent = data.length;
+}
+
+function ihlalTbodyRender(data) {
+  document.getElementById("ihlalerTbody").innerHTML = data.length
+    ? data.map(i => `<tr>
+        <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
+        <td style="max-width:240px;font-size:13px;">${i.baslik}</td>
+        <td style="font-size:12px;">${i.konum||'—'}</td>
+        <td style="font-size:12px;">${i.kategori||'—'}</td>
+        <td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;">${i.tarih||'—'}</td>
+        <td style="font-size:11px;">${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td>
+        <td><button class="del-btn" onclick="kayitSil('ihlaller','${i.id}')">Sil</button></td>
+      </tr>`).join('')
+    : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
+}
+
+function haberTbodyRender(data) {
+  document.getElementById("haberlerTbody").innerHTML = data.length
+    ? data.map(i => `<tr>
+        <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
+        <td style="max-width:260px;font-size:13px;">${i.baslik}</td>
+        <td style="font-size:12px;">${i.kaynak||'—'}</td>
+        <td><span class="badge haber">${i.etiket||i.kategori||'Haber'}</span></td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
+        <td style="display:flex;gap:5px;">
+          ${i.url?`<a class="det-btn" href="${i.url}" target="_blank" rel="noopener">↗</a>`:''}
+          <button class="del-btn" onclick="kayitSil('haberler','${i.id}')">Sil</button>
+        </td>
+      </tr>`).join('')
+    : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
+}
+
+function raporTbodyRender(data) {
+  document.getElementById("raporlarTbody").innerHTML = data.length
+    ? data.map(i => `<tr>
+        <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
+        <td style="max-width:320px;font-size:13px;">${i.baslik}</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${i.yil||'—'}</td>
+        <td><span class="badge haber">${i.etiket||'Genel'}</span></td>
+        <td style="display:flex;gap:5px;">
+          ${i.dosya?`<a class="det-btn" href="${i.dosya}" target="_blank" rel="noopener">↗</a>`:''}
+          <button class="del-btn" onclick="kayitSil('raporlar','${i.id}')">Sil</button>
+        </td>
+      </tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
+}
+
+// Uyumluluk — eski çağrılar hâlâ çalışsın
+function renderIhlalTable()  { tabloRender("ihlaller"); }
+function renderHaberTable()  { tabloRender("haberler"); }
+function renderRaporTable()  { tabloRender("raporlar"); }
+
+// JSON'dan yükle + localStorage ile birleştir → _veri'ye yaz
+function tumVeriYukle() {
+  const silIhlal = silGetir("ihlaller");
+  const silHaber = silGetir("haberler");
+
+  // localStorage'dan başla
+  const lIhlal = SITE.getList("ihlaller");
+  const lHaber = SITE.getList("haberler");
+  const lRapor = SITE.getList("raporlar");
+
+  // data.json → ihlaller
   fetch("data.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
-    .then(data => {
-      const ihlaller = data.ihlaller || (Array.isArray(data) ? data : []);
-      renderIhlalTable(ihlaller);
+    .then(d => {
+      const json = (d.ihlaller || []).filter(x => !silIhlal.has(String(x.id)));
+      const localIds = new Set(lIhlal.map(x => String(x.id)));
+      _veri.ihlaller = [
+        ...lIhlal,
+        ...json.filter(x => !localIds.has(String(x.id)))
+      ].sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
     })
-    .catch(() => renderIhlalTable([]));
-}
+    .catch(() => { _veri.ihlaller = [...lIhlal]; })
+    .finally(() => tabloRender("ihlaller"));
 
-// Haber silme: ID'yi kalıcı listeye ekle (localStorage + SITE)
-const SILINEN_KEY = "ekoloji_haber_silinen";
-
-function getSilinen() {
-  try { return JSON.parse(localStorage.getItem(SILINEN_KEY) || "[]"); } catch { return []; }
-}
-function addSilinen(id) {
-  const liste = getSilinen();
-  if (!liste.includes(String(id))) liste.push(String(id));
-  localStorage.setItem(SILINEN_KEY, JSON.stringify(liste));
-}
-
-function renderHaberRow(i) {
-  return `<tr>
-    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-    <td style="max-width:260px;font-size:13.5px;">${i.baslik}</td>
-    <td style="font-size:12px;">${i.kaynak||'—'}</td>
-    <td><span class="badge haber">${i.etiket||i.kategori||'Haber'}</span></td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
-    <td style="display:flex;gap:5px;">
-      ${i.url ? `<a class="det-btn" href="${i.url}" target="_blank" rel="noopener">Gör ↗</a>` : ''}
-      <button class="del-btn" onclick="delHaber('${i.id}')">Sil</button>
-    </td>
-  </tr>`;
-}
-
-function renderHaberTable(ekstraHaberler) {
-  const silinen  = getSilinen();
-  const local    = SITE.getList("haberler").filter(i => !silinen.includes(String(i.id)));
-  const ekstra   = (ekstraHaberler || []).filter(i => !silinen.includes(String(i.id)));
-
-  // Birleştir, aynı id varsa local öncelikli
-  const localIds = new Set(local.map(i => String(i.id)));
-  const birlesik = [...local, ...ekstra.filter(i => !localIds.has(String(i.id)))];
-  birlesik.sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
-
-  document.getElementById("haberlerTbody").innerHTML =
-    birlesik.length
-      ? birlesik.map(renderHaberRow).join('')
-      : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
-
-  // Başlık sayacı güncelle
-  const sayac = document.getElementById("haberSayac");
-  if (sayac) sayac.textContent = birlesik.length;
-}
-
-// haberler.json'dan çek ve tabloyu doldur
-function haberlerJsonYukle() {
+  // haberler.json → haberler
   fetch("haberler.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
-    .then(data => {
-      const haberler = data.haberler || (Array.isArray(data) ? data : []);
-      renderHaberTable(haberler);
+    .then(d => {
+      const json = (d.haberler || (Array.isArray(d) ? d : [])).filter(x => !silHaber.has(String(x.id)));
+      const localIds = new Set(lHaber.map(x => String(x.id)));
+      _veri.haberler = [
+        ...lHaber,
+        ...json.filter(x => !localIds.has(String(x.id)))
+      ].sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
     })
-    .catch(() => renderHaberTable([]));
-}
+    .catch(() => { _veri.haberler = [...lHaber]; })
+    .finally(() => tabloRender("haberler"));
 
-const SILINEN_RAPOR_KEY = "ekoloji_rapor_silinen";
-
-function getSilinenRapor() {
-  try { return JSON.parse(localStorage.getItem(SILINEN_RAPOR_KEY) || "[]"); } catch { return []; }
-}
-function addSilinenRapor(id) {
-  const liste = getSilinenRapor();
-  if (!liste.includes(String(id))) liste.push(String(id));
-  localStorage.setItem(SILINEN_RAPOR_KEY, JSON.stringify(liste));
-}
-
-function renderRaporTable() {
-  const silinen  = getSilinenRapor();
-  const data     = SITE.getList("raporlar").filter(i => !silinen.includes(String(i.id)));
-
-  document.getElementById("raporlarTbody").innerHTML = data.length ? data.map(i => `
-    <tr>
-      <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-      <td style="max-width:320px;font-size:13.5px;">${i.baslik}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${i.yil||'—'}</td>
-      <td><span class="badge haber">${i.etiket||'Genel'}</span></td>
-      <td style="display:flex;gap:5px;">
-        ${i.dosya ? `<a class="det-btn" href="${i.dosya}" target="_blank" rel="noopener">Gör ↗</a>` : ''}
-        <button class="del-btn" onclick="delRapor('${i.id}')">Sil</button>
-      </td>
-    </tr>
-  `).join('') : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
-
-  const sayac = document.getElementById("raporSayac");
-  if (sayac) sayac.textContent = data.length;
+  // raporlar sadece localStorage
+  _veri.raporlar = [...lRapor];
+  tabloRender("raporlar");
 }
 
 /* ════════════════════════════════════════════════
@@ -688,19 +695,13 @@ function addIhlal() {
   });
   document.getElementById("i-tarih").value = today();
 
-  renderIhlalTable();
+  _veri.ihlaller.unshift(yeni);
+  tabloRender("ihlaller");
   updateStats();
   toast("✓ İhlal kaydedildi.");
 }
 
-function delIhlal(id) {
-  if (!confirm("Bu ihlali kalıcı olarak silmek istiyor musunuz?\n\nSilinen ihlal data.json güncellenene kadar gizlenir.")) return;
-  SITE.delete("ihlaller", String(id));
-  addSilinenIhlal(id);
-  dataJsonIhlalYukle();
-  updateStats();
-  toast("✓ İhlal silindi ve gizleme listesine eklendi.");
-}
+
 
 /* ════════════════════════════════════════════════
    CRUD — HABER
@@ -724,18 +725,13 @@ function addHaber() {
   });
   document.getElementById("h-tarih").value = today();
 
-  renderHaberTable(); updateStats();
+  _veri.haberler.unshift({...SITE.getList("haberler")[0]});
+  tabloRender("haberler");
+  updateStats();
   toast("✓ Haber kaydedildi.");
 }
 
-function delHaber(id) {
-  if (!confirm("Bu haberi kalıcı olarak silmek istiyor musunuz?\n\nSilinen haber haberler.json güncellenene kadar gizlenir.")) return;
-  SITE.delete("haberler", String(id));
-  addSilinen(id);
-  haberlerJsonYukle();
-  updateStats();
-  toast("✓ Haber silindi ve gizleme listesine eklendi.");
-}
+
 
 /* ════════════════════════════════════════════════
    CRUD — RAPOR
@@ -758,18 +754,13 @@ function addRapor() {
     const el = document.getElementById(id); if(el) el.value = "";
   });
 
-  renderRaporTable(); updateStats();
+  _veri.raporlar = SITE.getList("raporlar");
+  tabloRender("raporlar");
+  updateStats();
   toast("✓ Rapor kaydedildi.");
 }
 
-function delRapor(id) {
-  if (!confirm("Bu raporu kalıcı olarak silmek istiyor musunuz?")) return;
-  SITE.delete("raporlar", String(id));
-  addSilinenRapor(id);
-  renderRaporTable();
-  updateStats();
-  toast("✓ Rapor silindi.");
-}
+
 
 /* ════════════════════════════════════════════════
    GITHUB AYARLARI
@@ -1005,7 +996,7 @@ function importSec() {
   });
   const ia = SITE.bulkImport("ihlaller", ihlaller);
   const ha = SITE.bulkImport("haberler", haberler);
-  dataJsonIhlalYukle(); haberlerJsonYukle(); updateStats();
+  tumVeriYukle(); updateStats();
   kapat();
   toast(`✓ ${ia} ihlal + ${ha} haber içe aktarıldı.`);
 }
@@ -1022,9 +1013,7 @@ function boot() {
   });
   initTabs();
   updateStats();
-  dataJsonIhlalYukle();
-  haberlerJsonYukle();
-  renderRaporTable();
+  tumVeriYukle();
 }
 
 /* ════════════════════════════════════════════════
