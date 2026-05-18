@@ -4,7 +4,6 @@
  */
 const SITE = {
 
-  // ── Varsayılan veriler (ilk açılışta LocalStorage boşsa kullanılır) ──
   defaults: {
     ihlaller: [
       { id: 1, tarih: "2025-05-15", baslik: "Akbelen Ormanlarında İzinsiz Ağaç Kesimine Devam", konum: "Muğla", kategori: "Maden", siddet: "kritik", aciklama: "İktidar destekli maden şirketi ÇED kararına rağmen kesimi sürdürüyor.", kaynak: "Bianet" },
@@ -23,8 +22,6 @@ const SITE = {
     ],
   },
 
-  // ── Temel LocalStorage okuma/yazma ──
-
   get(key) {
     try {
       const raw = localStorage.getItem("ekoloji_" + key);
@@ -36,12 +33,9 @@ const SITE = {
     try { localStorage.setItem("ekoloji_" + key, JSON.stringify(value)); } catch {}
   },
 
-  /** Güvenli liste al — asla null dönmez */
   getList(key) {
     return this.get(key) || [];
   },
-
-  // ── İlk yükleme ──
 
   init() {
     if (!this.get("ihlaller")) this.set("ihlaller", this.defaults.ihlaller);
@@ -49,8 +43,6 @@ const SITE = {
     if (!this.get("raporlar")) this.set("raporlar", this.defaults.raporlar);
     if (!this.get("nextId"))   this.set("nextId", { ihlaller: 10, haberler: 10, raporlar: 10 });
   },
-
-  // ── ID üreteci ──
 
   nextId(collection) {
     const ids = this.get("nextId") || { ihlaller: 10, haberler: 10, raporlar: 10 };
@@ -60,9 +52,6 @@ const SITE = {
     return id;
   },
 
-  // ── CRUD ──
-
-  /** Kayıt ekle veya güncelle (id eşleşirse günceller, yoksa en üste ekler) */
   upsert(collection, item) {
     const list = this.getList(collection);
     const idx  = list.findIndex(x => x.id === item.id);
@@ -71,12 +60,10 @@ const SITE = {
     this.set(collection, list);
   },
 
-  /** id'ye göre sil */
   delete(collection, id) {
     this.set(collection, this.getList(collection).filter(x => x.id !== id));
   },
 
-  /** Toplu ekle; zaten var olanları atlar. Eklenen kayıt sayısını döner. */
   bulkImport(collection, items) {
     const list      = this.getList(collection);
     const mevcutIds = new Set(list.map(x => String(x.id)));
@@ -85,31 +72,13 @@ const SITE = {
     return yeniler.length;
   },
 
-  // ── Admin oturum yönetimi ──
-  //
-  // TEK ANAHTAR: SESSION_KEY = "ekoloji_admin_session"
-  // Değer: "1" (aktif) | yok (çıkış yapılmış)
-  //
-  // NOT: Şifre client-side'da tutulduğu için bu güvenlik katmanı
-  // yalnızca kazara erişimi engeller. Gerçek koruma için
-  // sunucu taraflı auth gerekir.
-
   SESSION_KEY: "ekoloji_admin_session",
 
-  /** Oturum açık mı? */
   isAdmin() {
     return sessionStorage.getItem(this.SESSION_KEY) === "1";
   },
 
-  /**
-   * Şifre doğrulama + oturum aç.
-   * Şifreyi değiştirmek için YALNIZCA burayı güncelle.
-   * @param {string} pass
-   * @returns {boolean}
-   */
   login(pass) {
-    // Basit hash: btoa ile encode — DevTools'dan düz okumayı engeller.
-    // Daha güçlü koruma için sunucu taraflı doğrulama kullan.
     const HASH = "ZWtvbG9qaTIwMjU="; // btoa("ekoloji2025")
     if (btoa(pass) === HASH) {
       sessionStorage.setItem(this.SESSION_KEY, "1");
@@ -118,11 +87,10 @@ const SITE = {
     return false;
   },
 
-  /** Tüm oturum anahtarlarını temizle */
   logout() {
     sessionStorage.removeItem(this.SESSION_KEY);
+    sessionStorage.removeItem("ekoloji_admin");
   },
 };
 
-// Sayfa yüklendiğinde verileri başlat
 SITE.init();
