@@ -30,8 +30,8 @@
 .ihlal-row .date{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(122,158,138,.5);text-align:right;white-space:nowrap;}
 .count-bar{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:20px;}
 .count-bar b{color:var(--bright);}
-
-/* Modal */
+.admin-sil-btn{padding:4px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8.5px;cursor:pointer;letter-spacing:.06em;white-space:nowrap;}
+.admin-sil-btn:hover{background:rgba(232,92,42,.25);}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;padding:40px;max-width:560px;width:90%;position:relative;}
@@ -55,7 +55,6 @@
 </div>
 
 <div class="content-area">
-  <!-- Filters -->
   <div class="filter-bar">
     <input class="search-box" id="searchBox" type="search" placeholder="Ara: konum, başlık, kategori…">
     <button class="filter-btn active" data-filter="hepsi">Tümü</button>
@@ -64,11 +63,9 @@
     <button class="filter-btn" data-filter="takipte">● Takipte</button>
   </div>
   <div class="count-bar" id="countBar"></div>
-
   <div class="ihlaL-grid" id="ihlalerList"></div>
 </div>
 
-<!-- Detail Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <button class="close" onclick="closeModal()">✕</button>
@@ -86,33 +83,62 @@
 </footer>
 
 <script>
+
+/* ─── Admin silme yardımcıları ─── */
+const _adminMod = {
+  keys: {
+    ihlaller: "ekoloji_ihlal_silinen",
+    haberler:  "ekoloji_haber_silinen",
+    raporlar:  "ekoloji_rapor_silinen",
+  },
+  getSilinen(col) {
+    try { return new Set(JSON.parse(localStorage.getItem(this.keys[col]) || "[]").map(String)); }
+    catch { return new Set(); }
+  },
+  sil(col, id, onSuccess) {
+    if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
+    const sid = String(id);
+    // localStorage'dan çıkar
+    if (typeof SITE !== "undefined") {
+      SITE.set(col, SITE.getList(col).filter(x => String(x.id) !== sid));
+    }
+    // Silinen listesine ekle
+    const s = this.getSilinen(col);
+    s.add(sid);
+    localStorage.setItem(this.keys[col], JSON.stringify([...s]));
+    if (onSuccess) onSuccess(sid);
+  }
+};
+
 let allData = [];
 let activeFilter = "hepsi";
 
 function formatDate(d) {
   if (!d) return "—";
-  const dt = new Date(d);
-  return dt.toLocaleDateString("tr-TR", { day:"numeric", month:"short", year:"numeric" });
+  return new Date(d).toLocaleDateString("tr-TR", { day:"numeric", month:"short", year:"numeric" });
 }
 
 function render(data) {
   const list = document.getElementById("ihlalerList");
   const count = document.getElementById("countBar");
+  const adminMod = typeof SITE !== "undefined" && SITE.isAdmin();
   if (!data.length) {
     list.innerHTML = '<div class="empty-state">Bu kriterlere uyan ihlal kaydı bulunamadı.</div>';
-    count.innerHTML = "0 kayıt";
-    return;
+    count.innerHTML = "0 kayıt"; return;
   }
   count.innerHTML = `<b>${data.length}</b> ihlal kaydı gösteriliyor`;
   list.innerHTML = data.map(item => `
-    <div class="ihlal-row ${item.siddet}" onclick="openModal(${item.id})">
-      <div><span class="sev ${item.siddet}">${item.siddet.charAt(0).toUpperCase()+item.siddet.slice(1)}</span></div>
+    <div class="ihlal-row ${item.siddet}" onclick="openModal('${item.id}')">
+      <div><span class="sev ${item.siddet}">${(item.siddet||'').charAt(0).toUpperCase()+(item.siddet||'').slice(1)}</span></div>
       <div>
         <h3>${item.baslik}</h3>
-        <div class="meta">${item.konum} · ${item.kategori}${item.kaynak ? ' · ' + item.kaynak : ''}</div>
+        <div class="meta">${item.konum||''} · ${item.kategori||''}${item.kaynak ? ' · ' + item.kaynak : ''}</div>
         ${item.aciklama ? `<div class="desc">${item.aciklama}</div>` : ''}
       </div>
-      <div class="date">${formatDate(item.tarih)}</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <span class="date">${formatDate(item.tarih)}</span>
+        ${adminMod ? `<button class="admin-sil-btn" onclick="event.stopPropagation();ihlalSil('${item.id}')">SİL</button>` : ''}
+      </div>
     </div>
   `).join("");
 }
@@ -121,18 +147,25 @@ function filter() {
   const q = document.getElementById("searchBox").value.toLowerCase();
   let data = allData;
   if (activeFilter !== "hepsi") data = data.filter(i => i.siddet === activeFilter);
-  if (q) data = data.filter(i => (i.baslik+i.konum+i.kategori+i.aciklama).toLowerCase().includes(q));
+  if (q) data = data.filter(i => (i.baslik+i.konum+i.kategori+(i.aciklama||'')).toLowerCase().includes(q));
   render(data);
 }
 
+function ihlalSil(id) {
+  _adminMod.sil("ihlaller", id, sid => {
+    allData = allData.filter(i => String(i.id) !== sid);
+    filter();
+  });
+}
+
 function openModal(id) {
-  const item = allData.find(i => i.id === id);
+  const item = allData.find(i => String(i.id) === String(id));
   if (!item) return;
   document.getElementById("modalContent").innerHTML = `
     <div class="badge ${item.siddet}" style="margin-bottom:14px;">${item.siddet}</div>
     <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.1;margin-bottom:20px;">${item.baslik}</h2>
-    <div class="modal-field"><label>Konum</label><p>${item.konum}</p></div>
-    <div class="modal-field"><label>Kategori</label><p>${item.kategori}</p></div>
+    <div class="modal-field"><label>Konum</label><p>${item.konum||'—'}</p></div>
+    <div class="modal-field"><label>Kategori</label><p>${item.kategori||'—'}</p></div>
     <div class="modal-field"><label>Tarih</label><p>${formatDate(item.tarih)}</p></div>
     ${item.kaynak ? `<div class="modal-field"><label>Kaynak</label><p>${item.kaynak}</p></div>` : ''}
     ${item.aciklama ? `<div class="modal-field"><label>Açıklama</label><p>${item.aciklama}</p></div>` : ''}
@@ -140,10 +173,7 @@ function openModal(id) {
   document.getElementById("modal").classList.add("open");
 }
 
-function closeModal() {
-  document.getElementById("modal").classList.remove("open");
-}
-
+function closeModal() { document.getElementById("modal").classList.remove("open"); }
 document.getElementById("modal").addEventListener("click", e => { if(e.target===e.currentTarget) closeModal(); });
 
 document.querySelectorAll(".filter-btn").forEach(btn => {
@@ -154,20 +184,31 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
     filter();
   });
 });
-
 document.getElementById("searchBox").addEventListener("input", filter);
 
-// Check URL param for category pre-filter
-const urlKat = new URLSearchParams(location.search).get("kat");
+// Silinen listesi
+const silinen = _adminMod.getSilinen("ihlaller");
+const urlKat  = new URLSearchParams(location.search).get("kat");
 
-allData = (SITE.get("ihlaller") || []).sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
-
-if (urlKat) {
-  allData = allData.filter(i => i.kategori && i.kategori.toLowerCase().includes(urlKat.toLowerCase()));
-  document.getElementById("searchBox").value = urlKat;
-}
-
-filter();
+// Önce data.json'dan çek, yoksa localStorage
+fetch("data.json?v=" + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(d => {
+    const json  = (d.ihlaller || []).filter(x => !silinen.has(String(x.id)));
+    const local = (SITE.getList("ihlaller") || []).filter(x => !silinen.has(String(x.id)));
+    const localIds = new Set(local.map(x => String(x.id)));
+    allData = [...local, ...json.filter(x => !localIds.has(String(x.id)))]
+              .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
+    if (urlKat) allData = allData.filter(i => i.kategori?.toLowerCase().includes(urlKat.toLowerCase()));
+    if (urlKat) document.getElementById("searchBox").value = urlKat;
+    filter();
+  })
+  .catch(() => {
+    allData = (SITE.getList("ihlaller") || []).filter(x => !silinen.has(String(x.id)))
+              .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
+    if (urlKat) allData = allData.filter(i => i.kategori?.toLowerCase().includes(urlKat.toLowerCase()));
+    filter();
+  });
 </script>
 </body>
 </html>
