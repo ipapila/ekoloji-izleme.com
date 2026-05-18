@@ -9,16 +9,16 @@
 <style>
 .page-header{background:var(--forest);padding:100px 80px 60px;border-bottom:1px solid rgba(45,158,107,.15);}
 .page-header-inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
-.page-header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
+.page-header h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
 .page-header h1 span{color:var(--bright);}
 .filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-.filter-btn{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;padding:6px 12px;border-radius:2px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.filter-btn{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;padding:6px 12px;border-radius:2px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;}
 .filter-btn:hover,.filter-btn.aktif{background:rgba(45,158,107,.15);border-color:var(--accent);color:var(--bright);}
-.search-box{font-family:'JetBrains Mono',monospace;font-size:11px;padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:220px;}
+.search-box{font-family:"JetBrains Mono",monospace;font-size:11px;padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:220px;}
 .search-box:focus{border-color:var(--accent);}
 .scan-bar{background:var(--dark);padding:16px 80px;display:flex;align-items:center;gap:16px;border-bottom:1px solid rgba(45,158,107,.1);}
-.scan-status{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);flex:1;}
-.btn-tara{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;transition:all .2s;}
+.scan-status{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);flex:1;}
+.btn-tara{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;background:var(--accent);color:var(--dark);font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;transition:all .2s;}
 .btn-tara:hover{background:var(--bright);}
 .btn-tara:disabled{opacity:.5;cursor:not-allowed;}
 .content{background:var(--dark);padding:50px 80px;min-height:60vh;}
@@ -27,19 +27,21 @@
 .haber-kart:hover{background:var(--deep);border-left-color:var(--accent);padding-left:34px;}
 .haber-kart h3{font-size:16px;font-weight:400;color:var(--cream);line-height:1.5;margin-bottom:7px;}
 .haber-kart-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
-.haber-kart-meta span{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);}
-.haber-kart-meta a{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--accent);text-decoration:none;}
+.haber-kart-meta span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);}
+.haber-kart-meta a{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--accent);text-decoration:none;}
 .haber-kart-meta a:hover{color:var(--bright);}
-.badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 8px;border-radius:2px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.2);white-space:nowrap;height:fit-content;}
-.empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;}
+.badge{font-family:"JetBrains Mono",monospace;font-size:8.5px;padding:3px 8px;border-radius:2px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.2);white-space:nowrap;height:fit-content;}
+.admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:"JetBrains Mono",monospace;font-size:8.5px;cursor:pointer;letter-spacing:.06em;white-space:nowrap;}
+.admin-sil-btn:hover{background:rgba(232,92,42,.25);}
+.empty{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;}
 .modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
 .modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:700px;width:100%;max-height:88vh;overflow-y:auto;}
 .modal-header{padding:24px 32px 0;display:flex;justify-content:space-between;align-items:start;gap:12px;position:sticky;top:0;background:var(--deep);z-index:1;}
 .modal-body{padding:16px 32px 32px;}
-.modal-title{font-family:'Crimson Pro',serif;font-size:26px;font-weight:400;color:var(--cream);line-height:1.35;margin:12px 0;}
-.modal-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
+.modal-title{font-family:"Crimson Pro",serif;font-size:26px;font-weight:400;color:var(--cream);line-height:1.35;margin:12px 0;}
+.modal-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);}
 .modal-ozet{font-size:15px;font-weight:300;color:var(--cream);line-height:1.75;margin-bottom:24px;}
-.modal-kaynak-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;}
+.modal-kaynak-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--accent);color:var(--dark);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;}
 .modal-kaynak-btn:hover{background:var(--bright);}
 .modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0;}
 .modal-close:hover{color:var(--cream);}
@@ -62,12 +64,12 @@
     </div>
     <div class="filter-bar">
       <input class="search-box" id="searchBox" placeholder="Ara…" oninput="filtrele()">
-      <button class="filter-btn aktif" onclick="filtreBtnClick(this,'')">Tümü</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'Çevre İhlali')">İhlal</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'Orman / Maden')">Orman/Maden</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'HES / RES / Baraj')">HES/RES</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'İklim')">İklim</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'STK')">STK</button>
+      <button class="filter-btn aktif" onclick="filtreBtnClick(this,\'\')">Tümü</button>
+      <button class="filter-btn" onclick="filtreBtnClick(this,\'Çevre İhlali\')">İhlal</button>
+      <button class="filter-btn" onclick="filtreBtnClick(this,\'Orman / Maden\')">Orman/Maden</button>
+      <button class="filter-btn" onclick="filtreBtnClick(this,\'HES / RES / Baraj\')">HES/RES</button>
+      <button class="filter-btn" onclick="filtreBtnClick(this,\'İklim\')">İklim</button>
+      <button class="filter-btn" onclick="filtreBtnClick(this,\'STK\')">STK</button>
     </div>
   </div>
 </div>
@@ -83,12 +85,11 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div id="detailModal" class="modal-bg" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+<div id="detailModal" class="modal-bg" style="display:none;" onclick="if(event.target===this)this.style.display=\'none\'">
   <div class="modal-box">
     <div class="modal-header">
       <span class="badge" id="mBadge"></span>
-      <button class="modal-close" onclick="document.getElementById('detailModal').style.display='none'">✕</button>
+      <button class="modal-close" onclick="document.getElementById(\'detailModal\').style.display=\'none\'">✕</button>
     </div>
     <div class="modal-body">
       <h2 class="modal-title" id="mTitle"></h2>
@@ -100,131 +101,141 @@
 </div>
 
 <script>
-const HABERLER_URL = 'https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json';
+
+/* ─── Admin silme yardımcıları ─── */
+const _adminMod = {
+  keys: {
+    ihlaller: "ekoloji_ihlal_silinen",
+    haberler:  "ekoloji_haber_silinen",
+    raporlar:  "ekoloji_rapor_silinen",
+  },
+  getSilinen(col) {
+    try { return new Set(JSON.parse(localStorage.getItem(this.keys[col]) || "[]").map(String)); }
+    catch { return new Set(); }
+  },
+  sil(col, id, onSuccess) {
+    if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
+    const sid = String(id);
+    if (typeof SITE !== "undefined") {
+      SITE.set(col, SITE.getList(col).filter(x => String(x.id) !== sid));
+    }
+    const s = this.getSilinen(col);
+    s.add(sid);
+    localStorage.setItem(this.keys[col], JSON.stringify([...s]));
+    if (onSuccess) onSuccess(sid);
+  }
+};
+
+const HABERLER_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
 let tumHaberler = [];
 let gorunenHaberler = [];
-let aktifKategori = '';
+let aktifKategori = "";
 
 function acModal(idx) {
   const h = gorunenHaberler[idx];
   if (!h) return;
-  const tarih = h.tarih ? new Date(h.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}) : '';
-  const domain = h.url ? (() => { try { return new URL(h.url).hostname.replace('www.',''); } catch(e){ return ''; } })() : '';
-  document.getElementById('mBadge').textContent = h.kategori || h.kaynak || '';
-  document.getElementById('mTitle').textContent = h.baslik;
-  document.getElementById('mMeta').innerHTML =
-    `<span>📰 ${h.kaynak||''}</span>` +
-    (tarih ? `<span>📅 ${tarih}</span>` : '') +
-    (domain ? `<span>🔗 ${domain}</span>` : '');
-  document.getElementById('mOzet').textContent = h.ozet || 'Özet yok. Kaynağa gidin.';
-  const link = document.getElementById('mLink');
+  const tarih = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
+  const domain = h.url ? (() => { try { return new URL(h.url).hostname.replace("www.",""); } catch(e){ return ""; } })() : "";
+  document.getElementById("mBadge").textContent = h.kategori || h.kaynak || "";
+  document.getElementById("mTitle").textContent = h.baslik;
+  document.getElementById("mMeta").innerHTML =
+    `<span>📰 ${h.kaynak||""}</span>` +
+    (tarih ? `<span>📅 ${tarih}</span>` : "") +
+    (domain ? `<span>🔗 ${domain}</span>` : "");
+  document.getElementById("mOzet").textContent = h.ozet || "Özet yok. Kaynağa gidin.";
+  const link = document.getElementById("mLink");
   if (h.url) {
     link.href = h.url;
     link.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Kaynağa Git — ${domain}`;
-    link.style.display = 'inline-flex';
-  } else {
-    link.style.display = 'none';
-  }
-  document.getElementById('detailModal').style.display = 'flex';
+    link.style.display = "inline-flex";
+  } else { link.style.display = "none"; }
+  document.getElementById("detailModal").style.display = "flex";
 }
 
 function render(liste) {
   gorunenHaberler = liste;
-  const grid = document.getElementById('haberGrid');
-  if (!liste.length) { grid.innerHTML = '<div class="empty">Haber bulunamadı.</div>'; return; }
+  const grid = document.getElementById("haberGrid");
+  if (!liste.length) { grid.innerHTML = "<div class=\"empty\">Haber bulunamadı.</div>"; return; }
+  const adminMod = typeof SITE !== "undefined" && SITE.isAdmin();
   grid.innerHTML = liste.map((h,i) => {
-    const tarih = h.tarih ? new Date(h.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '';
-    const domain = h.url ? (() => { try { return new URL(h.url).hostname.replace('www.',''); } catch(e){ return ''; } })() : '';
+    const tarih = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}) : "";
+    const domain = h.url ? (() => { try { return new URL(h.url).hostname.replace("www.",""); } catch(e){ return ""; } })() : "";
     return `<div class="haber-kart" onclick="acModal(${i})">
       <div>
         <h3>${h.baslik}</h3>
         <div class="haber-kart-meta">
-          <span>📰 ${h.kaynak||''}</span>
-          ${tarih?`<span>📅 ${tarih}</span>`:''}
-          ${domain?`<a href="${h.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${domain}</a>`:''}
+          <span>📰 ${h.kaynak||""}</span>
+          ${tarih?`<span>📅 ${tarih}</span>`:""}
+          ${domain?`<a href="${h.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${domain}</a>`:""}
         </div>
       </div>
-      <span class="badge">${(h.kategori||h.etiket||h.kaynak||'').slice(0,16)}</span>
+      <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0;">
+        <span class="badge">${(h.kategori||h.etiket||h.kaynak||"").slice(0,16)}</span>
+        ${adminMod ? `<button class="admin-sil-btn" onclick="event.stopPropagation();haberSil(\'${h.id}\')">SİL</button>` : ""}
+      </div>
     </div>`;
-  }).join('');
+  }).join("");
+}
+
+function haberSil(id) {
+  _adminMod.sil("haberler", id, sid => {
+    tumHaberler = tumHaberler.filter(h => String(h.id) !== sid);
+    filtrele();
+  });
 }
 
 function filtrele() {
-  const q = document.getElementById('searchBox').value.toLowerCase();
+  const q = document.getElementById("searchBox").value.toLowerCase();
   render(tumHaberler.filter(h => {
-    const kat = aktifKategori ? (h.kategori||h.kaynak||'').includes(aktifKategori) : true;
-    return kat && (!q || (h.baslik+' '+(h.ozet||'')+' '+(h.kaynak||'')).toLowerCase().includes(q));
+    const kat = aktifKategori ? (h.kategori||h.kaynak||"").includes(aktifKategori) : true;
+    return kat && (!q || (h.baslik+" "+(h.ozet||"")+" "+(h.kaynak||"")).toLowerCase().includes(q));
   }));
 }
 
 function filtreBtnClick(btn, kat) {
   aktifKategori = kat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('aktif'));
-  btn.classList.add('aktif');
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("aktif"));
+  btn.classList.add("aktif");
   filtrele();
 }
 
-/**
- * İki kaynaktan gelen haberleri birleştir:
- * - GitHub haberler.json (otomatik tarama)
- * - localStorage ekoloji_haberler (admin manuel girişi)
- * id bazında tekilleştirir, tarihe göre sıralar.
- */
-function birlestir(githubHaberler, localHaberler) {
+function birlestir(github, local) {
+  const silinen = _adminMod.getSilinen("haberler");
   const map = new Map();
-  // önce github, sonra local (local daha güncel olabilir)
-  [...(githubHaberler || []), ...(localHaberler || [])].forEach(h => {
-    map.set(String(h.id), h);
-  });
-  return Array.from(map.values()).sort((a, b) => {
-    if (!a.tarih) return 1;
-    if (!b.tarih) return -1;
-    return new Date(b.tarih) - new Date(a.tarih);
-  });
+  [...(github||[]), ...(local||[])].forEach(h => { if(!silinen.has(String(h.id))) map.set(String(h.id), h); });
+  return Array.from(map.values()).sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
 }
 
 function yukle() {
   const localHaberler = SITE.getList("haberler");
-
-  fetch(HABERLER_URL + '?t=' + Date.now())
+  fetch(HABERLER_URL + "?t=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(data => {
-      const githubHaberler = data.haberler || [];
-      tumHaberler = birlestir(githubHaberler, localHaberler);
+      tumHaberler = birlestir(data.haberler||[], localHaberler);
       filtrele();
       const meta = data.meta?.guncelleme || data._meta?.guncelleme;
-      document.getElementById('scanStatus').textContent =
-        `${tumHaberler.length} haber` + (meta ? ' · ' + new Date(meta).toLocaleString('tr-TR') : '');
+      document.getElementById("scanStatus").textContent =
+        `${tumHaberler.length} haber` + (meta ? " · " + new Date(meta).toLocaleString("tr-TR") : "");
     })
     .catch(() => {
-      // GitHub erişilemiyorsa sadece localStorage
-      tumHaberler = localHaberler.length ? localHaberler : SITE.defaults.haberler;
+      tumHaberler = birlestir([], localHaberler);
       filtrele();
-      document.getElementById('scanStatus').textContent =
-        `${tumHaberler.length} haber (yerel)`;
+      document.getElementById("scanStatus").textContent = `${tumHaberler.length} haber (yerel)`;
     });
 }
 
-// Admin: Manuel Tara butonu
 if (SITE.isAdmin()) {
-  const alan = document.getElementById('adminAlan');
-  const btn = document.createElement('button');
-  btn.className = 'btn-tara';
-  btn.id = 'btnTara';
-  btn.innerHTML = '↻ Yenile';
+  const alan = document.getElementById("adminAlan");
+  const btn = document.createElement("button");
+  btn.className = "btn-tara"; btn.id = "btnTara"; btn.innerHTML = "↻ Yenile";
   btn.onclick = function() {
-    btn.disabled = true;
-    btn.innerHTML = '↻ Yükleniyor…';
+    btn.disabled = true; btn.innerHTML = "↻ Yükleniyor…";
     yukle();
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.innerHTML = '↻ Yenile';
-    }, 2000);
+    setTimeout(() => { btn.disabled = false; btn.innerHTML = "↻ Yenile"; }, 2000);
   };
   alan.appendChild(btn);
 }
 
-// İlk yükleme
 yukle();
 </script>
 </body>
