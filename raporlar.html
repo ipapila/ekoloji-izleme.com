@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raporlar — ekoloji-izleme.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-header{background:var(--forest);padding:100px 80px 60px;border-bottom:1px solid rgba(45,158,107,.15);}
+.page-header-inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
+.page-header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
+.page-header h1 span{color:var(--bright);}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;}
+.filter-btn{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;padding:6px 12px;border-radius:2px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.filter-btn:hover,.filter-btn.aktif{background:rgba(45,158,107,.15);border-color:var(--accent);color:var(--bright);}
+.search-box{font-family:'JetBrains Mono',monospace;font-size:11px;padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:220px;}
+.search-box:focus{border-color:var(--accent);}
+.content{background:var(--dark);padding:50px 80px;min-height:60vh;}
+.rapor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+.rapor-kart{background:var(--forest);border-radius:6px;border:1px solid rgba(45,158,107,.12);padding:28px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.rapor-kart::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.rapor-kart:hover{border-color:rgba(45,158,107,.3);background:var(--deep);transform:translateY(-3px);}
+.rapor-kart:hover::after{transform:scaleX(1);}
+.rapor-tur{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;padding:3px 8px;border-radius:2px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.2);display:inline-block;margin-bottom:14px;text-transform:uppercase;}
+.rapor-kart h3{font-family:'Crimson Pro',serif;font-size:20px;font-weight:400;color:var(--cream);line-height:1.4;margin-bottom:10px;}
+.rapor-ozet{font-size:13.5px;font-weight:300;color:var(--muted);line-height:1.65;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.rapor-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(45,158,107,.1);padding-top:14px;margin-top:4px;}
+.rapor-tarih{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);}
+.rapor-oku{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;color:var(--accent);text-transform:uppercase;}
+.empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;letter-spacing:.05em;}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
+.modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-header{padding:28px 36px 0;display:flex;justify-content:space-between;align-items:start;gap:12px;position:sticky;top:0;background:var(--deep);z-index:1;padding-bottom:16px;border-bottom:1px solid rgba(45,158,107,.1);}
+.modal-body{padding:28px 36px 40px;}
+.modal-tur{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;padding:3px 9px;border-radius:2px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.2);text-transform:uppercase;}
+.modal-title{font-family:'Crimson Pro',serif;font-size:32px;font-weight:400;color:var(--cream);line-height:1.25;margin:16px 0 12px;}
+.modal-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid rgba(45,158,107,.1);}
+.modal-meta span{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
+.modal-icerik{font-size:16px;font-weight:300;color:var(--cream);line-height:1.85;}
+.modal-icerik p{margin-bottom:1.2em;}
+.modal-icerik h4{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--bright);letter-spacing:.03em;margin:28px 0 10px;}
+.modal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:24px;border-top:1px solid rgba(45,158,107,.1);}
+.modal-btn-primary{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:all .2s;}
+.modal-btn-primary:hover{background:var(--bright);}
+.modal-btn-outline{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:transparent;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;border:1px solid rgba(240,245,242,.2);transition:all .2s;}
+.modal-btn-outline:hover{border-color:var(--accent);color:var(--bright);}
+.modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;padding:0;transition:color .2s;}
+.modal-close:hover{color:var(--cream);}
+
+@media(max-width:900px){
+  .page-header{padding:80px 28px 40px;} .page-header-inner{grid-template-columns:1fr;}
+  .content{padding:30px 28px;} .rapor-grid{grid-template-columns:1fr;}
+  .modal-body,.modal-header{padding-left:20px;padding-right:20px;}
+}
+</style>
+</head>
+<body>
+<script src="site-data.js"></script>
+<div id="nav-root"></div>
+<script src="nav.js"></script>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div>
+      <div class="section-tag">Araştırma & Analiz</div>
+      <h1>RAPORLAR <span>&</span><br>DOSYALAR</h1>
+    </div>
+    <div>
+      <div class="filter-bar">
+        <input class="search-box" id="searchBox" placeholder="Ara…" oninput="filtrele()">
+        <button class="filter-btn aktif" onclick="filtreBtnClick(this,'')">Tümü</button>
+        <button class="filter-btn" onclick="filtreBtnClick(this,'Veri')">Veri</button>
+        <button class="filter-btn" onclick="filtreBtnClick(this,'Alan Raporu')">Alan</button>
+        <button class="filter-btn" onclick="filtreBtnClick(this,'Hukuki')">Hukuki</button>
+        <button class="filter-btn" onclick="filtreBtnClick(this,'Analiz')">Analiz</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="rapor-grid" id="raporGrid">
+    <div class="empty">Raporlar yükleniyor…</div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detailModal" class="modal-bg" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-tur" id="mTur"></span>
+      <button class="modal-close" onclick="document.getElementById('detailModal').style.display='none'">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="mTitle"></h2>
+      <div class="modal-meta" id="mMeta"></div>
+      <div class="modal-icerik" id="mIcerik"></div>
+      <div class="modal-actions" id="mActions"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let tumRaporlar = [];
+let aktifTur = '';
+// Filtrelenmiş sonuçları sakla — onclick doğru objeyi bulsun
+let gorunenRaporlar = [];
+
+function acModal(idx) {
+  const r = gorunenRaporlar[idx];
+  if (!r) return;
+  const tarihStr = r.tarih ? new Date(r.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : '';
+  const domain = r.url ? (() => { try { return new URL(r.url).hostname.replace('www.',''); } catch(e){ return r.url; } })() : '';
+  document.getElementById('mTur').textContent = r.tur || r.kategori || 'Rapor';
+  document.getElementById('mTitle').textContent = r.baslik || r.title || '';
+  document.getElementById('mMeta').innerHTML =
+    (r.yazar ? `<span>✍ ${r.yazar}</span>` : '') +
+    (tarihStr ? `<span>📅 ${tarihStr}</span>` : '') +
+    (r.bolge || r.konum ? `<span>📍 ${r.bolge||r.konum}</span>` : '') +
+    (domain ? `<span>🔗 ${domain}</span>` : '');
+
+  // İçerik — icerik alanı varsa tam metin, yoksa ozet + açıklama
+  const icerikEl = document.getElementById('mIcerik');
+  if (r.icerik) {
+    // Düz metin paragrafları
+    icerikEl.innerHTML = r.icerik.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+  } else if (r.ozet || r.aciklama || r.description) {
+    const metin = r.ozet || r.aciklama || r.description || '';
+    icerikEl.innerHTML = metin.split(/\n{2,}/).map(p => `<p>${p}</p>`).join('') ||
+      `<p>${metin}</p>`;
+  } else {
+    icerikEl.innerHTML = '<p style="opacity:.5">İçerik mevcut değil. Raporun tamamı için kaynağa gidin.</p>';
+  }
+
+  const actions = document.getElementById('mActions');
+  actions.innerHTML = '';
+  if (r.url) {
+    actions.innerHTML += `<a href="${r.url}" target="_blank" rel="noopener noreferrer" class="modal-btn-primary">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Kaynağa Git
+    </a>`;
+  }
+  if (r.dosya_url || r.pdf_url) {
+    actions.innerHTML += `<a href="${r.dosya_url||r.pdf_url}" target="_blank" rel="noopener noreferrer" class="modal-btn-outline">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      PDF İndir
+    </a>`;
+  }
+  document.getElementById('detailModal').style.display = 'flex';
+}
+
+function render(liste) {
+  gorunenRaporlar = liste;
+  const grid = document.getElementById('raporGrid');
+  if (!liste.length) { grid.innerHTML = '<div class="empty">Rapor bulunamadı.</div>'; return; }
+  grid.innerHTML = liste.map((r,i) => {
+    const tarih = r.tarih ? new Date(r.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}) : '';
+    const ozet = r.ozet || r.aciklama || r.description || '';
+    return `<div class="rapor-kart" onclick="acModal(${i})">
+      <span class="rapor-tur">${r.tur||r.kategori||'Rapor'}</span>
+      <h3>${r.baslik||r.title||''}</h3>
+      ${ozet ? `<p class="rapor-ozet">${ozet}</p>` : ''}
+      <div class="rapor-footer">
+        <span class="rapor-tarih">${tarih}${r.yazar?' · '+r.yazar:''}</span>
+        <span class="rapor-oku">Detay →</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filtrele() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const filtered = tumRaporlar.filter(r => {
+    const tur = aktifTur ? (r.tur||r.kategori||'').includes(aktifTur) : true;
+    const arama = !q || ((r.baslik||r.title||'')+' '+(r.ozet||r.aciklama||'')).toLowerCase().includes(q);
+    return tur && arama;
+  });
+  render(filtered);
+}
+
+function filtreBtnClick(btn, tur) {
+  aktifTur = tur;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('aktif'));
+  btn.classList.add('aktif');
+  filtrele();
+}
+
+// localStorage'dan SITE verisi
+const raporlarData = (typeof SITE !== 'undefined' && SITE.get('raporlar')) || [];
+
+// Ayrıca raporlar.json varsa dene
+fetch('raporlar.json')
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(data => {
+    tumRaporlar = (data.raporlar || data || []).concat(raporlarData);
+    filtrele();
+  })
+  .catch(() => {
+    tumRaporlar = raporlarData;
+    if (!tumRaporlar.length) {
+      document.getElementById('raporGrid').innerHTML =
+        '<div class="empty">Henüz rapor eklenmedi. Admin panelinden rapor ekleyebilirsiniz.</div>';
+    } else {
+      filtrele();
+    }
+  });
+</script>
+</body>
+</html>
