@@ -937,24 +937,11 @@ function boot() {
    Başka bypass yolu yok.
    ════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
-  // Referrer kontrolü: admin.html'e nav'dan (aynı origin) gelinmediyse
-  // ya da referrer yoksa (direkt URL yazımı, yeni sekme, vb.) oturumu sıfırla.
-  // Bu sayede nav butonundaki şifre modalı bypass edilemez.
-  const gelenSayfa = document.referrer
-    ? new URL(document.referrer).origin === location.origin
-    : false;
-
-  if (!gelenSayfa) {
-    // Direkt URL erişimi — mevcut oturumu temizle, her seferinde şifre iste
-    sessionStorage.removeItem("ekoloji_admin_session");
-  }
-
-  if (sessionAktifMi()) {
-    gosterAdminPanel();
-  } else {
-    document.getElementById("loginScreen").style.display = "block";
-  }
+  /* Her sayfa açılışında oturumu sıfırla — şifre zorunlu.
+     Session sadece doLogin() sonrası gosterAdminPanel() içinde geçerlidir.
+     Böylece eski/kalıcı session bypass'ı tamamen engellenir. */
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById("loginScreen").style.display = "block";
 });
 </script>
-</body>
-</html>
+</body></html>
