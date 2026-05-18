@@ -95,17 +95,17 @@
 .haberler-footer{display:flex;justify-content:flex-end;margin-top:10px;}
 
 /* ─── TAM HARİTA ─── */
-.harita-section{background:var(--dark);padding:100px 80px 0;}
+.harita-section{background:var(--dark);padding:100px 80px 100px;}
 .harita-header{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:40px;}
 .harita-meta{display:flex;flex-direction:column;align-items:flex-start;}
-.harita-frame-wrap{position:relative;border-radius:8px;overflow:hidden;border:1px solid rgba(45,158,107,.2);box-shadow:0 0 60px rgba(0,0,0,.5),0 0 0 1px rgba(45,158,107,.08);}
+.harita-frame-wrap{position:relative;border-radius:8px;overflow:hidden;border:1px solid rgba(45,158,107,.2);box-shadow:0 0 60px rgba(0,0,0,.5),0 0 0 1px rgba(45,158,107,.08);min-height:640px;}
 .harita-frame{width:100%;height:640px;border:none;display:block;background:var(--forest);}
 .harita-overlay-bar{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(8,21,14,.95) 0%,transparent 100%);padding:16px 20px;display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(45,158,107,.6);letter-spacing:.08em;pointer-events:none;}
 .harita-dot{width:6px;height:6px;border-radius:50%;background:var(--bright);animation:blink 2s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
 
 /* ─── ECOSYSTEM ─── */
-.ecosystem-section{background:var(--deep);padding:100px 80px;}
+.ecosystem-section{background:var(--deep);padding:100px 80px;border-top:1px solid rgba(45,158,107,.18);}
 .ecosystem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:60px;}
 .eco-card{padding:36px 28px;border-radius:6px;border:1px solid rgba(45,158,107,.15);background:rgba(13,35,24,.4);transition:all .3s;cursor:pointer;text-decoration:none;display:block;}
 .eco-card:hover{border-color:rgba(45,158,107,.35);background:rgba(26,74,53,.3);transform:translateY(-4px);}
@@ -140,7 +140,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   .features-section,.violations-section,.ecosystem-section{padding:60px 28px;}
   .stats-strip{flex-wrap:wrap;} .stat-item{flex:0 0 calc(50% - 24px);border-right:none;}
   .cta-section{padding:60px 28px;}
-  .harita-section{padding:60px 28px 0;} .harita-header{grid-template-columns:1fr;} .harita-frame{height:420px;}
+  .harita-section{padding:60px 28px 60px;} .harita-header{grid-template-columns:1fr;} .harita-frame{height:420px;}
   .haberler-band{padding:60px 28px;} .haberler-band-inner{grid-template-columns:1fr;} .haberler-sol{position:static;}
 }
 </style>
@@ -172,10 +172,10 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   </div>
 
   <div class="hero-content">
-    <div class="hero-tag">Türkiye Ekoloji Gözlem Platformu</div>
-    <h1 class="hero-h1">DOĞAYI<br><span>KORUMAK</span>BİR GÖREV</h1>
+    <div class="hero-tag">Ekoloji Gözlem Platformu</div>
+    <h1 class="hero-h1">İNSAN DOĞANIN<br><span>EFENDİSİ</span>DEĞİL,<br>BİR PARÇASIDIR.</h1>
     <p class="hero-desc">
-      Türkiye'nin dört bir yanında gerçekleşen <em>ekolojik ihlalleri</em> takip ediyoruz.
+      Bölgenin dört bir yanında gerçekleşen <em>ekolojik ihlalleri</em> takip ediyoruz.
       Haritalar, raporlar ve anlık taramalarla çevresel yıkıma karşı <em>belge üretiyoruz</em>.
     </p>
     <div class="hero-actions">
@@ -253,7 +253,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
           style="width:100%;height:100%;border:none;display:block;"
           title="Ekoloji Haritası"
           loading="lazy"
-          sandbox="allow-scripts allow-forms allow-popups"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
         ></iframe>
       </div>
       <div class="mini-stats" id="miniStats"></div>
