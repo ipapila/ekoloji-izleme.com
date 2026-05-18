@@ -116,7 +116,7 @@
 
     <div class="tab-bar">
       <button class="tab active" data-tab="ihlaller">İhlaller</button>
-      <button class="tab" data-tab="haberler">Haberler</button>
+      <button class="tab" data-tab="haberler">Haberler <span id="haberSayac" style="font-size:9px;background:rgba(45,158,107,.2);padding:1px 6px;border-radius:2px;margin-left:4px;">—</span></button>
       <button class="tab" data-tab="raporlar">Raporlar</button>
     </div>
 
@@ -530,21 +530,61 @@ function renderIhlalTable() {
   `).join('') || '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
 }
 
-function renderHaberTable() {
-  const data = SITE.getList("haberler");
-  document.getElementById("haberlerTbody").innerHTML = data.map(i => `
-    <tr>
-      <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-      <td style="max-width:280px;">${i.baslik}</td>
-      <td>${i.kaynak||'—'}</td>
-      <td><span class="badge haber">${i.etiket||'Haber'}</span></td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
-      <td style="display:flex;gap:5px;">
-        <a class="det-btn" href="detay.html#haber-${i.id}" target="_blank">Gör</a>
-        <button class="del-btn" onclick="delHaber(${i.id})">Sil</button>
-      </td>
-    </tr>
-  `).join('') || '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
+// Haber silme: ID'yi kalıcı listeye ekle (localStorage + SITE)
+const SILINEN_KEY = "ekoloji_haber_silinen";
+
+function getSilinen() {
+  try { return JSON.parse(localStorage.getItem(SILINEN_KEY) || "[]"); } catch { return []; }
+}
+function addSilinen(id) {
+  const liste = getSilinen();
+  if (!liste.includes(String(id))) liste.push(String(id));
+  localStorage.setItem(SILINEN_KEY, JSON.stringify(liste));
+}
+
+function renderHaberRow(i) {
+  return `<tr>
+    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
+    <td style="max-width:260px;font-size:13.5px;">${i.baslik}</td>
+    <td style="font-size:12px;">${i.kaynak||'—'}</td>
+    <td><span class="badge haber">${i.etiket||i.kategori||'Haber'}</span></td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
+    <td style="display:flex;gap:5px;">
+      ${i.url ? `<a class="det-btn" href="${i.url}" target="_blank" rel="noopener">Gör ↗</a>` : ''}
+      <button class="del-btn" onclick="delHaber('${i.id}')">Sil</button>
+    </td>
+  </tr>`;
+}
+
+function renderHaberTable(ekstraHaberler) {
+  const silinen  = getSilinen();
+  const local    = SITE.getList("haberler").filter(i => !silinen.includes(String(i.id)));
+  const ekstra   = (ekstraHaberler || []).filter(i => !silinen.includes(String(i.id)));
+
+  // Birleştir, aynı id varsa local öncelikli
+  const localIds = new Set(local.map(i => String(i.id)));
+  const birlesik = [...local, ...ekstra.filter(i => !localIds.has(String(i.id)))];
+  birlesik.sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
+
+  document.getElementById("haberlerTbody").innerHTML =
+    birlesik.length
+      ? birlesik.map(renderHaberRow).join('')
+      : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
+
+  // Başlık sayacı güncelle
+  const sayac = document.getElementById("haberSayac");
+  if (sayac) sayac.textContent = birlesik.length;
+}
+
+// haberler.json'dan çek ve tabloyu doldur
+function haberlerJsonYukle() {
+  fetch("haberler.json?v=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      const haberler = data.haberler || (Array.isArray(data) ? data : []);
+      renderHaberTable(haberler);
+    })
+    .catch(() => renderHaberTable([]));
 }
 
 function renderRaporTable() {
@@ -636,10 +676,12 @@ function addHaber() {
 }
 
 function delHaber(id) {
-  if (!confirm("Haberi silmek istediğinizden emin misiniz?")) return;
-  SITE.delete("haberler", id);
-  renderHaberTable(); updateStats();
-  toast("Silindi.");
+  if (!confirm("Bu haberi kalıcı olarak silmek istiyor musunuz?\n\nSilinen haber haberler.json güncellenene kadar gizlenir.")) return;
+  SITE.delete("haberler", String(id));
+  addSilinen(id);
+  haberlerJsonYukle();
+  updateStats();
+  toast("✓ Haber silindi ve gizleme listesine eklendi.");
 }
 
 /* ════════════════════════════════════════════════
@@ -926,7 +968,7 @@ function boot() {
   initTabs();
   updateStats();
   renderIhlalTable();
-  renderHaberTable();
+  haberlerJsonYukle();
   renderRaporTable();
 }
 
@@ -937,9 +979,6 @@ function boot() {
    Başka bypass yolu yok.
    ════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
-  /* Her sayfa açılışında oturumu sıfırla — şifre zorunlu.
-     Session sadece doLogin() sonrası gosterAdminPanel() içinde geçerlidir.
-     Böylece eski/kalıcı session bypass'ı tamamen engellenir. */
   sessionStorage.removeItem(SESSION_KEY);
   document.getElementById("loginScreen").style.display = "block";
 });
