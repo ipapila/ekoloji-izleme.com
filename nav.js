@@ -38,6 +38,7 @@
          </button>
        </div>`
     : `<a href="admin.html"
+          onclick="adminGirisIste(event)"
           style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
                  text-decoration:none;letter-spacing:.08em;padding:6px 12px;
                  border:1px solid rgba(45,158,107,.2);border-radius:3px;transition:all .2s;"
@@ -174,6 +175,105 @@
   if (root) root.innerHTML = html;
   else document.body.insertAdjacentHTML("afterbegin", html);
 })();
+
+/**
+ * Global: nav'daki ADMIN butonuna tıklanınca çağrılır.
+ * Oturum açık değilse şifre modalı gösterir; şifre doğruysa session'ı
+ * ayarlar ve admin.html'e yönlendirir.
+ * Oturum zaten açıksa direkt geçiş yapar (href devam eder).
+ */
+function adminGirisIste(e) {
+  // Oturum zaten aktifse — linkin doğal davranışına izin ver
+  if (sessionStorage.getItem("ekoloji_admin_session") === "1") return;
+
+  // Aktif değilse sayfaya geçişi engelle, önce şifre sor
+  e.preventDefault();
+
+  // Halihazırda modal açıksa tekrar açma
+  if (document.getElementById("navAdminModal")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "navAdminModal";
+  modal.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+  `;
+  modal.innerHTML = `
+    <div style="background:#0d2318;border:1px solid rgba(45,158,107,.35);
+                border-radius:8px;padding:40px 44px;width:360px;max-width:92vw;">
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:30px;
+                 color:#f0f5f2;margin:0 0 6px;">Admin Girişi</h2>
+      <p style="font-size:12px;color:rgba(122,158,138,.7);margin:0 0 24px;
+                letter-spacing:.04em;">ekoloji-izleme.com yönetim paneli</p>
+      <label style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+                    color:rgba(122,158,138,.6);display:block;margin-bottom:7px;">Şifre</label>
+      <input id="navAdminPass" type="password" placeholder="••••••••"
+             autofocus
+             style="width:100%;box-sizing:border-box;padding:10px 14px;
+                    background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.25);
+                    border-radius:4px;color:#f0f5f2;font-family:'JetBrains Mono',monospace;
+                    font-size:13px;outline:none;margin-bottom:8px;"
+             onkeydown="if(event.key==='Enter')navAdminDoLogin();
+                        if(event.key==='Escape')navAdminKapat();">
+      <div id="navAdminErr"
+           style="display:none;color:#e85c2a;font-size:11px;margin-bottom:10px;">
+        Hatalı şifre.
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button onclick="navAdminDoLogin()"
+                style="flex:1;padding:10px;background:#2d9e6b;color:#0d2318;
+                       border:none;border-radius:4px;cursor:pointer;
+                       font-family:'JetBrains Mono',monospace;font-size:11px;
+                       letter-spacing:.08em;text-transform:uppercase;">
+          Giriş Yap →
+        </button>
+        <button onclick="navAdminKapat()"
+                style="padding:10px 16px;background:transparent;
+                       color:rgba(122,158,138,.6);border:1px solid rgba(45,158,107,.2);
+                       border-radius:4px;cursor:pointer;font-size:11px;">
+          İptal
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(modal);
+  // Modal dışına tıklayınca kapat
+  modal.addEventListener("click", function(ev) {
+    if (ev.target === modal) navAdminKapat();
+  });
+  setTimeout(() => {
+    const inp = document.getElementById("navAdminPass");
+    if (inp) inp.focus();
+  }, 60);
+}
+
+function navAdminDoLogin() {
+  const inp  = document.getElementById("navAdminPass");
+  const err  = document.getElementById("navAdminErr");
+  if (!inp) return;
+  const pass = inp.value;
+
+  // Hash kontrolü — site-data.js SITE.login() ile birebir aynı mantık
+  // btoa("ekoloji2025") === "ZWtvbG9qaTIwMjU="
+  let ok = false;
+  try { ok = btoa(pass) === "ZWtvbG9qaTIwMjU="; } catch(e) { ok = false; }
+
+  if (ok) {
+    sessionStorage.setItem("ekoloji_admin_session", "1");
+    navAdminKapat();
+    location.href = "admin.html";
+  } else {
+    if (err) { err.style.display = "block"; }
+    inp.value = "";
+    inp.focus();
+  }
+}
+
+function navAdminKapat() {
+  const m = document.getElementById("navAdminModal");
+  if (m) m.remove();
+}
 
 /**
  * Global: nav'daki Çıkış butonu tarafından çağrılır.
