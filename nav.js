@@ -1,23 +1,50 @@
 /**
  * nav.js — Ortak navigasyonu her sayfaya enjekte eder.
- * Her sayfanın <body> başında <div id="nav-root"></div> olmalı.
- * Kullanım: <script src="../nav.js"></script> veya <script src="nav.js"></script>
+ * Admin oturumu sessionStorage'dan okunur; aktifse nav'da rozet gösterilir.
+ *
+ * SESSION_KEY: site-data.js → SITE.SESSION_KEY = "ekoloji_admin_session"
+ * ile birebir aynı anahtar kullanılır. İKİ AYRIDAN ASLA OLMASIN.
  */
 (function () {
-  const pages = {
-    "index.html":         "",
-    "ihlaller.html":      "İhlaller",
-    "madenler.html":      "İzleme Konuları",
-    "raporlar.html":      "Raporlar",
-    "ekoloji-suclari.html": "Ekoloji Suçları",
-    "etkinlikler.html":   "Etkinlikler",
-    "karsı-durus.html":   "Karşı Duruş",
-    "ekosistem.html":     "Ekosistem",
-    "admin.html":         "",
-  };
+  // ⚠️  Bu değer SITE.SESSION_KEY ile senkron kalmalı.
+  //     Değiştirirsen site-data.js'de de değiştir.
+  const SESSION_KEY = "ekoloji_admin_session";
+  const adminAktif  = sessionStorage.getItem(SESSION_KEY) === "1";
 
   const current = location.pathname.split("/").pop() || "index.html";
-  const isAdmin = typeof SITE !== "undefined" && SITE.isAdmin();
+
+  /* Admin butonu: giriş yapılmışsa rozet + çıkış linki, yoksa sade ADMIN linki */
+  const adminBtn = adminAktif
+    ? `<div style="display:flex;align-items:center;gap:8px;">
+         <a href="admin.html"
+            style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);
+                   text-decoration:none;letter-spacing:.08em;padding:5px 12px;
+                   border:1px solid rgba(45,158,107,.45);border-radius:3px;
+                   background:rgba(45,158,107,.08);display:flex;align-items:center;gap:6px;
+                   transition:all .2s;"
+            onmouseover="this.style.background='rgba(45,158,107,.18)'"
+            onmouseout="this.style.background='rgba(45,158,107,.08)'">
+           <span style="display:inline-block;width:6px;height:6px;border-radius:50%;
+                        background:var(--bright);box-shadow:0 0 6px var(--bright);"></span>
+           ADMIN
+         </a>
+         <button onclick="adminCikis()"
+            style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);
+                   letter-spacing:.06em;padding:5px 10px;border:1px solid rgba(232,92,42,.25);
+                   border-radius:3px;background:transparent;cursor:pointer;transition:all .2s;"
+            onmouseover="this.style.color='var(--warn)';this.style.borderColor='rgba(232,92,42,.5)'"
+            onmouseout="this.style.color='var(--muted)';this.style.borderColor='rgba(232,92,42,.25)'">
+           Çıkış
+         </button>
+       </div>`
+    : `<a href="admin.html"
+          style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
+                 text-decoration:none;letter-spacing:.08em;padding:6px 12px;
+                 border:1px solid rgba(45,158,107,.2);border-radius:3px;transition:all .2s;"
+          onmouseover="this.style.color='var(--bright)';this.style.borderColor='rgba(45,158,107,.4)'"
+          onmouseout="this.style.color='var(--muted)';this.style.borderColor='rgba(45,158,107,.2)'">
+        ADMIN
+       </a>`;
 
   const html = `
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -52,6 +79,25 @@
     </li>
 
     <li class="nav-item">
+      <a href="haberler.html" class="nav-link ${current === 'haberler.html' ? 'active' : ''}">Haberler
+        <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+      </a>
+      <div class="dropdown">
+        <div class="dropdown-label">Medya Takibi</div>
+        <a href="haberler.html"><span class="dot"></span>Tüm Haberler</a>
+        <a href="haberler.html?kat=Çevre İhlali"><span class="dot"></span>Çevre İhlali</a>
+        <a href="haberler.html?kat=Orman / Maden"><span class="dot"></span>Orman / Maden</a>
+        <a href="haberler.html?kat=HES / RES / Baraj"><span class="dot"></span>HES / RES / Baraj</a>
+        <a href="haberler.html?kat=İklim"><span class="dot"></span>İklim</a>
+        <hr>
+        <div class="dropdown-label">Direniş</div>
+        <a href="haberler.html?tur=sosyal"><span class="dot"></span>Sosyal Medya Takibi</a>
+        <a href="haberler.html?tur=nobet"><span class="dot"></span>Nöbetler &amp; Protestolar</a>
+        <a href="haberler.html?tur=direnis"><span class="dot"></span>Yerel Direnişler</a>
+      </div>
+    </li>
+
+    <li class="nav-item">
       <a href="raporlar.html" class="nav-link ${current === 'raporlar.html' ? 'active' : ''}">Raporlar
         <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
       </a>
@@ -72,7 +118,6 @@
         <hr>
         <div class="dropdown-label">Haberler &amp; Direniş</div>
         <a href="haberler.html"><span class="dot"></span>Basın Haberleri</a>
-        <a href="haberler.html?tur=sosyal"><span class="dot"></span>Sosyal Medya Takibi</a>
         <a href="haberler.html?tur=hareket"><span class="dot"></span>Halk Hareketleri</a>
         <a href="haberler.html?tur=nobet"><span class="dot"></span>Nöbetler &amp; Protestolar</a>
         <a href="haberler.html?tur=direnis"><span class="dot"></span>Yerel Direnişler</a>
@@ -117,7 +162,7 @@
     <div class="rec-indicator">
       <div class="rec-dot"></div> CANLI İZLEME
     </div>
-    <a href="admin.html" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-decoration:none;letter-spacing:.08em;padding:6px 12px;border:1px solid rgba(45,158,107,.2);border-radius:3px;transition:all .2s;" onmouseover="this.style.color='var(--bright)';this.style.borderColor='rgba(45,158,107,.4)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='rgba(45,158,107,.2)'">ADMIN</a>
+    ${adminBtn}
   </div>
 
   <div class="hamburger" onclick="document.querySelector('.nav-menu').style.display=document.querySelector('.nav-menu').style.display==='flex'?'none':'flex'">
@@ -129,3 +174,20 @@
   if (root) root.innerHTML = html;
   else document.body.insertAdjacentHTML("afterbegin", html);
 })();
+
+/**
+ * Global: nav'daki Çıkış butonu tarafından çağrılır.
+ * SITE.logout() tek yetkili temizleyicidir — doğrudan sessionStorage
+ * dokunulmaz, senkron kalmak için SITE üzerinden gidilir.
+ */
+function adminCikis() {
+  if (typeof SITE !== "undefined" && typeof SITE.logout === "function") {
+    SITE.logout(); // sessionStorage.removeItem("ekoloji_admin_session")
+  } else {
+    // SITE henüz yüklenmediyse fallback — asla eski anahtarları ekleme
+    sessionStorage.removeItem("ekoloji_admin_session");
+  }
+
+  // Admin panelindeyse login ekranına dön, değilse nav'ı güncelle
+  location.reload();
+}
