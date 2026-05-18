@@ -41,7 +41,21 @@
 .header-row h2{font-family:'Bebas Neue',sans-serif;font-size:34px;}
 .header-row .btn-group{display:flex;gap:8px;}
 
-/* ── Tarama Modal ── */
+.admin-badge{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  background:rgba(45,158,107,.15);
+  border:1px solid rgba(45,158,107,.3);
+  color:var(--bright);
+  padding:3px 10px;
+  border-radius:2px;
+  margin-left:12px;
+  vertical-align:middle;
+}
+
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;display:none;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
 .modal{background:var(--dark);border:1px solid rgba(45,158,107,.25);border-radius:8px;width:min(760px,95vw);max-height:85vh;display:flex;flex-direction:column;}
@@ -70,7 +84,7 @@
 <script src="site-data.js"></script>
 
 <!-- LOGIN -->
-<div id="loginScreen">
+<div id="loginScreen" style="display:none;">
   <div class="login-box">
     <h1>Admin Girişi</h1>
     <p>ekoloji-izleme.com içerik yönetim paneli</p>
@@ -91,7 +105,7 @@
 
   <div class="admin-wrap">
     <div class="header-row">
-      <h2>İçerik Yönetim Paneli</h2>
+      <h2>İçerik Yönetim Paneli <span class="admin-badge">● Admin</span></h2>
       <div class="btn-group">
         <button class="btn btn-primary" onclick="aciTaramaModal()">⚡ Şimdi Tara</button>
         <button class="btn btn-outline" onclick="doLogout()">Çıkış Yap</button>
@@ -176,7 +190,7 @@
           <label class="form-label">Açıklama</label>
           <textarea class="form-control" id="i-aciklama" placeholder="Detaylı açıklama"></textarea>
         </div>
-        <button class="btn btn-primary" onclick="addIhlal()">+ İhlal Kaydet</button>
+        <button class="btn btn-primary" id="ihlalKaydetBtn" onclick="addIhlal()">+ İhlal Kaydet</button>
       </div>
 
       <div class="admin-table-wrap">
@@ -291,8 +305,6 @@
       <button class="modal-kapat" onclick="kapat()">×</button>
     </div>
     <div class="modal-body">
-
-      <!-- GitHub Ayarları -->
       <div id="ghAyarAlan" style="margin-bottom:16px;padding:16px 18px;background:rgba(0,0,0,.25);border-radius:4px;border:1px solid rgba(45,158,107,.12);">
         <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">
           GitHub Bağlantısı
@@ -324,18 +336,13 @@
         <div style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(200,185,150,.4);line-height:1.6;">
           Token: <a href="https://github.com/settings/tokens/new?scopes=workflow" target="_blank"
             style="color:var(--bright);text-decoration:none;">github.com/settings/tokens</a>
-          → "workflow" scope seç → Fine-grained token da olur
+          → "workflow" scope seç
         </div>
       </div>
 
-      <!-- İki mod: GitHub Actions tetikle VEYA veriyi yenile -->
       <div style="display:flex;gap:8px;margin-bottom:14px;">
-        <button class="btn btn-primary" style="flex:1;" onclick="yapiTarama('actions')">
-          ⚡ GitHub Actions ile Tara
-        </button>
-        <button class="btn btn-outline" style="flex:1;" onclick="yapiTarama('reload')">
-          🔄 data.json Yenile
-        </button>
+        <button class="btn btn-primary" style="flex:1;" onclick="yapiTarama('actions')">⚡ GitHub Actions ile Tara</button>
+        <button class="btn btn-outline" style="flex:1;" onclick="yapiTarama('reload')">🔄 data.json Yenile</button>
       </div>
 
       <div class="tarama-log" id="taramaLog">Hazır. Yukarıdaki butonlardan birini seç.</div>
@@ -354,20 +361,122 @@
 </div>
 
 <script>
-/* ── Auth ── */
+/* ════════════════════════════════════════════════
+   SITE PATCH — sunucudaki site-data.js eski kalsa bile
+   eksik fonksiyonları burada tamamla.
+   ════════════════════════════════════════════════ */
+(function patchSITE() {
+  if (typeof SITE === "undefined") return;
+
+  // getList
+  if (typeof SITE.getList !== "function") {
+    SITE.getList = function(key) { return this.get(key) || []; };
+  }
+
+  // upsert
+  if (typeof SITE.upsert !== "function") {
+    SITE.upsert = function(collection, item) {
+      const list = this.getList(collection);
+      const idx  = list.findIndex(x => x.id === item.id);
+      if (idx >= 0) list[idx] = item; else list.unshift(item);
+      this.set(collection, list);
+    };
+  }
+
+  // delete
+  if (typeof SITE.delete !== "function") {
+    SITE.delete = function(collection, id) {
+      this.set(collection, this.getList(collection).filter(x => x.id !== id));
+    };
+  }
+
+  // bulkImport
+  if (typeof SITE.bulkImport !== "function") {
+    SITE.bulkImport = function(collection, items) {
+      const list      = this.getList(collection);
+      const mevcutIds = new Set(list.map(x => String(x.id)));
+      const yeniler   = items.filter(x => !mevcutIds.has(String(x.id)));
+      this.set(collection, [...yeniler, ...list]);
+      return yeniler.length;
+    };
+  }
+
+  // SESSION_KEY + login/logout/isAdmin — tek anahtar, tek değer
+  SITE.SESSION_KEY = "ekoloji_admin_session";
+
+  SITE.isAdmin = function() {
+    return sessionStorage.getItem(this.SESSION_KEY) === "1";
+  };
+
+  SITE.login = function(pass) {
+    const HASH = "ZWtvbG9qaTIwMjU="; // btoa("ekoloji2025")
+    if (btoa(pass) === HASH) {
+      sessionStorage.setItem(this.SESSION_KEY, "1");
+      return true;
+    }
+    return false;
+  };
+
+  SITE.logout = function() {
+    sessionStorage.removeItem(this.SESSION_KEY);
+    // eski anahtarları da temizle
+    sessionStorage.removeItem("ekoloji_admin");
+    sessionStorage.removeItem("ekoloji_admin_session"); // zaten aynı ama garanti
+  };
+})();
+</script>
+
+<script>
+/* ════════════════════════════════════════════════
+   OTURUM YÖNETİMİ
+   TEK ANAHTAR: "ekoloji_admin_session" === "1"
+   site-data.js → SITE.SESSION_KEY ile aynı.
+   ════════════════════════════════════════════════ */
+const SESSION_KEY = "ekoloji_admin_session";
+
+function sessionAktifMi() {
+  return sessionStorage.getItem(SESSION_KEY) === "1";
+}
+
+/* ════════════════════════════════════════════════
+   AUTH
+   ════════════════════════════════════════════════ */
 function doLogin() {
   const pass = document.getElementById("passInput").value;
+  const errEl = document.getElementById("loginErr");
+  errEl.style.display = "none";
+
+  if (typeof SITE === "undefined") {
+    errEl.textContent = "site-data.js yüklenemedi.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  // SITE.login() şifreyi doğrular ve SESSION_KEY'e "1" yazar
   if (SITE.login(pass)) {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    boot();
+    gosterAdminPanel();
   } else {
-    document.getElementById("loginErr").style.display = "block";
+    errEl.style.display = "block";
   }
 }
-function doLogout() { SITE.logout(); location.reload(); }
 
-/* ── Toast ── */
+function doLogout() {
+  // SITE.logout() tek yetkili temizleyici
+  if (typeof SITE !== "undefined" && typeof SITE.logout === "function") {
+    SITE.logout();
+  } else {
+    sessionStorage.removeItem(SESSION_KEY);
+  }
+  location.reload();
+}
+
+function gosterAdminPanel() {
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("adminPanel").style.display  = "block";
+  boot();
+}
+
+/* TOAST */
 function toast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -375,19 +484,23 @@ function toast(msg) {
   setTimeout(() => t.classList.remove("show"), 2800);
 }
 
-/* ── Tabs ── */
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
+/* TABS */
+function initTabs() {
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
+    });
   });
-});
+}
 
-/* ── Stats ── */
+/* ════════════════════════════════════════════════
+   STATS
+   ════════════════════════════════════════════════ */
 function updateStats() {
-  const counts = ['ihlaller','haberler','raporlar'].map(k => SITE.get(k).length);
+  const counts = ['ihlaller','haberler','raporlar'].map(k => SITE.getList(k).length);
   document.getElementById("statsRow").innerHTML = `
     <div class="stat-box"><div class="n">${counts[0]}</div><div class="l">Toplam İhlal</div></div>
     <div class="stat-box"><div class="n">${counts[1]}</div><div class="l">Haber / Kayıt</div></div>
@@ -395,9 +508,11 @@ function updateStats() {
   `;
 }
 
-/* ── Render tabloları ── */
+/* ════════════════════════════════════════════════
+   TABLO RENDER
+   ════════════════════════════════════════════════ */
 function renderIhlalTable() {
-  const data = SITE.get("ihlaller");
+  const data = SITE.getList("ihlaller");
   document.getElementById("ihlalerTbody").innerHTML = data.map(i => `
     <tr>
       <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
@@ -416,7 +531,7 @@ function renderIhlalTable() {
 }
 
 function renderHaberTable() {
-  const data = SITE.get("haberler");
+  const data = SITE.getList("haberler");
   document.getElementById("haberlerTbody").innerHTML = data.map(i => `
     <tr>
       <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
@@ -433,7 +548,7 @@ function renderHaberTable() {
 }
 
 function renderRaporTable() {
-  const data = SITE.get("raporlar");
+  const data = SITE.getList("raporlar");
   document.getElementById("raporlarTbody").innerHTML = data.map(i => `
     <tr>
       <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
@@ -448,27 +563,42 @@ function renderRaporTable() {
   `).join('') || '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:28px;">Henüz kayıt yok</td></tr>';
 }
 
-/* ── CRUD İhlal ── */
+/* ════════════════════════════════════════════════
+   CRUD — İHLAL
+   ════════════════════════════════════════════════ */
 function addIhlal() {
   const baslik = document.getElementById("i-baslik").value.trim();
   const konum  = document.getElementById("i-konum").value.trim();
-  if (!baslik || !konum) { toast("Başlık ve konum zorunludur."); return; }
-  SITE.upsert("ihlaller", {
-    id: SITE.nextId("ihlaller"),
-    baslik, konum,
+
+  if (!baslik) { toast("⚠ Başlık alanı zorunludur."); document.getElementById("i-baslik").focus(); return; }
+  if (!konum)  { toast("⚠ Konum alanı zorunludur.");  document.getElementById("i-konum").focus();  return; }
+
+  const latVal = parseFloat(document.getElementById("i-lat").value);
+  const lngVal = parseFloat(document.getElementById("i-lng").value);
+
+  const yeni = {
+    id:         SITE.nextId("ihlaller"),
+    baslik,
+    konum,
     kategori:   document.getElementById("i-kat").value,
     siddet:     document.getElementById("i-siddet").value,
-    lat:        parseFloat(document.getElementById("i-lat").value) || null,
-    lng:        parseFloat(document.getElementById("i-lng").value) || null,
+    lat:        isNaN(latVal) ? null : latVal,
+    lng:        isNaN(lngVal) ? null : lngVal,
     tarih:      document.getElementById("i-tarih").value || today(),
     kaynak:     document.getElementById("i-kaynak").value.trim(),
     kaynak_url: document.getElementById("i-kaynak-url").value.trim(),
     aciklama:   document.getElementById("i-aciklama").value.trim(),
-  });
+  };
+
+  SITE.upsert("ihlaller", yeni);
+
   ["i-baslik","i-konum","i-tarih","i-kaynak","i-kaynak-url","i-aciklama","i-lat","i-lng"].forEach(id => {
-    const el = document.getElementById(id); if(el) el.value="";
+    const el = document.getElementById(id); if(el) el.value = "";
   });
-  renderIhlalTable(); updateStats();
+  document.getElementById("i-tarih").value = today();
+
+  renderIhlalTable();
+  updateStats();
   toast("✓ İhlal kaydedildi.");
 }
 
@@ -479,12 +609,15 @@ function delIhlal(id) {
   toast("Silindi.");
 }
 
-/* ── CRUD Haber ── */
+/* ════════════════════════════════════════════════
+   CRUD — HABER
+   ════════════════════════════════════════════════ */
 function addHaber() {
   const baslik = document.getElementById("h-baslik").value.trim();
-  if (!baslik) { toast("Başlık zorunludur."); return; }
+  if (!baslik) { toast("⚠ Başlık zorunludur."); document.getElementById("h-baslik").focus(); return; }
+
   SITE.upsert("haberler", {
-    id: SITE.nextId("haberler"),
+    id:     SITE.nextId("haberler"),
     baslik,
     kaynak: document.getElementById("h-kaynak").value.trim(),
     tarih:  document.getElementById("h-tarih").value || today(),
@@ -492,9 +625,12 @@ function addHaber() {
     ozet:   document.getElementById("h-ozet").value.trim(),
     url:    document.getElementById("h-url").value.trim(),
   });
-  ["h-baslik","h-kaynak","h-tarih","h-ozet","h-url"].forEach(id => {
-    const el = document.getElementById(id); if(el) el.value="";
+
+  ["h-baslik","h-kaynak","h-ozet","h-url"].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = "";
   });
+  document.getElementById("h-tarih").value = today();
+
   renderHaberTable(); updateStats();
   toast("✓ Haber kaydedildi.");
 }
@@ -506,12 +642,15 @@ function delHaber(id) {
   toast("Silindi.");
 }
 
-/* ── CRUD Rapor ── */
+/* ════════════════════════════════════════════════
+   CRUD — RAPOR
+   ════════════════════════════════════════════════ */
 function addRapor() {
   const baslik = document.getElementById("r-baslik").value.trim();
-  if (!baslik) { toast("Başlık zorunludur."); return; }
+  if (!baslik) { toast("⚠ Başlık zorunludur."); document.getElementById("r-baslik").focus(); return; }
+
   SITE.upsert("raporlar", {
-    id: SITE.nextId("raporlar"),
+    id:     SITE.nextId("raporlar"),
     baslik,
     yil:    parseInt(document.getElementById("r-yil").value) || new Date().getFullYear(),
     yazar:  document.getElementById("r-yazar").value.trim(),
@@ -519,9 +658,11 @@ function addRapor() {
     ozet:   document.getElementById("r-ozet").value.trim(),
     dosya:  document.getElementById("r-dosya").value.trim(),
   });
+
   ["r-baslik","r-yil","r-yazar","r-ozet","r-dosya"].forEach(id => {
-    const el = document.getElementById(id); if(el) el.value="";
+    const el = document.getElementById(id); if(el) el.value = "";
   });
+
   renderRaporTable(); updateStats();
   toast("✓ Rapor kaydedildi.");
 }
@@ -533,29 +674,12 @@ function delRapor(id) {
   toast("Silindi.");
 }
 
-/* ── API Anahtarı ── */
-const API_KEY_STORAGE = "ekoloji_api_key";
-
-function apiKeyKaydet() {
-  const key = document.getElementById("apiKeyInput").value.trim();
-  if (!key.startsWith("sk-ant-")) {
-    document.getElementById("apiKeyDurum").innerHTML =
-      '<span style="color:var(--warn);">✗ Geçersiz format — sk-ant- ile başlamalı</span>';
-    return;
-  }
-  sessionStorage.setItem(API_KEY_STORAGE, key);
-  document.getElementById("apiKeyInput").value = "••••••••••••••••";
-  document.getElementById("apiKeyDurum").innerHTML =
-    '<span style="color:var(--bright);">✓ Kaydedildi</span>';
-}
-
-function apiKeyAl() {
-  return sessionStorage.getItem(API_KEY_STORAGE) || "";
-}
-
-/* ── GitHub Ayarları ── */
-const GH_REPO_KEY  = "ekoloji_gh_repo";
-const GH_TOKEN_KEY = "ekoloji_gh_token";
+/* ════════════════════════════════════════════════
+   GITHUB AYARLARI
+   ════════════════════════════════════════════════ */
+const GH_REPO_KEY     = "ekoloji_gh_repo";
+const GH_TOKEN_KEY    = "ekoloji_gh_token";
+const GH_WORKFLOW_KEY = "ekoloji_gh_workflow";
 
 function ghAyarKaydet() {
   const repo     = document.getElementById("ghRepo").value.trim();
@@ -564,7 +688,7 @@ function ghAyarKaydet() {
   if (!repo || !token) { document.getElementById("ghAyarDurum").textContent = "Repo ve token zorunlu."; return; }
   sessionStorage.setItem(GH_REPO_KEY,  repo);
   sessionStorage.setItem(GH_TOKEN_KEY, token);
-  if (workflow) sessionStorage.setItem("ekoloji_gh_workflow", workflow);
+  if (workflow) sessionStorage.setItem(GH_WORKFLOW_KEY, workflow);
   document.getElementById("ghAyarDurum").innerHTML = '<span style="color:var(--bright);">✓ Kaydedildi</span>';
 }
 
@@ -575,7 +699,9 @@ function ghAyarAl() {
   };
 }
 
-/* ── Tarama Modal ── */
+/* ════════════════════════════════════════════════
+   TARAMA MODAL
+   ════════════════════════════════════════════════ */
 let _bulunanlar = [];
 
 function aciTaramaModal() {
@@ -586,14 +712,13 @@ function aciTaramaModal() {
   document.getElementById("seciliSayi").textContent = '0';
   document.getElementById("taramaModal").classList.add("open");
 
-  // Kaydedilmiş ayarları geri yükle
   const {repo, token} = ghAyarAl();
   if (repo)  document.getElementById("ghRepo").value  = repo;
   if (token) {
     document.getElementById("ghToken").value = "••••••••••••••••";
     document.getElementById("ghAyarDurum").innerHTML = '<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';
   }
-  const wf = sessionStorage.getItem("ekoloji_gh_workflow");
+  const wf = sessionStorage.getItem(GH_WORKFLOW_KEY);
   if (wf) document.getElementById("ghWorkflow").value = wf;
 }
 
@@ -601,17 +726,11 @@ function kapat() {
   document.getElementById("taramaModal").classList.remove("open");
 }
 
-/* ── Ana tarama fonksiyonu ── */
 async function yapiTarama(mod) {
   const logEl = document.getElementById("taramaLog");
   logEl.innerHTML = '';
+  function log(msg) { logEl.innerHTML += msg + '\n'; logEl.scrollTop = logEl.scrollHeight; }
 
-  function log(msg) {
-    logEl.innerHTML += msg + '\n';
-    logEl.scrollTop = logEl.scrollHeight;
-  }
-
-  /* ── Mod 1: data.json'u yeniden yükle, yeni kayıtları listele ── */
   if (mod === 'reload') {
     log('<span class="spinner"></span>data.json yükleniyor…');
     try {
@@ -619,80 +738,60 @@ async function yapiTarama(mod) {
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const data = await r.json();
 
-      // Mevcut ID'lerle karşılaştır
-      const mevcutIhlalIds = new Set(SITE.get("ihlaller").map(i => String(i.id)));
-      const mevcutHaberIds = new Set(SITE.get("haberler").map(i => String(i.id)));
-
-      const yeniIhlaller = (data.ihlaller||[]).filter(i => !mevcutIhlalIds.has(String(i.id)));
-      const yeniHaberler = (data.haberler||[]).filter(i => !mevcutHaberIds.has(String(i.id)));
+      const mevcutIhlalIds = new Set(SITE.getList("ihlaller").map(i => String(i.id)));
+      const mevcutHaberIds = new Set(SITE.getList("haberler").map(i => String(i.id)));
+      const yeniIhlaller   = (data.ihlaller||[]).filter(i => !mevcutIhlalIds.has(String(i.id)));
+      const yeniHaberler   = (data.haberler||[]).filter(i => !mevcutHaberIds.has(String(i.id)));
 
       _bulunanlar = [
-        ...yeniIhlaller.map(i => ({...i, tip:'ihlal', _kayit:i})),
-        ...yeniHaberler.map(i => ({...i, tip:'haber', _kayit:i})),
+        ...yeniIhlaller.map(i => ({...i, tip:'ihlal'})),
+        ...yeniHaberler.map(i => ({...i, tip:'haber'})),
       ];
 
       if (_bulunanlar.length === 0) {
-        log('<span class="ok">✓ data.json yüklendi — yeni kayıt bulunamadı (zaten güncel).</span>');
-        // Tarih bilgisini göster
-        if (data._meta?.guncelleme) {
-          const tarih = new Date(data._meta.guncelleme).toLocaleString('tr-TR');
-          log(`Son güncelleme: ${tarih}`);
-        }
+        log('<span class="ok">✓ data.json yüklendi — yeni kayıt bulunamadı.</span>');
+        if (data._meta?.guncelleme) log(`Son güncelleme: ${new Date(data._meta.guncelleme).toLocaleString('tr-TR')}`);
         return;
       }
-
       log(`<span class="ok">✓ ${_bulunanlar.length} yeni kayıt bulundu.</span>`);
       renderBulunanlar();
       document.getElementById("importBtn").disabled = false;
-
     } catch(e) {
       log(`<span class="warn">✗ Hata: ${e.message}</span>`);
-      log('data.json dosyası bulunamadı veya okunamadı.');
     }
     return;
   }
 
-  /* ── Mod 2: GitHub Actions workflow_dispatch ── */
-  // Her zaman önce input alanlarından oku, yoksa sessionStorage'a bak
   const repoInput  = document.getElementById("ghRepo").value.trim();
   const tokenInput = document.getElementById("ghToken").value.trim();
   const {repo: savedRepo, token: savedToken} = ghAyarAl();
-
   const gercekRepo  = repoInput  || savedRepo;
   const gercekToken = (tokenInput && !tokenInput.startsWith("•")) ? tokenInput : savedToken;
 
   if (!gercekRepo || !gercekToken) {
-    log('<span class="warn">✗ Repo ve token alanlarını doldurun, ardından tekrar deneyin.</span>');
-    log('Repo formatı: <strong>kullaniciadı/repo-adı</strong> &nbsp;·&nbsp; Token: ghp_ ile başlar');
+    log('<span class="warn">✗ Repo ve token alanlarını doldurun.</span>');
     return;
   }
 
-  // Her seferinde sessionStorage'a kaydet (bir sonraki açılışta hazır olsun)
   sessionStorage.setItem(GH_REPO_KEY,  gercekRepo);
   sessionStorage.setItem(GH_TOKEN_KEY, gercekToken);
 
   const [owner, repoName] = gercekRepo.split("/");
-  if (!owner || !repoName) {
-    log('<span class="warn">✗ Repo formatı hatalı. "kullanici/repo" formatında gir.</span>');
-    return;
-  }
+  if (!owner || !repoName) { log('<span class="warn">✗ Repo formatı hatalı.</span>'); return; }
 
   log(`<span class="spinner"></span>GitHub Actions tetikleniyor: <strong>${owner}/${repoName}</strong>`);
 
   try {
-    /* 0. Default branch'i öğren */
     const repoResp = await fetch(
       `https://api.github.com/repos/${owner}/${repoName}`,
       { headers: { "Authorization": `Bearer ${gercekToken}`, "Accept": "application/vnd.github+json" } }
     );
     if (!repoResp.ok) throw new Error(`Repo bilgisi alınamadı: HTTP ${repoResp.status}`);
-    const repoData   = await repoResp.json();
-    const defBranch  = repoData.default_branch || "main";
-    log(`Repo bulundu. Default branch: <strong>${defBranch}</strong>`);
+    const repoData  = await repoResp.json();
+    const defBranch = repoData.default_branch || "main";
+    log(`Repo bulundu. Branch: <strong>${defBranch}</strong>`);
 
-    /* 1. Workflow dispatch tetikle */
-    // Workflow dosya adı: önce input'tan al, yoksa update_data.yml dene, sonra guncelle.yml
-    const workflowDosyasi = sessionStorage.getItem("ekoloji_gh_workflow") || "update_data.yml";
+    const workflowDosyasi = sessionStorage.getItem(GH_WORKFLOW_KEY) || "update_data.yml";
     const dispatchResp = await fetch(
       `https://api.github.com/repos/${owner}/${repoName}/actions/workflows/${workflowDosyasi}/dispatches`,
       {
@@ -707,93 +806,57 @@ async function yapiTarama(mod) {
       }
     );
 
-    if (dispatchResp.status === 422) throw new Error(
-      `422 — Workflow tetiklenemedi. Olası nedenler:\n` +
-      `• guncelle.yml henüz repoya push edilmedi\n` +
-      `• Workflow dosyasında 'workflow_dispatch' trigger eksik\n` +
-      `• Actions sekmesinde workflow devre dışı bırakılmış`
-    );
-    if (dispatchResp.status === 401) throw new Error("GitHub token geçersiz veya süresi dolmuş.");
+    if (dispatchResp.status === 422) throw new Error("422 — Workflow tetiklenemedi. workflow_dispatch trigger eksik olabilir.");
+    if (dispatchResp.status === 401) throw new Error("GitHub token geçersiz.");
     if (dispatchResp.status === 403) throw new Error("Token'da 'workflow' yetkisi eksik.");
     if (!dispatchResp.ok) throw new Error(`GitHub API: HTTP ${dispatchResp.status}`);
 
     log('<span class="ok">✓ Workflow tetiklendi. Çalışması bekleniyor…</span>');
-    log('(GitHub Actions genellikle 1-3 dakika sürer)');
-
-    /* 2. Run'ı bul ve durumunu izle */
-    await new Promise(r => setTimeout(r, 4000));  // 4sn bekle — GitHub run'ı kaydetsin
+    await new Promise(r => setTimeout(r, 4000));
     const runId = await sonRunBul(owner, repoName, gercekToken, log);
-
-    if (runId) {
-      await runDurumIzle(owner, repoName, runId, gercekToken, log);
-    }
-
+    if (runId) await runDurumIzle(owner, repoName, runId, gercekToken, log);
   } catch(e) {
     log(`<span class="warn">✗ Hata: ${e.message}</span>`);
   }
 }
 
 async function sonRunBul(owner, repo, token, log) {
-  const wf = sessionStorage.getItem("ekoloji_gh_workflow") || "update_data.yml";
+  const wf = sessionStorage.getItem(GH_WORKFLOW_KEY) || "update_data.yml";
   try {
-    const r = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=3`,
-      { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" } }
-    );
+    const r    = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=3`,
+      { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" } });
     const data = await r.json();
-    const run = data.workflow_runs?.[0];
+    const run  = data.workflow_runs?.[0];
     if (!run) { log('<span class="warn">Run bulunamadı.</span>'); return null; }
-    log(`Run #${run.run_number} başladı → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);
+    log(`Run #${run.run_number} → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);
     return run.id;
-  } catch(e) {
-    log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`);
-    return null;
-  }
+  } catch(e) { log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`); return null; }
 }
 
 async function runDurumIzle(owner, repo, runId, token, log) {
-  const MAX_DENEME = 30;  // 30 × 6sn = 3 dakika
-  for (let i = 0; i < MAX_DENEME; i++) {
+  for (let i = 0; i < 30; i++) {
     await new Promise(r => setTimeout(r, 6000));
     try {
-      const r = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,
-        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" } }
-      );
+      const r   = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" } });
       const run = await r.json();
-      const status     = run.status;      // queued | in_progress | completed
-      const conclusion = run.conclusion;  // success | failure | cancelled | null
-
-      if (status === "completed") {
-        if (conclusion === "success") {
+      if (run.status === "completed") {
+        if (run.conclusion === "success") {
           log('<span class="ok">✓ Tarama tamamlandı! data.json güncellendi.</span>');
           log('→ Yeni verileri görmek için "data.json Yenile" butonuna bas.');
         } else {
-          log(`<span class="warn">✗ Workflow ${conclusion} ile bitti. GitHub Actions loglarını kontrol et.</span>`);
+          log(`<span class="warn">✗ Workflow ${run.conclusion} ile bitti.</span>`);
         }
         return;
       }
-      // Devam ediyorsa spinner güncelle
-      const gecon = Math.round((i + 1) * 6);
-      const son = document.getElementById("taramaLog");
-      const satirlar = son.innerHTML.split('\n');
-      // Son spinner satırını güncelle
-      const spinnerIdx = satirlar.findLastIndex(s => s.includes("spinner") || s.includes("saniye"));
-      const yeniSatir = `<span class="spinner"></span>Devam ediyor… (${gecon}sn)`;
-      if (spinnerIdx >= 0) satirlar[spinnerIdx] = yeniSatir;
-      else son.innerHTML += yeniSatir + '\n';
-      son.innerHTML = satirlar.join('\n');
-      son.scrollTop = son.scrollHeight;
-    } catch(e) {
-      log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);
-    }
+      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*6}sn)`);
+    } catch(e) { log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`); }
   }
-  log('<span class="warn">Zaman aşımı. GitHub Actions sayfasını manuel kontrol et.</span>');
+  log('<span class="warn">Zaman aşımı. GitHub Actions sayfasını kontrol et.</span>');
 }
 
 function renderBulunanlar() {
-  const el = document.getElementById("bulunanlar");
-  el.innerHTML = _bulunanlar.map((item, idx) => `
+  document.getElementById("bulunanlar").innerHTML = _bulunanlar.map((item, idx) => `
     <div class="bulunan-item">
       <input type="checkbox" id="b${idx}" checked onchange="sayiGuncelle()">
       <div class="bulunan-icerik">
@@ -812,19 +875,19 @@ function renderBulunanlar() {
 }
 
 function sayiGuncelle() {
-  const secili = document.querySelectorAll('#bulunanlar input:checked').length;
-  document.getElementById("seciliSayi").textContent = secili;
+  document.getElementById("seciliSayi").textContent =
+    document.querySelectorAll('#bulunanlar input:checked').length;
 }
 
 function tumunuSec() {
-  document.querySelectorAll('#bulunanlar input[type=checkbox]').forEach(cb => cb.checked=true);
+  document.querySelectorAll('#bulunanlar input[type=checkbox]').forEach(cb => cb.checked = true);
   sayiGuncelle();
 }
 
 function importSec() {
   const ihlaller = [], haberler = [];
   document.querySelectorAll('#bulunanlar input:checked').forEach(cb => {
-    const idx = parseInt(cb.id.replace('b',''));
+    const idx  = parseInt(cb.id.replace('b',''));
     const item = _bulunanlar[idx];
     if (!item) return;
     if (item.tip === 'ihlal') {
@@ -850,25 +913,34 @@ function importSec() {
   toast(`✓ ${ia} ihlal + ${ha} haber içe aktarıldı.`);
 }
 
-/* ── Yardımcılar ── */
+/* ════════════════════════════════════════════════
+   YARDIMCILAR
+   ════════════════════════════════════════════════ */
 function today() { return new Date().toISOString().slice(0,10); }
 
-async function boot() {
+function boot() {
   const t = today();
-  ["i-tarih","h-tarih"].forEach(id => { const el=document.getElementById(id); if(el) el.value=t; });
-  await SITE.ready();
+  ["i-tarih","h-tarih"].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = t;
+  });
+  initTabs();
   updateStats();
   renderIhlalTable();
   renderHaberTable();
   renderRaporTable();
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await SITE.ready();
-  if (SITE.isAdmin()) {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    boot();
+/* ════════════════════════════════════════════════
+   SAYFA YÜKLENME — tek kontrol noktası
+   sessionAktifMi() → SESSION_KEY === "1"
+   SITE.login() da aynı anahtara yazar.
+   Başka bypass yolu yok.
+   ════════════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+  if (sessionAktifMi()) {
+    gosterAdminPanel();
+  } else {
+    document.getElementById("loginScreen").style.display = "block";
   }
 });
 </script>
