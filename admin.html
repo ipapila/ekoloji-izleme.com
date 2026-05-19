@@ -117,19 +117,46 @@
           <div class="form-group">
             <label class="form-label">Kategori *</label>
             <select class="form-control" id="i-kat">
-              <option value="Maden">Maden & Taş Ocağı</option>
-              <option value="Orman">Orman</option>
-              <option value="Su Kirliliği">Su Kirliliği</option>
-              <option value="HES">HES & Nehir</option>
-              <option value="RES">RES & Enerji</option>
-              <option value="Kıyı">Kıyı & Deniz</option>
-              <option value="Tarım Arazisi">Tarım Arazisi</option>
-              <option value="Atık">Atık & Depolama</option>
-              <option value="Sanayi">Sanayi Bölgesi</option>
-              <option value="Kaçak Yapı">Kaçak Yapılaşma</option>
-              <option value="Su Hakkı">Su Hakkı</option>
-              <option value="Termik">Termik Santral</option>
-              <option value="Diğer">Diğer</option>
+              <optgroup label="── Ekolojik İhlaller ──">
+                <option value="Ekolojik İhlal">Ekolojik İhlal</option>
+                <option value="İklim Olayları">İklim Olayları</option>
+                <option value="Acele Kamulaştırma">Acele Kamulaştırma</option>
+                <option value="Kıyı İhlalleri">Kıyı İhlalleri</option>
+              </optgroup>
+              <optgroup label="── Enerji & Maden ──">
+                <option value="Maden Ocağı">Maden Ocağı</option>
+                <option value="Taş-Mermer Ocağı">Taş-Mermer Ocağı</option>
+                <option value="Termik Reaktör">Termik Reaktör</option>
+                <option value="HES">HES & Nehir Projeleri</option>
+                <option value="GES">GES & Güneş Enerjisi</option>
+                <option value="RES">RES & Rüzgar Enerjisi</option>
+                <option value="Nükleer Enerji">Nükleer Enerji</option>
+                <option value="Jeotermal">Jeotermal</option>
+              </optgroup>
+              <optgroup label="── Koruma Alanları ──">
+                <option value="Milli Park">Milli Park</option>
+                <option value="Özel Çevre Koruma Alanı">Özel Çevre Koruma Alanı</option>
+                <option value="Orman Alanı">Orman Alanı</option>
+                <option value="Sulak Alan">Sulak Alan</option>
+                <option value="Kültür Varlığı">Kültür Varlığı</option>
+              </optgroup>
+              <optgroup label="── Ekosistem & Topluluklar ──">
+                <option value="Nesli Tehlike Altında Türler">Nesli Tehlike Altında Türler</option>
+                <option value="Yaban Hayatı">Yaban Hayatı</option>
+                <option value="Bitki Örtüsü">Bitki Örtüsü</option>
+                <option value="Su Ekosistemleri">Su Ekosistemleri</option>
+                <option value="Çiftçi & Köylü Sorunları">Çiftçi & Köylü Sorunları</option>
+                <option value="Yerli Haklar">Yerli Haklar</option>
+                <option value="Balıkçı Toplulukları">Balıkçı Toplulukları</option>
+                <option value="Tarım Arazisi İhlali">Tarım Arazisi İhlali</option>
+                <option value="Su Hakkı">Su Hakkı</option>
+              </optgroup>
+              <optgroup label="── Diğer ──">
+                <option value="Sanayi Bölgesi">Sanayi Bölgesi</option>
+                <option value="Atık & Depolama">Atık & Depolama</option>
+                <option value="Kaçak Yapılaşma">Kaçak Yapılaşma</option>
+                <option value="Diğer">Diğer</option>
+              </optgroup>
             </select>
           </div>
           <div class="form-group">
@@ -629,7 +656,7 @@ function editKayit(col, id) {
     { label:"Başlık *",   id:"baslik",    val: item.baslik||"" },
     { label:"Konum *",    id:"konum",     val: item.konum||"" },
     { label:"Kategori",   id:"kategori",  val: item.kategori||"",
-      select:["Maden","HES","RES","GES","Termik","Orman","Kıyı","Su Kirliliği","Tarım Arazisi","Atık","Sanayi","Kaçak Yapı","Su Hakkı","Nükleer","Kamulaştırma","Diğer"] },
+      select:["Ekolojik İhlal","İklim Olayları","Acele Kamulaştırma","Kültür Varlığı","Milli Park","Özel Çevre Koruma Alanı","Maden Ocağı","Taş-Mermer Ocağı","Termik Reaktör","HES","GES","RES","Nükleer Enerji","Jeotermal","Orman Alanı","Sulak Alan","Kıyı İhlalleri","Nesli Tehlike Altında Türler","Yaban Hayatı","Bitki Örtüsü","Su Ekosistemleri","Çiftçi & Köylü Sorunları","Yerli Haklar","Balıkçı Toplulukları","Tarım Arazisi İhlali","Su Hakkı","Sanayi Bölgesi","Atık & Depolama","Kaçak Yapılaşma","Diğer"] },
     { label:"Şiddet",     id:"siddet",    val: item.siddet||"takipte",
       select:["kritik","orta","takipte"] },
     { label:"Tarih",      id:"tarih",     val: item.tarih||"", type:"date" },
