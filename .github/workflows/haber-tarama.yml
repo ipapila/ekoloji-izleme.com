@@ -45,8 +45,12 @@ jobs:
             echo "Değişiklik yok, commit atlanıyor."
           else
             git commit -m "🔄 Haber güncellemesi — $(date -u '+%Y-%m-%d %H:%M UTC')"
-            git push
-            echo "✓ Push tamamlandı."
+            # Çakışma olursa rebase ile çöz, 3 kez dene
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && echo "✓ Push tamamlandı." && break
+              echo "⚠ Push başarısız ($i/3), yeniden deneniyor..."
+              sleep 5
+            done
           fi
 
       - name: haberler.json'u Plesk sunucuya gönder
