@@ -171,7 +171,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 <div id="nav-root"></div>
 <script src="nav.js"></script>
 
-<!-- ══════════ TICKER (nav altı) ══════════ -->
+<!-- ══════════ TICKER (nav altı — index.html'e özgü, nav.js bunu algılayıp kendi ticker'ını göstermez) ══════════ -->
 <div class="ticker-bar">
   <div class="ticker-inner" id="tickerInner"></div>
 </div>
@@ -251,7 +251,8 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
       <div class="feature-name">Ekosistem İzleme</div>
       <p class="feature-desc">NASA FIRMS uydu yangın verileri, OSM ve koruma alanları veritabanıyla habitat değişimleri izleniyor.</p>
     </a>
-    <a href="karsı-durus.html" class="feature-card">
+    <!-- ✅ DEĞİŞTİ: karsi-durus.html → haberler.html?tur=direnis -->
+    <a href="haberler.html?tur=direnis" class="feature-card">
       <div class="feature-icon">✊</div><div class="feature-num">06</div>
       <div class="feature-name">Direniş Ağı</div>
       <p class="feature-desc">Yerel halk hareketleri, nöbetler ve protestolar belgeleniyor; dayanışma ağları görünür kılınıyor.</p>
@@ -374,7 +375,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
         <li><a href="raporlar.html">Raporlar</a></li>
         <li><a href="haberler.html">Haberler</a></li>
         <li><a href="raporlar.html?tur=Veri">Veri Setleri</a></li>
-        <li><a href="etkinlikler.html">Etkinlikler</a></li>
+        <!-- ✅ DEĞİŞTİ: etkinlikler.html linki kaldırıldı -->
       </ul>
     </div>
     <div class="footer-col">
@@ -498,7 +499,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 </div>
 
 <script>
-// ── Harita verisi (localStorage) ──
+// ── İstatistikler ──
 const ihlaller = SITE.get("ihlaller") || [];
 document.getElementById("statIhlal").textContent = ihlaller.length;
 
@@ -637,7 +638,7 @@ if (SITE.isAdmin()) {
     <div id="taramaLog" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);line-height:1.7;"></div>`;
 }
 
-// ── Ticker — son haberler ──
+// ── Ticker — index.html'e özgü (nav.js bu sayfada kendi ticker'ını göstermez) ──
 function tickerRender(haberler) {
   const silinen = JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]");
   const liste = haberler.filter(h => !silinen.includes(String(h.id))).slice(0, 12);
@@ -680,7 +681,7 @@ const reveals = document.querySelectorAll('.feature-card,.violation-item,.eco-ca
 const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:.08});
 reveals.forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition=`opacity .5s ease ${i*.06}s,transform .5s ease ${i*.06}s`;obs.observe(el);});
 
-// ══════════ MODAL SİSTEMİ ══════════
+// ── Modal sistemi ──
 function modalAc(tip) {
   const id = tip === 'ihlal' ? 'modalIhlal' : 'modalGonullu';
   const el = document.getElementById(id);
@@ -713,31 +714,16 @@ function ihlalGonder() {
   const aciklama = document.getElementById('ihlal_aciklama').value.trim();
   const ad       = document.getElementById('ihlal_ad').value.trim();
   const iletisim = document.getElementById('ihlal_iletisim').value.trim();
-
-  if (!konum || !kategori || !aciklama) {
-    alert('Lütfen zorunlu alanları (* işaretli) doldurun.');
-    return;
-  }
-
+  if (!konum || !kategori || !aciklama) { alert('Lütfen zorunlu alanları (* işaretli) doldurun.'); return; }
   const konu = encodeURIComponent('[EKOLOJİ İHLALİ] ' + kategori + ' — ' + konum);
   const govde = encodeURIComponent(
-    'EKOLOJİ İZLEME PLATFORMU — İHLAL BİLDİRİMİ\n' +
-    '─────────────────────────────────────\n\n' +
-    'Bildiren  : ' + (ad || 'Anonim') + '\n' +
-    'İletişim  : ' + (iletisim || 'Belirtilmedi') + '\n' +
-    'Konum     : ' + konum + '\n' +
-    'Kategori  : ' + kategori + '\n\n' +
-    'AÇIKLAMA:\n' + aciklama + '\n\n' +
-    '─────────────────────────────────────\n' +
-    'Gönderim : ' + new Date().toLocaleString('tr-TR') + '\n' +
-    'Kaynak   : ekoloji-izleme.com'
+    'EKOLOJİ İZLEME PLATFORMU — İHLAL BİLDİRİMİ\n─────────────────────────────────────\n\n' +
+    'Bildiren  : ' + (ad || 'Anonim') + '\nİletişim  : ' + (iletisim || 'Belirtilmedi') + '\n' +
+    'Konum     : ' + konum + '\nKategori  : ' + kategori + '\n\nAÇIKLAMA:\n' + aciklama + '\n\n' +
+    '─────────────────────────────────────\nGönderim : ' + new Date().toLocaleString('tr-TR') + '\nKaynak   : ekoloji-izleme.com'
   );
-
   window.location.href = 'mailto:ipapila@gmail.com?subject=' + konu + '&body=' + govde;
-  setTimeout(function() {
-    modalKapat('ihlal');
-    bildirimGoster('✓ E-posta istemciniz açıldı. Teşekkür ederiz!');
-  }, 600);
+  setTimeout(function() { modalKapat('ihlal'); bildirimGoster('✓ E-posta istemciniz açıldı. Teşekkür ederiz!'); }, 600);
 }
 
 function gonulluGonder() {
@@ -745,34 +731,18 @@ function gonulluGonder() {
   const eposta = document.getElementById('gonullu_eposta').value.trim();
   const bolge  = document.getElementById('gonullu_bolge').value.trim();
   const mesaj  = document.getElementById('gonullu_mesaj').value.trim();
-
-  if (!ad || !eposta) {
-    alert('Lütfen ad soyad ve e-posta alanlarını doldurun.');
-    return;
-  }
-
-  const secili = Array.from(document.querySelectorAll('#katki_alanlari input[type=checkbox]:checked'))
-    .map(cb => cb.value);
-
+  if (!ad || !eposta) { alert('Lütfen ad soyad ve e-posta alanlarını doldurun.'); return; }
+  const secili = Array.from(document.querySelectorAll('#katki_alanlari input[type=checkbox]:checked')).map(cb => cb.value);
   const konu = encodeURIComponent('[GÖNÜLLÜ BAŞVURUSU] ' + ad + (bolge ? ' — ' + bolge : ''));
   const govde = encodeURIComponent(
-    'EKOLOJİ İZLEME PLATFORMU — GÖNÜLLÜ BAŞVURUSU\n' +
-    '─────────────────────────────────────\n\n' +
-    'Ad Soyad  : ' + ad + '\n' +
-    'E-posta   : ' + eposta + '\n' +
-    'Bölge     : ' + (bolge || 'Belirtilmedi') + '\n' +
+    'EKOLOJİ İZLEME PLATFORMU — GÖNÜLLÜ BAŞVURUSU\n─────────────────────────────────────\n\n' +
+    'Ad Soyad  : ' + ad + '\nE-posta   : ' + eposta + '\nBölge     : ' + (bolge || 'Belirtilmedi') + '\n' +
     'Katkı     : ' + (secili.length ? secili.join(', ') : 'Belirtilmedi') + '\n\n' +
     (mesaj ? 'TANITIM:\n' + mesaj + '\n\n' : '') +
-    '─────────────────────────────────────\n' +
-    'Gönderim : ' + new Date().toLocaleString('tr-TR') + '\n' +
-    'Kaynak   : ekoloji-izleme.com'
+    '─────────────────────────────────────\nGönderim : ' + new Date().toLocaleString('tr-TR') + '\nKaynak   : ekoloji-izleme.com'
   );
-
   window.location.href = 'mailto:ipapila@gmail.com?subject=' + konu + '&body=' + govde;
-  setTimeout(function() {
-    modalKapat('gonullu');
-    bildirimGoster('✓ E-posta istemciniz açıldı. Başvurunuz için teşekkür ederiz!');
-  }, 600);
+  setTimeout(function() { modalKapat('gonullu'); bildirimGoster('✓ E-posta istemciniz açıldı. Başvurunuz için teşekkür ederiz!'); }, 600);
 }
 </script>
 </body>
