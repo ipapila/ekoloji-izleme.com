@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 
 REPO_OWNER = "ipapila"
-REPO_NAME  = "ekoloji-izleme"
+REPO_NAME  = "ekoloji-izleme.com"
 FILE_PATH  = "data.json"
 
 # ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
