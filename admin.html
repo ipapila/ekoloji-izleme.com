@@ -115,9 +115,9 @@
     <div class="stats-row" id="statsRow"></div>
 
     <div class="tab-bar">
-      <button class="tab active" data-tab="ihlaller">İhlaller <span id="ihlalSayac" style="font-size:9px;background:rgba(45,158,107,.2);padding:1px 6px;border-radius:2px;margin-left:4px;">—</span></button>
-      <button class="tab" data-tab="haberler">Haberler <span id="haberSayac" style="font-size:9px;background:rgba(45,158,107,.2);padding:1px 6px;border-radius:2px;margin-left:4px;">—</span></button>
-      <button class="tab" data-tab="raporlar">Raporlar <span id="raporSayac" style="font-size:9px;background:rgba(45,158,107,.2);padding:1px 6px;border-radius:2px;margin-left:4px;">—</span></button>
+      <button class="tab active" data-tab="ihlaller">İhlaller</button>
+      <button class="tab" data-tab="haberler">Haberler</button>
+      <button class="tab" data-tab="raporlar">Raporlar</button>
     </div>
 
     <!-- İHLALLER -->
@@ -190,6 +190,20 @@
           <label class="form-label">Açıklama</label>
           <textarea class="form-control" id="i-aciklama" placeholder="Detaylı açıklama"></textarea>
         </div>
+        <div class="form-group">
+          <label class="form-label">Fotoğraf</label>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--bright);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Fotoğraf Seç
+              <input type="file" id="i-foto" accept="image/*" style="display:none;" onchange="onFotoSec('i-foto','i-foto-url','i-foto-onizleme')">
+            </label>
+            <input class="form-control" id="i-foto-url" placeholder="veya fotoğraf URL'si girin" style="flex:1;min-width:200px;">
+          </div>
+          <div id="i-foto-onizleme" style="margin-top:8px;display:none;">
+            <img style="max-height:80px;border-radius:3px;border:1px solid rgba(45,158,107,.2);" alt="Önizleme">
+          </div>
+        </div>
         <button class="btn btn-primary" id="ihlalKaydetBtn" onclick="addIhlal()">+ İhlal Kaydet</button>
       </div>
 
@@ -236,6 +250,20 @@
           <label class="form-label">Orijinal URL</label>
           <input class="form-control" id="h-url" placeholder="https://...">
         </div>
+        <div class="form-group">
+          <label class="form-label">Fotoğraf (isteğe bağlı)</label>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Fotoğraf Seç
+              <input type="file" id="h-foto" accept="image/*" style="display:none;" onchange="onFotoSec('h-foto','h-foto-url','h-foto-onizleme')">
+            </label>
+            <input class="form-control" id="h-foto-url" placeholder="veya fotoğraf URL'si" style="flex:1;min-width:200px;">
+          </div>
+          <div id="h-foto-onizleme" style="margin-top:8px;display:none;">
+            <img style="max-height:80px;border-radius:3px;" alt="Önizleme">
+          </div>
+        </div>
         <button class="btn btn-primary" onclick="addHaber()">+ Haber Kaydet</button>
       </div>
 
@@ -279,8 +307,30 @@
           <textarea class="form-control" id="r-ozet" rows="6" placeholder="Rapor hakkında açıklama, bulgular, öneriler — detay sayfasında görünecek"></textarea>
         </div>
         <div class="form-group">
-          <label class="form-label">Dosya URL (PDF veya web)</label>
-          <input class="form-control" id="r-dosya" placeholder="https://... (PDF ise iframe ile gömülür)">
+          <label class="form-label">PDF Dosyası</label>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              PDF Seç &amp; Yükle
+              <input type="file" id="r-pdf-dosya" accept=".pdf,.doc,.docx" style="display:none;" onchange="pdfYukle(this)">
+            </label>
+            <span id="r-pdf-durum" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);"></span>
+          </div>
+          <input class="form-control" id="r-dosya" placeholder="Dosya yüklendikten sonra URL otomatik girer — ya da manuel girin" style="margin-top:8px;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kapak Fotoğrafı (isteğe bağlı)</label>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Fotoğraf Seç
+              <input type="file" id="r-foto" accept="image/*" style="display:none;" onchange="onFotoSec('r-foto','r-foto-url','r-foto-onizleme')">
+            </label>
+            <input class="form-control" id="r-foto-url" placeholder="veya görsel URL'si" style="flex:1;min-width:200px;">
+          </div>
+          <div id="r-foto-onizleme" style="margin-top:8px;display:none;">
+            <img style="max-height:80px;border-radius:3px;" alt="Önizleme">
+          </div>
         </div>
         <button class="btn btn-primary" onclick="addRapor()">+ Rapor Kaydet</button>
       </div>
@@ -509,11 +559,10 @@ function updateStats() {
 }
 
 /* ════════════════════════════════════════════════
-   VERİ YÖNETİMİ — tek güvenilir silme mekanizması
-   ID'ler her yerde String'e normalize edilir.
+   VERİ YÖNETİMİ — Sil / Düzenle / Render
    ════════════════════════════════════════════════ */
 
-// Silinen ID listesi — localStorage'da kalıcı
+// Silinen ID listesi
 const SIL_KEY = {
   ihlaller: "ekoloji_ihlal_silinen",
   haberler:  "ekoloji_haber_silinen",
@@ -524,141 +573,326 @@ function silGetir(col) {
   catch { return new Set(); }
 }
 function silEkle(col, id) {
-  const s = silGetir(col);
-  s.add(String(id));
+  const s = silGetir(col); s.add(String(id));
   localStorage.setItem(SIL_KEY[col], JSON.stringify([...s]));
 }
 
-// In-memory birleşik veri (boot'ta doldurulur, sil günceller)
+// In-memory veri
 const _veri = { ihlaller: [], haberler: [], raporlar: [] };
 
-// Tek silme fonksiyonu — her 3 koleksiyon için
+// Evrensel sil
 function kayitSil(col, id) {
   if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
   const sid = String(id);
-  
-  // 1. In-memory'den çıkar
   _veri[col] = _veri[col].filter(x => String(x.id) !== sid);
-  
-  // 2. localStorage'dan çıkar (String karşılaştırma)
   SITE.set(col, SITE.getList(col).filter(x => String(x.id) !== sid));
-  
-  // 3. Silinen listesine ekle (JSON kaynaklı veriler için)
-  silEkle(col, sid);
-  
-  // 4. Tablo + istatistik güncelle
-  tabloRender(col);
-  updateStats();
+  silEkle(col, id);
+  tabloRender(col); updateStats();
   toast("✓ Kayıt silindi.");
 }
 
-// Tabloyu in-memory'den çiz
+// Eski silme fonksiyonları — uyumluluk
+function delIhlal(id) { kayitSil("ihlaller", id); }
+function delHaber(id) { kayitSil("haberler", id); }
+function delRapor(id) { kayitSil("raporlar", id); }
+
+// Render — tabloya yaz
+function renderIhlalTable()  { tabloRender("ihlaller"); }
+function renderHaberTable()  { tabloRender("haberler"); }
+function renderRaporTable()  { tabloRender("raporlar"); }
+
 function tabloRender(col) {
   const silinen = silGetir(col);
-  const data    = _veri[col].filter(x => !silinen.has(String(x.id)));
-
-  if      (col === "ihlaller") ihlalTbodyRender(data);
-  else if (col === "haberler") haberTbodyRender(data);
-  else if (col === "raporlar") raporTbodyRender(data);
-
-  // Tab sayacı
+  const data = (_veri[col].length ? _veri[col] : SITE.getList(col))
+                .filter(x => !silinen.has(String(x.id)));
+  if      (col === "ihlaller") _ihlalRender(data);
+  else if (col === "haberler") _haberRender(data);
+  else if (col === "raporlar") _raporRender(data);
   const ids = { ihlaller:"ihlalSayac", haberler:"haberSayac", raporlar:"raporSayac" };
-  const el  = document.getElementById(ids[col]);
+  const el = document.getElementById(ids[col]);
   if (el) el.textContent = data.length;
 }
 
-function ihlalTbodyRender(data) {
+function _ihlalRender(data) {
   document.getElementById("ihlalerTbody").innerHTML = data.length
     ? data.map(i => `<tr>
         <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-        <td style="max-width:240px;font-size:13px;">${i.baslik}</td>
+        <td style="max-width:200px;font-size:13px;">${i.baslik}</td>
         <td style="font-size:12px;">${i.konum||'—'}</td>
         <td style="font-size:12px;">${i.kategori||'—'}</td>
         <td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td>
         <td style="font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;">${i.tarih||'—'}</td>
         <td style="font-size:11px;">${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td>
-        <td><button class="del-btn" onclick="kayitSil('ihlaller','${i.id}')">Sil</button></td>
+        <td style="display:flex;gap:4px;flex-wrap:wrap;">
+          <button class="det-btn" onclick="editKayit('ihlaller','${i.id}')">Düzenle</button>
+          <button class="del-btn" onclick="kayitSil('ihlaller','${i.id}')">Sil</button>
+        </td>
       </tr>`).join('')
     : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
 }
 
-function haberTbodyRender(data) {
+function _haberRender(data) {
   document.getElementById("haberlerTbody").innerHTML = data.length
     ? data.map(i => `<tr>
         <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-        <td style="max-width:260px;font-size:13px;">${i.baslik}</td>
+        <td style="max-width:240px;font-size:13px;">${i.baslik}</td>
         <td style="font-size:12px;">${i.kaynak||'—'}</td>
         <td><span class="badge haber">${i.etiket||i.kategori||'Haber'}</span></td>
         <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
-        <td style="display:flex;gap:5px;">
+        <td style="display:flex;gap:4px;flex-wrap:wrap;">
           ${i.url?`<a class="det-btn" href="${i.url}" target="_blank" rel="noopener">↗</a>`:''}
+          <button class="det-btn" onclick="editKayit('haberler','${i.id}')">Düzenle</button>
           <button class="del-btn" onclick="kayitSil('haberler','${i.id}')">Sil</button>
         </td>
       </tr>`).join('')
     : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
 }
 
-function raporTbodyRender(data) {
+function _raporRender(data) {
   document.getElementById("raporlarTbody").innerHTML = data.length
     ? data.map(i => `<tr>
         <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-        <td style="max-width:320px;font-size:13px;">${i.baslik}</td>
+        <td style="max-width:280px;font-size:13px;">${i.baslik}</td>
         <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${i.yil||'—'}</td>
         <td><span class="badge haber">${i.etiket||'Genel'}</span></td>
-        <td style="display:flex;gap:5px;">
+        <td style="display:flex;gap:4px;flex-wrap:wrap;">
           ${i.dosya?`<a class="det-btn" href="${i.dosya}" target="_blank" rel="noopener">↗</a>`:''}
+          <button class="det-btn" onclick="editKayit('raporlar','${i.id}')">Düzenle</button>
           <button class="del-btn" onclick="kayitSil('raporlar','${i.id}')">Sil</button>
         </td>
       </tr>`).join('')
     : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
 }
 
-// Uyumluluk — eski çağrılar hâlâ çalışsın
-function renderIhlalTable()  { tabloRender("ihlaller"); }
-function renderHaberTable()  { tabloRender("haberler"); }
-function renderRaporTable()  { tabloRender("raporlar"); }
-
-// JSON'dan yükle + localStorage ile birleştir → _veri'ye yaz
+// Veri yükle — JSON + localStorage
 function tumVeriYukle() {
-  const silIhlal = silGetir("ihlaller");
-  const silHaber = silGetir("haberler");
+  const silI = silGetir("ihlaller");
+  const silH = silGetir("haberler");
+  const lI = SITE.getList("ihlaller").filter(x => !silI.has(String(x.id)));
+  const lH = SITE.getList("haberler").filter(x => !silH.has(String(x.id)));
+  _veri.raporlar = SITE.getList("raporlar").filter(x => !silGetir("raporlar").has(String(x.id)));
 
-  // localStorage'dan başla
-  const lIhlal = SITE.getList("ihlaller");
-  const lHaber = SITE.getList("haberler");
-  const lRapor = SITE.getList("raporlar");
-
-  // data.json → ihlaller
   fetch("data.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
-      const json = (d.ihlaller || []).filter(x => !silIhlal.has(String(x.id)));
-      const localIds = new Set(lIhlal.map(x => String(x.id)));
-      _veri.ihlaller = [
-        ...lIhlal,
-        ...json.filter(x => !localIds.has(String(x.id)))
-      ].sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
+      const json = (d.ihlaller||[]).filter(x => !silI.has(String(x.id)));
+      const ids  = new Set(lI.map(x => String(x.id)));
+      _veri.ihlaller = [...lI, ...json.filter(x => !ids.has(String(x.id)))]
+                        .sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
     })
-    .catch(() => { _veri.ihlaller = [...lIhlal]; })
+    .catch(() => { _veri.ihlaller = lI; })
     .finally(() => tabloRender("ihlaller"));
 
-  // haberler.json → haberler
   fetch("haberler.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
-      const json = (d.haberler || (Array.isArray(d) ? d : [])).filter(x => !silHaber.has(String(x.id)));
-      const localIds = new Set(lHaber.map(x => String(x.id)));
-      _veri.haberler = [
-        ...lHaber,
-        ...json.filter(x => !localIds.has(String(x.id)))
-      ].sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
+      const json = (d.haberler||(Array.isArray(d)?d:[])).filter(x => !silH.has(String(x.id)));
+      const ids  = new Set(lH.map(x => String(x.id)));
+      _veri.haberler = [...lH, ...json.filter(x => !ids.has(String(x.id)))]
+                        .sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
     })
-    .catch(() => { _veri.haberler = [...lHaber]; })
+    .catch(() => { _veri.haberler = lH; })
     .finally(() => tabloRender("haberler"));
 
-  // raporlar sadece localStorage
-  _veri.raporlar = [...lRapor];
   tabloRender("raporlar");
+}
+
+/* ════════════════════════════════════════════════
+   DÜZENLE MODAL
+   ════════════════════════════════════════════════ */
+function editKayit(col, id) {
+  const item = (_veri[col].length ? _veri[col] : SITE.getList(col))
+                .find(x => String(x.id) === String(id));
+  if (!item) { toast("⚠ Kayıt bulunamadı."); return; }
+
+  // Alanlar: her koleksiyon için farklı form
+  const alanlar = col === "ihlaller" ? [
+    { label:"Başlık *",   id:"baslik",    val: item.baslik||"" },
+    { label:"Konum *",    id:"konum",     val: item.konum||"" },
+    { label:"Kategori",   id:"kategori",  val: item.kategori||"",
+      select:["Maden","HES","RES","GES","Termik","Orman","Kıyı","Su Kirliliği","Tarım Arazisi","Atık","Sanayi","Kaçak Yapı","Su Hakkı","Nükleer","Kamulaştırma","Diğer"] },
+    { label:"Şiddet",     id:"siddet",    val: item.siddet||"takipte",
+      select:["kritik","orta","takipte"] },
+    { label:"Tarih",      id:"tarih",     val: item.tarih||"", type:"date" },
+    { label:"Enlem",      id:"lat",       val: item.lat||"",   type:"number", step:"0.00001" },
+    { label:"Boylam",     id:"lng",       val: item.lng||"",   type:"number", step:"0.00001" },
+    { label:"Kaynak",     id:"kaynak",    val: item.kaynak||"" },
+    { label:"Kaynak URL", id:"kaynak_url",val: item.kaynak_url||"", type:"url" },
+    { label:"Açıklama",   id:"aciklama",  val: item.aciklama||"", textarea:true },
+    { label:"Fotoğraf URL",id:"foto_url", val: item.foto_url||"", type:"url" },
+  ] : col === "haberler" ? [
+    { label:"Başlık *",  id:"baslik",  val: item.baslik||"" },
+    { label:"Kaynak",    id:"kaynak",  val: item.kaynak||"" },
+    { label:"Tarih",     id:"tarih",   val: item.tarih||"", type:"date" },
+    { label:"Etiket",    id:"etiket",  val: item.etiket||"Haber",
+      select:["Haber","İklim","Direniş","Hukuk","Nöbet","Sosyal Medya","STK"] },
+    { label:"Özet",      id:"ozet",    val: item.ozet||"", textarea:true },
+    { label:"URL",       id:"url",     val: item.url||"", type:"url" },
+    { label:"Fotoğraf URL",id:"foto_url",val: item.foto_url||"", type:"url" },
+  ] : [
+    { label:"Başlık *",  id:"baslik",  val: item.baslik||"" },
+    { label:"Yıl",       id:"yil",     val: item.yil||"", type:"number" },
+    { label:"Yazar",     id:"yazar",   val: item.yazar||"" },
+    { label:"Etiket",    id:"etiket",  val: item.etiket||"Genel",
+      select:["Maden","Orman","Su","Genel","Yıllık","Veri","Hukuk","Makale","Alan Raporu","Analiz"] },
+    { label:"Özet",      id:"ozet",    val: item.ozet||"", textarea:true },
+    { label:"Dosya URL", id:"dosya",   val: item.dosya||"", type:"url" },
+    { label:"Fotoğraf URL",id:"foto_url",val: item.foto_url||"", type:"url" },
+  ];
+
+  const form = alanlar.map(a => {
+    if (a.select) return `
+      <div class="form-group">
+        <label class="form-label">${a.label}</label>
+        <select class="form-control" id="edit_${a.id}">
+          ${a.select.map(o=>`<option ${o===a.val?'selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>`;
+    if (a.textarea) return `
+      <div class="form-group">
+        <label class="form-label">${a.label}</label>
+        <textarea class="form-control" id="edit_${a.id}" rows="4">${a.val}</textarea>
+      </div>`;
+    return `
+      <div class="form-group">
+        <label class="form-label">${a.label}</label>
+        <input class="form-control" id="edit_${a.id}" type="${a.type||'text'}"
+               ${a.step?`step="${a.step}"`:''}
+               value="${String(a.val).replace(/"/g,'&quot;')}">
+      </div>`;
+  }).join('');
+
+  const m = document.createElement("div");
+  m.id = "editModal";
+  m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;";
+  m.innerHTML = `
+    <div style="background:var(--deep);border:1px solid rgba(45,158,107,.3);border-radius:8px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;padding:32px;position:relative;">
+      <button onclick="document.getElementById('editModal').remove()"
+              style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">✕</button>
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--cream);margin:0 0 24px;">
+        Kaydı Düzenle <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">#${item.id}</span>
+      </h3>
+      ${form}
+      <div style="display:flex;gap:10px;margin-top:24px;">
+        <button onclick="editKaydet('${col}','${item.id}')"
+                style="flex:1;padding:12px;background:var(--accent);color:var(--dark);border:none;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;">
+          ✓ Kaydet
+        </button>
+        <button onclick="document.getElementById('editModal').remove()"
+                style="padding:12px 20px;background:transparent;color:var(--muted);border:1px solid rgba(45,158,107,.2);border-radius:4px;cursor:pointer;font-size:11px;">
+          İptal
+        </button>
+      </div>
+    </div>`;
+  m.addEventListener("click", e => { if(e.target===m) m.remove(); });
+  document.body.appendChild(m);
+}
+
+function editKaydet(col, id) {
+  const modal = document.getElementById("editModal");
+  if (!modal) return;
+
+  const al = (eid) => {
+    const el = modal.querySelector(`#edit_${eid}`);
+    return el ? el.value.trim() : "";
+  };
+
+  const mevcut = (_veri[col].length ? _veri[col] : SITE.getList(col))
+                  .find(x => String(x.id) === String(id)) || {};
+
+  let guncellendi;
+  if (col === "ihlaller") {
+    guncellendi = { ...mevcut,
+      baslik: al("baslik"), konum: al("konum"), kategori: al("kategori"),
+      siddet: al("siddet"), tarih: al("tarih"),
+      lat: parseFloat(al("lat")) || null, lng: parseFloat(al("lng")) || null,
+      kaynak: al("kaynak"), kaynak_url: al("kaynak_url"),
+      aciklama: al("aciklama"), foto_url: al("foto_url"),
+    };
+  } else if (col === "haberler") {
+    guncellendi = { ...mevcut,
+      baslik: al("baslik"), kaynak: al("kaynak"), tarih: al("tarih"),
+      etiket: al("etiket"), ozet: al("ozet"), url: al("url"), foto_url: al("foto_url"),
+    };
+  } else {
+    guncellendi = { ...mevcut,
+      baslik: al("baslik"), yil: parseInt(al("yil"))||mevcut.yil,
+      yazar: al("yazar"), etiket: al("etiket"),
+      ozet: al("ozet"), dosya: al("dosya"), foto_url: al("foto_url"),
+    };
+  }
+
+  if (!guncellendi.baslik) { toast("⚠ Başlık zorunludur."); return; }
+
+  SITE.upsert(col, guncellendi);
+  const idx = _veri[col].findIndex(x => String(x.id) === String(id));
+  if (idx >= 0) _veri[col][idx] = guncellendi;
+
+  modal.remove();
+  tabloRender(col);
+  toast("✓ Kayıt güncellendi.");
+}
+
+/* ════════════════════════════════════════════════
+   DOSYA YÜKLEME — Fotoğraf + PDF
+   ════════════════════════════════════════════════ */
+// Fotoğraf seçilince önizleme göster + URL alanını güncelle
+function onFotoSec(inputId, urlId, prevId) {
+  const file = document.getElementById(inputId)?.files?.[0];
+  if (!file) return;
+
+  // Önizleme
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById(prevId);
+    if (prev) {
+      prev.style.display = "block";
+      prev.querySelector("img").src = e.target.result;
+    }
+  };
+  reader.readAsDataURL(file);
+
+  // Sunucuya yükle
+  dosyaYukle(file, "img", url => {
+    const urlEl = document.getElementById(urlId);
+    if (urlEl) urlEl.value = url;
+  });
+}
+
+// PDF seçilince yükle
+function pdfYukle(input) {
+  const file = input?.files?.[0];
+  if (!file) return;
+  const durum = document.getElementById("r-pdf-durum");
+  if (durum) durum.textContent = "⏳ Yükleniyor…";
+
+  dosyaYukle(file, "pdf", url => {
+    const urlEl = document.getElementById("r-dosya");
+    if (urlEl) urlEl.value = url;
+    if (durum) durum.textContent = "✓ Yüklendi: " + file.name;
+  }, err => {
+    if (durum) durum.textContent = "⚠ Hata: " + err;
+  });
+}
+
+// Genel sunucu yükleme — upload.php
+function dosyaYukle(file, klasor, onSuccess, onError) {
+  const fd = new FormData();
+  fd.append("dosya", file);
+  fd.append("klasor", klasor); // "pdf" veya "img"
+  fd.append("secret", sessionStorage.getItem("ekoloji_admin_session") === "1" ? "admin" : "");
+
+  fetch("upload.php", { method:"POST", body: fd })
+    .then(r => r.ok ? r.json() : Promise.reject(r.status + " " + r.statusText))
+    .then(d => {
+      if (d.ok && d.url) { onSuccess(d.url); }
+      else { (onError||toast)("⚠ Yükleme başarısız: " + (d.hata||"bilinmeyen hata")); }
+    })
+    .catch(e => {
+      // upload.php yoksa veya hata varsa URL manuel girilebileceğini bildir
+      (onError||toast)("⚠ upload.php bağlantısı kurulamadı. URL'yi manuel girin.");
+      console.warn("Yükleme hatası:", e);
+    });
 }
 
 /* ════════════════════════════════════════════════
@@ -686,14 +920,17 @@ function addIhlal() {
     kaynak:     document.getElementById("i-kaynak").value.trim(),
     kaynak_url: document.getElementById("i-kaynak-url").value.trim(),
     aciklama:   document.getElementById("i-aciklama").value.trim(),
+    foto_url:   (document.getElementById("i-foto-url")?.value.trim()) || "",
   };
 
   SITE.upsert("ihlaller", yeni);
 
-  ["i-baslik","i-konum","i-tarih","i-kaynak","i-kaynak-url","i-aciklama","i-lat","i-lng"].forEach(id => {
+  ["i-baslik","i-konum","i-tarih","i-kaynak","i-kaynak-url","i-aciklama","i-lat","i-lng","i-foto-url"].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = "";
   });
   document.getElementById("i-tarih").value = today();
+  const op = document.getElementById("i-foto-onizleme");
+  if(op) op.style.display="none";
 
   _veri.ihlaller.unshift(yeni);
   tabloRender("ihlaller");
@@ -701,7 +938,12 @@ function addIhlal() {
   toast("✓ İhlal kaydedildi.");
 }
 
-
+function delIhlal(id) {
+  if (!confirm("Bu ihlali silmek istediğinizden emin misiniz?")) return;
+  SITE.delete("ihlaller", id);
+  renderIhlalTable(); updateStats();
+  toast("Silindi.");
+}
 
 /* ════════════════════════════════════════════════
    CRUD — HABER
@@ -710,28 +952,37 @@ function addHaber() {
   const baslik = document.getElementById("h-baslik").value.trim();
   if (!baslik) { toast("⚠ Başlık zorunludur."); document.getElementById("h-baslik").focus(); return; }
 
-  SITE.upsert("haberler", {
-    id:     SITE.nextId("haberler"),
+  const yeniH = {
+    id:       SITE.nextId("haberler"),
     baslik,
-    kaynak: document.getElementById("h-kaynak").value.trim(),
-    tarih:  document.getElementById("h-tarih").value || today(),
-    etiket: document.getElementById("h-etiket").value,
-    ozet:   document.getElementById("h-ozet").value.trim(),
-    url:    document.getElementById("h-url").value.trim(),
-  });
+    kaynak:   document.getElementById("h-kaynak").value.trim(),
+    tarih:    document.getElementById("h-tarih").value || today(),
+    etiket:   document.getElementById("h-etiket").value,
+    ozet:     document.getElementById("h-ozet").value.trim(),
+    url:      document.getElementById("h-url").value.trim(),
+    foto_url: (document.getElementById("h-foto-url")?.value.trim()) || "",
+  };
+  SITE.upsert("haberler", yeniH);
 
-  ["h-baslik","h-kaynak","h-ozet","h-url"].forEach(id => {
+  ["h-baslik","h-kaynak","h-ozet","h-url","h-foto-url"].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = "";
   });
   document.getElementById("h-tarih").value = today();
+  const hp = document.getElementById("h-foto-onizleme");
+  if(hp) hp.style.display="none";
 
-  _veri.haberler.unshift({...SITE.getList("haberler")[0]});
+  _veri.haberler.unshift(yeniH);
   tabloRender("haberler");
   updateStats();
   toast("✓ Haber kaydedildi.");
 }
 
-
+function delHaber(id) {
+  if (!confirm("Haberi silmek istediğinizden emin misiniz?")) return;
+  SITE.delete("haberler", id);
+  renderHaberTable(); updateStats();
+  toast("Silindi.");
+}
 
 /* ════════════════════════════════════════════════
    CRUD — RAPOR
@@ -740,19 +991,25 @@ function addRapor() {
   const baslik = document.getElementById("r-baslik").value.trim();
   if (!baslik) { toast("⚠ Başlık zorunludur."); document.getElementById("r-baslik").focus(); return; }
 
-  SITE.upsert("raporlar", {
-    id:     SITE.nextId("raporlar"),
+  const yeniR = {
+    id:       SITE.nextId("raporlar"),
     baslik,
-    yil:    parseInt(document.getElementById("r-yil").value) || new Date().getFullYear(),
-    yazar:  document.getElementById("r-yazar").value.trim(),
-    etiket: document.getElementById("r-etiket").value,
-    ozet:   document.getElementById("r-ozet").value.trim(),
-    dosya:  document.getElementById("r-dosya").value.trim(),
-  });
+    yil:      parseInt(document.getElementById("r-yil").value) || new Date().getFullYear(),
+    yazar:    document.getElementById("r-yazar").value.trim(),
+    etiket:   document.getElementById("r-etiket").value,
+    ozet:     document.getElementById("r-ozet").value.trim(),
+    dosya:    document.getElementById("r-dosya").value.trim(),
+    foto_url: (document.getElementById("r-foto-url")?.value.trim()) || "",
+  };
+  SITE.upsert("raporlar", yeniR);
 
-  ["r-baslik","r-yil","r-yazar","r-ozet","r-dosya"].forEach(id => {
+  ["r-baslik","r-yil","r-yazar","r-ozet","r-dosya","r-foto-url"].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = "";
   });
+  const rp = document.getElementById("r-foto-onizleme");
+  if(rp) rp.style.display="none";
+  const rd = document.getElementById("r-pdf-durum");
+  if(rd) rd.textContent="";
 
   _veri.raporlar = SITE.getList("raporlar");
   tabloRender("raporlar");
@@ -760,7 +1017,12 @@ function addRapor() {
   toast("✓ Rapor kaydedildi.");
 }
 
-
+function delRapor(id) {
+  if (!confirm("Raporu silmek istediğinizden emin misiniz?")) return;
+  SITE.delete("raporlar", id);
+  renderRaporTable(); updateStats();
+  toast("Silindi.");
+}
 
 /* ════════════════════════════════════════════════
    GITHUB AYARLARI
@@ -1023,8 +1285,13 @@ function boot() {
    Başka bypass yolu yok.
    ════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
-  sessionStorage.removeItem(SESSION_KEY);
-  document.getElementById("loginScreen").style.display = "block";
+  if (sessionAktifMi()) {
+    gosterAdminPanel();
+  } else {
+    document.getElementById("loginScreen").style.display = "block";
+  }
 });
 </script>
-</body></html>
+</body>
+</html></body>
+</html>
