@@ -888,18 +888,29 @@ const GH_DEFAULTS = {
 };
 
 function ghAyarKaydet() {
-  const repo     = document.getElementById("ghRepo").value.trim();
-  const token    = document.getElementById("ghToken").value.trim();
-  const workflow = document.getElementById("ghWorkflow").value.trim();
-  if (!repo || !token) {
-    document.getElementById("ghAyarDurum").textContent = "Repo ve token zorunlu.";
+  const repo        = document.getElementById("ghRepo").value.trim();
+  const tokenInput  = document.getElementById("ghToken").value.trim();
+  const workflow    = document.getElementById("ghWorkflow").value.trim();
+  const mevcutToken = localStorage.getItem(GH_TOKEN_KEY) || "";
+
+  if (!repo) {
+    document.getElementById("ghAyarDurum").textContent = "Repo zorunlu.";
     return;
   }
-  localStorage.setItem(GH_REPO_KEY,  repo);
-  localStorage.setItem(GH_TOKEN_KEY, token);
+
+  // Token alanı "••••" gösteriyorsa (maske) — mevcut kayıtlı tokeni koru
+  const gercekGiris = tokenInput && !tokenInput.startsWith("\u2022");
+  if (!gercekGiris && !mevcutToken) {
+    document.getElementById("ghAyarDurum").textContent = "Token zorunlu — lütfen girin.";
+    return;
+  }
+
+  localStorage.setItem(GH_REPO_KEY, repo);
+  if (gercekGiris) localStorage.setItem(GH_TOKEN_KEY, tokenInput);
   localStorage.setItem(GH_WORKFLOW_KEY, workflow || GH_DEFAULTS.workflow);
+
   document.getElementById("ghAyarDurum").innerHTML =
-    '<span style="color:var(--bright);">✓ Kaydedildi — bir daha sorulmaz</span>';
+    '<span style="color:var(--bright);">\u2713 Kaydedildi \u2014 bir daha sorulmaz</span>';
 }
 
 function ghAyarAl() {
