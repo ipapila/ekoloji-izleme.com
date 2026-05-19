@@ -12,17 +12,14 @@
 .login-box h1{font-family:'Bebas Neue',sans-serif;font-size:36px;margin-bottom:6px;}
 .login-box p{font-size:14px;color:var(--muted);margin-bottom:28px;}
 .error-msg{color:var(--warn);font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:10px;}
-
 .tab-bar{display:flex;gap:4px;border-bottom:1px solid rgba(45,158,107,.15);margin-bottom:36px;}
 .tab{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;}
 .tab:hover{color:var(--cream);}
 .tab.active{color:var(--bright);border-bottom-color:var(--bright);}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
-
 .form-card{background:var(--forest);border:1px solid rgba(45,158,107,.15);border-radius:6px;padding:32px 36px;margin-bottom:28px;}
 .form-card h3{font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:24px;color:var(--cream);}
-
 .admin-table-wrap{overflow-x:auto;}
 .admin-table{width:100%;border-collapse:collapse;font-size:13.5px;}
 .admin-table th{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid rgba(45,158,107,.15);text-align:left;white-space:nowrap;}
@@ -40,22 +37,7 @@
 .header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
 .header-row h2{font-family:'Bebas Neue',sans-serif;font-size:34px;}
 .header-row .btn-group{display:flex;gap:8px;}
-
-.admin-badge{
-  display:inline-block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:9px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  background:rgba(45,158,107,.15);
-  border:1px solid rgba(45,158,107,.3);
-  color:var(--bright);
-  padding:3px 10px;
-  border-radius:2px;
-  margin-left:12px;
-  vertical-align:middle;
-}
-
+.admin-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;background:rgba(45,158,107,.15);border:1px solid rgba(45,158,107,.3);color:var(--bright);padding:3px 10px;border-radius:2px;margin-left:12px;vertical-align:middle;}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;display:none;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
 .modal{background:var(--dark);border:1px solid rgba(45,158,107,.25);border-radius:8px;width:min(760px,95vw);max-height:85vh;display:flex;flex-direction:column;}
@@ -64,18 +46,15 @@
 .modal-kapat{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;}
 .modal-body{padding:24px 28px;overflow-y:auto;flex:1;}
 .modal-footer{padding:16px 28px;border-top:1px solid rgba(45,158,107,.12);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-
 .tarama-log{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);background:rgba(0,0,0,.3);border-radius:4px;padding:14px 16px;margin-bottom:18px;line-height:1.7;min-height:60px;}
 .tarama-log .ok{color:var(--bright);}
 .tarama-log .warn{color:var(--warn);}
-
 .bulunan-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(45,158,107,.07);}
 .bulunan-item:last-child{border-bottom:none;}
 .bulunan-item input[type=checkbox]{margin-top:3px;accent-color:var(--bright);}
 .bulunan-icerik{flex:1;}
 .bulunan-baslik{font-size:14px;color:var(--cream);margin-bottom:4px;}
 .bulunan-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;}
-
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(45,158,107,.3);border-top-color:var(--bright);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -206,7 +185,6 @@
         </div>
         <button class="btn btn-primary" id="ihlalKaydetBtn" onclick="addIhlal()">+ İhlal Kaydet</button>
       </div>
-
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead><tr><th>#</th><th>Başlık</th><th>Konum</th><th>Kat.</th><th>Şiddet</th><th>Tarih</th><th>Harita</th><th></th></tr></thead>
@@ -244,7 +222,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">İçerik / Özet</label>
-          <textarea class="form-control" id="h-ozet" rows="6" placeholder="Haber tam metni veya detaylı özet — detay sayfasında görünecek"></textarea>
+          <textarea class="form-control" id="h-ozet" rows="6" placeholder="Haber tam metni veya detaylı özet"></textarea>
         </div>
         <div class="form-group">
           <label class="form-label">Orijinal URL</label>
@@ -266,7 +244,6 @@
         </div>
         <button class="btn btn-primary" onclick="addHaber()">+ Haber Kaydet</button>
       </div>
-
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead><tr><th>#</th><th>Başlık</th><th>Kaynak</th><th>Etiket</th><th>Tarih</th><th></th></tr></thead>
@@ -304,7 +281,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">Özet / İçerik</label>
-          <textarea class="form-control" id="r-ozet" rows="6" placeholder="Rapor hakkında açıklama, bulgular, öneriler — detay sayfasında görünecek"></textarea>
+          <textarea class="form-control" id="r-ozet" rows="6" placeholder="Rapor hakkında açıklama"></textarea>
         </div>
         <div class="form-group">
           <label class="form-label">PDF Dosyası</label>
@@ -316,7 +293,7 @@
             </label>
             <span id="r-pdf-durum" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);"></span>
           </div>
-          <input class="form-control" id="r-dosya" placeholder="Dosya yüklendikten sonra URL otomatik girer — ya da manuel girin" style="margin-top:8px;">
+          <input class="form-control" id="r-dosya" placeholder="Dosya yüklendikten sonra URL otomatik girer" style="margin-top:8px;">
         </div>
         <div class="form-group">
           <label class="form-label">Kapak Fotoğrafı (isteğe bağlı)</label>
@@ -334,7 +311,6 @@
         </div>
         <button class="btn btn-primary" onclick="addRapor()">+ Rapor Kaydet</button>
       </div>
-
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead><tr><th>#</th><th>Başlık</th><th>Yıl</th><th>Etiket</th><th></th></tr></thead>
@@ -358,12 +334,12 @@
       <div id="ghAyarAlan" style="margin-bottom:16px;padding:16px 18px;background:rgba(0,0,0,.25);border-radius:4px;border:1px solid rgba(45,158,107,.12);">
         <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">
           GitHub Bağlantısı
-          <span style="color:rgba(200,185,150,.35);font-size:8px;"> — oturum süresince saklanır</span>
+          <span style="color:rgba(200,185,150,.35);font-size:8px;"> — tarayıcıda kalıcı saklanır</span>
         </div>
         <div class="form-row" style="margin-bottom:8px;">
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:9px;">Repo (kullanıcı/repo)</label>
-            <input class="form-control" id="ghRepo" placeholder="ipapila/ekoloji-izleme"
+            <input class="form-control" id="ghRepo" placeholder="ipapila/ekoloji-izleme.com"
                    style="font-family:'JetBrains Mono',monospace;font-size:12px;">
           </div>
           <div class="form-group" style="margin-bottom:0;">
@@ -375,7 +351,7 @@
         <div class="form-row" style="margin-bottom:8px;">
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:9px;">Workflow dosyası</label>
-            <input class="form-control" id="ghWorkflow" placeholder="update_data.yml"
+            <input class="form-control" id="ghWorkflow" placeholder="tara.yml"
                    style="font-family:'JetBrains Mono',monospace;font-size:12px;">
           </div>
         </div>
@@ -411,19 +387,11 @@
 </div>
 
 <script>
-/* ════════════════════════════════════════════════
-   SITE PATCH — sunucudaki site-data.js eski kalsa bile
-   eksik fonksiyonları burada tamamla.
-   ════════════════════════════════════════════════ */
 (function patchSITE() {
   if (typeof SITE === "undefined") return;
-
-  // getList
   if (typeof SITE.getList !== "function") {
     SITE.getList = function(key) { return this.get(key) || []; };
   }
-
-  // upsert
   if (typeof SITE.upsert !== "function") {
     SITE.upsert = function(collection, item) {
       const list = this.getList(collection);
@@ -432,15 +400,11 @@
       this.set(collection, list);
     };
   }
-
-  // delete
   if (typeof SITE.delete !== "function") {
     SITE.delete = function(collection, id) {
       this.set(collection, this.getList(collection).filter(x => x.id !== id));
     };
   }
-
-  // bulkImport
   if (typeof SITE.bulkImport !== "function") {
     SITE.bulkImport = function(collection, items) {
       const list      = this.getList(collection);
@@ -450,59 +414,41 @@
       return yeniler.length;
     };
   }
-
-  // SESSION_KEY + login/logout/isAdmin — tek anahtar, tek değer
   SITE.SESSION_KEY = "ekoloji_admin_session";
-
   SITE.isAdmin = function() {
     return sessionStorage.getItem(this.SESSION_KEY) === "1";
   };
-
   SITE.login = function(pass) {
-    const HASH = "ZWtvbG9qaTIwMjU="; // btoa("ekoloji2025")
+    const HASH = "ZWtvbG9qaTIwMjU=";
     if (btoa(pass) === HASH) {
       sessionStorage.setItem(this.SESSION_KEY, "1");
       return true;
     }
     return false;
   };
-
   SITE.logout = function() {
     sessionStorage.removeItem(this.SESSION_KEY);
-    // eski anahtarları da temizle
     sessionStorage.removeItem("ekoloji_admin");
-    sessionStorage.removeItem("ekoloji_admin_session"); // zaten aynı ama garanti
   };
 })();
 </script>
 
 <script>
-/* ════════════════════════════════════════════════
-   OTURUM YÖNETİMİ
-   TEK ANAHTAR: "ekoloji_admin_session" === "1"
-   site-data.js → SITE.SESSION_KEY ile aynı.
-   ════════════════════════════════════════════════ */
 const SESSION_KEY = "ekoloji_admin_session";
 
 function sessionAktifMi() {
   return sessionStorage.getItem(SESSION_KEY) === "1";
 }
 
-/* ════════════════════════════════════════════════
-   AUTH
-   ════════════════════════════════════════════════ */
 function doLogin() {
   const pass = document.getElementById("passInput").value;
   const errEl = document.getElementById("loginErr");
   errEl.style.display = "none";
-
   if (typeof SITE === "undefined") {
     errEl.textContent = "site-data.js yüklenemedi.";
     errEl.style.display = "block";
     return;
   }
-
-  // SITE.login() şifreyi doğrular ve SESSION_KEY'e "1" yazar
   if (SITE.login(pass)) {
     gosterAdminPanel();
   } else {
@@ -511,7 +457,6 @@ function doLogin() {
 }
 
 function doLogout() {
-  // SITE.logout() tek yetkili temizleyici
   if (typeof SITE !== "undefined" && typeof SITE.logout === "function") {
     SITE.logout();
   } else {
@@ -526,7 +471,6 @@ function gosterAdminPanel() {
   boot();
 }
 
-/* TOAST */
 function toast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -534,7 +478,6 @@ function toast(msg) {
   setTimeout(() => t.classList.remove("show"), 2800);
 }
 
-/* TABS */
 function initTabs() {
   document.querySelectorAll(".tab").forEach(tab => {
     tab.addEventListener("click", () => {
@@ -546,9 +489,6 @@ function initTabs() {
   });
 }
 
-/* ════════════════════════════════════════════════
-   STATS
-   ════════════════════════════════════════════════ */
 function updateStats() {
   const counts = ['ihlaller','haberler','raporlar'].map(k => SITE.getList(k).length);
   document.getElementById("statsRow").innerHTML = `
@@ -558,11 +498,6 @@ function updateStats() {
   `;
 }
 
-/* ════════════════════════════════════════════════
-   VERİ YÖNETİMİ — Sil / Düzenle / Render
-   ════════════════════════════════════════════════ */
-
-// Silinen ID listesi
 const SIL_KEY = {
   ihlaller: "ekoloji_ihlal_silinen",
   haberler:  "ekoloji_haber_silinen",
@@ -577,10 +512,8 @@ function silEkle(col, id) {
   localStorage.setItem(SIL_KEY[col], JSON.stringify([...s]));
 }
 
-// In-memory veri
 const _veri = { ihlaller: [], haberler: [], raporlar: [] };
 
-// Evrensel sil
 function kayitSil(col, id) {
   if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
   const sid = String(id);
@@ -591,15 +524,9 @@ function kayitSil(col, id) {
   toast("✓ Kayıt silindi.");
 }
 
-// Eski silme fonksiyonları — uyumluluk
 function delIhlal(id) { kayitSil("ihlaller", id); }
 function delHaber(id) { kayitSil("haberler", id); }
 function delRapor(id) { kayitSil("raporlar", id); }
-
-// Render — tabloya yaz
-function renderIhlalTable()  { tabloRender("ihlaller"); }
-function renderHaberTable()  { tabloRender("haberler"); }
-function renderRaporTable()  { tabloRender("raporlar"); }
 
 function tabloRender(col) {
   const silinen = silGetir(col);
@@ -608,9 +535,6 @@ function tabloRender(col) {
   if      (col === "ihlaller") _ihlalRender(data);
   else if (col === "haberler") _haberRender(data);
   else if (col === "raporlar") _raporRender(data);
-  const ids = { ihlaller:"ihlalSayac", haberler:"haberSayac", raporlar:"raporSayac" };
-  const el = document.getElementById(ids[col]);
-  if (el) el.textContent = data.length;
 }
 
 function _ihlalRender(data) {
@@ -664,7 +588,6 @@ function _raporRender(data) {
     : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
 }
 
-// Veri yükle — JSON + localStorage
 function tumVeriYukle() {
   const silI = silGetir("ihlaller");
   const silH = silGetir("haberler");
@@ -697,15 +620,11 @@ function tumVeriYukle() {
   tabloRender("raporlar");
 }
 
-/* ════════════════════════════════════════════════
-   DÜZENLE MODAL
-   ════════════════════════════════════════════════ */
 function editKayit(col, id) {
   const item = (_veri[col].length ? _veri[col] : SITE.getList(col))
                 .find(x => String(x.id) === String(id));
   if (!item) { toast("⚠ Kayıt bulunamadı."); return; }
 
-  // Alanlar: her koleksiyon için farklı form
   const alanlar = col === "ihlaller" ? [
     { label:"Başlık *",   id:"baslik",    val: item.baslik||"" },
     { label:"Konum *",    id:"konum",     val: item.konum||"" },
@@ -791,15 +710,12 @@ function editKayit(col, id) {
 function editKaydet(col, id) {
   const modal = document.getElementById("editModal");
   if (!modal) return;
-
   const al = (eid) => {
     const el = modal.querySelector(`#edit_${eid}`);
     return el ? el.value.trim() : "";
   };
-
   const mevcut = (_veri[col].length ? _veri[col] : SITE.getList(col))
                   .find(x => String(x.id) === String(id)) || {};
-
   let guncellendi;
   if (col === "ihlaller") {
     guncellendi = { ...mevcut,
@@ -821,67 +737,47 @@ function editKaydet(col, id) {
       ozet: al("ozet"), dosya: al("dosya"), foto_url: al("foto_url"),
     };
   }
-
   if (!guncellendi.baslik) { toast("⚠ Başlık zorunludur."); return; }
-
   SITE.upsert(col, guncellendi);
   const idx = _veri[col].findIndex(x => String(x.id) === String(id));
   if (idx >= 0) _veri[col][idx] = guncellendi;
-
   modal.remove();
   tabloRender(col);
   toast("✓ Kayıt güncellendi.");
 }
 
-/* ════════════════════════════════════════════════
-   DOSYA YÜKLEME — Fotoğraf + PDF
-   ════════════════════════════════════════════════ */
-// Fotoğraf seçilince önizleme göster + URL alanını güncelle
 function onFotoSec(inputId, urlId, prevId) {
   const file = document.getElementById(inputId)?.files?.[0];
   if (!file) return;
-
-  // Önizleme
   const reader = new FileReader();
   reader.onload = e => {
     const prev = document.getElementById(prevId);
-    if (prev) {
-      prev.style.display = "block";
-      prev.querySelector("img").src = e.target.result;
-    }
+    if (prev) { prev.style.display = "block"; prev.querySelector("img").src = e.target.result; }
   };
   reader.readAsDataURL(file);
-
-  // Sunucuya yükle
   dosyaYukle(file, "img", url => {
     const urlEl = document.getElementById(urlId);
     if (urlEl) urlEl.value = url;
   });
 }
 
-// PDF seçilince yükle
 function pdfYukle(input) {
   const file = input?.files?.[0];
   if (!file) return;
   const durum = document.getElementById("r-pdf-durum");
   if (durum) durum.textContent = "⏳ Yükleniyor…";
-
   dosyaYukle(file, "pdf", url => {
     const urlEl = document.getElementById("r-dosya");
     if (urlEl) urlEl.value = url;
     if (durum) durum.textContent = "✓ Yüklendi: " + file.name;
-  }, err => {
-    if (durum) durum.textContent = "⚠ Hata: " + err;
-  });
+  }, err => { if (durum) durum.textContent = "⚠ Hata: " + err; });
 }
 
-// Genel sunucu yükleme — upload.php
 function dosyaYukle(file, klasor, onSuccess, onError) {
   const fd = new FormData();
   fd.append("dosya", file);
-  fd.append("klasor", klasor); // "pdf" veya "img"
+  fd.append("klasor", klasor);
   fd.append("secret", sessionStorage.getItem("ekoloji_admin_session") === "1" ? "admin" : "");
-
   fetch("upload.php", { method:"POST", body: fd })
     .then(r => r.ok ? r.json() : Promise.reject(r.status + " " + r.statusText))
     .then(d => {
@@ -889,29 +785,21 @@ function dosyaYukle(file, klasor, onSuccess, onError) {
       else { (onError||toast)("⚠ Yükleme başarısız: " + (d.hata||"bilinmeyen hata")); }
     })
     .catch(e => {
-      // upload.php yoksa veya hata varsa URL manuel girilebileceğini bildir
       (onError||toast)("⚠ upload.php bağlantısı kurulamadı. URL'yi manuel girin.");
       console.warn("Yükleme hatası:", e);
     });
 }
 
-/* ════════════════════════════════════════════════
-   CRUD — İHLAL
-   ════════════════════════════════════════════════ */
 function addIhlal() {
   const baslik = document.getElementById("i-baslik").value.trim();
   const konum  = document.getElementById("i-konum").value.trim();
-
   if (!baslik) { toast("⚠ Başlık alanı zorunludur."); document.getElementById("i-baslik").focus(); return; }
   if (!konum)  { toast("⚠ Konum alanı zorunludur.");  document.getElementById("i-konum").focus();  return; }
-
   const latVal = parseFloat(document.getElementById("i-lat").value);
   const lngVal = parseFloat(document.getElementById("i-lng").value);
-
   const yeni = {
-    id:         SITE.nextId("ihlaller"),
-    baslik,
-    konum,
+    id: SITE.nextId("ihlaller"),
+    baslik, konum,
     kategori:   document.getElementById("i-kat").value,
     siddet:     document.getElementById("i-siddet").value,
     lat:        isNaN(latVal) ? null : latVal,
@@ -922,36 +810,21 @@ function addIhlal() {
     aciklama:   document.getElementById("i-aciklama").value.trim(),
     foto_url:   (document.getElementById("i-foto-url")?.value.trim()) || "",
   };
-
   SITE.upsert("ihlaller", yeni);
-
   ["i-baslik","i-konum","i-tarih","i-kaynak","i-kaynak-url","i-aciklama","i-lat","i-lng","i-foto-url"].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = "";
   });
   document.getElementById("i-tarih").value = today();
   const op = document.getElementById("i-foto-onizleme");
   if(op) op.style.display="none";
-
   _veri.ihlaller.unshift(yeni);
-  tabloRender("ihlaller");
-  updateStats();
+  tabloRender("ihlaller"); updateStats();
   toast("✓ İhlal kaydedildi.");
 }
 
-function delIhlal(id) {
-  if (!confirm("Bu ihlali silmek istediğinizden emin misiniz?")) return;
-  SITE.delete("ihlaller", id);
-  renderIhlalTable(); updateStats();
-  toast("Silindi.");
-}
-
-/* ════════════════════════════════════════════════
-   CRUD — HABER
-   ════════════════════════════════════════════════ */
 function addHaber() {
   const baslik = document.getElementById("h-baslik").value.trim();
   if (!baslik) { toast("⚠ Başlık zorunludur."); document.getElementById("h-baslik").focus(); return; }
-
   const yeniH = {
     id:       SITE.nextId("haberler"),
     baslik,
@@ -963,34 +836,20 @@ function addHaber() {
     foto_url: (document.getElementById("h-foto-url")?.value.trim()) || "",
   };
   SITE.upsert("haberler", yeniH);
-
   ["h-baslik","h-kaynak","h-ozet","h-url","h-foto-url"].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = "";
   });
   document.getElementById("h-tarih").value = today();
   const hp = document.getElementById("h-foto-onizleme");
   if(hp) hp.style.display="none";
-
   _veri.haberler.unshift(yeniH);
-  tabloRender("haberler");
-  updateStats();
+  tabloRender("haberler"); updateStats();
   toast("✓ Haber kaydedildi.");
 }
 
-function delHaber(id) {
-  if (!confirm("Haberi silmek istediğinizden emin misiniz?")) return;
-  SITE.delete("haberler", id);
-  renderHaberTable(); updateStats();
-  toast("Silindi.");
-}
-
-/* ════════════════════════════════════════════════
-   CRUD — RAPOR
-   ════════════════════════════════════════════════ */
 function addRapor() {
   const baslik = document.getElementById("r-baslik").value.trim();
   if (!baslik) { toast("⚠ Başlık zorunludur."); document.getElementById("r-baslik").focus(); return; }
-
   const yeniR = {
     id:       SITE.nextId("raporlar"),
     baslik,
@@ -1002,7 +861,6 @@ function addRapor() {
     foto_url: (document.getElementById("r-foto-url")?.value.trim()) || "",
   };
   SITE.upsert("raporlar", yeniR);
-
   ["r-baslik","r-yil","r-yazar","r-ozet","r-dosya","r-foto-url"].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = "";
   });
@@ -1010,49 +868,46 @@ function addRapor() {
   if(rp) rp.style.display="none";
   const rd = document.getElementById("r-pdf-durum");
   if(rd) rd.textContent="";
-
   _veri.raporlar = SITE.getList("raporlar");
-  tabloRender("raporlar");
-  updateStats();
+  tabloRender("raporlar"); updateStats();
   toast("✓ Rapor kaydedildi.");
-}
-
-function delRapor(id) {
-  if (!confirm("Raporu silmek istediğinizden emin misiniz?")) return;
-  SITE.delete("raporlar", id);
-  renderRaporTable(); updateStats();
-  toast("Silindi.");
 }
 
 /* ════════════════════════════════════════════════
    GITHUB AYARLARI
+   ✅ DEĞİŞİKLİK: sessionStorage → localStorage (kalıcı)
+                  Varsayılan repo ve workflow önceden dolu
    ════════════════════════════════════════════════ */
 const GH_REPO_KEY     = "ekoloji_gh_repo";
 const GH_TOKEN_KEY    = "ekoloji_gh_token";
 const GH_WORKFLOW_KEY = "ekoloji_gh_workflow";
 
+const GH_DEFAULTS = {
+  repo:     "ipapila/ekoloji-izleme.com",
+  workflow: "tara.yml",
+};
+
 function ghAyarKaydet() {
   const repo     = document.getElementById("ghRepo").value.trim();
   const token    = document.getElementById("ghToken").value.trim();
   const workflow = document.getElementById("ghWorkflow").value.trim();
-  if (!repo || !token) { document.getElementById("ghAyarDurum").textContent = "Repo ve token zorunlu."; return; }
-  sessionStorage.setItem(GH_REPO_KEY,  repo);
-  sessionStorage.setItem(GH_TOKEN_KEY, token);
-  if (workflow) sessionStorage.setItem(GH_WORKFLOW_KEY, workflow);
-  document.getElementById("ghAyarDurum").innerHTML = '<span style="color:var(--bright);">✓ Kaydedildi</span>';
+  if (!repo || !token) {
+    document.getElementById("ghAyarDurum").textContent = "Repo ve token zorunlu.";
+    return;
+  }
+  localStorage.setItem(GH_REPO_KEY,  repo);
+  localStorage.setItem(GH_TOKEN_KEY, token);
+  localStorage.setItem(GH_WORKFLOW_KEY, workflow || GH_DEFAULTS.workflow);
+  document.getElementById("ghAyarDurum").innerHTML =
+    '<span style="color:var(--bright);">✓ Kaydedildi — bir daha sorulmaz</span>';
 }
 
 function ghAyarAl() {
   return {
-    repo:  sessionStorage.getItem(GH_REPO_KEY)  || "",
-    token: sessionStorage.getItem(GH_TOKEN_KEY) || "",
+    repo:  localStorage.getItem(GH_REPO_KEY)  || GH_DEFAULTS.repo,
+    token: localStorage.getItem(GH_TOKEN_KEY) || "",
   };
 }
-
-/* ════════════════════════════════════════════════
-   TARAMA MODAL
-   ════════════════════════════════════════════════ */
-let _bulunanlar = [];
 
 function aciTaramaModal() {
   _bulunanlar = [];
@@ -1063,13 +918,16 @@ function aciTaramaModal() {
   document.getElementById("taramaModal").classList.add("open");
 
   const {repo, token} = ghAyarAl();
-  if (repo)  document.getElementById("ghRepo").value  = repo;
+  document.getElementById("ghRepo").value = repo;
+
   if (token) {
     document.getElementById("ghToken").value = "••••••••••••••••";
-    document.getElementById("ghAyarDurum").innerHTML = '<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';
+    document.getElementById("ghAyarDurum").innerHTML =
+      '<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';
   }
-  const wf = sessionStorage.getItem(GH_WORKFLOW_KEY);
-  if (wf) document.getElementById("ghWorkflow").value = wf;
+
+  const wf = localStorage.getItem(GH_WORKFLOW_KEY) || GH_DEFAULTS.workflow;
+  document.getElementById("ghWorkflow").value = wf;
 }
 
 function kapat() {
@@ -1087,17 +945,14 @@ async function yapiTarama(mod) {
       const r = await fetch('./data.json?v=' + Date.now());
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const data = await r.json();
-
       const mevcutIhlalIds = new Set(SITE.getList("ihlaller").map(i => String(i.id)));
       const mevcutHaberIds = new Set(SITE.getList("haberler").map(i => String(i.id)));
       const yeniIhlaller   = (data.ihlaller||[]).filter(i => !mevcutIhlalIds.has(String(i.id)));
       const yeniHaberler   = (data.haberler||[]).filter(i => !mevcutHaberIds.has(String(i.id)));
-
       _bulunanlar = [
         ...yeniIhlaller.map(i => ({...i, tip:'ihlal'})),
         ...yeniHaberler.map(i => ({...i, tip:'haber'})),
       ];
-
       if (_bulunanlar.length === 0) {
         log('<span class="ok">✓ data.json yüklendi — yeni kayıt bulunamadı.</span>');
         if (data._meta?.guncelleme) log(`Son güncelleme: ${new Date(data._meta.guncelleme).toLocaleString('tr-TR')}`);
@@ -1123,8 +978,8 @@ async function yapiTarama(mod) {
     return;
   }
 
-  sessionStorage.setItem(GH_REPO_KEY,  gercekRepo);
-  sessionStorage.setItem(GH_TOKEN_KEY, gercekToken);
+  localStorage.setItem(GH_REPO_KEY,  gercekRepo);
+  localStorage.setItem(GH_TOKEN_KEY, gercekToken);
 
   const [owner, repoName] = gercekRepo.split("/");
   if (!owner || !repoName) { log('<span class="warn">✗ Repo formatı hatalı.</span>'); return; }
@@ -1141,7 +996,7 @@ async function yapiTarama(mod) {
     const defBranch = repoData.default_branch || "main";
     log(`Repo bulundu. Branch: <strong>${defBranch}</strong>`);
 
-    const workflowDosyasi = sessionStorage.getItem(GH_WORKFLOW_KEY) || "update_data.yml";
+    const workflowDosyasi = localStorage.getItem(GH_WORKFLOW_KEY) || GH_DEFAULTS.workflow;
     const dispatchResp = await fetch(
       `https://api.github.com/repos/${owner}/${repoName}/actions/workflows/${workflowDosyasi}/dispatches`,
       {
@@ -1171,7 +1026,7 @@ async function yapiTarama(mod) {
 }
 
 async function sonRunBul(owner, repo, token, log) {
-  const wf = sessionStorage.getItem(GH_WORKFLOW_KEY) || "update_data.yml";
+  const wf = localStorage.getItem(GH_WORKFLOW_KEY) || GH_DEFAULTS.workflow;
   try {
     const r    = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=3`,
       { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" } });
@@ -1204,6 +1059,8 @@ async function runDurumIzle(owner, repo, runId, token, log) {
   }
   log('<span class="warn">Zaman aşımı. GitHub Actions sayfasını kontrol et.</span>');
 }
+
+let _bulunanlar = [];
 
 function renderBulunanlar() {
   document.getElementById("bulunanlar").innerHTML = _bulunanlar.map((item, idx) => `
@@ -1263,9 +1120,6 @@ function importSec() {
   toast(`✓ ${ia} ihlal + ${ha} haber içe aktarıldı.`);
 }
 
-/* ════════════════════════════════════════════════
-   YARDIMCILAR
-   ════════════════════════════════════════════════ */
 function today() { return new Date().toISOString().slice(0,10); }
 
 function boot() {
@@ -1278,12 +1132,6 @@ function boot() {
   tumVeriYukle();
 }
 
-/* ════════════════════════════════════════════════
-   SAYFA YÜKLENME — tek kontrol noktası
-   sessionAktifMi() → SESSION_KEY === "1"
-   SITE.login() da aynı anahtara yazar.
-   Başka bypass yolu yok.
-   ════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
   if (sessionAktifMi()) {
     gosterAdminPanel();
@@ -1293,5 +1141,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 </body>
-</html></body>
 </html>
