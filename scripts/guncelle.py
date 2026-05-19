@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ekoloji-izleme.com — Otomatik Güncelleme v3
-Birleştirilmiş kaynak listesi + kaynak URL veriye ekleniyor.
+ekoloji-izleme.com — Otomatik Güncelleme v4
+Haberler + Turkiye-katmanlar harita ihlalleri entegrasyonu.
 """
 
 import env_yukle  # .env dosyasını os.environ'a yükler
@@ -12,8 +12,11 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 
 REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
-REPO_NAME  = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")  # ← düzeltildi
+REPO_NAME  = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")
 FILE_PATH  = "data.json"
+
+# Turkiye-katmanlar harita reposu
+HARITA_RAW_URL = "https://raw.githubusercontent.com/ipapila/Turkiye-katmanlar/main/data.json"
 
 # ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
 KAYNAK_RSS = [
@@ -197,6 +200,111 @@ def update_remote_data(new_data, sha):
     else:
         print(f"❌ Hata {r.status_code}: {r.text[:300]}")
 
+
+# ─── HARİTA REPO İHLAL AKTARIMI ─────────────────────────────────────
+
+def harita_ihlalleri_cek(mevcut_idler):
+    """
+    ipapila/Turkiye-katmanlar data.json'dan ihlalleri çeker.
+    Harita modeli → ihlaller.html uyumlu modele dönüştürür.
+    Zaten mevcut olanları (mevcut_idler) atlar.
+    """
+    print(f"\n🗺  Harita reposundan ihlaller çekiliyor…")
+    try:
+        r = requests.get(HARITA_RAW_URL, timeout=20,
+                         headers={"User-Agent": "ekoloji-izleme-bot/3.0"})
+        r.raise_for_status()
+        harita_data = r.json()
+    except Exception as e:
+        print(f"  ⚠️  Harita verisi alınamadı: {e}")
+        return []
+
+    # data.json doğrudan liste olabilir veya dict içinde olabilir
+    if isinstance(harita_data, list):
+        kayitlar = harita_data
+    elif isinstance(harita_data, dict):
+        # Tüm olası anahtarları dene
+        kayitlar = (harita_data.get("features") or
+                    harita_data.get("ihlaller") or
+                    harita_data.get("data") or [])
+        # GeoJSON FeatureCollection ise özellikleri çıkar
+        if kayitlar and isinstance(kayitlar[0], dict) and "properties" in kayitlar[0]:
+            kayitlar = [f["properties"] for f in kayitlar if "properties" in f]
+    else:
+        kayitlar = []
+
+    yeni = []
+    atlan = 0
+    for k in kayitlar:
+        kid = str(k.get("id", ""))
+        if kid in mevcut_idler:
+            atlan += 1
+            continue
+
+        # Alan adı
+        ad = k.get("ad") or k.get("name") or k.get("baslik") or ""
+        if not ad:
+            continue
+
+        il    = k.get("il") or k.get("province") or ""
+        ilce  = k.get("ilce") or k.get("district") or ""
+        koord = k.get("koordinatlar") or {}
+        lat   = koord.get("lat") if isinstance(koord, dict) else None
+        lng   = koord.get("lng") if isinstance(koord, dict) else None
+
+        # Kategori → siddet eşlemesi
+        tip = k.get("tip") or k.get("kategori") or "Ekolojik İhlal"
+        siddet_map = {
+            "Ekolojik İhlal": "kritik",
+            "Acele Kamulaştırma": "kritik",
+            "Maden Ocağı": "kritik",
+            "Termik Reaktör": "kritik",
+            "Nükleer Enerji": "kritik",
+            "HES": "orta",
+            "RES": "orta",
+            "GES": "orta",
+            "Jeotermal": "orta",
+            "Taş-Mermer Ocağı": "orta",
+            "Kıyı İhlalleri": "orta",
+            "İklim Olayları": "orta",
+            "Orman Alanı": "takipte",
+            "Sulak Alan": "takipte",
+            "Milli Park": "takipte",
+            "Özel Çevre Koruma Alanı": "takipte",
+            "Kültür Varlığı": "takipte",
+        }
+        siddet = siddet_map.get(tip, "takipte")
+
+        ihlal = {
+            "id":        kid or f"h_{len(yeni)}_{datetime.date.today().strftime('%Y%m%d')}",
+            "baslik":    ad,
+            "ad":        ad,
+            "konum":     f"{il}{', ' + ilce if ilce else ''}".strip(", "),
+            "il":        il,
+            "ilce":      ilce,
+            "kategori":  tip,
+            "tip":       tip,
+            "siddet":    siddet,
+            "tarih":     k.get("eklenme") or datetime.date.today().isoformat(),
+            "lat":       lat,
+            "lng":       lng,
+            "koordinatlar": koord,
+            "alan_ha":   k.get("alan_ha") or 0,
+            "durum":     k.get("durum") or "Aktif",
+            "belge_no":  k.get("belge_no") or "",
+            "kaynak":    k.get("kaynak") or "Turkiye-katmanlar",
+            "kaynak_url": k.get("kaynak_link") or "",
+            "aciklama":  k.get("aciklama") or "",
+            "alt_kategori": k.get("alt_kategori") or "",
+            "kaynak_turu":  k.get("kaynak_turu") or "resmi",
+            "foto_url":  "",
+        }
+        yeni.append(ihlal)
+
+    print(f"  ✅ {len(yeni)} yeni ihlal aktarıldı, {atlan} zaten mevcut.")
+    return yeni
+
+
 # ─── YARDIMCILAR ────────────────────────────────────────────────────
 
 def html_temizle(text):
@@ -327,20 +435,27 @@ def main():
         data = {"ihlaller": [], "haberler": [], "raporlar": [], "_meta": {}}
         sha  = None
 
+    mevcut_ihlaller = data.get("ihlaller", [])
     mevcut_haberler = data.get("haberler", [])
     mevcut_urls     = {h.get("url", "") for h in mevcut_haberler}
-    print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal, "
-          f"{len(mevcut_haberler)} haber")
+    mevcut_idler    = {str(i.get("id", "")) for i in mevcut_ihlaller}
 
+    print(f"  Mevcut: {len(mevcut_ihlaller)} ihlal, {len(mevcut_haberler)} haber")
+
+    # ── 1. Harita reposundan ihlalleri aktar ──────────────────────
+    yeni_ihlaller = harita_ihlalleri_cek(mevcut_idler)
+    data["ihlaller"] = yeni_ihlaller + mevcut_ihlaller
+
+    # ── 2. Haberleri tara ────────────────────────────────────────
     print(f"\n🔍 RSS taranıyor… ({len(KAYNAK_RSS)} kaynak)")
-    yeni = []
+    yeni_haberler = []
     id_sayac = sonraki_id(mevcut_haberler)
     for kaynak in KAYNAK_RSS:
         for h in rss_cek(kaynak):
             if h["url"] not in mevcut_urls:
                 h["id"] = id_sayac
                 id_sayac += 1
-                yeni.append(h)
+                yeni_haberler.append(h)
                 mevcut_urls.add(h["url"])
 
     print(f"\n🌐 Web scraping… ({len(KAYNAK_WEB)} kaynak)")
@@ -349,14 +464,14 @@ def main():
             if h["url"] not in mevcut_urls:
                 h["id"] = id_sayac
                 id_sayac += 1
-                yeni.append(h)
+                yeni_haberler.append(h)
                 mevcut_urls.add(h["url"])
 
-    print(f"\n✅ {len(yeni)} yeni haber eklendi.")
-    data["haberler"] = yeni + mevcut_haberler
+    print(f"\n✅ {len(yeni_haberler)} yeni haber eklendi.")
+    data["haberler"] = yeni_haberler + mevcut_haberler
     data["_meta"] = {
         "guncelleme":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "kaynak":        "otomatik_tarama_v3",
+        "kaynak":        "otomatik_tarama_v4",
         "kaynak_sayisi": len(KAYNAK_RSS) + len(KAYNAK_WEB),
         "ihlal_sayisi":  len(data["ihlaller"]),
         "haber_sayisi":  len(data["haberler"]),
