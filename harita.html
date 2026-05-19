@@ -7,25 +7,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-  html, body {
-    margin: 0; padding: 0; height: 100%;
-    overflow: hidden;
+  /*
+   * ✅ DÜZELTİLDİ: Tam ekran + overflow:hidden → Normal sayfa yapısı
+   * Nav üstte sabit, harita içeriği gövde bölümünde render edilir.
+   * Ticker harita sayfasında gösterilmez (topbar zaten istatistik gösteriyor).
+   */
+
+  body {
+    margin: 0;
+    padding-top: 64px; /* sabit nav yüksekliği */
     background: var(--dark);
+    /* overflow:hidden kaldırıldı — sayfa normal akışta */
   }
 
-  /* Nav sabit üstte, harita altı tamamen dolduruyor */
-  #nav-root nav {
-    position: fixed !important;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-  }
-
+  /* Harita sarmalayıcı — normal blok eleman, flex ile iframe'i doldurur */
   .harita-wrap {
-    position: fixed;
-    top: 64px; /* nav yüksekliği */
-    left: 0; right: 0; bottom: 0;
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 64px); /* viewport - nav */
+    min-height: 500px;
   }
 
   /* Üst şerit — başlık + bilgi + butonlar */
@@ -143,6 +143,7 @@
     border: none;
     display: block;
     background: var(--forest);
+    min-height: 0; /* flex shrink için gerekli */
   }
 
   @media (max-width: 700px) {
@@ -154,11 +155,21 @@
 </head>
 <body>
 <script src="site-data.js"></script>
+
+<!--
+  ✅ DÜZELTİLDİ: Ticker suppressor
+  Harita sayfasında nav.js'in ticker'ını göstermiyoruz — topbar zaten istatistik içeriyor.
+  nav.js, #tickerInner varsa kendi ticker'ını gizler.
+-->
+<div id="tickerInner" style="display:none;"></div>
+
 <div id="nav-root"></div>
 <script src="nav.js"></script>
 
+<!-- ══════════ HARİTA GÖVDE ══════════ -->
 <div class="harita-wrap">
-  <!-- Üst şerit -->
+
+  <!-- Üst bilgi şeridi -->
   <div class="harita-topbar">
     <div class="harita-title">EKOLOJİ <span>HARİTASI</span></div>
 
@@ -196,7 +207,7 @@
     </a>
   </div>
 
-  <!-- Harita -->
+  <!-- Harita iframe -->
   <iframe
     id="haritaFrame"
     src="https://ekoloji-izleme.com/harita/index.html"
@@ -205,6 +216,7 @@
     sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
     allowfullscreen
   ></iframe>
+
 </div>
 
 <script>
