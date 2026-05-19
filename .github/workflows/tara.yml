@@ -1,0 +1,66 @@
+name: Haber Tarama
+
+on:
+  schedule:
+    - cron: '0 3,6,9,12,15,18 * * *'
+  workflow_dispatch:
+  workflow_call:           # ← tara.yml tarafından çağrılabilir
+
+jobs:
+  tara:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Repo'yu çek
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Bağımlılıkları yükle
+        run: pip install requests beautifulsoup4 feedparser lxml
+
+      - name: Tarayıcıyı çalıştır
+        run: |
+          if [ ! -f tarayici.py ]; then
+            echo "❌ tarayici.py bulunamadı."
+            exit 1
+          fi
+          python tarayici.py \
+            --cikti haberler.json \
+            --harita-url "https://ipapila.github.io/Turkiye-katmanlar/data/ihlaller.json"
+          echo "--- haberler.json içeriği (ilk 20 satır) ---"
+          head -20 haberler.json 2>/dev/null || echo "haberler.json oluşmadı!"
+
+      - name: haberler.json'u commit et ve push yap
+        run: |
+          git config user.name  "ekoloji-tarayici[bot]"
+          git config user.email "bot@ekoloji-izleme.com"
+          git add -f haberler.json
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok, commit atlanıyor."
+          else
+            git commit -m "🔄 Haber güncellemesi — $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+            echo "✓ Push tamamlandı."
+          fi
+
+      - name: Güncelleme özeti
+        run: |
+          if [ -f haberler.json ]; then
+            echo "✓ haberler.json güncellendi"
+            python3 -c "
+          import json
+          d = json.load(open('haberler.json'))
+          m = d.get('meta', {})
+          print(f\"  Toplam haber : {m.get('toplam', len(d.get('haberler',[])))}\")
+          print(f\"  Güncelleme   : {m.get('guncelleme','?')}\")
+          print(f\"  Harita kaydı : {m.get('harita_kayit_sayisi','?')}\")
+          "
+          else
+            echo "⚠ haberler.json oluşturulamadı"
+          fi
