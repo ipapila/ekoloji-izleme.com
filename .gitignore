@@ -1,0 +1,11 @@
+# Gizli bilgiler — git'e gitmez
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
