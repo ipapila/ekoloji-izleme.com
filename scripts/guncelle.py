@@ -1,20 +1,147 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ekoloji-izleme.com — Otomatik Güncelleme (v2 — hassas filtre)
-data.json'u GitHub'dan çeker, RSS'leri tarar, günceller.
+ekoloji-izleme.com — Otomatik Güncelleme v3
+Birleştirilmiş kaynak listesi + kaynak URL veriye ekleniyor.
+
+Twitter/X notu: X API artık ücretli (Basic $100/ay).
+  İzlenecek hashtag'ler: #çevreihlali #NöbetçiMadenciler #HSKOrmanKatliamı
+  Aktif etmek için: https://developer.twitter.com/en/portal/dashboard
 """
 
 import json, requests, os, base64, datetime, re
 import xml.etree.ElementTree as ET
+from bs4 import BeautifulSoup
 
 REPO_OWNER = "ipapila"
 REPO_NAME  = "ekoloji-izleme"
 FILE_PATH  = "data.json"
 
+# ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
+# Her kaynak: ad, url, etiket, genel (bool), web (ana sayfa URL'si)
+# genel=False → odaklı çevre kaynağı, eşik=1
+# genel=True  → genel haber sitesi, eşik=4 (sıkı filtre)
+
+KAYNAK_RSS = [
+    # ── ODAKLI ÇEVRE KAYNAKLARI ──────────────────────────────────
+    {
+        "ad": "Bianet Çevre", "etiket": "Haber", "genel": False,
+        "url": "https://bianet.org/topic/cevre/feed/rss",
+        "web": "https://bianet.org/topic/cevre",
+    },
+    {
+        "ad": "İklim Haber", "etiket": "İklim", "genel": False,
+        "url": "https://iklimhaber.org/feed/",
+        "web": "https://iklimhaber.org",
+    },
+    {
+        "ad": "Yeşil Gazete", "etiket": "Haber", "genel": False,
+        "url": "https://yesilgazete.org/feed/",
+        "web": "https://yesilgazete.org",
+    },
+    {
+        "ad": "350.org Türkiye", "etiket": "Direniş", "genel": False,
+        "url": "https://350.org/tr/feed/",
+        "web": "https://350.org/tr/",
+    },
+    {
+        "ad": "TEMA Vakfı", "etiket": "STK", "genel": False,
+        "url": "https://www.tema.org.tr/duyurular?format=feed",
+        "web": "https://www.tema.org.tr",
+    },
+    # ── GOOGLE NEWS — KONU ODAKLI SORGULAR ───────────────────────
+    {
+        "ad": "Google News", "etiket": "Çevre İhlali", "genel": False,
+        "url": "https://news.google.com/rss/search?q=çevre+ihlali+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+        "web": "https://news.google.com",
+    },
+    {
+        "ad": "Google News", "etiket": "Orman / Maden", "genel": False,
+        "url": "https://news.google.com/rss/search?q=orman+tahribi+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+        "web": "https://news.google.com",
+    },
+    {
+        "ad": "Google News", "etiket": "HES / RES / Baraj", "genel": False,
+        "url": "https://news.google.com/rss/search?q=HES+RES+baraj+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+        "web": "https://news.google.com",
+    },
+    {
+        "ad": "Google News", "etiket": "Kamulaştırma", "genel": False,
+        "url": "https://news.google.com/rss/search?q=acele+kamulaştırma+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+        "web": "https://news.google.com",
+    },
+    {
+        "ad": "Google News", "etiket": "ÇED Kararları", "genel": False,
+        "url": "https://news.google.com/rss/search?q=ÇED+maden+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
+        "web": "https://news.google.com",
+    },
+    {
+        "ad": "Google News", "etiket": "Orman / Maden", "genel": False,
+        "url": "https://news.google.com/rss/search?q=ağaç+katliamı+orman+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+        "web": "https://news.google.com",
+    },
+    {
+        "ad": "Google News", "etiket": "Çevre İhlali", "genel": False,
+        "url": "https://news.google.com/rss/search?q=sulak+alan+milli+park+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+        "web": "https://news.google.com",
+    },
+    # ── GENEL HABER SİTELERİ — ÇEVRE KATEGORİSİ ─────────────────
+    {
+        "ad": "Sözcü Çevre", "etiket": "Haber", "genel": True,
+        "url": "https://www.sozcu.com.tr/rss/cevre.xml",
+        "web": "https://www.sozcu.com.tr/cevre/",
+    },
+    {
+        "ad": "Cumhuriyet Çevre", "etiket": "Haber", "genel": True,
+        "url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",
+        "web": "https://www.cumhuriyet.com.tr/cevre",
+    },
+    {
+        "ad": "Gazete Duvar", "etiket": "Haber", "genel": True,
+        "url": "https://www.gazeteduvar.com.tr/feed",
+        "web": "https://www.gazeteduvar.com.tr",
+    },
+    {
+        "ad": "Bianet Genel", "etiket": "Haber", "genel": True,
+        "url": "https://bianet.org/biamag/feed/rss",
+        "web": "https://bianet.org",
+    },
+]
+
+# Web scraping ile çekilen kaynaklar (RSS'i olmayan siteler)
+KAYNAK_WEB = [
+    {
+        "ad": "Greenpeace TR", "etiket": "STK", "genel": False,
+        "url": "https://www.greenpeace.org/turkey/blog/",
+        "web": "https://www.greenpeace.org/turkey/",
+        "secici": ".post-title a, h2 a, .article-title a",
+        "ozet_secici": ".post-excerpt p, .article-excerpt",
+    },
+    {
+        "ad": "WWF Türkiye", "etiket": "STK", "genel": False,
+        "url": "https://www.wwf.org.tr/basin_bultenleri/",
+        "web": "https://www.wwf.org.tr",
+        "secici": ".press-release-title a, h3 a, h2 a",
+        "ozet_secici": ".press-release-excerpt, .entry-summary",
+    },
+    {
+        "ad": "Çevre Bakanlığı", "etiket": "Resmi", "genel": False,
+        "url": "https://www.csb.gov.tr/duyurular",
+        "web": "https://www.csb.gov.tr",
+        "secici": ".duyuru-item a, .news-item a, h3 a",
+        "ozet_secici": ".duyuru-ozet, .news-excerpt",
+    },
+    {
+        "ad": "Euronews TR", "etiket": "Haber", "genel": True,
+        "url": "https://tr.euronews.com/tag/cevre",
+        "web": "https://tr.euronews.com/tag/cevre",
+        "secici": ".article__title a, h3.article__title a, .media__title a",
+        "ozet_secici": ".article__summary, .media__summary",
+    },
+]
+
 # ─── FİLTRE SİSTEMİ ────────────────────────────────────────────────
 
-# Tek başına yeterli — kesinlikle ekoloji haberi
 YUKSEK_SINYAL = [
     "çevre ihlali", "çevre katliamı", "ÇED", "çed kararı", "çed raporu",
     "acele kamulaştırma", "taş ocağı", "taşocağı", "maden ocağı",
@@ -26,10 +153,9 @@ YUKSEK_SINYAL = [
     "atık depolama", "kaçak maden", "MAPEG", "EPDK kararı",
     "dere yatağı", "kıyı tahribatı", "ormana yapı",
     "resmî gazete maden", "resmî gazete çevre",
-    "orman yangını", "sera gazı emisyon",
+    "orman yangını", "sera gazı emisyon", "iklim krizi",
 ]
 
-# Bağlam gerektiren — birden fazlası gerekir (genel kaynaklarda)
 ORTA_SINYAL = [
     "çevre", "ekoloji", "orman", "maden", "baraj", "HES", "RES", "GES",
     "kamulaştırma", "doğa", "habitat", "kirlilik", "atık", "iklim",
@@ -40,90 +166,59 @@ ORTA_SINYAL = [
     "yaban hayat", "doğal yaşam", "kuş türü", "balık türü",
 ]
 
-# Güçlü negatif — varsa her zaman reddet
 GUCLU_NEGATIF = [
     "faiz", "borsa", "döviz kuru", "enflasyon rakam", "bütçe açığı",
     "seçim sonuç", "cumhurbaşkanı açıkladı", "milletvekili",
     "futbol", "maç sonucu", "şampiyon", "transfer haberi", "penaltı",
     "dizi oyuncu", "film izle", "magazin", "ünlü çift", "nişanlandı",
-    "moda koleksiyon", "kripto", "bitcoin fiyat", "nft",
-    "müzik listesi", "konser bilet", "yeni albüm",
+    "moda koleksiyon", "kripto", "bitcoin fiyat",
     "kalaşnikof", "silah eğitim", "muharebe", "hava saldırı",
-    "bakanlara erdoğan", "soru kabul",   # siyasi yazışmalar
-    "iran devrim",                        # uluslararası siyaset
-    "liseli kız", "öğrenci kavga",        # okul olayları
+    "iran devrim", "soru kabul", "bakanlara erdoğan",
+    "liseli kız", "öğrenci kavga",
 ]
 
-# Genel kaynaklara özel ek negatif
 GENEL_NEGATIF = [
     "ekonomi büyüme", "piyasa rallisi", "hisse senedi",
     "ihracat rekoru", "savunma sanayii", "operasyon düzenlendi",
     "turizm rekoru", "otel doluluk", "tatil fırsatı",
-    "sağlık haberi", "hastane", "ameliyat",
-    "üniversite sınav", "okul kayıt",
+    "hastane ameliyat", "üniversite sınav", "okul kayıt",
 ]
 
 
-def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = True) -> int:
+def ekoloji_puani(baslik, ozet="", genel=True):
     metin = (baslik + " " + ozet).lower()
-
-    # Güçlü negatif → 0
     if any(k.lower() in metin for k in GUCLU_NEGATIF):
         return 0
-    if genel_kaynak and any(k.lower() in metin for k in GENEL_NEGATIF):
+    if genel and any(k.lower() in metin for k in GENEL_NEGATIF):
         return 0
-
     puan = 0
-    baslik_lower = baslik.lower()
-
+    bl = baslik.lower()
     for k in YUKSEK_SINYAL:
-        if k.lower() in metin:
-            puan += 3
-        if k.lower() in baslik_lower:
-            puan += 2  # başlıkta geçmesi ekstra
-
+        kl = k.lower()
+        if kl in metin: puan += 3
+        if kl in bl:    puan += 2
     for k in ORTA_SINYAL:
-        if k.lower() in metin:
-            puan += 1
-
+        if k.lower() in metin: puan += 1
     return puan
 
 
-def ekoloji_mi(baslik: str, ozet: str = "", genel_kaynak: bool = True) -> bool:
-    puan = ekoloji_puani(baslik, ozet, genel_kaynak)
-    esik = 4 if genel_kaynak else 1
-    sonuc = puan >= esik
-    if not sonuc and puan > 0:
-        print(f"    ✗ düşük puan [{puan}/{esik}]: {baslik[:60]}")
-    return sonuc
+def ekoloji_mi(baslik, ozet="", genel=True):
+    return ekoloji_puani(baslik, ozet, genel) >= (4 if genel else 1)
 
-
-# ─── RSS KAYNAKLARI ─────────────────────────────────────────────────
-
-KAYNAK_RSS = [
-    # Odaklı çevre kaynakları — düşük eşik (1)
-    {"ad": "Bianet Çevre",  "url": "https://bianet.org/topic/cevre/feed/rss",     "etiket": "Haber",    "genel": False},
-    {"ad": "İklim Haber",   "url": "https://iklimhaber.org/feed/",                 "etiket": "İklim",    "genel": False},
-    {"ad": "Yeşil Gazete",  "url": "https://yesilgazete.org/feed/",                "etiket": "Haber",    "genel": False},
-    {"ad": "350.org TR",    "url": "https://350.org/tr/feed/",                     "etiket": "Direniş",  "genel": False},
-    # Genel haberler — yüksek eşik (4)
-    {"ad": "Bianet Genel",  "url": "https://bianet.org/biamag/feed/rss",           "etiket": "Haber",    "genel": True},
-    {"ad": "Gazete Duvar",  "url": "https://www.gazeteduvar.com.tr/feed",          "etiket": "Haber",    "genel": True},
-]
 
 # ─── GITHUB YARDIMCILARI ────────────────────────────────────────────
 
 def get_sha():
     token = os.environ.get("GITHUB_TOKEN")
     url   = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
-    resp  = requests.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=15)
-    return resp.json().get("sha") if resp.status_code == 200 else None
+    r = requests.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=15)
+    return r.json().get("sha") if r.status_code == 200 else None
 
 def get_remote_data():
     raw = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/{FILE_PATH}"
-    resp = requests.get(raw, timeout=15)
-    if resp.status_code == 200:
-        try:    return resp.json(), get_sha()
+    r = requests.get(raw, timeout=15)
+    if r.status_code == 200:
+        try:    return r.json(), get_sha()
         except: return None, None
     return None, None
 
@@ -133,15 +228,23 @@ def update_remote_data(new_data, sha):
         print("❌ GITHUB_TOKEN yok!")
         return
     url     = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
-    content = base64.b64encode(json.dumps(new_data, ensure_ascii=False, indent=2).encode()).decode()
-    payload = {"message": f"otomatik güncelleme {datetime.date.today()}", "content": content}
+    content = base64.b64encode(
+        json.dumps(new_data, ensure_ascii=False, indent=2).encode()
+    ).decode()
+    payload = {
+        "message": f"otomatik güncelleme {datetime.date.today()}",
+        "content": content,
+    }
     if sha:
         payload["sha"] = sha
-    resp = requests.put(url, headers={"Authorization": f"Bearer {token}"}, json=payload, timeout=20)
-    if resp.status_code in (200, 201):
-        print(f"✅ GitHub güncellendi — {len(new_data.get('ihlaller',[]))} ihlal, {len(new_data.get('haberler',[]))} haber.")
+    r = requests.put(url, headers={"Authorization": f"Bearer {token}"},
+                     json=payload, timeout=20)
+    if r.status_code in (200, 201):
+        print(f"✅ GitHub güncellendi — "
+              f"{len(new_data.get('ihlaller',[]))} ihlal, "
+              f"{len(new_data.get('haberler',[]))} haber.")
     else:
-        print(f"❌ Hata: {resp.status_code} — {resp.text[:300]}")
+        print(f"❌ Hata {r.status_code}: {r.text[:300]}")
 
 # ─── YARDIMCILAR ────────────────────────────────────────────────────
 
@@ -168,48 +271,101 @@ def rss_cek(kaynak):
     genel = kaynak.get("genel", True)
     esik  = 4 if genel else 1
     try:
-        resp = requests.get(kaynak["url"], timeout=20,
-                            headers={"User-Agent": "ekoloji-izleme-bot/2.0"})
-        resp.raise_for_status()
-        root = ET.fromstring(resp.content)
-        ns   = {"atom": "http://www.w3.org/2005/Atom"}
+        r = requests.get(kaynak["url"], timeout=20,
+                         headers={"User-Agent": "ekoloji-izleme-bot/2.0"})
+        r.raise_for_status()
+        root  = ET.fromstring(r.content)
+        ns    = {"atom": "http://www.w3.org/2005/Atom"}
         items = root.findall(".//item") or root.findall(".//atom:entry", ns)
 
-        kabul = reddedilen = 0
+        kabul = red = 0
         for item in items[:30]:
             def txt(tag):
                 el = item.find(tag)
                 return (el.text or "").strip() if el is not None else ""
 
             baslik = txt("title")
-            ozet   = html_temizle(txt("description") or txt("summary") or txt("content"))
+            ozet   = html_temizle(
+                txt("description") or txt("summary") or txt("content")
+            )
             url    = txt("link") or txt("guid")
-            tarih  = tarih_normalize(txt("pubDate") or txt("published") or txt("updated"))
+            tarih  = tarih_normalize(
+                txt("pubDate") or txt("published") or txt("updated")
+            )
 
             if not baslik or not url:
                 continue
-
-            puan = ekoloji_puani(baslik, ozet, genel)
-            if puan < esik:
-                reddedilen += 1
+            if ekoloji_puani(baslik, ozet, genel) < esik:
+                red += 1
                 continue
 
             haberler.append({
-                "baslik": baslik,
-                "kaynak": kaynak["ad"],
-                "tarih":  tarih,
-                "etiket": kaynak["etiket"],
-                "ozet":   ozet,
-                "url":    url,
+                "baslik":    baslik,
+                "kaynak":    kaynak["ad"],
+                "kaynak_web": kaynak["web"],   # ← kaynak ana sayfa URL'si
+                "tarih":     tarih,
+                "etiket":    kaynak["etiket"],
+                "ozet":      ozet,
+                "url":       url,
             })
             kabul += 1
 
-        print(f"  📡 {kaynak['ad']}: {kabul} kabul / {reddedilen} reddedildi (eşik={esik})")
+        print(f"  📡 {kaynak['ad']}: {kabul} kabul / {red} red (eşik={esik})")
     except Exception as e:
-        print(f"  ⚠️  {kaynak['ad']} hatası: {e}")
+        print(f"  ⚠️  {kaynak['ad']}: {e}")
     return haberler
 
-# ─── ANA ────────────────────────────────────────────────────────────
+# ─── WEB SCRAPING ────────────────────────────────────────────────────
+
+def web_cek(kaynak):
+    haberler = []
+    genel = kaynak.get("genel", False)
+    esik  = 4 if genel else 1
+    try:
+        r = requests.get(kaynak["url"], timeout=20,
+                         headers={"User-Agent": "ekoloji-izleme-bot/2.0"})
+        r.raise_for_status()
+        soup  = BeautifulSoup(r.text, "html.parser")
+        kabul = red = 0
+
+        for a in soup.select(kaynak["secici"])[:20]:
+            baslik = a.get_text(" ", strip=True)
+            if not baslik or len(baslik) < 10:
+                continue
+            href = a.get("href", "")
+            if not href:
+                continue
+            link = href if href.startswith("http") else kaynak["url"].rstrip("/") + "/" + href.lstrip("/")
+
+            ozet = ""
+            if kaynak.get("ozet_secici"):
+                parent = a.find_parent(["article", "div", "li"])
+                if parent:
+                    el = parent.select_one(kaynak["ozet_secici"])
+                    if el:
+                        ozet = el.get_text(" ", strip=True)[:300]
+
+            if ekoloji_puani(baslik, ozet, genel) < esik:
+                red += 1
+                continue
+
+            haberler.append({
+                "baslik":     baslik,
+                "kaynak":     kaynak["ad"],
+                "kaynak_web": kaynak["web"],   # ← kaynak ana sayfa URL'si
+                "tarih":      datetime.date.today().isoformat(),
+                "etiket":     kaynak["etiket"],
+                "ozet":       ozet,
+                "url":        link,
+            })
+            kabul += 1
+
+        print(f"  🌐 {kaynak['ad']}: {kabul} kabul / {red} red (eşik={esik})")
+    except Exception as e:
+        print(f"  ⚠️  {kaynak['ad']}: {e}")
+    return haberler
+
+# ─── ANA FONKSİYON ─────────────────────────────────────────────────
 
 def main():
     print("📥 data.json çekiliyor…")
@@ -222,31 +378,44 @@ def main():
 
     mevcut_haberler = data.get("haberler", [])
     mevcut_urls     = {h.get("url", "") for h in mevcut_haberler}
-    print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal, {len(mevcut_haberler)} haber")
+    print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal, "
+          f"{len(mevcut_haberler)} haber")
 
-    print("\n🔍 RSS taranıyor…")
-    yeni_haberler = []
+    # RSS
+    print(f"\n🔍 RSS taranıyor… ({len(KAYNAK_RSS)} kaynak)")
+    yeni = []
     id_sayac = sonraki_id(mevcut_haberler)
-
     for kaynak in KAYNAK_RSS:
         for h in rss_cek(kaynak):
             if h["url"] not in mevcut_urls:
                 h["id"] = id_sayac
                 id_sayac += 1
-                yeni_haberler.append(h)
+                yeni.append(h)
                 mevcut_urls.add(h["url"])
 
-    print(f"\n✅ {len(yeni_haberler)} yeni haber eklendi.")
-    data["haberler"] = yeni_haberler + mevcut_haberler
+    # Web scraping
+    print(f"\n🌐 Web scraping… ({len(KAYNAK_WEB)} kaynak)")
+    for kaynak in KAYNAK_WEB:
+        for h in web_cek(kaynak):
+            if h["url"] not in mevcut_urls:
+                h["id"] = id_sayac
+                id_sayac += 1
+                yeni.append(h)
+                mevcut_urls.add(h["url"])
+
+    print(f"\n✅ {len(yeni)} yeni haber eklendi.")
+    data["haberler"] = yeni + mevcut_haberler
     data["_meta"] = {
         "guncelleme":   datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "kaynak":       "otomatik_tarama_v2",
+        "kaynak":       "otomatik_tarama_v3",
+        "kaynak_sayisi": len(KAYNAK_RSS) + len(KAYNAK_WEB),
         "ihlal_sayisi": len(data["ihlaller"]),
         "haber_sayisi": len(data["haberler"]),
     }
 
     print("\n📤 GitHub'a yazılıyor…")
     update_remote_data(data, sha)
+
 
 if __name__ == "__main__":
     main()
