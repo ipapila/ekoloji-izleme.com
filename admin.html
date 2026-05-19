@@ -884,7 +884,7 @@ const GH_WORKFLOW_KEY = "ekoloji_gh_workflow";
 
 const GH_DEFAULTS = {
   repo:     "ipapila/ekoloji-izleme.com",
-  workflow: "tara.yml",
+  workflow: "update_data.yml",  // tara.yml değil — alt workflow direkt takip edilir
 };
 
 function ghAyarKaydet() {
@@ -914,9 +914,16 @@ function ghAyarKaydet() {
 }
 
 function ghAyarAl() {
+  const token = localStorage.getItem(GH_TOKEN_KEY) || "";
+  // Bozuk token kontrolü: bullet (•) veya ASCII dışı karakter varsa temizle
+  if (token && [...token].some(c => c.charCodeAt(0) > 127)) {
+    localStorage.removeItem(GH_TOKEN_KEY);
+    console.warn("Bozuk token temizlendi, lütfen token'ı tekrar girin.");
+    return { repo: localStorage.getItem(GH_REPO_KEY) || GH_DEFAULTS.repo, token: "" };
+  }
   return {
-    repo:  localStorage.getItem(GH_REPO_KEY)  || GH_DEFAULTS.repo,
-    token: localStorage.getItem(GH_TOKEN_KEY) || "",
+    repo:  localStorage.getItem(GH_REPO_KEY) || GH_DEFAULTS.repo,
+    token,
   };
 }
 
@@ -1058,8 +1065,8 @@ async function runDurumIzle(owner, repo, runId, token, log) {
       const run = await r.json();
       if (run.status === "completed") {
         if (run.conclusion === "success") {
-          log('<span class="ok">✓ Tarama tamamlandı! data.json güncellendi.</span>');
-          log('→ Yeni verileri görmek için "data.json Yenile" butonuna bas.');
+          log('<span class="ok">✓ Tarama tamamlandı! Yeni veriler yükleniyor…</span>');
+          await otomatikYenile(log);
         } else {
           log(`<span class="warn">✗ Workflow ${run.conclusion} ile bitti.</span>`);
         }
@@ -1069,6 +1076,40 @@ async function runDurumIzle(owner, repo, runId, token, log) {
     } catch(e) { log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`); }
   }
   log('<span class="warn">Zaman aşımı. GitHub Actions sayfasını kontrol et.</span>');
+}
+
+async function otomatikYenile(log) {
+  // GitHub'a yazdıktan sonra kısa bekle (CDN cache)
+  await new Promise(r => setTimeout(r, 3000));
+  log('<span class="spinner"></span>data.json güncellendi, yeni kayıtlar alınıyor…');
+  try {
+    const r = await fetch('./data.json?v=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+
+    const mevcutIhlalIds = new Set(SITE.getList("ihlaller").map(i => String(i.id)));
+    const mevcutHaberIds = new Set(SITE.getList("haberler").map(i => String(i.id)));
+    const yeniIhlaller   = (data.ihlaller||[]).filter(i => !mevcutIhlalIds.has(String(i.id)));
+    const yeniHaberler   = (data.haberler||[]).filter(i => !mevcutHaberIds.has(String(i.id)));
+
+    _bulunanlar = [
+      ...yeniIhlaller.map(i => ({...i, tip:'ihlal'})),
+      ...yeniHaberler.map(i => ({...i, tip:'haber'})),
+    ];
+
+    if (_bulunanlar.length === 0) {
+      log('<span class="ok">✓ Veriler güncellendi — bu taramada yeni kayıt yok.</span>');
+      if (data._meta?.guncelleme)
+        log('Son güncelleme: ' + new Date(data._meta.guncelleme).toLocaleString('tr-TR'));
+      return;
+    }
+
+    log(`<span class="ok">✓ ${yeniIhlaller.length} yeni ihlal + ${yeniHaberler.length} yeni haber bulundu.</span>`);
+    renderBulunanlar();
+    document.getElementById("importBtn").disabled = false;
+  } catch(e) {
+    log('<span class="warn">⚠ Otomatik yükleme başarısız: ' + e.message + ' — Manuel "data.json Yenile" butonunu dene.</span>');
+  }
 }
 
 let _bulunanlar = [];
