@@ -9,12 +9,12 @@ satırı yeterli. python-dotenv gerektirmez.
 import os
 from pathlib import Path
 
+
 def _yukle():
-    # Bu dosyanın bulunduğu dizin = proje kökü
-    env_dosyasi = Path(__file__).parent / ".env"
+    # scripts/ içinde olduğumuz için bir üst dizin = proje kökü
+    env_dosyasi = Path(__file__).parent.parent / ".env"
     if not env_dosyasi.exists():
         return  # .env yoksa sessizce geç (GitHub Actions kendi env var'larını kullanır)
-
     with env_dosyasi.open(encoding="utf-8") as f:
         for satir in f:
             satir = satir.strip()
@@ -26,5 +26,6 @@ def _yukle():
             # Zaten set edilmişse (örn. GitHub Actions) üzerine yazma
             if anahtar not in os.environ:
                 os.environ[anahtar] = deger
+
 
 _yukle()
