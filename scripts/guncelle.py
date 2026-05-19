@@ -3,53 +3,25 @@
 """
 ekoloji-izleme.com — Otomatik Güncelleme v3
 Birleştirilmiş kaynak listesi + kaynak URL veriye ekleniyor.
-
-Twitter/X notu: X API artık ücretli (Basic $100/ay).
-  İzlenecek hashtag'ler: #çevreihlali #NöbetçiMadenciler #HSKOrmanKatliamı
-  Aktif etmek için: https://developer.twitter.com/en/portal/dashboard
 """
+
+import env_yukle  # .env dosyasını os.environ'a yükler
 
 import json, requests, os, base64, datetime, re
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 
-REPO_OWNER = "ipapila"
-REPO_NAME  = "ekoloji-izleme.com"
+REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
+REPO_NAME  = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")  # ← düzeltildi
 FILE_PATH  = "data.json"
 
 # ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
-# Her kaynak: ad, url, etiket, genel (bool), web (ana sayfa URL'si)
-# genel=False → odaklı çevre kaynağı, eşik=1
-# genel=True  → genel haber sitesi, eşik=4 (sıkı filtre)
-
 KAYNAK_RSS = [
-    # ── ODAKLI ÇEVRE KAYNAKLARI ──────────────────────────────────
-    {
-        "ad": "Bianet Çevre", "etiket": "Haber", "genel": False,
-        "url": "https://bianet.org/topic/cevre/feed/rss",
-        "web": "https://bianet.org/topic/cevre",
-    },
     {
         "ad": "İklim Haber", "etiket": "İklim", "genel": False,
         "url": "https://iklimhaber.org/feed/",
         "web": "https://iklimhaber.org",
     },
-    {
-        "ad": "Yeşil Gazete", "etiket": "Haber", "genel": False,
-        "url": "https://yesilgazete.org/feed/",
-        "web": "https://yesilgazete.org",
-    },
-    {
-        "ad": "350.org Türkiye", "etiket": "Direniş", "genel": False,
-        "url": "https://350.org/tr/feed/",
-        "web": "https://350.org/tr/",
-    },
-    {
-        "ad": "TEMA Vakfı", "etiket": "STK", "genel": False,
-        "url": "https://www.tema.org.tr/duyurular?format=feed",
-        "web": "https://www.tema.org.tr",
-    },
-    # ── GOOGLE NEWS — KONU ODAKLI SORGULAR ───────────────────────
     {
         "ad": "Google News", "etiket": "Çevre İhlali", "genel": False,
         "url": "https://news.google.com/rss/search?q=çevre+ihlali+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
@@ -85,16 +57,10 @@ KAYNAK_RSS = [
         "url": "https://news.google.com/rss/search?q=sulak+alan+milli+park+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
         "web": "https://news.google.com",
     },
-    # ── GENEL HABER SİTELERİ — ÇEVRE KATEGORİSİ ─────────────────
     {
         "ad": "Sözcü Çevre", "etiket": "Haber", "genel": True,
         "url": "https://www.sozcu.com.tr/rss/cevre.xml",
         "web": "https://www.sozcu.com.tr/cevre/",
-    },
-    {
-        "ad": "Cumhuriyet Çevre", "etiket": "Haber", "genel": True,
-        "url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",
-        "web": "https://www.cumhuriyet.com.tr/cevre",
     },
     {
         "ad": "Gazete Duvar", "etiket": "Haber", "genel": True,
@@ -108,7 +74,6 @@ KAYNAK_RSS = [
     },
 ]
 
-# Web scraping ile çekilen kaynaklar (RSS'i olmayan siteler)
 KAYNAK_WEB = [
     {
         "ad": "Greenpeace TR", "etiket": "STK", "genel": False,
@@ -118,25 +83,11 @@ KAYNAK_WEB = [
         "ozet_secici": ".post-excerpt p, .article-excerpt",
     },
     {
-        "ad": "WWF Türkiye", "etiket": "STK", "genel": False,
-        "url": "https://www.wwf.org.tr/basin_bultenleri/",
-        "web": "https://www.wwf.org.tr",
-        "secici": ".press-release-title a, h3 a, h2 a",
-        "ozet_secici": ".press-release-excerpt, .entry-summary",
-    },
-    {
         "ad": "Çevre Bakanlığı", "etiket": "Resmi", "genel": False,
         "url": "https://www.csb.gov.tr/duyurular",
         "web": "https://www.csb.gov.tr",
         "secici": ".duyuru-item a, .news-item a, h3 a",
         "ozet_secici": ".duyuru-ozet, .news-excerpt",
-    },
-    {
-        "ad": "Euronews TR", "etiket": "Haber", "genel": True,
-        "url": "https://tr.euronews.com/tag/cevre",
-        "web": "https://tr.euronews.com/tag/cevre",
-        "secici": ".article__title a, h3.article__title a, .media__title a",
-        "ozet_secici": ".article__summary, .media__summary",
     },
 ]
 
@@ -302,7 +253,7 @@ def rss_cek(kaynak):
             haberler.append({
                 "baslik":    baslik,
                 "kaynak":    kaynak["ad"],
-                "kaynak_web": kaynak["web"],   # ← kaynak ana sayfa URL'si
+                "kaynak_web": kaynak["web"],
                 "tarih":     tarih,
                 "etiket":    kaynak["etiket"],
                 "ozet":      ozet,
@@ -352,7 +303,7 @@ def web_cek(kaynak):
             haberler.append({
                 "baslik":     baslik,
                 "kaynak":     kaynak["ad"],
-                "kaynak_web": kaynak["web"],   # ← kaynak ana sayfa URL'si
+                "kaynak_web": kaynak["web"],
                 "tarih":      datetime.date.today().isoformat(),
                 "etiket":     kaynak["etiket"],
                 "ozet":       ozet,
@@ -381,7 +332,6 @@ def main():
     print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal, "
           f"{len(mevcut_haberler)} haber")
 
-    # RSS
     print(f"\n🔍 RSS taranıyor… ({len(KAYNAK_RSS)} kaynak)")
     yeni = []
     id_sayac = sonraki_id(mevcut_haberler)
@@ -393,7 +343,6 @@ def main():
                 yeni.append(h)
                 mevcut_urls.add(h["url"])
 
-    # Web scraping
     print(f"\n🌐 Web scraping… ({len(KAYNAK_WEB)} kaynak)")
     for kaynak in KAYNAK_WEB:
         for h in web_cek(kaynak):
@@ -406,11 +355,11 @@ def main():
     print(f"\n✅ {len(yeni)} yeni haber eklendi.")
     data["haberler"] = yeni + mevcut_haberler
     data["_meta"] = {
-        "guncelleme":   datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "kaynak":       "otomatik_tarama_v3",
+        "guncelleme":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "kaynak":        "otomatik_tarama_v3",
         "kaynak_sayisi": len(KAYNAK_RSS) + len(KAYNAK_WEB),
-        "ihlal_sayisi": len(data["ihlaller"]),
-        "haber_sayisi": len(data["haberler"]),
+        "ihlal_sayisi":  len(data["ihlaller"]),
+        "haber_sayisi":  len(data["haberler"]),
     }
 
     print("\n📤 GitHub'a yazılıyor…")
