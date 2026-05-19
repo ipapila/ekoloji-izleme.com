@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '0 3,6,9,12,15,18 * * *'
   workflow_dispatch:
-  workflow_call:           # ← tara.yml tarafından çağrılabilir
+  workflow_call:
 
 jobs:
   tara:
@@ -47,6 +47,21 @@ jobs:
             git commit -m "🔄 Haber güncellemesi — $(date -u '+%Y-%m-%d %H:%M UTC')"
             git push
             echo "✓ Push tamamlandı."
+          fi
+
+      - name: haberler.json'u Plesk sunucuya gönder
+        run: |
+          HTTP_STATUS=$(curl -s -o /tmp/webhook_response.txt -w "%{http_code}" \
+            -X POST "${{ secrets.FLEX_WEBHOOK_URL }}?dosya=haberler.json" \
+            -H "X-Webhook-Secret: ${{ secrets.FLEX_WEBHOOK_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --data-binary @haberler.json)
+          echo "HTTP Status: $HTTP_STATUS"
+          cat /tmp/webhook_response.txt
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "⚠️  Webhook başarısız (HTTP $HTTP_STATUS) — workflow devam ediyor."
+          else
+            echo "✅ Plesk sunucu güncellendi: haberler.json"
           fi
 
       - name: Güncelleme özeti
