@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ekoloji-izleme.com — Ekoloji Gözlem Platformu</title>
+<title>ekoloji-izleme.com — Türkiye'nin Ekoloji Gözlem Platformu</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
@@ -94,10 +94,9 @@
 .haber-source-badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 7px;border-radius:2px;background:rgba(45,158,107,.12);color:var(--accent);white-space:nowrap;height:fit-content;border:1px solid rgba(45,158,107,.2);}
 .haberler-footer{display:flex;justify-content:flex-end;margin-top:10px;}
 
-/* harita.html'e taşındı */50%{opacity:.2;}}
 
 /* ─── ECOSYSTEM ─── */
-.ecosystem-section{background:var(--deep);padding:100px 80px;}
+.ecosystem-section{background:var(--deep);padding:100px 80px;border-top:1px solid rgba(45,158,107,.18);}
 .ecosystem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:60px;}
 .eco-card{padding:36px 28px;border-radius:6px;border:1px solid rgba(45,158,107,.15);background:rgba(13,35,24,.4);transition:all .3s;cursor:pointer;text-decoration:none;display:block;}
 .eco-card:hover{border-color:rgba(45,158,107,.35);background:rgba(26,74,53,.3);transform:translateY(-4px);}
@@ -132,6 +131,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   .features-section,.violations-section,.ecosystem-section{padding:60px 28px;}
   .stats-strip{flex-wrap:wrap;} .stat-item{flex:0 0 calc(50% - 24px);border-right:none;}
   .cta-section{padding:60px 28px;}
+
   .haberler-band{padding:60px 28px;} .haberler-band-inner{grid-template-columns:1fr;} .haberler-sol{position:static;}
 }
 </style>
@@ -164,9 +164,9 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 
   <div class="hero-content">
     <div class="hero-tag">Türkiye Ekoloji Gözlem Platformu</div>
-    <h1 class="hero-h1">insan doğanın<br><span>efendisi</span>değil parçasıdır/h1>
+    <h1 class="hero-h1">DOĞAYI<br><span>KORUMAK</span>BİR GÖREV</h1>
     <p class="hero-desc">
-      Ülkenin dört bir yanında gerçekleşen <em>ekolojik ihlalleri</em> takip ediyoruz.
+      Türkiye'nin dört bir yanında gerçekleşen <em>ekolojik ihlalleri</em> takip ediyoruz.
       Haritalar, raporlar ve anlık taramalarla çevresel yıkıma karşı <em>belge üretiyoruz</em>.
     </p>
     <div class="hero-actions">
@@ -247,14 +247,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
         ></iframe>
         <a href="harita.html"
-           style="position:absolute;bottom:12px;right:12px;
-                  display:inline-flex;align-items:center;gap:7px;
-                  padding:8px 15px;background:rgba(8,21,14,.88);
-                  color:var(--bright);font-family:'JetBrains Mono',monospace;
-                  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-                  text-decoration:none;border-radius:4px;
-                  border:1px solid rgba(45,158,107,.45);
-                  backdrop-filter:blur(6px);transition:all .2s;z-index:10;"
+           style="position:absolute;bottom:12px;right:12px;display:inline-flex;align-items:center;gap:7px;padding:8px 15px;background:rgba(8,21,14,.88);color:var(--bright);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;border:1px solid rgba(45,158,107,.45);backdrop-filter:blur(6px);transition:all .2s;z-index:10;"
            onmouseover="this.style.background='rgba(45,158,107,.25)'"
            onmouseout="this.style.background='rgba(8,21,14,.88)'">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
@@ -328,8 +321,8 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
     <p class="cta-sub">Bulunduğunuz yerde gözlemlediğiniz çevresel tahribatı bildirin. Belge, fotoğraf ve koordinat ile katkı sağlayın.</p>
   </div>
   <div style="display:flex;flex-direction:column;gap:14px;">
-    <a href="admin.html" class="btn-primary" style="justify-content:center;">📍 İhlal Bildir</a>
-    <a href="admin.html" class="btn-outline" style="justify-content:center;">Gönüllü Ol →</a>
+    <button onclick="iletisimAc('ihlal')" class="btn-primary" style="justify-content:center;cursor:pointer;border:none;">📍 İhlal Bildir</button>
+    <button onclick="iletisimAc('gonullu')" class="btn-outline" style="justify-content:center;cursor:pointer;">Gönüllü Ol →</button>
   </div>
 </div>
 
@@ -523,14 +516,134 @@ if (SITE.isAdmin()) {
     <div id="taramaLog" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);line-height:1.7;"></div>`;
 }
 
-// ── Ticker ──
-const tickerItems = ihlaller.slice(0,6).map(i=>`
-  <div class="ticker-item">
-    <span class="label ${i.siddet==='takipte'?'ok':i.siddet==='orta'?'warn':''}">${i.siddet.toUpperCase()}</span>
-    ${i.baslik} — ${i.konum}
-  </div>
-`).join("") || `<div class="ticker-item"><span class="label">BİLGİ</span>Henüz ihlal kaydı eklenmedi — Admin panelinden ekleyebilirsiniz.</div>`;
-document.getElementById("tickerInner").innerHTML = tickerItems + tickerItems;
+// ── Ticker — haberler.json önce denenir ──
+function tickerRender(liste) {
+  if (!liste || !liste.length) return;
+  const silinen = JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]");
+  const items = liste.filter(h => !silinen.includes(String(h.id))).slice(0, 12)
+    .map(h => `<div class="ticker-item" style="cursor:pointer;"
+        onclick='tickerHaberAc(${JSON.stringify(h).replace(/'/g,"&#39;")})'>
+      <span class="label" style="background:rgba(45,158,107,.18);color:var(--bright);border:1px solid rgba(45,158,107,.3);">
+        ${(h.kategori||h.etiket||h.kaynak||'HABER').toString().slice(0,12).toUpperCase()}
+      </span>
+      ${h.baslik}${h.kaynak?` <span style="opacity:.5;font-size:.85em;">— ${h.kaynak}</span>`:''}
+    </div>`).join('');
+  if (items) document.getElementById("tickerInner").innerHTML = items + items;
+}
+function tickerHaberAc(h) {
+  const m = document.createElement("div");
+  m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);";
+  m.innerHTML = `<div style="background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:640px;width:100%;padding:32px;position:relative;">
+    <button onclick="this.closest('div[style]').remove()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">${h.kategori||h.etiket||h.kaynak||''}</div>
+    <h3 style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:400;color:var(--cream);line-height:1.4;margin:0 0 14px;">${h.baslik}</h3>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 18px;">${h.ozet||''}</p>
+    ${h.url?`<a href="${h.url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-decoration:none;border-radius:4px;text-transform:uppercase;">Kaynağa Git ↗</a>`:''}
+  </div>`;
+  m.addEventListener("click", e => { if(e.target===m) m.remove(); });
+  document.body.appendChild(m);
+}
+fetch("haberler.json?v=" + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(d => { tickerRender(d.haberler || (Array.isArray(d) ? d : [])); })
+  .catch(() => {
+    // Fallback: ihlaller ticker
+    const items = ihlaller.slice(0,6).map(i=>`<div class="ticker-item">
+      <span class="label ${i.siddet==='takipte'?'ok':i.siddet==='orta'?'warn':''}">${i.siddet.toUpperCase()}</span>
+      ${i.baslik} — ${i.konum}</div>`).join('');
+    if (items) document.getElementById("tickerInner").innerHTML = items + items;
+  });
+
+// ── İletişim Modalı ──
+function iletisimAc(tip) {
+  const baslik  = tip === 'ihlal'   ? 'İhlal Bildirimi'   : 'Gönüllü Olma Talebi';
+  const konu    = tip === 'ihlal'   ? 'İhlal Bildirimi — ekoloji-izleme.com'
+                                    : 'Gönüllü Olmak İstiyorum — ekoloji-izleme.com';
+  const aciklama = tip === 'ihlal'
+    ? 'Gözlemlediğiniz çevresel ihlali aşağıdaki alanlara ekleyerek bize bildirin.
+Fotoğraf, konum ve belge ekleyebilirsiniz.'
+    : 'Platformumuza destek olmak istiyorsanız kendinizi kısaca tanıtın.
+Hangi konularda katkı sağlayabileceğinizi belirtin.';
+
+  if (document.getElementById("iletisimModal")) return;
+  const m = document.createElement("div");
+  m.id = "iletisimModal";
+  m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);overflow-y:auto;";
+  m.innerHTML = `
+    <div style="background:var(--deep);border:1px solid rgba(45,158,107,.3);border-radius:8px;width:100%;max-width:560px;padding:40px;position:relative;">
+      <button onclick="document.getElementById('iletisimModal').remove()"
+              style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">✕</button>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">
+        ${tip === 'ihlal' ? '📍 İhlal Bildirimi' : '🌿 Gönüllü Ol'}
+      </div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--cream);margin:0 0 10px;">${baslik}</h2>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 28px;">${aciklama}</p>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Adınız</label>
+          <input id="ilt-ad" type="text" placeholder="Ad Soyad"
+                 style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:4px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;">
+        </div>
+        <div>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">E-posta</label>
+          <input id="ilt-eposta" type="email" placeholder="ornek@mail.com"
+                 style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:4px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;">
+        </div>
+        ${tip === 'ihlal' ? `
+        <div>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Konum / İl</label>
+          <input id="ilt-konum" type="text" placeholder="Örn: Muğla, Akbelen"
+                 style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:4px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;">
+        </div>` : ''}
+        <div>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Mesajınız</label>
+          <textarea id="ilt-mesaj" rows="5" placeholder="${tip === 'ihlal' ? 'İhlali kısaca açıklayın…' : 'Kendinizi kısaca tanıtın…'}"
+                    style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:4px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;resize:vertical;"></textarea>
+        </div>
+        <div id="ilt-sonuc" style="display:none;font-family:'JetBrains Mono',monospace;font-size:11px;padding:10px 14px;border-radius:4px;"></div>
+        <button onclick="iletisimGonder('${tip}','${konu}')"
+                style="padding:13px;background:var(--accent);color:var(--dark);border:none;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;"
+                onmouseover="this.style.background='var(--bright)'"
+                onmouseout="this.style.background='var(--accent)'">
+          ${tip === 'ihlal' ? '→ Bildirimi Gönder' : '→ Başvuruyu Gönder'}
+        </button>
+      </div>
+    </div>`;
+  m.addEventListener("click", e => { if(e.target===m) m.remove(); });
+  document.body.appendChild(m);
+}
+
+function iletisimGonder(tip, konu) {
+  const ad      = document.getElementById("ilt-ad")?.value.trim();
+  const eposta  = document.getElementById("ilt-eposta")?.value.trim();
+  const konum   = document.getElementById("ilt-konum")?.value.trim() || "";
+  const mesaj   = document.getElementById("ilt-mesaj")?.value.trim();
+  const sonuc   = document.getElementById("ilt-sonuc");
+
+  if (!ad || !eposta || !mesaj) {
+    sonuc.style.display = "block";
+    sonuc.style.background = "rgba(232,92,42,.12)";
+    sonuc.style.color = "#e85c2a";
+    sonuc.style.border = "1px solid rgba(232,92,42,.3)";
+    sonuc.textContent = "⚠ Lütfen tüm zorunlu alanları doldurun.";
+    return;
+  }
+
+  const icerik = tip === 'ihlal'
+    ? `Ad: ${ad}\nE-posta: ${eposta}\nKonum: ${konum}\n\n${mesaj}`
+    : `Ad: ${ad}\nE-posta: ${eposta}\n\n${mesaj}`;
+
+  // mailto ile e-posta istemcisini aç
+  const mailtoUrl = `mailto:ipapila@gmail.com?subject=${encodeURIComponent(konu)}&body=${encodeURIComponent(icerik)}`;
+  window.location.href = mailtoUrl;
+
+  sonuc.style.display = "block";
+  sonuc.style.background = "rgba(45,158,107,.12)";
+  sonuc.style.color = "var(--bright)";
+  sonuc.style.border = "1px solid rgba(45,158,107,.3)";
+  sonuc.textContent = "✓ E-posta istemciniz açılıyor…";
+}
 
 // ── Scroll reveal ──
 const reveals = document.querySelectorAll('.feature-card,.violation-item,.eco-card,.mini-stat,.haber-item');
