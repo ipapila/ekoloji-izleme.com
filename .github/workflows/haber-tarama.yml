@@ -2,15 +2,15 @@ name: Haber Tarama
 
 on:
   schedule:
-    # Her 3 saatte bir (UTC) — 06:00, 09:00, 12:00, 15:00, 18:00, 21:00 TR saatiyle örtüşür
     - cron: '0 3,6,9,12,15,18 * * *'
-  workflow_dispatch:  # Manuel tetikleme (GitHub Actions sekmesinden)
+  workflow_dispatch:
+  workflow_call:           # ← tara.yml tarafından çağrılabilir
 
 jobs:
   tara:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # haberler.json'u commit edebilmek için
+      contents: write
 
     steps:
       - name: Repo'yu çek
@@ -40,9 +40,7 @@ jobs:
         run: |
           git config user.name  "ekoloji-tarayici[bot]"
           git config user.email "bot@ekoloji-izleme.com"
-          # -f: .gitignore'u görmezden gel
           git add -f haberler.json
-          # Staged değişiklik yoksa commit atla
           if git diff --staged --quiet; then
             echo "Değişiklik yok, commit atlanıyor."
           else
