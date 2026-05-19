@@ -5,6 +5,9 @@ name: Tara (Veri + Haberler)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
 
   # ── Veri güncelle (guncelle.py → data.json → Flex) ─────────────────────
