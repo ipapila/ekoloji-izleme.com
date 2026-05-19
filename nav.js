@@ -92,6 +92,7 @@
         <hr>
         <div class="dropdown-label">Direniş</div>
         <a href="haberler.html?tur=sosyal"><span class="dot"></span>Sosyal Medya Takibi</a>
+        <a href="haberler.html?tur=hareket"><span class="dot"></span>Halk Hareketleri</a>
         <a href="haberler.html?tur=nobet"><span class="dot"></span>Nöbetler &amp; Protestolar</a>
         <a href="haberler.html?tur=direnis"><span class="dot"></span>Yerel Direnişler</a>
       </div>
@@ -106,37 +107,6 @@
         <a href="raporlar.html?tur=Makale"><span class="dot"></span>Makaleler</a>
         <a href="raporlar.html?tur=Özel"><span class="dot"></span>Özel Raporlar</a>
         <a href="raporlar.html?tur=Veri"><span class="dot"></span>Veri Analizleri</a>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a href="ekoloji-suclari.html" class="nav-link ${current === 'ekoloji-suclari.html' ? 'active' : ''}">Ekoloji Suçları
-        <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
-      </a>
-      <div class="dropdown">
-        <a href="ihlaller.html"><span class="dot"></span>Ekolojik İhlaller (Günlük Tarama)</a>
-        <hr>
-        <div class="dropdown-label">Haberler &amp; Direniş</div>
-        <a href="haberler.html"><span class="dot"></span>Basın Haberleri</a>
-        <a href="haberler.html?tur=hareket"><span class="dot"></span>Halk Hareketleri</a>
-        <a href="haberler.html?tur=nobet"><span class="dot"></span>Nöbetler &amp; Protestolar</a>
-        <a href="haberler.html?tur=direnis"><span class="dot"></span>Yerel Direnişler</a>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a href="etkinlikler.html" class="nav-link ${current === 'etkinlikler.html' ? 'active' : ''}">Etkinlikler</a>
-    </li>
-
-    <li class="nav-item">
-      <a href="karsı-durus.html" class="nav-link ${current === 'karsı-durus.html' ? 'active' : ''}">Karşı Duruş
-        <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
-      </a>
-      <div class="dropdown">
-        <a href="karsı-durus.html?sec=hukuk"><span class="dot"></span>Hukuki Mücadele</a>
-        <a href="karsı-durus.html?sec=stk"><span class="dot"></span>Sivil Toplum Ağı</a>
-        <a href="karsı-durus.html?sec=kampanya"><span class="dot"></span>Farkındalık Kampanyaları</a>
-        <a href="karsı-durus.html?sec=uluslararasi"><span class="dot"></span>Uluslararası Bağlantılar</a>
       </div>
     </li>
 
