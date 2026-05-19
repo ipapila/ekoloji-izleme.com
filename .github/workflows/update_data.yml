@@ -2,9 +2,9 @@ name: Veri Güncelleme + Flex Push
 
 on:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 2,8,14,20 * * *'  # Günde 4 kez: 05:00, 11:00, 17:00, 23:00 TR
   workflow_dispatch:
-  workflow_call:           # ← tara.yml tarafından çağrılabilir
+  workflow_call:
 
 permissions:
   contents: write
