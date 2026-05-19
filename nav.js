@@ -1,6 +1,7 @@
 /**
  * nav.js — Ortak navigasyonu her sayfaya enjekte eder.
  * Admin oturumu sessionStorage'dan okunur; aktifse nav'da rozet gösterilir.
+ * Ticker (kayar haber şeridi) de burada oluşturulur — tüm sayfalarda çalışır.
  *
  * SESSION_KEY: site-data.js → SITE.SESSION_KEY = "ekoloji_admin_session"
  * ile birebir aynı anahtar kullanılır. İKİ AYRIDAN ASLA OLMASIN.
@@ -13,7 +14,7 @@
 
   const current = location.pathname.split("/").pop() || "index.html";
 
-  /* Admin butonu: giriş yapılmışsa rozet + çıkış linki, yoksa sade ADMIN linki */
+  /* Admin butonu */
   const adminBtn = adminAktif
     ? `<div style="display:flex;align-items:center;gap:8px;">
          <a href="admin.html"
@@ -46,7 +47,7 @@
         ADMIN
        </a>`;
 
-  const html = `
+  const navHTML = `
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <nav>
   <a href="index.html" class="nav-logo">
@@ -83,18 +84,17 @@
         <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
       </a>
       <div class="dropdown">
-        <div class="dropdown-label">Medya Takibi</div>
+        <div class="dropdown-label">Konu</div>
         <a href="haberler.html"><span class="dot"></span>Tüm Haberler</a>
         <a href="haberler.html?kat=Çevre İhlali"><span class="dot"></span>Çevre İhlali</a>
         <a href="haberler.html?kat=Orman / Maden"><span class="dot"></span>Orman / Maden</a>
         <a href="haberler.html?kat=HES / RES / Baraj"><span class="dot"></span>HES / RES / Baraj</a>
         <a href="haberler.html?kat=İklim"><span class="dot"></span>İklim</a>
         <hr>
-        <div class="dropdown-label">Direniş</div>
-        <a href="haberler.html?tur=sosyal"><span class="dot"></span>Sosyal Medya Takibi</a>
-        <a href="haberler.html?tur=hareket"><span class="dot"></span>Halk Hareketleri</a>
+        <div class="dropdown-label">Direniş &amp; Toplum</div>
         <a href="haberler.html?tur=nobet"><span class="dot"></span>Nöbetler &amp; Protestolar</a>
         <a href="haberler.html?tur=direnis"><span class="dot"></span>Yerel Direnişler</a>
+        <a href="haberler.html?tur=hareket"><span class="dot"></span>Halk Hareketleri</a>
       </div>
     </li>
 
@@ -138,26 +138,108 @@
   <div class="hamburger" onclick="document.querySelector('.nav-menu').style.display=document.querySelector('.nav-menu').style.display==='flex'?'none':'flex'">
     <span></span><span></span><span></span>
   </div>
-</nav>`;
+</nav>
+
+<!-- TICKER: nav'ın hemen altında kayar haber şeridi -->
+<div class="ticker-bar" id="navTicker" style="display:none;">
+  <div class="ticker-inner" id="navTickerInner"></div>
+</div>`;
 
   const root = document.getElementById("nav-root");
-  if (root) root.innerHTML = html;
-  else document.body.insertAdjacentHTML("afterbegin", html);
+  if (root) root.innerHTML = navHTML;
+  else document.body.insertAdjacentHTML("afterbegin", navHTML);
+
+  // ── Ticker yükle ──────────────────────────────────────────────────────────
+  // Sadece index.html'de zaten ticker varsa çakışmayı önle
+  const mevcutTicker = document.getElementById("tickerInner");
+  if (mevcutTicker) {
+    // index.html kendi ticker'ını zaten yönetiyor; nav ticker'ını gizle
+    document.getElementById("navTicker").style.display = "none";
+  } else {
+    _tickerYukle();
+  }
+
+  function _tickerYukle() {
+    const bar = document.getElementById("navTicker");
+    if (!bar) return;
+
+    function _tickerRender(haberler) {
+      const silinen = (() => {
+        try { return new Set(JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]").map(String)); }
+        catch { return new Set(); }
+      })();
+
+      const liste = haberler.filter(h => !silinen.has(String(h.id))).slice(0, 12);
+      if (!liste.length) return;
+
+      bar.style.display = "block";
+
+      // Ticker öğelerini iki kez ekle (sonsuz döngü efekti için)
+      const items = liste.map(h => `
+        <div class="ticker-item" style="cursor:pointer;" onclick='_navTickerAc(${JSON.stringify(h).replace(/'/g, "&#39;")})'>
+          <span class="label" style="background:rgba(45,158,107,.18);color:var(--bright);border:1px solid rgba(45,158,107,.3);">
+            ${(h.kategori || h.etiket || h.kaynak || "HABER").toString().slice(0, 14).toUpperCase()}
+          </span>
+          ${h.baslik}${h.kaynak ? ` <span style="opacity:.5;font-size:.85em;">— ${h.kaynak}</span>` : ""}
+        </div>`).join("");
+
+      document.getElementById("navTickerInner").innerHTML = items + items;
+    }
+
+    // Veri kaynağı: önce haberler.json, yoksa localStorage/defaults
+    fetch("haberler.json?v=" + Date.now())
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        const haberler = data.haberler || (Array.isArray(data) ? data : []);
+        if (haberler.length) _tickerRender(haberler);
+        else _tickerFallback();
+      })
+      .catch(_tickerFallback);
+
+    function _tickerFallback() {
+      if (typeof SITE !== "undefined") {
+        const h = SITE.getList("haberler") || SITE.defaults.haberler || [];
+        if (h.length) _tickerRender(h);
+      }
+    }
+  }
 })();
+
+// ── Ticker haber modalı (global — onclick içinden erişilebilir) ───────────
+function _navTickerAc(h) {
+  const m = document.createElement("div");
+  m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);";
+  m.innerHTML = `
+    <div style="background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;
+                max-width:640px;width:100%;padding:32px;position:relative;">
+      <button onclick="this.closest('div[style]').remove()"
+        style="position:absolute;top:16px;right:16px;background:none;border:none;
+               color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;
+                  text-transform:uppercase;color:var(--accent);margin-bottom:12px;">
+        ${h.kategori || h.etiket || h.kaynak || ""}
+      </div>
+      <h3 style="font-family:'Crimson Pro',serif;font-size:24px;font-weight:400;
+                 color:var(--cream);line-height:1.4;margin:0 0 16px;">${h.baslik}</h3>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;">${h.ozet || ""}</p>
+      ${h.url ? `<a href="${h.url}" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;
+               background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;
+               font-size:10px;letter-spacing:.08em;text-decoration:none;border-radius:4px;
+               text-transform:uppercase;">Kaynağa Git ↗</a>` : ""}
+    </div>`;
+  m.addEventListener("click", e => { if (e.target === m) m.remove(); });
+  document.body.appendChild(m);
+}
 
 /**
  * Global: nav'daki Çıkış butonu tarafından çağrılır.
- * SITE.logout() tek yetkili temizleyicidir — doğrudan sessionStorage
- * dokunulmaz, senkron kalmak için SITE üzerinden gidilir.
  */
 function adminCikis() {
   if (typeof SITE !== "undefined" && typeof SITE.logout === "function") {
-    SITE.logout(); // sessionStorage.removeItem("ekoloji_admin_session")
+    SITE.logout();
   } else {
-    // SITE henüz yüklenmediyse fallback — asla eski anahtarları ekleme
     sessionStorage.removeItem("ekoloji_admin_session");
   }
-
-  // Admin panelindeyse login ekranına dön, değilse nav'ı güncelle
   location.reload();
 }
