@@ -186,9 +186,15 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
     <div class="scan-line"></div>
   </div>
   <div class="hero-visual">
-    <div class="crosshair-ring"></div>
-    <div class="crosshair-ring"></div>
-    <div class="crosshair-ring"></div>
+    <!-- Amblem: crosshair tasarımı kendi içinde, CSS halkaları arka planda animasyon sağlar -->
+    <div class="crosshair-ring" style="opacity:.18;"></div>
+    <div class="crosshair-ring" style="opacity:.12;"></div>
+    <div class="crosshair-ring" style="opacity:.15;"></div>
+    <img
+      src="ekoloji-izleme_amblem_transparan.png"
+      alt="Ekoloji İzleme Amblemi"
+      style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:.88;pointer-events:none;"
+    >
     <div class="gps-data">GPS: 39°53'E · 38.5°51'N<br>ZOOM 10x · ●REC<br><span style="color:var(--accent)">■■□□□</span> 60%</div>
   </div>
 
