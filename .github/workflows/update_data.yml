@@ -2,8 +2,9 @@ name: Veri Güncelleme + Flex Push
 
 on:
   schedule:
-    - cron: '0 3 * * *'   # Her gece 03:00 UTC (06:00 Türkiye)
-  workflow_dispatch:       # Elle de tetiklenebilir
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+  workflow_call:           # ← tara.yml tarafından çağrılabilir
 
 permissions:
   contents: write
@@ -27,8 +28,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ✅ DÜZELTİLDİ: guncelle.py GitHub API'ye yazdığı için lokal data.json hâlâ eski.
-      # Webhook'a göndermeden önce güncel sürümü GitHub'dan çekiyoruz.
       - name: Güncel data.json'u GitHub'dan indir
         run: |
           curl -s \
