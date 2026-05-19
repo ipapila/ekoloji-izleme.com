@@ -2,7 +2,7 @@ name: Veri Güncelleme + Flex Push
 
 on:
   schedule:
-    - cron: '0 2,8,14,20 * * *'  # Günde 4 kez: 05:00, 11:00, 17:00, 23:00 TR
+    - cron: '0 2,8,14,20 * * *'
   workflow_dispatch:
   workflow_call:
 
@@ -21,12 +21,18 @@ jobs:
           python-version: '3.10'
 
       - name: Bağımlılıkları yükle
-        run: pip install requests beautifulsoup4 lxml
+        run: pip install requests beautifulsoup4 lxml anthropic
 
-      - name: Veriyi güncelle (guncelle.py)
+      - name: Haberleri güncelle (guncelle.py)
         run: python scripts/guncelle.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: İhlalleri tara ve ekle (geojson_uret.py)
+        run: python scripts/geojson_uret.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: Güncel data.json'u GitHub'dan indir
         run: |
@@ -36,7 +42,8 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/contents/data.json" \
             -o data.json
           echo "data.json boyutu: $(wc -c < data.json) byte"
-          echo "Haber sayısı: $(python3 -c "import json; d=json.load(open('data.json')); print(len(d.get('haberler',[])))")"
+          echo "İhlal sayısı : $(python3 -c "import json; d=json.load(open('data.json')); print(len(d.get('ihlaller',[])))")"
+          echo "Haber sayısı : $(python3 -c "import json; d=json.load(open('data.json')); print(len(d.get('haberler',[])))")"
 
       - name: data.json'u Flex sunucuya gönder
         run: |
@@ -48,7 +55,7 @@ jobs:
           echo "HTTP Status: $HTTP_STATUS"
           cat /tmp/webhook_response.txt
           if [ "$HTTP_STATUS" != "200" ]; then
-            echo "⚠️  Webhook başarısız (HTTP $HTTP_STATUS) — workflow devam ediyor."
+            echo "⚠️  Webhook başarısız (HTTP $HTTP_STATUS)"
           else
             echo "✅ Flex sunucu güncellendi."
           fi
