@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="shared.css">
 <style>
 /* ─── HERO ─── */
-.hero{min-height:100vh;padding-top:72px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;}
+.hero{min-height:100vh;padding-top:20px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,74,53,.4) 0%,transparent 70%),radial-gradient(ellipse 50% 80% at 10% 80%,rgba(13,35,24,.8) 0%,transparent 60%),linear-gradient(160deg,var(--dark) 0%,var(--forest) 50%,var(--dark) 100%);}
 .hero-lines{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
 .scan-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(45,158,107,.3),transparent);animation:scan 8s linear infinite;}
@@ -217,7 +217,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
     </div>
     <div class="stats-strip" id="statsStrip">
       <div class="stat-item"><div class="stat-number" id="statIhlal">—</div><div class="stat-label">Kayıtlı İhlal</div></div>
-      <div class="stat-item"><div class="stat-number">124</div><div class="stat-label">Aktif İzleme</div></div>
+      <div class="stat-item"><div class="stat-number" id="statIzleme">—</div><div class="stat-label">Aktif İzleme</div></div>
       <!-- ✅ DÜZELTİLDİ: 63 → 81, dinamik güncelleme için id eklendi -->
       <div class="stat-item"><div class="stat-number" id="statIl">81</div><div class="stat-label">İl Kapsama</div></div>
     </div>
@@ -508,14 +508,43 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 </div>
 
 <script>
-// ── İstatistikler ──
-const ihlaller = SITE.get("ihlaller") || [];
-document.getElementById("statIhlal").textContent = ihlaller.length;
+// ── İstatistikler — data.json'dan toplam rakamlar ──
+(function istatistikYukle() {
+  // Önce localStorage'dan hızlı göster
+  const local = SITE.get("ihlaller") || [];
+  if (local.length) document.getElementById("statIhlal").textContent = local.length;
 
-// ✅ DÜZELTİLDİ: İl sayısını veriden dinamik hesapla (veri yoksa 81 varsayılan kalır)
-const _ilSet = new Set(ihlaller.map(i => i.il || i.konum || "").filter(Boolean));
-const _statIlEl = document.getElementById("statIl");
-if (_statIlEl && _ilSet.size > 0) _statIlEl.textContent = _ilSet.size;
+  // data.json'dan gerçek toplamı çek
+  fetch("data.json?v=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      const meta = d._meta || {};
+
+      // Kayıtlı İhlal: meta'dan veya dizi uzunluğundan
+      const ihlalSayisi = meta.ihlal_sayisi || (d.ihlaller||[]).length;
+      if (ihlalSayisi > 0)
+        document.getElementById("statIhlal").textContent = ihlalSayisi.toLocaleString("tr-TR");
+
+      // Aktif İzleme: haber sayısı platform genelini yansıtır
+      const haberSayisi = meta.haber_sayisi || (d.haberler||[]).length;
+      const izlemeEl = document.getElementById("statIzleme");
+      if (izlemeEl && haberSayisi > 0)
+        izlemeEl.textContent = haberSayisi.toLocaleString("tr-TR");
+
+      // İl Kapsama: 81 (Türkiye'nin tüm illeri taranıyor)
+      // Veriden benzersiz il sayısını hesapla, yoksa 81 yaz
+      const iller = new Set((d.ihlaller||[]).map(i => i.il || "").filter(Boolean));
+      const ilSayisi = iller.size > 0 ? iller.size : 81;
+      const ilEl = document.getElementById("statIl");
+      if (ilEl) ilEl.textContent = ilSayisi;
+    })
+    .catch(() => {
+      // data.json yoksa localStorage değerleri kalır, il = 81
+      const ilEl = document.getElementById("statIl");
+      if (ilEl && ilEl.textContent === "81") return;
+      if (ilEl) ilEl.textContent = "81";
+    });
+})();
 
 const sonList = ihlaller.sort((a,b) => new Date(b.tarih)-new Date(a.tarih)).slice(0,6);
 const siddetMap = { kritik:"kritik", orta:"orta", takipte:"dusuk" };
