@@ -499,7 +499,7 @@
 </div>
 
 <!-- ══ ÖZEL MAKALE ══ -->
-<div class="featured-article" onclick="makaleAc(0)" id="featured">
+<div class="featured-article" onclick="makaleAc('0')" id="featured">
   <div>
     <span class="featured-label">✦ Öne Çıkan Makale</span>
     <h2 class="featured-title" id="feat-title">Madenciliğin Gölgesinde: Türkiye'de Altın Arama Lisanslarının Ekosistem Maliyeti</h2>
@@ -699,15 +699,25 @@ const MAKALELER = [
 
 let goruntulenecek = 6;
 let aktifKategori = 'hepsi';
-let filtreliMakaleler = [...MAKALELER];
+
+/* SITE'dan gelen makaleleri hardcoded listeye ekle */
+function tumMakaleler() {
+  const siteListe = (typeof SITE !== 'undefined' ? SITE.getList('makaleler') : []) || [];
+  const hardIds = new Set(MAKALELER.map(m => String(m.id)));
+  const siteEkler = siteListe.filter(m => !hardIds.has(String(m.id)));
+  return [...siteEkler, ...MAKALELER];
+}
+
+let filtreliMakaleler = [];
 
 function filtrele(kategori, btn) {
   aktifKategori = kategori;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('aktif'));
-  btn.classList.add('aktif');
+  if (btn) btn.classList.add('aktif');
+  const hepsi = tumMakaleler();
   filtreliMakaleler = kategori === 'hepsi'
-    ? [...MAKALELER]
-    : MAKALELER.filter(m => m.kategori === kategori);
+    ? hepsi
+    : hepsi.filter(m => (m.kategori||'') === kategori);
   goruntulenecek = 6;
   renderGrid();
 }
@@ -720,18 +730,22 @@ function catCls(kat) {
 function renderGrid() {
   const grid = document.getElementById('makalelerGrid');
   const liste = filtreliMakaleler.slice(0, goruntulenecek);
-  grid.innerHTML = liste.map(m => `
-    <div class="article-card" onclick="makaleAc(${m.id})" data-kat="${m.kategori}">
-      <span class="read-time">${m.okumaSuresi}</span>
-      <span class="card-category ${catCls(m.kategori)}">${m.kategoriLabel}</span>
+  grid.innerHTML = liste.map(m => {
+    const tarih = m.tarih ? new Date(m.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '';
+    const label = m.kategoriLabel || m.tur || m.kategori || '';
+    const okuma = m.okumaSuresi || '';
+    const ozet  = m.ozet || '';
+    return `<div class="article-card" onclick="makaleAc('${m.id}')" data-kat="${m.kategori||''}">
+      ${okuma ? `<span class="read-time">${okuma}</span>` : ''}
+      <span class="card-category ${catCls(m.kategori)}">${label}</span>
       <h3 class="card-title">${m.baslik}</h3>
-      <p class="card-excerpt">${m.ozet}</p>
+      ${ozet ? `<p class="card-excerpt">${ozet}</p>` : ''}
       <div class="card-footer">
-        <span class="card-author">${m.yazar}</span>
-        <span class="card-date">${new Date(m.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'})}</span>
+        <span class="card-author">${m.yazar||''}</span>
+        <span class="card-date">${tarih}</span>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
   document.getElementById('dahaFazlaBtn').style.display =
     goruntulenecek >= filtreliMakaleler.length ? 'none' : 'inline-flex';
 }
@@ -742,7 +756,9 @@ function dahaFazlaYukle() {
 }
 
 function makaleAc(id) {
-  const m = typeof id === 'number' ? MAKALELER.find(x => x.id === id) : (MAKALELER.find(x => x.id === id) || (typeof SITE !== 'undefined' && SITE.getList('makaleler').find(x => String(x.id) === String(id))));
+  const sid = String(id);
+  const m = MAKALELER.find(x => String(x.id) === sid)
+         || (typeof SITE !== 'undefined' ? SITE.getList('makaleler').find(x => String(x.id) === sid) : null);
   if (!m) return;
   const etiketler = Array.isArray(m.etiketler) ? m.etiketler : (m.etiketler ? (() => { try { return JSON.parse(m.etiketler); } catch(e){ return []; } })() : []);
   const tarih = m.tarih ? new Date(m.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}) : '';
@@ -820,7 +836,7 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') makaleKapat(); 
 
 // Popüler liste (sidebar)
 document.getElementById('populerListe').innerHTML = MAKALELER.slice(0,5).map((m,i) => `
-  <div class="sidebar-link" onclick="makaleAc(${m.id})">
+  <div class="sidebar-link" onclick="makaleAc('${m.id}')">
     <span class="sl-num">0${i+1}</span>
     <span class="sl-title">${m.baslik}</span>
   </div>
@@ -832,8 +848,8 @@ document.getElementById('etiketler').innerHTML = tumEtiketler.map(t =>
   `<span class="tag">${t}</span>`
 ).join('');
 
-// İlk render
-renderGrid();
+// İlk render — SITE makaleleri de dahil
+filtrele('hepsi', document.querySelector('.filter-btn.aktif'));
 
 // Scroll reveal
 const revEls = document.querySelectorAll('.article-card');
