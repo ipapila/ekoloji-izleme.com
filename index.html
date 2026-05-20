@@ -542,7 +542,6 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
     });
 })();
 
-const sonList = ihlaller.sort((a,b) => new Date(b.tarih)-new Date(a.tarih)).slice(0,6);
 const siddetMap = { kritik:"kritik", orta:"orta", takipte:"dusuk" };
 const labelMap  = { kritik:"Kritik", orta:"Orta", takipte:"Takipte" };
 const clsMap    = { kritik:"", orta:"medium", takipte:"low" };
@@ -553,25 +552,34 @@ function fmtDate(d) {
   return dt.toLocaleDateString("tr-TR",{day:"numeric",month:"short"}) + "<br>" + dt.getFullYear();
 }
 
-document.getElementById("sonIhlalerList").innerHTML = sonList.map(i => `
-  <a href="ihlaller.html" class="violation-item ${clsMap[i.siddet]||''}">
-    <span class="v-severity ${siddetMap[i.siddet]||'dusuk'}">${labelMap[i.siddet]||i.siddet}</span>
-    <div class="v-info">
-      <h4>${i.baslik}</h4>
-      <p>${i.konum} · ${i.kategori}</p>
-    </div>
-    <div class="v-date">${fmtDate(i.tarih)}</div>
-  </a>
-`).join("") + `<a href="ihlaller.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;background:rgba(45,158,107,.07);border:1px dashed rgba(45,158,107,.2);color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;transition:all .2s;" onmouseover="this.style.background='rgba(45,158,107,.15)'" onmouseout="this.style.background='rgba(45,158,107,.07)'">Tüm İhlalleri Gör →</a>`;
+function ihlallerRender(ihlaller) {
+  const sonList = (ihlaller || []).sort((a,b) => new Date(b.tarih)-new Date(a.tarih)).slice(0,6);
+  document.getElementById("sonIhlalerList").innerHTML = sonList.map(i => `
+    <a href="ihlaller.html" class="violation-item ${clsMap[i.siddet]||''}">
+      <span class="v-severity ${siddetMap[i.siddet]||'dusuk'}">${labelMap[i.siddet]||i.siddet}</span>
+      <div class="v-info">
+        <h4>${i.baslik}</h4>
+        <p>${i.konum} · ${i.kategori}</p>
+      </div>
+      <div class="v-date">${fmtDate(i.tarih)}</div>
+    </a>
+  `).join("") + `<a href="ihlaller.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;background:rgba(45,158,107,.07);border:1px dashed rgba(45,158,107,.2);color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;transition:all .2s;" onmouseover="this.style.background='rgba(45,158,107,.15)'" onmouseout="this.style.background='rgba(45,158,107,.07)'">Tüm İhlalleri Gör →</a>`;
 
-const kritik  = ihlaller.filter(i=>i.siddet==="kritik").length;
-const thisWeek = ihlaller.filter(i=>{ if(!i.tarih) return false; return (Date.now()-new Date(i.tarih).getTime()) < 7*86400000; }).length;
-document.getElementById("miniStats").innerHTML = `
-  <div class="mini-stat"><div class="mini-stat-num" style="color:var(--warn);">${thisWeek}</div><div class="mini-stat-label">Bu Hafta Yeni</div></div>
-  <div class="mini-stat"><div class="mini-stat-num">156</div><div class="mini-stat-label">Aktif Dava</div></div>
-  <div class="mini-stat"><div class="mini-stat-num" style="color:var(--alert);">${kritik}</div><div class="mini-stat-label">Kritik İhlal</div></div>
-  <div class="mini-stat"><div class="mini-stat-num" style="color:var(--leaf);">41</div><div class="mini-stat-label">Kazanılan Dava</div></div>
-`;
+  const kritik   = ihlaller.filter(i=>i.siddet==="kritik").length;
+  const thisWeek = ihlaller.filter(i=>{ if(!i.tarih) return false; return (Date.now()-new Date(i.tarih).getTime()) < 7*86400000; }).length;
+  document.getElementById("miniStats").innerHTML = `
+    <div class="mini-stat"><div class="mini-stat-num" style="color:var(--warn);">${thisWeek}</div><div class="mini-stat-label">Bu Hafta Yeni</div></div>
+    <div class="mini-stat"><div class="mini-stat-num">156</div><div class="mini-stat-label">Aktif Dava</div></div>
+    <div class="mini-stat"><div class="mini-stat-num" style="color:var(--alert);">${kritik}</div><div class="mini-stat-label">Kritik İhlal</div></div>
+    <div class="mini-stat"><div class="mini-stat-num" style="color:var(--leaf);">41</div><div class="mini-stat-label">Kazanılan Dava</div></div>
+  `;
+}
+
+// data.json'dan ihlalleri çek, yoksa localStorage'dan al
+fetch("data.json?v=" + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(d => ihlallerRender(d.ihlaller || []))
+  .catch(() => ihlallerRender(SITE.getList("ihlaller") || SITE.defaults.ihlaller));
 
 // ── Haber detay modal ──
 function haberDetay(h) {
