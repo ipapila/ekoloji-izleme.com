@@ -29,13 +29,11 @@ HARITA_URLS = [
 ]
 
 RSS_KAYNAKLARI = [
-    # Çevre odaklı kaynaklar — zaten filtrelenmiş, düşük eşik
     {"url": "https://bianet.org/topic/cevre/feed/rss",          "kaynak": "Bianet",       "kategori": "Çevre İhlali", "genel": False},
     {"url": "https://iklimhaber.org/feed/",                      "kaynak": "İklim Haber",  "kategori": "İklim",        "genel": False},
     {"url": "https://yesilgazete.org/feed/",                     "kaynak": "Yeşil Gazete", "kategori": "Çevre Medyası","genel": False},
     {"url": "https://www.tema.org.tr/duyurular?format=feed",     "kaynak": "TEMA",         "kategori": "STK",          "genel": False},
     {"url": "https://www.greenpeace.org/turkey/feed/",           "kaynak": "Greenpeace TR","kategori": "STK",          "genel": False},
-    # Google News — konu odaklı sorgular
     {"url": "https://news.google.com/rss/search?q=çevre+ihlali+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Çevre İhlali", "genel": False},
     {"url": "https://news.google.com/rss/search?q=orman+tahribi+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
@@ -46,7 +44,6 @@ RSS_KAYNAKLARI = [
      "kaynak": "Google News", "kategori": "Kamulaştırma", "genel": False},
     {"url": "https://news.google.com/rss/search?q=ÇED+maden+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "ÇED Kararları", "genel": False},
-    # Genel haberler — yüksek eşik uygulanır
     {"url": "https://www.sozcu.com.tr/rss/cevre.xml",            "kaynak": "Sözcü",        "kategori": "Haber",        "genel": True},
     {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",       "kaynak": "Cumhuriyet",   "kategori": "Haber",        "genel": True},
 ]
@@ -66,7 +63,6 @@ WEB_KAYNAKLARI = [
 
 # ─── FİLTRE SİSTEMİ ────────────────────────────────────────────────
 
-# Tek başına yeterli — kesinlikle ekoloji haberi
 YUKSEK_SINYAL = [
     "çevre ihlali", "çevre katliamı", "ÇED", "çed kararı", "çed raporu",
     "acele kamulaştırma", "taş ocağı", "taşocağı", "maden ocağı",
@@ -80,7 +76,6 @@ YUKSEK_SINYAL = [
     "ormana yapı", "dere yatağı", "dereye yapı", "kıyı tahribatı",
 ]
 
-# Bağlam gerektiren — birden fazlası veya yüksek sinyalle birlikte
 ORTA_SINYAL = [
     "çevre", "ekoloji", "orman", "maden", "baraj", "HES", "RES", "GES",
     "kamulaştırma", "doğa", "habitat", "kirlilik", "atık", "iklim",
@@ -91,7 +86,6 @@ ORTA_SINYAL = [
     "doğal yaşam", "yaban hayat", "kuş türü", "balık türü",
 ]
 
-# Bunlar varsa — ne kadar çevre kelimesi geçerse geçsin reddet
 GUCLU_NEGATIF = [
     "faiz", "borsa", "döviz", "kur", "enflasyon", "bütçe açığı",
     "seçim", "cumhurbaşkanı", "milletvekili", "muhalefet", "iktidar partisi",
@@ -100,62 +94,39 @@ GUCLU_NEGATIF = [
     "moda", "defilé", "koleksiyon",
     "kripto", "bitcoin", "nft", "borsa rallisi",
     "müzik listesi", "konser", "albüm",
-    "İsrail", "Gazze", "Ukrayna savaşı", "Rusya savaşı",  # uluslararası siyaset
+    "İsrail", "Gazze", "Ukrayna savaşı", "Rusya savaşı",
 ]
 
-# Genel kaynaklara ek negatif — bağlam dışı tek kelime kullanımları
 GENEL_KAYNAK_NEGATIF = [
     "ekonomi", "piyasa", "hisse", "yatırım", "ihracat", "ithalat",
     "savunma", "asker", "muharebe", "operasyon",
     "turizm sezonu", "tatil", "otel",
-    "sağlık", "hastane", "ameliyat",  # tıbbi haberler
+    "sağlık", "hastane", "ameliyat",
     "eğitim", "üniversite sınav", "okul",
 ]
 
 
 def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False) -> int:
-    """
-    Haberin ekoloji puanını hesapla.
-    0  → ilgisiz
-    1+ → ekoloji ile ilgili (eşik: genel kaynak=3, odaklı kaynak=1)
-    """
     metin = (baslik + " " + ozet).lower()
-
-    # Güçlü negatif → anında 0
     if any(k.lower() in metin for k in GUCLU_NEGATIF):
         return 0
-
-    # Genel kaynak için ek negatif
     if genel_kaynak and any(k.lower() in metin for k in GENEL_KAYNAK_NEGATIF):
         return 0
-
     puan = 0
-
-    # Yüksek sinyal: +3 her biri
     for k in YUKSEK_SINYAL:
         if k.lower() in metin:
             puan += 3
-
-    # Orta sinyal: +1 her biri
     for k in ORTA_SINYAL:
         if k.lower() in metin:
             puan += 1
-
-    # Başlıkta geçen yüksek sinyal ekstra +2
     baslik_lower = baslik.lower()
     for k in YUKSEK_SINYAL:
         if k.lower() in baslik_lower:
             puan += 2
-
     return puan
 
 
 def cevre_ile_ilgili(baslik: str, ozet: str = "", genel_kaynak: bool = False) -> bool:
-    """
-    Eşik:
-    - Odaklı çevre kaynağı (genel=False): puan >= 1
-    - Genel haber kaynağı  (genel=True):  puan >= 4
-    """
     puan = ekoloji_puani(baslik, ozet, genel_kaynak)
     esik = 4 if genel_kaynak else 1
     return puan >= esik
@@ -267,17 +238,14 @@ def rss_tara(kaynaklar: list) -> list:
                 tarih  = tarih_normalize(
                     entry.get("published_parsed") or entry.get("updated_parsed")
                 )
-
                 if not baslik or not link:
                     continue
-
                 puan = ekoloji_puani(baslik, ozet, genel)
                 esik = 4 if genel else 1
                 if puan < esik:
                     reddedilen += 1
                     log.debug(f"  ✗ [{puan:2d}] {baslik[:60]}")
                     continue
-
                 log.debug(f"  ✓ [{puan:2d}] {baslik[:60]}")
                 haberler.append({
                     "id":          haber_id(link, baslik),
@@ -291,7 +259,6 @@ def rss_tara(kaynaklar: list) -> list:
                     "_puan":       puan,
                 })
                 kabul += 1
-
             log.info(f"  → {kabul} kabul / {reddedilen} reddedildi")
             time.sleep(0.8)
         except Exception as e:
@@ -320,7 +287,6 @@ def web_tara(kaynaklar: list) -> list:
                 if not href:
                     continue
                 link = urljoin(kaynak["url"], href)
-
                 ozet = ""
                 if kaynak.get("ozet_secici"):
                     parent = a.find_parent(["article", "div", "li"])
@@ -328,13 +294,11 @@ def web_tara(kaynaklar: list) -> list:
                         ozet_el = parent.select_one(kaynak["ozet_secici"])
                         if ozet_el:
                             ozet = ozet_el.get_text(" ", strip=True)[:300]
-
                 puan = ekoloji_puani(baslik, ozet, genel)
                 esik = 4 if genel else 1
                 if puan < esik:
                     reddedilen += 1
                     continue
-
                 haberler.append({
                     "id":          haber_id(link, baslik),
                     "baslik":      baslik,
@@ -347,7 +311,6 @@ def web_tara(kaynaklar: list) -> list:
                     "_puan":       puan,
                 })
                 kabul += 1
-
             log.info(f"  → {kabul} kabul / {reddedilen} reddedildi")
         except Exception as e:
             log.warning(f"  Scrape hatası: {e}")
@@ -358,7 +321,7 @@ def web_tara(kaynaklar: list) -> list:
 # ─── ANA FONKSİYON ─────────────────────────────────────────────────
 
 def tara(cikti_dosyasi="haberler.json", harita_urls=None,
-         ozet_cek_aktif=False, max_haber=200):
+         ozet_cek_aktif=False, max_haber=200, max_harita=500):
     log.info("═" * 55)
     log.info("  ekoloji-izleme.com — Haber Tarayıcı v2")
     log.info("═" * 55)
@@ -367,15 +330,31 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
     if p.exists():
         try:
             eski = json.loads(p.read_text(encoding="utf-8"))
+            # ── DEĞİŞİKLİK 1: harita_kayitlari ID'lerini de gorulen_idler'e ekle ──
             gorulen_idler = {h.get("id", "") for h in eski.get("haberler", [])}
-            log.info(f"Mevcut dosyada {len(gorulen_idler)} haber.")
+            gorulen_idler |= {h.get("id", "") for h in eski.get("harita_kayitlari", [])}
+            log.info(
+                f"Mevcut: {len(eski.get('haberler',[]))} haber, "
+                f"{len(eski.get('harita_kayitlari',[]))} harita kaydı"
+            )
         except Exception:
-            eski, gorulen_idler = {"haberler": []}, set()
+            eski, gorulen_idler = {"haberler": [], "harita_kayitlari": []}, set()
     else:
-        eski, gorulen_idler = {"haberler": []}, set()
+        eski, gorulen_idler = {"haberler": [], "harita_kayitlari": []}, set()
 
     log.info("\n── Harita Verisi ──")
-    harita_kayitlari = harita_verisi_cek(harita_urls or HARITA_URLS)
+    harita_ham = harita_verisi_cek(harita_urls or HARITA_URLS)
+
+    # ── DEĞİŞİKLİK 2: harita kayıtlarını filtrele, eskiyle birleştir ──
+    harita_yeni = []
+    for h in harita_ham:
+        if h["id"] not in gorulen_idler:
+            harita_yeni.append(h)
+            gorulen_idler.add(h["id"])
+
+    harita_kayitlari = harita_yeni + eski.get("harita_kayitlari", [])
+    harita_kayitlari = harita_kayitlari[:max_harita]  # boyut sınırı
+    log.info(f"  → {len(harita_yeni)} yeni harita kaydı ({len(harita_ham) - len(harita_yeni)} tekrar atlandı)")
 
     log.info("\n── RSS Kaynakları ──")
     rss_haberler = rss_tara(RSS_KAYNAKLARI)
@@ -389,7 +368,6 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
             tum_yeni.append(h)
             gorulen_idler.add(h["id"])
 
-    # _puan alanını çıktıdan kaldır (dahili kullanım)
     for h in tum_yeni:
         h.pop("_puan", None)
 
@@ -402,6 +380,8 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
             "guncelleme": datetime.now(timezone.utc).isoformat(),
             "toplam": len(birlesik),
             "yeni_eklenen": len(tum_yeni),
+            "harita_kayit_sayisi": len(harita_kayitlari),
+            "harita_yeni": len(harita_yeni),
         },
         "haberler": birlesik,
         "harita_kayitlari": harita_kayitlari,
@@ -410,7 +390,10 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
     Path(cikti_dosyasi).write_text(
         json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    log.info(f"\n✓ {cikti_dosyasi} → {len(birlesik)} haber ({len(tum_yeni)} yeni)")
+    log.info(
+        f"\n✓ {cikti_dosyasi} → {len(birlesik)} haber ({len(tum_yeni)} yeni) | "
+        f"{len(harita_kayitlari)} harita kaydı ({len(harita_yeni)} yeni)"
+    )
     return cikti
 
 
