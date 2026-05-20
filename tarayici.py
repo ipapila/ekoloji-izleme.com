@@ -1,32 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ekoloji-izleme.com — Haber Tarayıcı (v2 — hassas filtre)
+ekoloji-izleme.com — Haber Tarayıcı (v3 — harita verisi kaldırıldı)
 """
 
 import argparse
 import hashlib
 import json
 import logging
-import re
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 
 import feedparser
 import requests
 from bs4 import BeautifulSoup
 
 # ─── YAPILANDIRMA ──────────────────────────────────────────────────
-
-HARITA_URLS = [
-    "https://ekoloji-izleme.com/harita/data.json",
-    "https://ekoloji-izleme.com/harita/ihlaller.json",
-    "https://ipapila.github.io/Turkiye-katmanlar/data/ihlaller.json",
-]
 
 RSS_KAYNAKLARI = [
     {"url": "https://bianet.org/topic/cevre/feed/rss",          "kaynak": "Bianet",       "kategori": "Çevre İhlali", "genel": False},
@@ -91,8 +84,7 @@ GUCLU_NEGATIF = [
     "seçim", "cumhurbaşkanı", "milletvekili", "muhalefet", "iktidar partisi",
     "futbol", "maç sonucu", "şampiyon", "transfer", "gol", "penaltı",
     "dizi", "film", "oyuncu", "magazin", "ünlü çift", "nişan", "düğün",
-    "moda", "defilé", "koleksiyon",
-    "kripto", "bitcoin", "nft", "borsa rallisi",
+    "moda", "defilé", "koleksiyon", "kripto", "bitcoin", "nft",
     "müzik listesi", "konser", "albüm",
     "İsrail", "Gazze", "Ukrayna savaşı", "Rusya savaşı",
 ]
@@ -126,13 +118,7 @@ def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False) -> in
     return puan
 
 
-def cevre_ile_ilgili(baslik: str, ozet: str = "", genel_kaynak: bool = False) -> bool:
-    puan = ekoloji_puani(baslik, ozet, genel_kaynak)
-    esik = 4 if genel_kaynak else 1
-    return puan >= esik
-
-
-# ─── YARDIMCI FONKSİYONLAR ─────────────────────────────────────────
+# ─── YARDIMCI ──────────────────────────────────────────────────────
 
 logging.basicConfig(
     level=logging.INFO,
@@ -175,48 +161,6 @@ def fetch(url: str, timeout: int = 12) -> Optional[requests.Response]:
         return None
 
 
-# ─── HARITA VERİSİ ─────────────────────────────────────────────────
-
-def harita_verisi_cek(urls: list) -> list:
-    kayitlar = []
-    for url in urls:
-        log.info(f"Harita verisi: {url}")
-        r = fetch(url)
-        if not r:
-            continue
-        try:
-            data = r.json()
-            items = (data if isinstance(data, list) else
-                     data.get("features") or data.get("ihlaller") or
-                     data.get("data") or data.get("items") or [])
-            for item in items:
-                if item.get("type") == "Feature":
-                    props = item.get("properties", {})
-                    coords = item.get("geometry", {}).get("coordinates", [])
-                    item = {**props}
-                    if coords and len(coords) >= 2:
-                        item["lng"], item["lat"] = coords[0], coords[1]
-                kayit = {
-                    "id": item.get("id") or haber_id(url, item.get("baslik", "")),
-                    "baslik": item.get("baslik") or item.get("name") or item.get("title", ""),
-                    "konum": item.get("konum") or item.get("il") or "",
-                    "kategori": item.get("kategori") or item.get("alan_turu") or "",
-                    "siddet": item.get("siddet") or "takipte",
-                    "tarih": tarih_normalize(item.get("tarih") or item.get("date")),
-                    "url": item.get("url") or item.get("kaynak_url") or "",
-                    "ozet": item.get("aciklama") or item.get("ozet") or "",
-                    "lat": item.get("lat") or item.get("enlem"),
-                    "lng": item.get("lng") or item.get("boylam"),
-                    "kaynak": "harita",
-                }
-                if kayit["baslik"]:
-                    kayitlar.append(kayit)
-            log.info(f"  → {len(items)} kayıt")
-        except Exception as e:
-            log.warning(f"  JSON parse hatası: {e}")
-    return kayitlar
-
-
 # ─── RSS TARAMA ────────────────────────────────────────────────────
 
 def rss_tara(kaynaklar: list) -> list:
@@ -227,6 +171,7 @@ def rss_tara(kaynaklar: list) -> list:
         try:
             feed = feedparser.parse(kaynak["url"])
             if feed.bozo and not feed.entries:
+                log.warning(f"  ⚠ Boş/hatalı feed atlandı")
                 continue
             kabul = reddedilen = 0
             for entry in feed.entries[:25]:
@@ -244,9 +189,7 @@ def rss_tara(kaynaklar: list) -> list:
                 esik = 4 if genel else 1
                 if puan < esik:
                     reddedilen += 1
-                    log.debug(f"  ✗ [{puan:2d}] {baslik[:60]}")
                     continue
-                log.debug(f"  ✓ [{puan:2d}] {baslik[:60]}")
                 haberler.append({
                     "id":          haber_id(link, baslik),
                     "baslik":      baslik,
@@ -320,41 +263,22 @@ def web_tara(kaynaklar: list) -> list:
 
 # ─── ANA FONKSİYON ─────────────────────────────────────────────────
 
-def tara(cikti_dosyasi="haberler.json", harita_urls=None,
-         ozet_cek_aktif=False, max_haber=200, max_harita=500):
+def tara(cikti_dosyasi="haberler.json", max_haber=200):
     log.info("═" * 55)
-    log.info("  ekoloji-izleme.com — Haber Tarayıcı v2")
+    log.info("  ekoloji-izleme.com — Haber Tarayıcı v3")
     log.info("═" * 55)
 
     p = Path(cikti_dosyasi)
     if p.exists():
         try:
             eski = json.loads(p.read_text(encoding="utf-8"))
-            # ── DEĞİŞİKLİK 1: harita_kayitlari ID'lerini de gorulen_idler'e ekle ──
-            gorulen_idler = {h.get("id", "") for h in eski.get("haberler", [])}
-            gorulen_idler |= {h.get("id", "") for h in eski.get("harita_kayitlari", [])}
-            log.info(
-                f"Mevcut: {len(eski.get('haberler',[]))} haber, "
-                f"{len(eski.get('harita_kayitlari',[]))} harita kaydı"
-            )
+            mevcut_haberler = eski.get("haberler", [])
+            gorulen_idler   = {h.get("id", "") for h in mevcut_haberler}
+            log.info(f"Mevcut: {len(mevcut_haberler)} haber ({len(gorulen_idler)} unique ID)")
         except Exception:
-            eski, gorulen_idler = {"haberler": [], "harita_kayitlari": []}, set()
+            mevcut_haberler, gorulen_idler = [], set()
     else:
-        eski, gorulen_idler = {"haberler": [], "harita_kayitlari": []}, set()
-
-    log.info("\n── Harita Verisi ──")
-    harita_ham = harita_verisi_cek(harita_urls or HARITA_URLS)
-
-    # ── DEĞİŞİKLİK 2: harita kayıtlarını filtrele, eskiyle birleştir ──
-    harita_yeni = []
-    for h in harita_ham:
-        if h["id"] not in gorulen_idler:
-            harita_yeni.append(h)
-            gorulen_idler.add(h["id"])
-
-    harita_kayitlari = harita_yeni + eski.get("harita_kayitlari", [])
-    harita_kayitlari = harita_kayitlari[:max_harita]  # boyut sınırı
-    log.info(f"  → {len(harita_yeni)} yeni harita kaydı ({len(harita_ham) - len(harita_yeni)} tekrar atlandı)")
+        mevcut_haberler, gorulen_idler = [], set()
 
     log.info("\n── RSS Kaynakları ──")
     rss_haberler = rss_tara(RSS_KAYNAKLARI)
@@ -362,45 +286,38 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
     log.info("\n── Web Scraping ──")
     web_haberler = web_tara(WEB_KAYNAKLARI)
 
+    # Dedup: sadece görülmemiş ID'ler eklenir
     tum_yeni = []
     for h in rss_haberler + web_haberler:
         if h["id"] not in gorulen_idler:
+            h.pop("_puan", None)
             tum_yeni.append(h)
             gorulen_idler.add(h["id"])
 
-    for h in tum_yeni:
-        h.pop("_puan", None)
-
-    birlesik = tum_yeni + eski.get("haberler", [])
+    birlesik = tum_yeni + mevcut_haberler
     birlesik.sort(key=lambda x: x.get("tarih") or "1970-01-01", reverse=True)
     birlesik = birlesik[:max_haber]
 
     cikti = {
         "meta": {
-            "guncelleme": datetime.now(timezone.utc).isoformat(),
-            "toplam": len(birlesik),
+            "guncelleme":  datetime.now(timezone.utc).isoformat(),
+            "toplam":      len(birlesik),
             "yeni_eklenen": len(tum_yeni),
-            "harita_kayit_sayisi": len(harita_kayitlari),
-            "harita_yeni": len(harita_yeni),
         },
         "haberler": birlesik,
-        "harita_kayitlari": harita_kayitlari,
     }
 
     Path(cikti_dosyasi).write_text(
         json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    log.info(
-        f"\n✓ {cikti_dosyasi} → {len(birlesik)} haber ({len(tum_yeni)} yeni) | "
-        f"{len(harita_kayitlari)} harita kaydı ({len(harita_yeni)} yeni)"
-    )
+    log.info(f"\n✓ {cikti_dosyasi} → {len(birlesik)} haber ({len(tum_yeni)} yeni)")
     return cikti
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cikti", default="haberler.json")
-    parser.add_argument("--harita-url", action="append", dest="harita_urls")
+    parser.add_argument("--harita-url", action="append", dest="harita_urls")  # geriye dönük uyumluluk
     parser.add_argument("--ozet-cek", action="store_true")
     parser.add_argument("--surekli", action="store_true")
     parser.add_argument("--aralik", type=int, default=180)
@@ -409,14 +326,14 @@ def main():
     if args.surekli:
         while True:
             try:
-                tara(args.cikti, args.harita_urls, args.ozet_cek)
+                tara(args.cikti)
             except KeyboardInterrupt:
                 sys.exit(0)
             except Exception as e:
                 log.error(f"Tarama hatası: {e}")
             time.sleep(args.aralik * 60)
     else:
-        tara(args.cikti, args.harita_urls, args.ozet_cek)
+        tara(args.cikti)
 
 if __name__ == "__main__":
     main()
