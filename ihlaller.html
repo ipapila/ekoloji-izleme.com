@@ -161,14 +161,21 @@ function ihlalSil(id) {
 function openModal(id) {
   const item = allData.find(i => String(i.id) === String(id));
   if (!item) return;
+  const etiketler = Array.isArray(item.etiketler) ? item.etiketler : (item.etiketler ? (() => { try { return JSON.parse(item.etiketler); } catch(e){ return []; } })() : []);
+  const chipsHTML = etiketler.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join("")}</div>` : "";
   document.getElementById("modalContent").innerHTML = `
-    <div class="badge ${item.siddet}" style="margin-bottom:14px;">${item.siddet}</div>
-    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.1;margin-bottom:20px;">${item.baslik}</h2>
+    ${item.foto_url ? `<img src="${item.foto_url}" alt="${item.baslik}" onerror="this.style.display='none'" style="width:100%;max-height:300px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">` : ""}
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+      <span class="badge ${item.siddet}" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 9px;border-radius:2px;text-transform:uppercase;">${item.siddet}</span>
+    </div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.1;margin-bottom:16px;">${item.baslik}</h2>
+    ${chipsHTML}
     <div class="modal-field"><label>Konum</label><p>${item.konum||'—'}</p></div>
     <div class="modal-field"><label>Kategori</label><p>${item.kategori||'—'}</p></div>
     <div class="modal-field"><label>Tarih</label><p>${formatDate(item.tarih)}</p></div>
     ${item.kaynak ? `<div class="modal-field"><label>Kaynak</label><p>${item.kaynak}</p></div>` : ''}
     ${item.aciklama ? `<div class="modal-field"><label>Açıklama</label><p>${item.aciklama}</p></div>` : ''}
+    ${item.kaynak_url ? `<div style="margin-top:18px;"><a href="${item.kaynak_url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Kaynağa Git →</a></div>` : ''}
   `;
   document.getElementById("modal").classList.add("open");
 }
