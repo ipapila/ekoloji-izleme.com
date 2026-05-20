@@ -1314,13 +1314,9 @@ function _importDosyaOku(file) {
       _importVeri = { ihlaller, haberler };
 
       log.textContent =
-        `✓ Algılanan: ${ihlaller.length} ihlal + ${haberler.length} haber
-
-` +
-        (ihlaller.slice(0,3).map(k => `🔴 ${k.baslik.slice(0,60)}`).join("
-") || "") +
-        (haberler.slice(0,3).map(h => `📰 ${h.baslik.slice(0,60)}`).join("
-") || "");
+        `✓ Algılanan: ${ihlaller.length} ihlal + ${haberler.length} haber\n\n` +
+        (ihlaller.slice(0,3).map(k => `🔴 ${k.baslik.slice(0,60)}`).join("\n") || "") +
+        (haberler.slice(0,3).map(h => `📰 ${h.baslik.slice(0,60)}`).join("\n") || "");
 
       document.getElementById("importUygulaBtn").disabled =
         (ihlaller.length + haberler.length) === 0;
