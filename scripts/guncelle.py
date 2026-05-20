@@ -225,10 +225,32 @@ def rss_cek(kaynak):
     haberler = []
     genel = kaynak.get("genel", True)
     esik  = 4 if genel else 1
+
+    # Farklı User-Agent'lar dene — bazı sunucular bot'u engelliyor
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
+        "ekoloji-izleme-bot/2.0 (+https://ekoloji-izleme.com)",
+    ]
+
+    r = None
+    for ua in user_agents:
+        try:
+            r = requests.get(kaynak["url"], timeout=20,
+                             headers={"User-Agent": ua,
+                                      "Accept": "application/rss+xml,application/xml,text/xml,*/*"})
+            if r.status_code == 200:
+                break
+            r = None
+        except Exception:
+            continue
+
+    if r is None or r.status_code != 200:
+        status = r.status_code if r is not None else "bağlantı hatası"
+        print(f"  ⚠️  {kaynak['ad']}: HTTP {status} — atlanıyor")
+        return haberler
+
     try:
-        r = requests.get(kaynak["url"], timeout=20,
-                         headers={"User-Agent": "ekoloji-izleme-bot/2.0"})
-        r.raise_for_status()
         root  = ET.fromstring(r.content)
         ns    = {"atom": "http://www.w3.org/2005/Atom"}
         items = root.findall(".//item") or root.findall(".//atom:entry", ns)
@@ -267,7 +289,7 @@ def rss_cek(kaynak):
 
         print(f"  📡 {kaynak['ad']}: {kabul} kabul / {red} red (eşik={esik})")
     except Exception as e:
-        print(f"  ⚠️  {kaynak['ad']}: {e}")
+        print(f"  ⚠️  {kaynak['ad']}: parse hatası — {e}")
     return haberler
 
 # ─── WEB SCRAPING ────────────────────────────────────────────────────
@@ -278,7 +300,11 @@ def web_cek(kaynak):
     esik  = 4 if genel else 1
     try:
         r = requests.get(kaynak["url"], timeout=20,
-                         headers={"User-Agent": "ekoloji-izleme-bot/2.0"})
+                         headers={
+                             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                             "Accept": "text/html,application/xhtml+xml,*/*",
+                             "Accept-Language": "tr-TR,tr;q=0.9",
+                         })
         r.raise_for_status()
         soup  = BeautifulSoup(r.text, "html.parser")
         kabul = red = 0
