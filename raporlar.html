@@ -104,20 +104,38 @@ function acModal(idx) {
   if (!r) return;
   const tarihStr = r.tarih ? new Date(r.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : '';
   const domain = r.url ? (() => { try { return new URL(r.url).hostname.replace('www.',''); } catch(e){ return r.url; } })() : '';
+  const etiketler = Array.isArray(r.etiketler) ? r.etiketler : (r.etiketler ? (() => { try { return JSON.parse(r.etiketler); } catch(e){ return []; } })() : []);
+  const hasPdf = r.dosya && /\.pdf(\?|$)/i.test(r.dosya);
+  const hasDoc = r.dosya && /\.(doc|docx)(\?|$)/i.test(r.dosya);
+  const dosyaAd = hasPdf ? '📄 PDF İndir' : hasDoc ? '📝 Belgeyi Aç' : r.dosya ? '📎 Dosyayı Aç' : '';
+
   document.getElementById('mTur').textContent = r.tur || r.kategori || 'Rapor';
   document.getElementById('mTitle').textContent = r.baslik || r.title || '';
   document.getElementById('mMeta').innerHTML =
     (r.yazar?`<span>✍ ${r.yazar}</span>`:'')+(tarihStr?`<span>📅 ${tarihStr}</span>`:'')+
+    (r.yil?`<span>📆 ${r.yil}</span>`:'')+
     (r.bolge||r.konum?`<span>📍 ${r.bolge||r.konum}</span>`:'')+
     (domain?`<span>🔗 ${domain}</span>`:'');
+
+  // Foto
+  let fotoHtml = '';
+  if (r.foto_url) fotoHtml = `<img src="${r.foto_url}" alt="${r.baslik||''}" onerror="this.style.display='none'" style="width:100%;max-height:280px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">`;
+
+  // Etiket chips
+  const chipsHtml = etiketler.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 14px;">${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join("")}</div>` : '';
+
   const icerikEl = document.getElementById('mIcerik');
   const metin = r.icerik || r.ozet || r.aciklama || r.description || '';
-  icerikEl.innerHTML = metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('') :
-    '<p style="opacity:.5">İçerik mevcut değil.</p>';
+  icerikEl.innerHTML = fotoHtml + chipsHtml + (metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('') :
+    '<p style="opacity:.5">İçerik mevcut değil.</p>');
+
   const actions = document.getElementById('mActions');
   actions.innerHTML = '';
-  if (r.url) actions.innerHTML += `<a href="${r.url}" target="_blank" rel="noopener" class="modal-btn-primary">Kaynağa Git</a>`;
-  if (r.dosya_url||r.pdf_url) actions.innerHTML += `<a href="${r.dosya_url||r.pdf_url}" target="_blank" rel="noopener" class="modal-btn-outline">PDF İndir</a>`;
+  if (hasPdf) actions.innerHTML += `<a href="${r.dosya}" target="_blank" rel="noopener" class="modal-btn-primary">${dosyaAd}</a>`;
+  else if (r.dosya) actions.innerHTML += `<a href="${r.dosya}" target="_blank" rel="noopener" class="modal-btn-outline">${dosyaAd}</a>`;
+  if (r.url || r.kaynak_url) actions.innerHTML += `<a href="${r.url||r.kaynak_url}" target="_blank" rel="noopener" class="modal-btn-outline">Kaynağa Git →</a>`;
+  if (hasPdf) actions.innerHTML += `<a href="${r.dosya}" download class="modal-btn-outline">⬇ İndir</a>`;
+
   document.getElementById('detailModal').style.display = 'flex';
 }
 
