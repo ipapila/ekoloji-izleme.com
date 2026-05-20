@@ -87,6 +87,7 @@
       <h2>İçerik Yönetim Paneli <span class="admin-badge">● Admin</span></h2>
       <div class="btn-group">
         <button class="btn btn-primary" onclick="aciTaramaModal()">⚡ Şimdi Tara</button>
+        <button class="btn btn-outline" onclick="aciImportModal()">⬆ JSON/GeoJSON İçe Aktar</button>
         <button class="btn btn-outline" onclick="doLogout()">Çıkış Yap</button>
       </div>
     </div>
@@ -349,6 +350,33 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+
+<!-- ══ JSON / GeoJSON Import Modal ══ -->
+<div class="modal-bg" id="importModal" style="display:none;align-items:center;justify-content:center;">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h3>JSON / GeoJSON İçe Aktar</h3>
+      <button class="modal-kapat" id="importKapat">×</button>
+    </div>
+    <div class="modal-body" style="padding:24px 28px;">
+      <div id="importDropZone" style="border:2px dashed rgba(45,158,107,.3);border-radius:6px;padding:36px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--bright);margin-bottom:8px;">📂 Dosya Sürükle veya Tıkla</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);">data.json, haberler.json veya GeoJSON FeatureCollection</div>
+        <input type="file" id="importFileInput" accept=".json,.geojson" style="display:none;">
+      </div>
+      <div id="importLog" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.3);border-radius:4px;padding:12px 14px;min-height:44px;white-space:pre-wrap;margin-bottom:16px;">Dosya bekleniyor…</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:16px;">
+        İhlaller → <code>id, ad/baslik, tip/kategori, il, aciklama, koordinatlar</code> alanları okunur<br>
+        Haberler → <code>id, baslik, kaynak, tarih, url, ozet</code> alanları okunur
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <button class="btn btn-outline" id="importIptalBtn">İptal</button>
+      <button class="btn btn-primary" id="importUygulaBtn" disabled>✓ İçe Aktar</button>
+    </div>
+  </div>
+</div>
 
 <!-- TARAMA MODAL -->
 <div class="modal-bg" id="taramaModal">
@@ -1199,6 +1227,127 @@ function importSec() {
   toast(`✓ ${ia} ihlal + ${ha} haber içe aktarıldı.`);
 }
 
+
+/* ════════════════════════════════════════════════
+   JSON / GeoJSON IMPORT
+   ════════════════════════════════════════════════ */
+let _importVeri = null;
+
+function aciImportModal() {
+  _importVeri = null;
+  document.getElementById("importLog").textContent = "Dosya bekleniyor…";
+  document.getElementById("importUygulaBtn").disabled = true;
+  document.getElementById("importModal").style.display = "flex";
+}
+
+function _importDosyaOku(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const log = document.getElementById("importLog");
+    try {
+      const parsed = JSON.parse(e.target.result);
+      let ihlaller = [], haberler = [];
+
+      // Format algıla
+      if (Array.isArray(parsed)) {
+        // Düz dizi — ihlal mi haber mi anla
+        const ilk = parsed[0] || {};
+        if (ilk.baslik && (ilk.url || ilk.kaynak)) haberler = parsed;
+        else ihlaller = parsed;
+      } else if (parsed.type === "FeatureCollection" && parsed.features) {
+        // GeoJSON
+        ihlaller = parsed.features.map(f => {
+          const p = f.properties || {};
+          const koord = f.geometry?.coordinates;
+          return {
+            ...p,
+            lat: koord ? koord[1] : (p.lat || null),
+            lng: koord ? koord[0] : (p.lng || null),
+          };
+        });
+      } else {
+        if (parsed.ihlaller) ihlaller = parsed.ihlaller;
+        if (parsed.haberler) haberler = parsed.haberler;
+      }
+
+      // Normalize ihlaller
+      ihlaller = ihlaller.map((k, i) => ({
+        id:          k.id || ("imp_i_" + Date.now() + "_" + i),
+        baslik:      k.baslik || k.ad || k.name || k.title || "",
+        konum:       k.konum || (k.il ? k.il + (k.ilce ? ", " + k.ilce : "") : ""),
+        il:          k.il || "",
+        ilce:        k.ilce || "",
+        kategori:    k.kategori || k.tip || "Diğer",
+        siddet:      k.siddet || "takipte",
+        tarih:       k.tarih || k.eklenme || new Date().toISOString().slice(0,10),
+        lat:         k.lat || k.koordinatlar?.lat || null,
+        lng:         k.lng || k.koordinatlar?.lng || null,
+        kaynak:      k.kaynak || "",
+        kaynak_url:  k.kaynak_url || k.kaynak_link || "",
+        aciklama:    k.aciklama || k.description || "",
+        foto_url:    k.foto_url || "",
+      })).filter(k => k.baslik);
+
+      // Normalize haberler
+      haberler = haberler.map((h, i) => ({
+        id:       h.id || ("imp_h_" + Date.now() + "_" + i),
+        baslik:   h.baslik || h.title || "",
+        kaynak:   h.kaynak || h.source || "",
+        etiket:   h.etiket || h.kategori || "Haber",
+        tarih:    h.tarih || new Date().toISOString().slice(0,10),
+        url:      h.url || "",
+        ozet:     h.ozet || h.aciklama || "",
+      })).filter(h => h.baslik);
+
+      _importVeri = { ihlaller, haberler };
+
+      log.textContent =
+        `✓ Algılanan: ${ihlaller.length} ihlal + ${haberler.length} haber
+
+` +
+        (ihlaller.slice(0,3).map(k => `🔴 ${k.baslik.slice(0,60)}`).join("
+") || "") +
+        (haberler.slice(0,3).map(h => `📰 ${h.baslik.slice(0,60)}`).join("
+") || "");
+
+      document.getElementById("importUygulaBtn").disabled =
+        (ihlaller.length + haberler.length) === 0;
+
+    } catch(err) {
+      document.getElementById("importLog").textContent = "❌ Parse hatası: " + err.message;
+    }
+  };
+  reader.readAsText(file);
+}
+
+function _importUygula() {
+  if (!_importVeri) return;
+  const { ihlaller, haberler } = _importVeri;
+
+  // Mevcut ID'leri topla (duplicate önle)
+  const mevcutIhlalIds = new Set(SITE.getList("ihlaller").map(x => String(x.id)));
+  const mevcutHaberIds = new Set(SITE.getList("haberler").map(x => String(x.id)));
+
+  const yeniI = ihlaller.filter(k => !mevcutIhlalIds.has(String(k.id)));
+  const yeniH = haberler.filter(h => !mevcutHaberIds.has(String(h.id)));
+
+  if (yeniI.length) {
+    const liste = [...yeniI, ...SITE.getList("ihlaller")];
+    SITE.set("ihlaller", liste);
+    _veri.ihlaller = liste;
+  }
+  if (yeniH.length) {
+    const liste = [...yeniH, ...SITE.getList("haberler")];
+    SITE.set("haberler", liste);
+    _veri.haberler = liste;
+  }
+
+  document.getElementById("importModal").style.display = "none";
+  tumVeriYukle();
+  updateStats();
+  toast(`✓ ${yeniI.length} ihlal + ${yeniH.length} haber içe aktarıldı (${ihlaller.length + haberler.length - yeniI.length - yeniH.length} duplicate atlandı).`);
+}
+
 function today() { return new Date().toISOString().slice(0,10); }
 
 function boot() {
@@ -1212,6 +1361,22 @@ function boot() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Import modal
+  const importModal   = document.getElementById("importModal");
+  const importDrop    = document.getElementById("importDropZone");
+  const importFileInp = document.getElementById("importFileInput");
+  if (importDrop) {
+    importDrop.addEventListener("click", () => importFileInp.click());
+    importDrop.addEventListener("dragover", e => { e.preventDefault(); importDrop.style.borderColor = "var(--accent)"; });
+    importDrop.addEventListener("dragleave", () => { importDrop.style.borderColor = ""; });
+    importDrop.addEventListener("drop", e => { e.preventDefault(); importDrop.style.borderColor = ""; if(e.dataTransfer.files[0]) _importDosyaOku(e.dataTransfer.files[0]); });
+    importFileInp.addEventListener("change", e => { if(e.target.files[0]) _importDosyaOku(e.target.files[0]); });
+  }
+  document.getElementById("importKapat")?.addEventListener("click",  () => { importModal.style.display = "none"; });
+  document.getElementById("importIptalBtn")?.addEventListener("click", () => { importModal.style.display = "none"; });
+  document.getElementById("importUygulaBtn")?.addEventListener("click", _importUygula);
+  if (importModal) importModal.addEventListener("click", e => { if(e.target===importModal) importModal.style.display="none"; });
+
   if (sessionAktifMi()) {
     gosterAdminPanel();
   } else {
