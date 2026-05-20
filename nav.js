@@ -141,12 +141,23 @@
         <div class="dropdown-label">İnsan Dışı Canlılar</div>
         <a href="ekosistem.html?sec=turler"><span class="dot"></span>Nesli Tehlike Altında Türler</a>
         <a href="ekosistem.html?sec=yaban"><span class="dot"></span>Yaban Hayatı İzleme</a>
-        <a href="ekosistem.html?sec=bitki"><span class="dot"></span>Bitki Örtüsü</a>
+        <a href="ekosistem.html?sec=bitki"><span class="dot"></span>Bitki Örtüsü & Habitatlar</a>
+        <a href="ekosistem.html?sec=su-canlilari"><span class="dot"></span>Su Canlıları</a>
+        <a href="ekosistem.html?sec=hayvan-haklari"><span class="dot"></span>Hayvan Hakları & Refahı</a>
         <hr>
-        <div class="dropdown-label">Dezavantajlı Gruplar</div>
+        <div class="dropdown-label">İnsan Toplulukları</div>
+        <a href="ekosistem.html?sec=kadinlar"><span class="dot"></span>Kadınlar & Ekoloji</a>
+        <a href="ekosistem.html?sec=lgbti"><span class="dot"></span>LGBTİ+ & Çevre</a>
+        <a href="ekosistem.html?sec=engelliler"><span class="dot"></span>Engelliler & Erişim</a>
         <a href="ekosistem.html?sec=ciftci"><span class="dot"></span>Çiftçi & Köylü Sorunları</a>
-        <a href="ekosistem.html?sec=yerli"><span class="dot"></span>Yerli Haklar</a>
         <a href="ekosistem.html?sec=balikci"><span class="dot"></span>Balıkçı Toplulukları</a>
+        <a href="ekosistem.html?sec=yerli"><span class="dot"></span>Yerli & Yerel Haklar</a>
+        <a href="ekosistem.html?sec=genclik"><span class="dot"></span>Çocuklar & Gençlik</a>
+        <hr>
+        <div class="dropdown-label">Çevre Adaleti</div>
+        <a href="ekosistem.html?sec=esitsizlik"><span class="dot"></span>Ekolojik Eşitsizlik</a>
+        <a href="ekosistem.html?sec=kentsel"><span class="dot"></span>Kentsel Çevre</a>
+        <a href="ekosistem.html?sec=goc"><span class="dot"></span>İklim Göçü & Yerinden Edilme</a>
       </div>
     </li>
   </ul>
