@@ -139,14 +139,23 @@ def uid():
 
 
 def html_cek(url, timeout=15):
-    try:
-        r = requests.get(url, timeout=timeout,
-                         headers={"User-Agent": "ekoloji-izleme.com-bot/3.0"})
-        r.raise_for_status()
-        return r.text
-    except Exception as e:
-        print(f"  ⚠ HTTP hatası ({url[:60]}): {e}")
-        return ""
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
+        "ekoloji-izleme.com-bot/3.0",
+    ]
+    for ua in user_agents:
+        try:
+            r = requests.get(url, timeout=timeout,
+                             headers={"User-Agent": ua,
+                                      "Accept": "text/html,application/xhtml+xml,application/xml,*/*",
+                                      "Accept-Language": "tr-TR,tr;q=0.9"})
+            if r.status_code == 200:
+                return r.text
+        except Exception as e:
+            print(f"  ⚠ HTTP hatası ({url[:60]}): {e}")
+    print(f"  ⚠ Tüm User-Agent'lar başarısız ({url[:60]})")
+    return ""
 
 
 def rss_cek(url):
