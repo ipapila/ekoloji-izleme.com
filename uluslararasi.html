@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LTTD3L198S');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uluslararası — ekoloji-izleme.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    :root {
+      --dark:   #070f0a;
+      --deep:   #0d2318;
+      --forest: #112c1c;
+      --teal:   #0f2318;
+      --accent: #2d9e6b;
+      --bright: #3ec882;
+      --leaf:   #5fd499;
+      --cream:  #f0f5f2;
+      --white:  #ffffff;
+      --muted:  #7a9e8a;
+      --warn:   #e85c2a;
+      --alert:  #f0a500;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--dark);
+      color: var(--cream);
+      font-family: 'Crimson Pro', serif;
+      font-weight: 300;
+    }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      padding: 120px 80px 70px;
+      background: linear-gradient(160deg, var(--dark) 0%, var(--deep) 50%, var(--dark) 100%);
+      border-bottom: 1px solid rgba(45,158,107,.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: 'DÜNYA';
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(90px, 14vw, 200px);
+      color: rgba(45,158,107,.035);
+      letter-spacing: .05em;
+      pointer-events: none;
+    }
+    /* Dönen küre efekti */
+    .globe-deco {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 1px solid rgba(45,158,107,.12);
+      opacity: 0;
+      animation: fadeGlobe 1s ease .5s forwards;
+    }
+    .globe-deco::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(45,158,107,.08);
+    }
+    .globe-deco::after {
+      content: '🌍';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      display: grid;
+      place-items: center;
+    }
+    @keyframes fadeGlobe { to { opacity: 1; } }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .section-tag::before { content: ''; width: 28px; height: 1px; background: var(--accent); }
+    .page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 7vw, 88px);
+      line-height: .9;
+      color: var(--white);
+      letter-spacing: .02em;
+      margin-bottom: 20px;
+    }
+    .page-title span { color: var(--bright); }
+    .page-desc {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.75;
+    }
+
+    /* ─── BÖLGE FİLTRESİ ─── */
+    .region-bar {
+      background: var(--deep);
+      border-bottom: 1px solid rgba(45,158,107,.1);
+      padding: 0 80px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .region-bar::-webkit-scrollbar { display: none; }
+    .region-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 18px 18px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all .2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .region-btn:hover { color: var(--cream); }
+    .region-btn.aktif { color: var(--bright); border-bottom-color: var(--accent); }
+
+    /* ─── ÜST HABER ŞERIDI ─── */
+    .top-stories {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 2px;
+      background: rgba(45,158,107,.06);
+    }
+    .story-main {
+      background: var(--deep);
+      padding: 48px 52px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .story-main:hover { background: #162b1f; }
+    .story-side { display: flex; flex-direction: column; gap: 2px; }
+    .story-side-item {
+      background: var(--forest);
+      padding: 28px 32px;
+      flex: 1;
+      cursor: pointer;
+      transition: all .2s;
+      border-left: 3px solid transparent;
+    }
+    .story-side-item:hover {
+      background: var(--deep);
+      border-left-color: var(--accent);
+      padding-left: 38px;
+    }
+    .region-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 2px;
+      border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+    .r-avrupa   { color: #7eb8ff; background: rgba(100,160,255,.1); border-color: rgba(100,160,255,.25); }
+    .r-asya     { color: #ffb84d; background: rgba(255,160,50,.1);  border-color: rgba(255,160,50,.25); }
+    .r-latin    { color: #ff8fa0; background: rgba(255,80,100,.1);  border-color: rgba(255,80,100,.25); }
+    .r-afrika   { color: #f0c040; background: rgba(240,180,0,.1);  border-color: rgba(240,180,0,.25); }
+    .r-kuzey    { color: #a0d8a0; background: rgba(80,200,80,.1);  border-color: rgba(80,200,80,.25); }
+    .r-okyanus  { color: #80d4ff; background: rgba(0,180,255,.1);  border-color: rgba(0,180,255,.25); }
+    .r-genel    { color: var(--bright); background: rgba(45,158,107,.1); border-color: rgba(45,158,107,.25); }
+
+    .story-title-lg {
+      font-family: 'Crimson Pro', serif;
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+    .story-title-sm {
+      font-family: 'Crimson Pro', serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .story-excerpt {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .story-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: rgba(122,158,138,.6);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── HABERLER LİSTESİ ─── */
+    .stories-section {
+      padding: 60px 80px 100px;
+      background: var(--dark);
+    }
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 20px;
+    }
+    .story-card {
+      background: var(--forest);
+      padding: 30px 26px;
+      cursor: pointer;
+      transition: all .25s;
+      border-top: 2px solid transparent;
+      position: relative;
+    }
+    .story-card:hover {
+      background: var(--deep);
+      border-top-color: var(--accent);
+    }
+    .card-title {
+      font-family: 'Crimson Pro', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .card-excerpt {
+      font-size: 13.5px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .card-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: rgba(122,158,138,.5);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 14px;
+      border-top: 1px solid rgba(45,158,107,.1);
+    }
+
+    /* ─── ÖRGÜT KARTLARı ─── */
+    .orgs-section {
+      background: var(--forest);
+      padding: 70px 80px;
+      border-top: 1px solid rgba(45,158,107,.12);
+    }
+    .orgs-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: var(--white);
+      letter-spacing: .03em;
+      margin-bottom: 8px;
+    }
+    .orgs-subtitle {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .orgs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .org-card {
+      background: var(--deep);
+      border: 1px solid rgba(45,158,107,.12);
+      border-radius: 4px;
+      padding: 22px 20px;
+      transition: all .25s;
+      text-decoration: none;
+      display: block;
+    }
+    .org-card:hover {
+      border-color: rgba(45,158,107,.35);
+      background: rgba(26,74,53,.3);
+      transform: translateY(-2px);
+    }
+    .org-emoji { font-size: 26px; display: block; margin-bottom: 10px; }
+    .org-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .06em;
+      color: var(--cream);
+      margin-bottom: 6px;
+    }
+    .org-desc {
+      font-size: 12.5px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0,0,0,.8);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--deep);
+      border: 1px solid rgba(45,158,107,.25);
+      border-radius: 8px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: modalGir .25s ease;
+    }
+    @keyframes modalGir { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .modal-header {
+      padding: 28px 32px 20px;
+      border-bottom: 1px solid rgba(45,158,107,.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .modal-body { padding: 28px 32px 36px; }
+    .modal-close {
+      background: none; border: none; color: var(--muted);
+      font-size: 22px; cursor: pointer; line-height: 1; padding: 4px; flex-shrink: 0;
+    }
+    .modal-close:hover { color: var(--cream); }
+    .modal-region {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+      margin-bottom: 10px; display: inline-block; padding: 3px 8px;
+      border-radius: 2px; border: 1px solid;
+    }
+    .modal-title {
+      font-family: 'Crimson Pro', serif;
+      font-size: clamp(20px, 3vw, 30px); font-weight: 400;
+      color: var(--cream); line-height: 1.25;
+    }
+    .modal-meta {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; color: var(--muted);
+      padding: 16px 0; border-bottom: 1px solid rgba(45,158,107,.1);
+      margin-bottom: 24px;
+    }
+    .modal-content { font-size: 16px; font-weight: 300; color: var(--cream); line-height: 1.85; }
+    .modal-content p { margin-bottom: 18px; }
+    .modal-content h3 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+      color: var(--bright); letter-spacing: .05em; margin: 28px 0 12px;
+    }
+    .modal-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 12px 20px; margin: 20px 0;
+      background: rgba(45,158,107,.07);
+      font-style: italic; color: var(--muted);
+    }
+    .modal-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-top: 28px; padding-top: 24px;
+      border-top: 1px solid rgba(45,158,107,.12);
+    }
+    .btn-small {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; background: var(--accent);
+      color: var(--dark); font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      border: none; border-radius: 3px; cursor: pointer; transition: all .2s;
+      text-decoration: none;
+    }
+    .btn-small:hover { background: var(--bright); }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:900px) {
+      .page-header { padding: 100px 28px 50px; }
+      .globe-deco { display: none; }
+      .region-bar { padding: 0 28px; }
+      .top-stories { grid-template-columns: 1fr; }
+      .story-main { padding: 36px 28px; }
+      .stories-section { padding: 40px 28px 60px; }
+      .stories-grid { grid-template-columns: 1fr; }
+      .orgs-section { padding: 50px 28px; }
+      .orgs-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<script src="site-data.js"></script>
+<div id="nav-root"></div>
+<script src="nav.js"></script>
+
+<!-- ══ PAGE HEADER ══ -->
+<div class="page-header" style="margin-top:64px;">
+  <div class="globe-deco"></div>
+  <div class="section-tag">Küresel Perspektif</div>
+  <h1 class="page-title">ULUSLARARASI<br><span>EKOLOJİ</span></h1>
+  <p class="page-desc">Dünya genelindeki çevre haberleri, iklim krizi raporları ve uluslararası çevre örgütlerinden güncel içerikler.</p>
+</div>
+
+<!-- ══ BÖLGE FİLTRESİ ══ -->
+<div class="region-bar">
+  <button class="region-btn aktif" onclick="bolgeFiltrele('hepsi', this)">🌐 Tümü</button>
+  <button class="region-btn" onclick="bolgeFiltrele('avrupa', this)">🇪🇺 Avrupa</button>
+  <button class="region-btn" onclick="bolgeFiltrele('asya', this)">🌏 Asya</button>
+  <button class="region-btn" onclick="bolgeFiltrele('latin', this)">🌎 Latin Amerika</button>
+  <button class="region-btn" onclick="bolgeFiltrele('afrika', this)">🌍 Afrika</button>
+  <button class="region-btn" onclick="bolgeFiltrele('kuzey', this)">🏔 Kuzey Amerika</button>
+  <button class="region-btn" onclick="bolgeFiltrele('okyanus', this)">🌊 Okyanusya</button>
+</div>
+
+<!-- ══ ÜST HABERLER ══ -->
+<div class="top-stories">
+  <div class="story-main" onclick="haberAc(0)">
+    <span class="region-badge r-latin">🌎 Amazon</span>
+    <h2 class="story-title-lg" id="top-title">Amazon'un Kalbi: 2024'te Kaybedilen 1,2 Milyon Hektar Orman</h2>
+    <p class="story-excerpt">Brezilya Uzay Araştırmaları Enstitüsü'nün yayımladığı yıllık PRODES raporuna göre Amazon havzasındaki ormansızlaşma 2024'te yeniden ivme kazandı. Tropikal yağmur ormanlarındaki yıllık kayıp, önceki üç yılın ortalamasının yüzde 34 üzerinde seyretti.</p>
+    <div class="story-meta">
+      <span>📰 INPE / Reuters</span>
+      <span>📅 Nisan 2025</span>
+      <span>🌡 İklim Krizi</span>
+    </div>
+  </div>
+  <div class="story-side">
+    <div class="story-side-item" onclick="haberAc(1)">
+      <span class="region-badge r-avrupa">🇪🇺 AB</span>
+      <h3 class="story-title-sm">Avrupa Doğa Restorasyon Yasası: Üye Ülkelerde Uygulama Direnci</h3>
+      <p class="story-meta" style="margin-top:8px;">BBC · Mart 2025</p>
+    </div>
+    <div class="story-side-item" onclick="haberAc(2)">
+      <span class="region-badge r-asya">🌏 Güney Asya</span>
+      <h3 class="story-title-sm">Bangladeş'te Sanayi Kirliliği: Buriganga Nehri'nin Son Çığlığı</h3>
+      <p class="story-meta" style="margin-top:8px;">The Guardian · Mart 2025</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HABERLER GRID ══ -->
+<div class="stories-section">
+  <div class="stories-grid" id="haberlerGrid">
+    <!-- JS ile doldurulur -->
+  </div>
+</div>
+
+<!-- ══ ULUSLARARASI ÖRGÜTLER ══ -->
+<div class="orgs-section">
+  <div class="section-tag">Kaynaklar</div>
+  <div class="orgs-title">ULUSLARARASI ÖRGÜTLER</div>
+  <p class="orgs-subtitle">Dünya genelinde ekolojik izleme ve savunuculuk yürüten kuruluşlar</p>
+  <div class="orgs-grid">
+    <a href="https://www.greenpeace.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">☮️</span>
+      <div class="org-name">Greenpeace</div>
+      <p class="org-desc">Küresel çevre savunuculuğu ve doğrudan eylem.</p>
+    </a>
+    <a href="https://www.wwf.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">🐼</span>
+      <div class="org-name">WWF</div>
+      <p class="org-desc">Yaban hayatı koruma ve sürdürülebilir kalkınma.</p>
+    </a>
+    <a href="https://www.amnesty.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">🕯️</span>
+      <div class="org-name">Amnesty International</div>
+      <p class="org-desc">Çevre savunucularının hakları ve belgelenmesi.</p>
+    </a>
+    <a href="https://www.globalwitness.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">🔎</span>
+      <div class="org-name">Global Witness</div>
+      <p class="org-desc">Çevre aktivistlerine yönelik şiddetin takibi.</p>
+    </a>
+    <a href="https://www.clientearth.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">⚖️</span>
+      <div class="org-name">ClientEarth</div>
+      <p class="org-desc">Çevre hukuku aracılığıyla iklim davası.</p>
+    </a>
+    <a href="https://www.earthjustice.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">🌿</span>
+      <div class="org-name">Earthjustice</div>
+      <p class="org-desc">ABD merkezli çevre hukuku kuruluşu.</p>
+    </a>
+    <a href="https://www.globalforestwatch.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">🛰️</span>
+      <div class="org-name">Global Forest Watch</div>
+      <p class="org-desc">Gerçek zamanlı ormansızlaşma izleme platformu.</p>
+    </a>
+    <a href="https://www.frontlinedefenders.org" target="_blank" rel="noopener" class="org-card">
+      <span class="org-emoji">🛡️</span>
+      <div class="org-name">Front Line Defenders</div>
+      <p class="org-desc">Risk altındaki insan hakları savunucuları.</p>
+    </a>
+  </div>
+</div>
+
+<!-- ══ HABER MODAL ══ -->
+<div id="haberModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div id="hm-region" class="modal-region r-genel"></div>
+        <div id="hm-title" class="modal-title"></div>
+      </div>
+      <button class="modal-close" onclick="haberKapat()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="hm-meta" class="modal-meta"></div>
+      <div id="hm-content" class="modal-content"></div>
+      <div class="modal-actions">
+        <a id="hm-link" href="#" target="_blank" rel="noopener" style="display:none" class="btn-small">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Kaynağa Git
+        </a>
+        <button onclick="haberKapat()" class="btn-small" style="background:transparent;color:var(--muted);border:1px solid rgba(45,158,107,.2);">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--dark);padding:50px 80px 36px;border-top:1px solid rgba(45,158,107,.1);">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--cream);">ekoloji-izleme<span style="color:var(--bright)">.com</span></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(122,158,138,.4);letter-spacing:.07em;">© 2025 — Bağımsız Çevre Gözlem Platformu</div>
+  </div>
+</footer>
+
+<script>
+const HABERLER = [
+  {
+    id: 0,
+    baslik: "Amazon'un Kalbi: 2024'te Kaybedilen 1,2 Milyon Hektar Orman",
+    bolge: "latin", bolgeLabel: "🌎 Amazon", bolgeClass: "r-latin",
+    kaynak: "INPE / Reuters", tarih: "2025-04-05", kategori: "Ormansızlaşma",
+    ozet: "Brezilya Uzay Araştırmaları Enstitüsü yıllık PRODES raporunu yayımladı.",
+    icerik: `
+      <p>Brezilya Ulusal Uzay Araştırmaları Enstitüsü'nün (INPE) Nisan 2025'te yayımladığı PRODES yıllık raporuna göre Amazon havzasındaki ormansızlaşma 2024 yılında ciddi biçimde ivme kazandı.</p>
+      <h3>Boyut ve Dağılım</h3>
+      <p>Analiz edilen dönemde toplam 1,2 milyon hektar birincil tropikal yağmur ormanı yok oldu. Bu rakam, 2021–2023 yıllık ortalama kaybının yüzde 34 üzerinde seyretmektedir. Tahribatın yüzde 67'si Pará ve Mato Grosso eyaletlerinde yoğunlaşmaktadır.</p>
+      <h3>İklim Geri Bildirimi</h3>
+      <p>Bilim insanları, Amazon'un giderek artan bölümlerinin artık karbon yutağı olmaktan çıkıp karbon kaynağına dönüştüğüne dikkat çekmektedir. Soy degradasyonu ve yangın siklüsleriyle birleşen bu eğilim, "ormandan savanaya geçiş eşiği" olarak tanımlanan kritik noktaya yaklaşıldığına işaret etmektedir.</p>
+      <blockquote>"Amazon tek parça olarak ayakta tutulduğunda dünyanın klimatik dengesine katkı sağlıyor; parçalandığında ise süreci hızlandıran bir kaynağa dönüşüyor." — INPE Direktörü</blockquote>
+      <h3>Politik Bağlam</h3>
+      <p>Brezilya'nın 2030 ormansızlaşma sıfır hedefi yeniden sorgulanırken, kıtanın geri kalanında da benzer trendler gözlemleniyor: Bolivya, Kolombiya ve Peru'da 2024 yılı kayıpları birlikte ek 400.000 hektara ulaşmaktadır.</p>
+    `
+  },
+  {
+    id: 1,
+    baslik: "Avrupa Doğa Restorasyon Yasası: Üye Ülkelerde Uygulama Direnci",
+    bolge: "avrupa", bolgeLabel: "🇪🇺 Avrupa", bolgeClass: "r-avrupa",
+    kaynak: "BBC / Euronews", tarih: "2025-03-18", kategori: "Politika",
+    ozet: "AB'nin Nature Restoration Law direktifi birçok üye ülkede tarım lobisi baskısıyla karşılaşıyor.",
+    icerik: `
+      <p>2024 yılında yürürlüğe giren AB Doğa Restorasyon Yasası, bozulmuş ekosistemlerin 2030'a kadar yüzde 20'sini ve 2050'ye kadar tamamını restore etmeyi hedeflemektedir. Ancak uygulama süreci, birçok üye ülkede tarım sektörü ile orman endüstrisinin güçlü muhalefesiyle keskin bir gerilime dönüşmüştür.</p>
+      <h3>Direniş Cepheleri</h3>
+      <p>Polonya, Avusturya ve İtalya ulusal uygulama planlarını yasanın belirlediği takvimin gerisinde hazırlarken, Hollanda ve Almanya'da çiftçi grupları direktife karşı hukuki süreç başlatmıştır.</p>
+      <blockquote>"Restorasyonu arazinin verimliliğiyle çatışan bir yükümlülük olarak değil, uzun vadeli gıda güvencesinin temeli olarak görmek gerekiyor." — Avrupa Çevre Ajansı</blockquote>
+      <h3>Türkiye Bağlamı</h3>
+      <p>AB üyelik sürecindeki Türkiye'nin bu direktife uyum sağlaması beklenmektedir; ancak mevcut mevzuat çerçevesi, hem kapsam hem denetim mekanizmaları bakımından AB standartlarının önemli ölçüde gerisinde kalmaktadır.</p>
+    `
+  },
+  {
+    id: 2,
+    baslik: "Bangladeş'te Sanayi Kirliliği: Buriganga Nehri'nin Son Çığlığı",
+    bolge: "asya", bolgeLabel: "🌏 Güney Asya", bolgeClass: "r-asya",
+    kaynak: "The Guardian", tarih: "2025-03-02", kategori: "Su Kirliliği",
+    ozet: "Dakka çevresindeki tekstil fabrikalarının kimyasal atıkları Buriganga Nehri'ni ekolojik felakete sürükledi.",
+    icerik: `
+      <p>Dakka'yı çevreleyen tekstil ihracat bölgelerinin sanayi atıkları, Buriganga Nehri'ni biyolojik açıdan neredeyse ölü bir su kütlesine dönüştürmüştür. Aroma ve rengi gözle görülür şekilde değişen nehirde ölçülen çözünmüş oksijen değerleri, su ekosistemlerinin varlığını sürdüremeyeceği sınırın çok altında seyretmektedir.</p>
+      <h3>Boyut</h3>
+      <p>Yaklaşık 15 milyon kişinin içme ve kullanma suyu kaynağı olan nehir, 5.000'den fazla tekstil fabrikasının deşarj ettiği boyama atıkları, ağır metaller ve işlenmemiş kimyasal maddelerle kirletilmektedir. Balık türü sayısının geçtiğimiz on yıl içinde yüzde 80 azaldığı bildirilmektedir.</p>
+      <blockquote>"Buriganga artık balık tuttuğumuz, çocuklarımızı yıkadığımız nehir değil. Geri dönüşü olup olmadığını bilmiyoruz." — Yerel balıkçı</blockquote>
+    `
+  },
+  {
+    id: 3,
+    baslik: "Kenya: Masai Mara'da Tarımsal Genişlemenin Yaban Hayatı Üzerindeki Etkisi",
+    bolge: "afrika", bolgeLabel: "🌍 Afrika", bolgeClass: "r-afrika",
+    kaynak: "Nature / AFP", tarih: "2025-02-14", kategori: "Habitat Kaybı",
+    ozet: "Göç güzergahlarında yoğunlaşan çitleme ve ekim faaliyetleri, gnu ve zebra popülasyonlarını tehdit ediyor.",
+    icerik: `
+      <p>Nature dergisinde yayımlanan araştırma, Masai Mara-Serengeti ekosisteminde göç güzergahlarının kritik dar boğazlarını kapayan tarımsal çitlemenin yıllık hayvan sayımlarında dramatik bir düşüşe yol açtığını ortaya koymaktadır.</p>
+      <h3>Göç Bozulması</h3>
+      <p>Uydu takip verileri, gnu sürülerinin artık geleneksel güzergahların yalnızca yüzde 60'ını kullanabildiğini göstermektedir. Güzergahların kesildiği noktalarda hayvan ölümleri ile yırtıcı-av karşılaşmaları belirgin biçimde artmıştır.</p>
+      <blockquote>"Göçü kesmek, bölgenin karbon döngüsünü, otlak yenilenmesini ve nehir ekosistemlerini birden olumsuz etkiliyor. Domino etkisi çok hızlı gelişiyor." — Araştırmacı ekip, Nature</blockquote>
+      <h3>Çözüm Arayışları</h3>
+      <p>Kenya Yaban Hayatı Servisi, Masai topluluklarıyla koruma ortaklığı modellerini genişletmeye çalışmaktadır. Ancak artan tarımsal baskı ve nüfus büyümesi karşısında bu modelin sürdürülebilirliği tartışmalıdır.</p>
+    `
+  },
+  {
+    id: 4,
+    baslik: "Kanada Orman Yangınları: 2024 Sezonu Rekorları Tarihe Gömdü",
+    bolge: "kuzey", bolgeLabel: "🏔 Kuzey Amerika", bolgeClass: "r-kuzey",
+    kaynak: "CBC / Science", tarih: "2025-01-28", kategori: "Yangın",
+    ozet: "Kanada'da 2024'te yanan orman alanı 2023'ün rekor sezonunu geride bıraktı; karbon emisyonları tahminleri alt üst etti.",
+    icerik: `
+      <p>Kanada Orman Servisi'nin yıllık raporuna göre 2024 yangın sezonu, daha önce rekor kıran 2023 sezonunun yaklaşık yüzde 15 üzerinde bir alanla kapandı. Toplam yanan alan 16 milyon hektarı aşarak tarihin en büyük tek ülke kayıplarından biri olarak kayıtlara geçti.</p>
+      <h3>Karbon Dengesi Krizi</h3>
+      <p>Boreal (kuzey) ormanları, küresel karbon tutumu açısından kritik öneme sahiptir. Ancak çalışmalar, Kanada ormanlarının 2000'li yılların başından bu yana net karbon kaynağına döndüğüne işaret etmektedir. Bu durum, Paris Anlaşması kapsamındaki ülke taahhütlerinin hesaplamalarını temelden sarsmaktadır.</p>
+      <blockquote>"Modeller bu senaryoyu 2060–2080 için öngörüyordu. Öngörülen gelecek, bugün yaşandı." — Kanada Orman Araştırmaları Merkezi</blockquote>
+    `
+  },
+  {
+    id: 5,
+    baslik: "Büyük Mercan Resifi: Ağartma Olaylarının Sıklığı Kritik Eşiği Aştı",
+    bolge: "okyanus", bolgeLabel: "🌊 Okyanusya", bolgeClass: "r-okyanus",
+    kaynak: "Australian Institute of Marine Science", tarih: "2025-01-10", kategori: "Okyanus",
+    ozet: "2024'te beşinci küresel mercan ağartma olayı ilan edildi; Büyük Set Resifi tarihinin en yaygın ağartmasını yaşadı.",
+    icerik: `
+      <p>NOAA ve Avustralya Deniz Bilimleri Enstitüsü'nün ortak açıklamasıyla 2024, küresel tarihte beşinci resmi mercan ağartma olayı olarak tescillendi. Büyük Mercan Resifi'nde gerçekleştirilen hava ve sualtı anketleri, izlenen istasyonların yüzde 73'ünde ağartma hasarı bulunduğunu ortaya koydu.</p>
+      <h3>Sıcaklık Kaydı</h3>
+      <p>Kuzey Avustralya açıklarındaki yüzey deniz suyu sıcaklıkları, Şubat–Nisan 2024 döneminde mevsim normallerinin 2,8 derece üzerinde seyrettikten sonra geri çekildi. Mercanların toparlanma kapasitesi, giderek kısalan soğuma aralıkları nedeniyle ciddi biçimde zorlanmaktadır.</p>
+      <blockquote>"1,5°C senaryosunda mercan resiflerinin yüzde 70–90'ını kaybedebiliriz. 2°C'de bu oran yüzde 99'a yükseliyor. Bu artık projeksiyon değil, gözlemlenen gerçeklik." — AIMS Baş Araştırmacısı</blockquote>
+    `
+  }
+];
+
+let aktifBolge = 'hepsi';
+
+function bolgeFiltrele(bolge, btn) {
+  aktifBolge = bolge;
+  document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('aktif'));
+  btn.classList.add('aktif');
+  renderGrid();
+}
+
+function renderGrid() {
+  const filtered = aktifBolge === 'hepsi'
+    ? HABERLER
+    : HABERLER.filter(h => h.bolge === aktifBolge);
+  const grid = document.getElementById('haberlerGrid');
+  grid.innerHTML = filtered.map(h => `
+    <div class="story-card" onclick="haberAc(${h.id})" data-bolge="${h.bolge}">
+      <span class="region-badge ${h.bolgeClass}" style="margin-bottom:12px;">${h.bolgeLabel}</span>
+      <h3 class="card-title">${h.baslik}</h3>
+      <p class="card-excerpt">${h.ozet}</p>
+      <div class="card-meta">
+        <span>📰 ${h.kaynak}</span>
+        <span>📅 ${new Date(h.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'})}</span>
+        <span>🏷 ${h.kategori}</span>
+      </div>
+    </div>
+  `).join('');
+
+  // scroll reveal
+  grid.querySelectorAll('.story-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = `opacity .5s ease ${i*.08}s, transform .5s ease ${i*.08}s`;
+    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 50);
+  });
+}
+
+function haberAc(id) {
+  const h = HABERLER.find(x => x.id === id);
+  if (!h) return;
+  const rEl = document.getElementById('hm-region');
+  rEl.textContent = h.bolgeLabel;
+  rEl.className = 'modal-region ' + h.bolgeClass;
+  document.getElementById('hm-title').textContent = h.baslik;
+  document.getElementById('hm-meta').innerHTML = `
+    <span>📰 ${h.kaynak}</span>
+    <span>📅 ${new Date(h.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})}</span>
+    <span>🏷 ${h.kategori}</span>
+  `;
+  document.getElementById('hm-content').innerHTML = h.icerik;
+  const linkEl = document.getElementById('hm-link');
+  if (h.url) { linkEl.href = h.url; linkEl.style.display = 'inline-flex'; }
+  else { linkEl.style.display = 'none'; }
+
+  document.getElementById('haberModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function haberKapat() {
+  document.getElementById('haberModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('haberModal').addEventListener('click', function(e) {
+  if (e.target === this) haberKapat();
+});
+document.addEventListener('keydown', e => { if(e.key==='Escape') haberKapat(); });
+
+renderGrid();
+</script>
+</body>
+</html>
