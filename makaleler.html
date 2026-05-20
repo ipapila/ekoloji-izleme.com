@@ -776,14 +776,31 @@ function makaleAc(id) {
 
   // PDF / URL butonları
   const mpdf = document.getElementById('mpdf');
-  if (m.pdf_url || m.dosya) {
-    mpdf.href = m.pdf_url || m.dosya; mpdf.style.display = 'inline-flex'; mpdf.textContent = '📥 PDF İndir';
+  const murl = document.getElementById('murl');
+  const dosyaUrl = m.pdf_url || m.dosya || '';
+  const kaynakUrl = m.url || '';
+
+  const isPdf = u => u && /\.pdf(\?|$)/i.test(u);
+  const isDoc = u => u && /\.(doc|docx)(\?|$)/i.test(u);
+
+  // Ayrı dosya alanı varsa (pdf_url / dosya)
+  if (dosyaUrl) {
+    mpdf.href = dosyaUrl;
+    mpdf.textContent = isPdf(dosyaUrl) ? '📥 PDF İndir' : isDoc(dosyaUrl) ? '📝 DOC İndir' : '📎 Dosyayı Aç';
+    mpdf.style.display = 'inline-flex';
   } else { mpdf.style.display = 'none'; }
 
-  const murl = document.getElementById('murl');
-  if (m.url) {
-    murl.href = m.url; murl.style.display = 'inline-flex';
-    murl.textContent = `Makaleye Git — ${domain || m.url}`;
+  // url alanı: pdf/doc ise indirme butonu, değilse "Makaleye Git"
+  if (kaynakUrl) {
+    murl.href = kaynakUrl;
+    if (isPdf(kaynakUrl)) {
+      murl.textContent = '📥 PDF İndir'; murl.setAttribute('download', '');
+    } else if (isDoc(kaynakUrl)) {
+      murl.textContent = '📝 DOC İndir'; murl.setAttribute('download', '');
+    } else {
+      murl.textContent = `Makaleye Git — ${domain || kaynakUrl}`; murl.removeAttribute('download');
+    }
+    murl.style.display = 'inline-flex';
   } else { murl.style.display = 'none'; }
 
   const modal = document.getElementById('makaleModal');
