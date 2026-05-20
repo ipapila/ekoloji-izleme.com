@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ekoloji-izleme.com — Haber Tarayıcı (v3 — harita verisi kaldırıldı)
+ekoloji-izleme.com — Haber Tarayıcı (v4 — genişletilmiş kaynaklar)
 """
 
 import argparse
@@ -19,42 +19,144 @@ import feedparser
 import requests
 from bs4 import BeautifulSoup
 
-# ─── YAPILANDIRMA ──────────────────────────────────────────────────
+# ─── RSS KAYNAKLARI ─────────────────────────────────────────────────
+# genel=False → eşik 1 puan  (zaten filtreli kaynak)
+# genel=True  → eşik 4 puan  (genel haber kaynağı, sıkı filtre)
 
 RSS_KAYNAKLARI = [
-    {"url": "https://bianet.org/topic/cevre/feed/rss",          "kaynak": "Bianet",       "kategori": "Çevre İhlali", "genel": False},
-    {"url": "https://iklimhaber.org/feed/",                      "kaynak": "İklim Haber",  "kategori": "İklim",        "genel": False},
-    {"url": "https://yesilgazete.org/feed/",                     "kaynak": "Yeşil Gazete", "kategori": "Çevre Medyası","genel": False},
-    {"url": "https://www.tema.org.tr/duyurular?format=feed",     "kaynak": "TEMA",         "kategori": "STK",          "genel": False},
-    {"url": "https://www.greenpeace.org/turkey/feed/",           "kaynak": "Greenpeace TR","kategori": "STK",          "genel": False},
-    {"url": "https://news.google.com/rss/search?q=çevre+ihlali+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Çevre İhlali", "genel": False},
-    {"url": "https://news.google.com/rss/search?q=orman+tahribi+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Orman / Maden", "genel": False},
-    {"url": "https://news.google.com/rss/search?q=HES+RES+baraj+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "HES / RES / Baraj", "genel": False},
-    {"url": "https://news.google.com/rss/search?q=acele+kamulaştırma+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Kamulaştırma", "genel": False},
-    {"url": "https://news.google.com/rss/search?q=ÇED+maden+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "ÇED Kararları", "genel": False},
-    {"url": "https://www.sozcu.com.tr/rss/cevre.xml",            "kaynak": "Sözcü",        "kategori": "Haber",        "genel": True},
-    {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",       "kaynak": "Cumhuriyet",   "kategori": "Haber",        "genel": True},
+
+    # ── Çevre / Ekoloji odaklı ──────────────────────────────────────
+    {"url": "https://bianet.org/topic/cevre/feed/rss",
+     "kaynak": "Bianet Çevre",         "kategori": "Çevre İhlali",   "genel": False},
+
+    {"url": "https://iklimhaber.org/feed/",
+     "kaynak": "İklim Haber",           "kategori": "İklim",           "genel": False},
+
+    {"url": "https://yesilgazete.org/feed/",
+     "kaynak": "Yeşil Gazete",          "kategori": "Çevre Medyası",   "genel": False},
+
+    {"url": "https://www.ekoiq.com/feed/",
+     "kaynak": "Ekoiq",                 "kategori": "Sürdürülebilirlik","genel": False},
+
+    # ── STK / Sivil toplum ──────────────────────────────────────────
+    {"url": "https://www.tema.org.tr/duyurular?format=feed",
+     "kaynak": "TEMA",                  "kategori": "STK",             "genel": False},
+
+    {"url": "https://www.greenpeace.org/turkey/feed/",
+     "kaynak": "Greenpeace TR",         "kategori": "STK",             "genel": False},
+
+    {"url": "https://dogadernegi.org/feed/",
+     "kaynak": "Doğa Derneği",          "kategori": "STK",             "genel": False},
+
+    {"url": "https://wwf.org.tr/feed/",
+     "kaynak": "WWF Türkiye",           "kategori": "STK",             "genel": False},
+
+    # ── Enerji ──────────────────────────────────────────────────────
+    {"url": "https://www.enerjiatlasi.com/rss/haberler.xml",
+     "kaynak": "Enerji Atlası",         "kategori": "Enerji",          "genel": False},
+
+    {"url": "https://enerjigunlugu.net/feed/",
+     "kaynak": "Enerji Günlüğü",        "kategori": "Enerji",          "genel": False},
+
+    {"url": "https://www.pvtech.org/feed/",          # güneş/yenilenebilir
+     "kaynak": "PV Tech",               "kategori": "Güneş Enerjisi",  "genel": False},
+
+    # ── Bağımsız / eleştirel medya ──────────────────────────────────
+    {"url": "https://www.gazeteduvar.com.tr/feed/",
+     "kaynak": "Gazete Duvar",          "kategori": "Haber",           "genel": True},
+
+    {"url": "https://medyascope.tv/feed/",
+     "kaynak": "Medyascope",            "kategori": "Haber",           "genel": True},
+
+    {"url": "https://artigercek.com/feed/",
+     "kaynak": "Artı Gerçek",           "kategori": "Haber",           "genel": True},
+
+    {"url": "https://bianet.org/bianet/feed/rss",    # genel Bianet (çevre dışı da var)
+     "kaynak": "Bianet Genel",          "kategori": "Haber",           "genel": True},
+
+    # ── Uluslararası Türkçe ─────────────────────────────────────────
+    {"url": "https://rss.dw.com/rdf/rss-tur-all",
+     "kaynak": "DW Türkçe",             "kategori": "Haber",           "genel": True},
+
+    {"url": "https://feeds.bbci.co.uk/turkish/rss.xml",
+     "kaynak": "BBC Türkçe",            "kategori": "Haber",           "genel": True},
+
+    {"url": "https://tr.euronews.com/rss",
+     "kaynak": "Euronews TR",           "kategori": "Haber",           "genel": True},
+
+    # ── Türk ana medyası (çevre filtreyle) ──────────────────────────
+    {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",
+     "kaynak": "Cumhuriyet Çevre",      "kategori": "Haber",           "genel": False},
+
+    {"url": "https://www.sozcu.com.tr/rss/cevre.xml",
+     "kaynak": "Sözcü Çevre",           "kategori": "Haber",           "genel": True},
+
+    {"url": "https://www.ntv.com.tr/rss/haberleri",
+     "kaynak": "NTV",                   "kategori": "Haber",           "genel": True},
+
+    {"url": "https://www.haberturk.com/rss",
+     "kaynak": "Habertürk",             "kategori": "Haber",           "genel": True},
+
+    # ── Resmi kaynaklar ─────────────────────────────────────────────
+    {"url": "https://www.resmigazete.gov.tr/rss/main.xml",
+     "kaynak": "Resmî Gazete",          "kategori": "Resmi",           "genel": False},
+
+    {"url": "https://www.csb.gov.tr/rss/haberler.xml",
+     "kaynak": "Çevre Bakanlığı",       "kategori": "Resmi",           "genel": False},
+
+    # ── Anadolu Ajansı ──────────────────────────────────────────────
+    {"url": "https://www.aa.com.tr/tr/rss/default?cat=cevre",
+     "kaynak": "AA Çevre",              "kategori": "Haber",           "genel": False},
+
+    {"url": "https://www.aa.com.tr/tr/rss/default?cat=ekonomi",
+     "kaynak": "AA Ekonomi",            "kategori": "Enerji",          "genel": True},
 ]
+
+# ─── WEB SCRAPING KAYNAKLARI ────────────────────────────────────────
 
 WEB_KAYNAKLARI = [
-    {"url": "https://yesilgazete.org",           "kaynak": "Yeşil Gazete", "kategori": "Çevre Medyası",
-     "secici": "article h2 a, .entry-title a",   "ozet_secici": "article .entry-content p", "genel": False},
-    {"url": "https://iklimhaber.org",            "kaynak": "İklim Haber",  "kategori": "İklim",
-     "secici": "article h2 a, .entry-title a",   "ozet_secici": "article p",                "genel": False},
-    {"url": "https://www.greenpeace.org/turkey/blog/", "kaynak": "Greenpeace TR", "kategori": "STK",
-     "secici": ".post-title a, h2 a",            "ozet_secici": ".post-excerpt p",           "genel": False},
-    {"url": "https://tr.euronews.com/tag/cevre", "kaynak": "Euronews TR",  "kategori": "Haber",
-     "secici": ".article__title a, h3.article__title a", "ozet_secici": ".article__summary", "genel": True},
-    {"url": "https://www.csb.gov.tr/duyurular",  "kaynak": "Çevre Bakanlığı", "kategori": "Resmi",
-     "secici": ".duyuru-item a, h3 a",           "ozet_secici": ".duyuru-ozet",              "genel": False},
+    {"url": "https://yesilgazete.org",
+     "kaynak": "Yeşil Gazete",     "kategori": "Çevre Medyası",
+     "secici": "article h2 a, .entry-title a",
+     "ozet_secici": "article .entry-content p",     "genel": False},
+
+    {"url": "https://iklimhaber.org",
+     "kaynak": "İklim Haber",      "kategori": "İklim",
+     "secici": "article h2 a, .entry-title a",
+     "ozet_secici": "article p",                    "genel": False},
+
+    {"url": "https://www.greenpeace.org/turkey/blog/",
+     "kaynak": "Greenpeace TR",    "kategori": "STK",
+     "secici": ".post-title a, h2 a",
+     "ozet_secici": ".post-excerpt p",              "genel": False},
+
+    {"url": "https://www.csb.gov.tr/duyurular",
+     "kaynak": "Çevre Bakanlığı",  "kategori": "Resmi",
+     "secici": ".duyuru-item a, h3 a",
+     "ozet_secici": ".duyuru-ozet",                 "genel": False},
+
+    {"url": "https://www.enerjiatlasi.com/haberler/",
+     "kaynak": "Enerji Atlası",    "kategori": "Enerji",
+     "secici": "h2 a, h3 a, .haber-baslik a",
+     "ozet_secici": ".ozet, p",                     "genel": False},
+
+    {"url": "https://ekolojik.net",
+     "kaynak": "Ekolojik",         "kategori": "Çevre Medyası",
+     "secici": "article h2 a, .entry-title a",
+     "ozet_secici": "article p",                    "genel": False},
+
+    {"url": "https://www.kib.org.tr/haberler",      # Kamu İhale ilanları
+     "kaynak": "KİK",              "kategori": "İhale",
+     "secici": ".haber-baslik a, h3 a, td a",
+     "ozet_secici": ".ozet",                        "genel": False},
+
+    {"url": "https://mapeg.gov.tr/haberler.aspx",   # Maden ve Petrol işleri
+     "kaynak": "MAPEG",            "kategori": "Maden",
+     "secici": ".haber a, h3 a, .news-title a",
+     "ozet_secici": ".haber-ozet, p",               "genel": False},
 ]
 
-# ─── FİLTRE SİSTEMİ ────────────────────────────────────────────────
+# ─── FİLTRE SİSTEMİ ─────────────────────────────────────────────────
 
 YUKSEK_SINYAL = [
     "çevre ihlali", "çevre katliamı", "ÇED", "çed kararı", "çed raporu",
@@ -67,6 +169,10 @@ YUKSEK_SINYAL = [
     "atık depolama", "düzensiz depolama", "kaçak maden", "kaçak yapı doğa",
     "MAPEG", "EPDK kararı", "resmî gazete çevre", "resmî gazete maden",
     "ormana yapı", "dere yatağı", "dereye yapı", "kıyı tahribatı",
+    "arama ruhsatı", "işletme ruhsatı", "maden ruhsatı",
+    "yenilenebilir enerji", "fosil yakıt", "karbon emisyon",
+    "iklim krizi", "iklim değişikliği", "küresel ısınma",
+    "çevre cezası", "çevre denetim", "çed itiraz",
 ]
 
 ORTA_SINYAL = [
@@ -75,8 +181,13 @@ ORTA_SINYAL = [
     "yangın", "sel", "taşkın", "heyelan", "kıyı", "deniz", "göl", "dere",
     "su hakkı", "tarım arazisi", "bor", "altın maden", "jeotermal",
     "ihlal", "ruhsatsız", "izinsiz", "yıkım", "ağaç", "sera gazı",
-    "plastik kirlilik", "sondaj", "arama ruhsatı", "TEMA", "WWF", "Greenpeace",
+    "plastik kirlilik", "sondaj", "TEMA", "WWF", "Greenpeace",
     "doğal yaşam", "yaban hayat", "kuş türü", "balık türü",
+    "solar", "güneş enerjisi", "rüzgar enerjisi", "enerji santrali",
+    "nükleer", "petrol", "doğalgaz", "kömür", "linyit",
+    "ihale", "ruhsat", "lisans", "proje onay", "inşaat izni",
+    "sit alanı", "flora", "fauna", "ekosistem",
+    "karbon", "emisyon", "hava kalitesi", "PM2", "azot dioksit",
 ]
 
 GUCLU_NEGATIF = [
@@ -118,7 +229,7 @@ def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False) -> in
     return puan
 
 
-# ─── YARDIMCI ──────────────────────────────────────────────────────
+# ─── YARDIMCI ────────────────────────────────────────────────────────
 
 logging.basicConfig(
     level=logging.INFO,
@@ -150,7 +261,7 @@ def tarih_normalize(tarih_str) -> Optional[str]:
         return str(tarih_str)
 
 
-def fetch(url: str, timeout: int = 12) -> Optional[requests.Response]:
+def fetch(url: str, timeout: int = 15) -> Optional[requests.Response]:
     try:
         r = requests.get(url, headers=HEADERS, timeout=timeout)
         r.raise_for_status()
@@ -161,20 +272,22 @@ def fetch(url: str, timeout: int = 12) -> Optional[requests.Response]:
         return None
 
 
-# ─── RSS TARAMA ────────────────────────────────────────────────────
+# ─── RSS TARAMA ──────────────────────────────────────────────────────
 
 def rss_tara(kaynaklar: list) -> list:
     haberler = []
+    basarili = basarisiz = 0
     for kaynak in kaynaklar:
         genel = kaynak.get("genel", False)
-        log.info(f"RSS: {kaynak['kaynak']} [genel={genel}]")
+        log.info(f"RSS: {kaynak['kaynak']}")
         try:
             feed = feedparser.parse(kaynak["url"])
             if feed.bozo and not feed.entries:
-                log.warning(f"  ⚠ Boş/hatalı feed atlandı")
+                log.warning(f"  ⚠ Erişilemiyor — atlandı")
+                basarisiz += 1
                 continue
             kabul = reddedilen = 0
-            for entry in feed.entries[:25]:
+            for entry in feed.entries[:30]:
                 baslik = entry.get("title", "").strip()
                 link   = entry.get("link", "")
                 ozet   = BeautifulSoup(
@@ -203,19 +316,23 @@ def rss_tara(kaynaklar: list) -> list:
                 })
                 kabul += 1
             log.info(f"  → {kabul} kabul / {reddedilen} reddedildi")
-            time.sleep(0.8)
+            basarili += 1
+            time.sleep(0.5)
         except Exception as e:
-            log.warning(f"  RSS hatası: {e}")
+            log.warning(f"  Hata: {e}")
+            basarisiz += 1
+
+    log.info(f"\nRSS özeti: {basarili} kaynak başarılı, {basarisiz} başarısız")
     return haberler
 
 
-# ─── WEB SCRAPING ──────────────────────────────────────────────────
+# ─── WEB SCRAPING ────────────────────────────────────────────────────
 
 def web_tara(kaynaklar: list) -> list:
     haberler = []
     for kaynak in kaynaklar:
         genel = kaynak.get("genel", False)
-        log.info(f"Web: {kaynak['kaynak']} [genel={genel}]")
+        log.info(f"Web: {kaynak['kaynak']}")
         r = fetch(kaynak["url"])
         if not r:
             continue
@@ -232,7 +349,7 @@ def web_tara(kaynaklar: list) -> list:
                 link = urljoin(kaynak["url"], href)
                 ozet = ""
                 if kaynak.get("ozet_secici"):
-                    parent = a.find_parent(["article", "div", "li"])
+                    parent = a.find_parent(["article", "div", "li", "tr"])
                     if parent:
                         ozet_el = parent.select_one(kaynak["ozet_secici"])
                         if ozet_el:
@@ -257,15 +374,15 @@ def web_tara(kaynaklar: list) -> list:
             log.info(f"  → {kabul} kabul / {reddedilen} reddedildi")
         except Exception as e:
             log.warning(f"  Scrape hatası: {e}")
-        time.sleep(1.2)
+        time.sleep(1.0)
     return haberler
 
 
-# ─── ANA FONKSİYON ─────────────────────────────────────────────────
+# ─── ANA FONKSİYON ───────────────────────────────────────────────────
 
-def tara(cikti_dosyasi="haberler.json", max_haber=200):
+def tara(cikti_dosyasi="haberler.json", max_haber=500):
     log.info("═" * 55)
-    log.info("  ekoloji-izleme.com — Haber Tarayıcı v3")
+    log.info("  ekoloji-izleme.com — Haber Tarayıcı v4")
     log.info("═" * 55)
 
     p = Path(cikti_dosyasi)
@@ -274,7 +391,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=200):
             eski = json.loads(p.read_text(encoding="utf-8"))
             mevcut_haberler = eski.get("haberler", [])
             gorulen_idler   = {h.get("id", "") for h in mevcut_haberler}
-            log.info(f"Mevcut: {len(mevcut_haberler)} haber ({len(gorulen_idler)} unique ID)")
+            log.info(f"Mevcut: {len(mevcut_haberler)} haber")
         except Exception:
             mevcut_haberler, gorulen_idler = [], set()
     else:
@@ -286,7 +403,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=200):
     log.info("\n── Web Scraping ──")
     web_haberler = web_tara(WEB_KAYNAKLARI)
 
-    # Dedup: sadece görülmemiş ID'ler eklenir
+    # Dedup
     tum_yeni = []
     for h in rss_haberler + web_haberler:
         if h["id"] not in gorulen_idler:
@@ -300,8 +417,8 @@ def tara(cikti_dosyasi="haberler.json", max_haber=200):
 
     cikti = {
         "meta": {
-            "guncelleme":  datetime.now(timezone.utc).isoformat(),
-            "toplam":      len(birlesik),
+            "guncelleme":   datetime.now(timezone.utc).isoformat(),
+            "toplam":       len(birlesik),
             "yeni_eklenen": len(tum_yeni),
         },
         "haberler": birlesik,
@@ -310,7 +427,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=200):
     Path(cikti_dosyasi).write_text(
         json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    log.info(f"\n✓ {cikti_dosyasi} → {len(birlesik)} haber ({len(tum_yeni)} yeni)")
+    log.info(f"\n✅ {cikti_dosyasi} → {len(birlesik)} haber ({len(tum_yeni)} yeni)")
     return cikti
 
 
