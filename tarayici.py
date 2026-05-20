@@ -22,8 +22,11 @@ from bs4 import BeautifulSoup
 
 # ─── YAPILANDIRMA ──────────────────────────────────────────────────
 
-# Turkiye-katmanlar haritasından veri çekimi devre dışı bırakıldı.
-# Tarayıcı yalnızca RSS ve web kaynaklarını kullanır.
+HARITA_URLS = [
+    "https://ekoloji-izleme.com/harita/data.json",
+    "https://ekoloji-izleme.com/harita/ihlaller.json",
+    "https://ipapila.github.io/Turkiye-katmanlar/data/ihlaller.json",
+]
 
 RSS_KAYNAKLARI = [
     # Çevre odaklı kaynaklar — zaten filtrelenmiş, düşük eşik
@@ -201,6 +204,47 @@ def fetch(url: str, timeout: int = 12) -> Optional[requests.Response]:
         return None
 
 
+# ─── HARITA VERİSİ ─────────────────────────────────────────────────
+
+def harita_verisi_cek(urls: list) -> list:
+    kayitlar = []
+    for url in urls:
+        log.info(f"Harita verisi: {url}")
+        r = fetch(url)
+        if not r:
+            continue
+        try:
+            data = r.json()
+            items = (data if isinstance(data, list) else
+                     data.get("features") or data.get("ihlaller") or
+                     data.get("data") or data.get("items") or [])
+            for item in items:
+                if item.get("type") == "Feature":
+                    props = item.get("properties", {})
+                    coords = item.get("geometry", {}).get("coordinates", [])
+                    item = {**props}
+                    if coords and len(coords) >= 2:
+                        item["lng"], item["lat"] = coords[0], coords[1]
+                kayit = {
+                    "id": item.get("id") or haber_id(url, item.get("baslik", "")),
+                    "baslik": item.get("baslik") or item.get("name") or item.get("title", ""),
+                    "konum": item.get("konum") or item.get("il") or "",
+                    "kategori": item.get("kategori") or item.get("alan_turu") or "",
+                    "siddet": item.get("siddet") or "takipte",
+                    "tarih": tarih_normalize(item.get("tarih") or item.get("date")),
+                    "url": item.get("url") or item.get("kaynak_url") or "",
+                    "ozet": item.get("aciklama") or item.get("ozet") or "",
+                    "lat": item.get("lat") or item.get("enlem"),
+                    "lng": item.get("lng") or item.get("boylam"),
+                    "kaynak": "harita",
+                }
+                if kayit["baslik"]:
+                    kayitlar.append(kayit)
+            log.info(f"  → {len(items)} kayıt")
+        except Exception as e:
+            log.warning(f"  JSON parse hatası: {e}")
+    return kayitlar
+
 
 # ─── RSS TARAMA ────────────────────────────────────────────────────
 
@@ -330,6 +374,9 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
     else:
         eski, gorulen_idler = {"haberler": []}, set()
 
+    log.info("\n── Harita Verisi ──")
+    harita_kayitlari = harita_verisi_cek(harita_urls or HARITA_URLS)
+
     log.info("\n── RSS Kaynakları ──")
     rss_haberler = rss_tara(RSS_KAYNAKLARI)
 
@@ -357,6 +404,7 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
             "yeni_eklenen": len(tum_yeni),
         },
         "haberler": birlesik,
+        "harita_kayitlari": harita_kayitlari,
     }
 
     Path(cikti_dosyasi).write_text(
@@ -369,6 +417,7 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cikti", default="haberler.json")
+    parser.add_argument("--harita-url", action="append", dest="harita_urls")
     parser.add_argument("--ozet-cek", action="store_true")
     parser.add_argument("--surekli", action="store_true")
     parser.add_argument("--aralik", type=int, default=180)
@@ -377,14 +426,14 @@ def main():
     if args.surekli:
         while True:
             try:
-                tara(args.cikti, ozet_cek_aktif=args.ozet_cek)
+                tara(args.cikti, args.harita_urls, args.ozet_cek)
             except KeyboardInterrupt:
                 sys.exit(0)
             except Exception as e:
                 log.error(f"Tarama hatası: {e}")
             time.sleep(args.aralik * 60)
     else:
-        tara(args.cikti, ozet_cek_aktif=args.ozet_cek)
+        tara(args.cikti, args.harita_urls, args.ozet_cek)
 
 if __name__ == "__main__":
     main()
