@@ -443,7 +443,19 @@
 
 <script>
 (function patchSITE() {
-  if (typeof SITE === "undefined") return;
+  // site-data.js yüklenmediyse minimal fallback SITE objesi oluştur
+  if (typeof SITE === "undefined") {
+    window.SITE = {
+      _store: {},
+      get: function(key) {
+        try { return JSON.parse(localStorage.getItem("ekoloji_" + key) || "null"); } catch { return null; }
+      },
+      set: function(key, val) {
+        try { localStorage.setItem("ekoloji_" + key, JSON.stringify(val)); } catch {}
+      },
+      getList: function(key) { return this.get(key) || []; },
+    };
+  }
   if (typeof SITE.getList !== "function") {
     SITE.getList = function(key) { return this.get(key) || []; };
   }
@@ -1377,9 +1389,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("importUygulaBtn")?.addEventListener("click", _importUygula);
   if (importModal) importModal.addEventListener("click", e => { if(e.target===importModal) importModal.style.display="none"; });
 
-  if (sessionAktifMi()) {
-    gosterAdminPanel();
-  } else {
+  try {
+    if (sessionAktifMi()) {
+      gosterAdminPanel();
+    } else {
+      document.getElementById("loginScreen").style.display = "block";
+    }
+  } catch(e) {
+    console.error("Admin boot hatası:", e);
     document.getElementById("loginScreen").style.display = "block";
   }
 });
