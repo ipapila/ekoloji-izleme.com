@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ekoloji-izleme.com — Otomatik Güncelleme v4
-Haberler + Turkiye-katmanlar harita ihlalleri entegrasyonu.
+Haber tarayıcı: RSS + web scraping → data.json
 """
 
 import env_yukle  # .env dosyasını os.environ'a yükler
