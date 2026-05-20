@@ -553,6 +553,10 @@
 <script>
 const SESSION_KEY = "ekoloji_admin_session";
 
+function today() {
+  return new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+}
+
 function sessionAktifMi() {
   return sessionStorage.getItem(SESSION_KEY) === "1";
 }
