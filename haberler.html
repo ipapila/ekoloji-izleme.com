@@ -120,15 +120,16 @@
 <div id="detailModal" class="modal-bg" style="display:none;">
   <div class="modal-box">
     <div class="modal-header">
-      <span class="badge" id="mBadge"></span>
-      <!-- ✅ DÜZELTİLDİ: onclick ile doğrudan ID kullanımı yerine addEventListener -->
+      <div id="mBadgeRow" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
       <button class="modal-close" id="detailClose">✕</button>
     </div>
     <div class="modal-body">
+      <img id="mFoto" src="" alt="" style="display:none;width:100%;max-height:320px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">
       <h2 class="modal-title" id="mTitle"></h2>
       <div class="modal-meta" id="mMeta"></div>
-      <p class="modal-ozet" id="mOzet"></p>
-      <a id="mLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;"></a>
+      <div id="mEtiketler" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;"></div>
+      <div class="modal-ozet" id="mOzet"></div>
+      <a id="mLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;margin-top:16px;"></a>
     </div>
   </div>
 </div>
@@ -220,13 +221,47 @@ function acModal(idx) {
   if (!h) return;
   const tarih = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
   const domain = h.url ? (() => { try { return new URL(h.url).hostname.replace("www.",""); } catch(e){ return ""; } })() : "";
-  document.getElementById("mBadge").textContent = h.kategori || h.etiket || h.kaynak || "";
+
+  // Badge satırı: kategori + eylem
+  const badgeRow = document.getElementById("mBadgeRow");
+  badgeRow.innerHTML = "";
+  const cats = [h.kategori, h.etiket].filter(Boolean);
+  const uniq = [...new Set(cats)];
+  uniq.forEach(c => {
+    const s = document.createElement("span");
+    s.className = "badge"; s.textContent = c; badgeRow.appendChild(s);
+  });
+  if (h.eylem) {
+    const s = document.createElement("span");
+    s.style.cssText = "font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 8px;border-radius:2px;background:rgba(240,165,0,.12);color:#f0a500;border:1px solid rgba(240,165,0,.25);";
+    s.textContent = h.eylem; badgeRow.appendChild(s);
+  }
+
+  // Foto
+  const foto = document.getElementById("mFoto");
+  if (h.foto_url) {
+    foto.src = h.foto_url; foto.style.display = "block";
+    foto.onerror = () => { foto.style.display = "none"; };
+  } else { foto.style.display = "none"; }
+
   document.getElementById("mTitle").textContent = h.baslik;
+
+  // Meta
   document.getElementById("mMeta").innerHTML =
-    `<span>📰 ${h.kaynak||""}</span>` +
+    (h.kaynak ? `<span>📰 ${h.kaynak}</span>` : "") +
     (tarih ? `<span>📅 ${tarih}</span>` : "") +
     (domain ? `<span>🔗 ${domain}</span>` : "");
+
+  // Etiketler chips
+  const et = document.getElementById("mEtiketler");
+  const etiketler = Array.isArray(h.etiketler) ? h.etiketler : (h.etiketler ? (() => { try { return JSON.parse(h.etiketler); } catch(e){ return []; } })() : []);
+  if (etiketler.length) {
+    et.style.display = "flex";
+    et.innerHTML = etiketler.map(e => `<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join("");
+  } else { et.style.display = "none"; et.innerHTML = ""; }
+
   document.getElementById("mOzet").textContent = h.ozet || "Özet yok. Kaynağa gidin.";
+
   const link = document.getElementById("mLink");
   if (h.url) {
     link.href = h.url;
