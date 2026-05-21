@@ -354,12 +354,19 @@ def main():
 
     if data is None:
         print("⚠️  Uzak veri alınamadı — boş yapıyla başlanıyor.")
-        data = {"ihlaller": [], "haberler": [], "raporlar": [], "makaleler": [], "uluslararasi": [], "_meta": {}}
+        data = {"ihlaller": [], "haberler": [], "raporlar": [], "_meta": {}}
         sha  = None
 
     mevcut_ihlaller = data.get("ihlaller", [])
     mevcut_haberler = data.get("haberler", [])
     mevcut_urls     = {h.get("url", "") for h in mevcut_haberler}
+    # Google News URL'leri her çalışmada değişir → başlık normalleştirme
+    # ile ikinci filtre (tarayici.py ile aynı mantık)
+    mevcut_basliklar = {
+        re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+        for h in mevcut_haberler
+        if h.get("baslik")
+    }
 
     print(f"  Mevcut: {len(mevcut_ihlaller)} ihlal, {len(mevcut_haberler)} haber")
 
@@ -369,20 +376,26 @@ def main():
     id_sayac = sonraki_id(mevcut_haberler)
     for kaynak in KAYNAK_RSS:
         for h in rss_cek(kaynak):
-            if h["url"] not in mevcut_urls:
+            baslik_norm = re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+            if h["url"] not in mevcut_urls and baslik_norm not in mevcut_basliklar:
                 h["id"] = id_sayac
                 id_sayac += 1
                 yeni_haberler.append(h)
                 mevcut_urls.add(h["url"])
+                if baslik_norm:
+                    mevcut_basliklar.add(baslik_norm)
 
     print(f"\n🌐 Web scraping… ({len(KAYNAK_WEB)} kaynak)")
     for kaynak in KAYNAK_WEB:
         for h in web_cek(kaynak):
-            if h["url"] not in mevcut_urls:
+            baslik_norm = re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+            if h["url"] not in mevcut_urls and baslik_norm not in mevcut_basliklar:
                 h["id"] = id_sayac
                 id_sayac += 1
                 yeni_haberler.append(h)
                 mevcut_urls.add(h["url"])
+                if baslik_norm:
+                    mevcut_basliklar.add(baslik_norm)
 
     print(f"\n✅ {len(yeni_haberler)} yeni haber eklendi.")
     data["haberler"] = yeni_haberler + mevcut_haberler
@@ -390,11 +403,11 @@ def main():
         "guncelleme":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "kaynak":        "otomatik_tarama_v4",
         "kaynak_sayisi": len(KAYNAK_RSS) + len(KAYNAK_WEB),
-        "ihlal_sayisi":  len(data.get("ihlaller",  [])),
-        "haber_sayisi":  len(data.get("haberler",  [])),
-        "rapor_sayisi":  len(data.get("raporlar",  [])),
-        "makale_sayisi": len(data.get("makaleler", [])),
-        "ulus_sayisi":   len(data.get("uluslararasi", [])),
+        "ihlal_sayisi":  len(data.get("ihlaller",    [])),
+        "haber_sayisi":  len(data.get("haberler",    [])),
+        "rapor_sayisi":  len(data.get("raporlar",    [])),
+        "makale_sayisi": len(data.get("makaleler",   [])),
+        "ulus_sayisi":   len(data.get("uluslararasi",[])),
     }
 
     print("\n📤 GitHub'a yazılıyor…")
