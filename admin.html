@@ -108,6 +108,7 @@
       <button class="tab" data-tab="raporlar">Raporlar</button>
       <button class="tab" data-tab="makaleler">Makaleler</button>
       <button class="tab" data-tab="uluslararasi">Uluslararası Medya</button>
+      <a href="kuresel.html" target="_blank" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--bright);text-decoration:none;padding:10px 14px;display:flex;align-items:center;gap:6px;margin-left:auto;opacity:.7;transition:opacity .2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">↗ Küresel Bakış sayfası</a>
     </div>
 
     <!-- İHLALLER -->
@@ -944,10 +945,6 @@ function ghAyarKaydet(){
   if(!gercek&&!mevcut){document.getElementById("ghAyarDurum").textContent="Token zorunlu.";return;}
   localStorage.setItem(GH_REPO_KEY,repo);if(gercek)localStorage.setItem(GH_TOKEN_KEY,ti);
   localStorage.setItem(GH_WORKFLOW_KEY,wf||GH_DEFAULTS.workflow);
-  const fu=document.getElementById("flexUrl")?.value.trim();
-  const fs=document.getElementById("flexSecret")?.value.trim();
-  if(fu)localStorage.setItem("ekoloji_flex_url",fu);
-  if(fs&&!fs.startsWith("\u2022"))localStorage.setItem("ekoloji_flex_secret",fs);
   document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Kaydedildi</span>';
 }
 function ghAyarAl(){
@@ -964,10 +961,6 @@ function aciTaramaModal(){
   document.getElementById("ghRepo").value=repo;
   if(token){document.getElementById("ghToken").value="••••••••••••••••";document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';}
   document.getElementById("ghWorkflow").value=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
-  const fu=localStorage.getItem("ekoloji_flex_url")||"";
-  const fs=localStorage.getItem("ekoloji_flex_secret")||"";
-  if(document.getElementById("flexUrl"))document.getElementById("flexUrl").value=fu;
-  if(document.getElementById("flexSecret")&&fs)document.getElementById("flexSecret").value="••••••••";
 }
 function kapat(){document.getElementById("taramaModal").classList.remove("open");}
 
@@ -1010,8 +1003,8 @@ async function yapiTarama(mod){
     if(!dr.ok)throw new Error(`GitHub API: HTTP ${dr.status}`);
     log('<span class="ok">✓ Workflow tetiklendi…</span>');
     await new Promise(r=>setTimeout(r,4000));
-    const run=await sonRunBul(owner,repoName,token,log);
-    if(run)await runDurumIzle(owner,repoName,run.id,run.url,token,log);
+    const runId=await sonRunBul(owner,repoName,token,log);
+    if(runId)await runDurumIzle(owner,repoName,runId,token,log);
   }catch(e){log(`<span class="warn">✗ ${e.message}</span>`);}
 }
 
@@ -1022,13 +1015,13 @@ async function sonRunBul(owner,repo,token,log){
     const data=await r.json(),run=data.workflow_runs?.[0];
     if(!run){log('<span class="warn">Run bulunamadı.</span>');return null;}
     log(`Run #${run.run_number} → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);
-    return {id:run.id, url:run.html_url};
+    return run.id;
   }catch(e){log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`);return null;}
 }
 
-async function runDurumIzle(owner,repo,runId,runUrl,token,log){
-  for(let i=0;i<50;i++){
-    await new Promise(r=>setTimeout(r,8000));
+async function runDurumIzle(owner,repo,runId,token,log){
+  for(let i=0;i<30;i++){
+    await new Promise(r=>setTimeout(r,6000));
     try{
       const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
       const run=await r.json();
@@ -1037,10 +1030,10 @@ async function runDurumIzle(owner,repo,runId,runUrl,token,log){
         else log(`<span class="warn">✗ Workflow ${run.conclusion}.</span>`);
         return;
       }
-      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*8}sn)`);
+      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*6}sn)`);
     }catch(e){log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);}
   }
-  log(`<span class="warn">⚠ İzleme süresi doldu (~7 dk). Workflow hâlâ çalışıyor olabilir — ${runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:'GitHub Actions sayfasını kontrol edin'}.</span>`);
+  log('<span class="warn">Zaman aşımı.</span>');
 }
 
 async function otomatikYenile(log){
@@ -1190,12 +1183,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("importIptalBtn")?.addEventListener("click",()=>{importModal.style.display="none";});
   document.getElementById("importUygulaBtn")?.addEventListener("click",_importUygula);
   if(importModal)importModal.addEventListener("click",e=>{if(e.target===importModal)importModal.style.display="none";});
-  /* Her sayfa açılışında şifre sor — sessionStorage auto-login kaldırıldı.
-     sessionStorage sekme boyunca yaşar; kullanıcı sekmeyi kapatmadan geri
-     dönünce admin paneline direkt düşüyordu. Artık her açılışta login ekranı
-     gösterilir, şifre girilmeden admin paneline erişilemez. */
-  SITE.logout();
-  document.getElementById("loginScreen").style.display="block";
+  try{if(sessionAktifMi())gosterAdminPanel();else document.getElementById("loginScreen").style.display="block";}
+  catch(e){document.getElementById("loginScreen").style.display="block";}
 });
 </script>
 </body>
