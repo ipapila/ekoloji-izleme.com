@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ekoloji-izleme.com — Otomatik Güncelleme v4
+ekoloji-izleme.com — Otomatik Güncelleme v5
 Haber tarayıcı: RSS + web scraping → data.json
+DEĞİŞİKLİKLER v5:
+  - haberler ayrıca haberler.json'a da yazılır (admin panel için)
+  - ihlallere DOKUNULMAZ (manuel yönetim)
+  - raporlar/makaleler/uluslararasi korunur (admin panelinden gelir)
 """
 
 import env_yukle  # .env dosyasını os.environ'a yükler
@@ -14,6 +18,7 @@ from bs4 import BeautifulSoup
 REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
 REPO_NAME  = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")
 FILE_PATH  = "data.json"
+HABER_PATH = "haberler.json"
 
 
 # ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
@@ -160,9 +165,9 @@ def ekoloji_mi(baslik, ozet="", genel=True):
 
 # ─── GITHUB YARDIMCILARI ────────────────────────────────────────────
 
-def get_sha():
+def get_sha(path=FILE_PATH):
     token = os.environ.get("GITHUB_TOKEN")
-    url   = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
+    url   = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{path}"
     r = requests.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=15)
     return r.json().get("sha") if r.status_code == 200 else None
 
@@ -174,17 +179,17 @@ def get_remote_data():
         except: return None, None
     return None, None
 
-def update_remote_data(new_data, sha):
+def update_remote_data(new_data, sha, path=FILE_PATH, msg=None):
     token = os.environ.get("GITHUB_TOKEN")
     if not token:
         print("❌ GITHUB_TOKEN yok!")
         return
-    url     = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
+    url     = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{path}"
     content = base64.b64encode(
-        json.dumps(new_data, ensure_ascii=False, indent=2).encode()
+        json.dumps(new_data, ensure_ascii=False, indent=2).encode("utf-8")
     ).decode()
     payload = {
-        "message": f"otomatik güncelleme {datetime.date.today()}",
+        "message": msg or f"otomatik güncelleme {datetime.date.today()}",
         "content": content,
     }
     if sha:
@@ -192,13 +197,9 @@ def update_remote_data(new_data, sha):
     r = requests.put(url, headers={"Authorization": f"Bearer {token}"},
                      json=payload, timeout=20)
     if r.status_code in (200, 201):
-        print(f"✅ GitHub güncellendi — "
-              f"{len(new_data.get('ihlaller',[]))} ihlal, "
-              f"{len(new_data.get('haberler',[]))} haber.")
+        print(f"✅ {path} güncellendi")
     else:
-        print(f"❌ Hata {r.status_code}: {r.text[:300]}")
-
-
+        print(f"❌ {path} hata {r.status_code}: {r.text[:200]}")
 
 
 # ─── YARDIMCILAR ────────────────────────────────────────────────────
@@ -226,7 +227,6 @@ def rss_cek(kaynak):
     genel = kaynak.get("genel", True)
     esik  = 4 if genel else 1
 
-    # Farklı User-Agent'lar dene — bazı sunucular bot'u engelliyor
     user_agents = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
@@ -358,7 +358,7 @@ def main():
                 "makaleler": [], "uluslararasi": [], "_meta": {}}
         sha  = None
 
-    # Eksik koleksiyon anahtarlarını ekle (eski data.json için)
+    # Eksik koleksiyon anahtarlarını ekle
     for col in ("raporlar", "makaleler", "uluslararasi"):
         if col not in data:
             data[col] = []
@@ -370,7 +370,7 @@ def main():
         for h in mevcut_haberler if h.get("baslik")
     }
 
-    print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal, {len(mevcut_haberler)} haber")
+    print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal (dokunulmayacak), {len(mevcut_haberler)} haber")
 
     # ── Haberleri tara ──────────────────────────────────────────
     print(f"\n🔍 RSS taranıyor… ({len(KAYNAK_RSS)} kaynak)")
@@ -396,20 +396,34 @@ def main():
                 if bn: mevcut_basliklar.add(bn)
 
     print(f"\n✅ {len(yeni_haberler)} yeni haber eklendi.")
-    data["haberler"] = yeni_haberler + mevcut_haberler
+
+    tum_haberler = yeni_haberler + mevcut_haberler
+    data["haberler"] = tum_haberler
+
+    # İHLALLERE DOKUNMA — sadece meta güncelle
     data["_meta"] = {
         "guncelleme":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "kaynak":        "otomatik_tarama_v4",
+        "kaynak":        "otomatik_tarama_v5",
         "kaynak_sayisi": len(KAYNAK_RSS) + len(KAYNAK_WEB),
         "ihlal_sayisi":  len(data.get("ihlaller",    [])),
-        "haber_sayisi":  len(data.get("haberler",    [])),
+        "haber_sayisi":  len(tum_haberler),
         "rapor_sayisi":  len(data.get("raporlar",    [])),
         "makale_sayisi": len(data.get("makaleler",   [])),
         "ulus_sayisi":   len(data.get("uluslararasi",[])),
     }
 
-    print("\n📤 GitHub'a yazılıyor…")
+    print("\n📤 GitHub'a yazılıyor (data.json)…")
     update_remote_data(data, sha)
+
+    # ── haberler.json'a ayrıca yaz ──────────────────────────────
+    # Admin paneli haberler.json'u ayrıca çekiyor
+    print("📤 GitHub'a yazılıyor (haberler.json)…")
+    haber_sha = get_sha(HABER_PATH)
+    haber_data = {"haberler": tum_haberler,
+                  "_meta": {"guncelleme": data["_meta"]["guncelleme"],
+                             "haber_sayisi": len(tum_haberler)}}
+    update_remote_data(haber_data, haber_sha, path=HABER_PATH,
+                       msg=f"haberler güncellendi {datetime.date.today()}")
 
 
 if __name__ == "__main__":
