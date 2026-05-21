@@ -368,8 +368,9 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
         try:
             eski = json.loads(p.read_text(encoding="utf-8"))
             gorulen_idler = {h.get("id", "") for h in eski.get("haberler", [])}
-            # Google News RSS'te aynı makale her seferinde farklı opak URL döner
-            # (CBMi… base64 kodu değişir) → başlık normalleştirme ile ikinci filtre
+            # Google News URL'leri her seferinde değişir (opak base64);
+            # aynı makale farklı ID alabilir → başlık normalleştirme ile
+            # ikinci filtre.
             gorulen_basliklar = {
                 re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
                 for h in eski.get("haberler", [])
@@ -381,8 +382,11 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
     else:
         eski, gorulen_idler, gorulen_basliklar = {"haberler": []}, set(), set()
 
-    log.info("\n── Harita Verisi ──")
-    harita_kayitlari = harita_verisi_cek(harita_urls or HARITA_URLS)
+    # harita_verisi_cek() artık çağrılmıyor: ihlal kayıtları haber değil,
+    # harita verisidir; data.json'daki "ihlaller" anahtarından okunur.
+    # Eski uygulama her çalışmada yüzlerce harita kaydını webhook üzerinden
+    # sunucuya gönderip "eski verilerin yeniden yüklenmesi" sorununa yol
+    # açıyordu.
 
     log.info("\n── RSS Kaynakları ──")
     rss_haberler = rss_tara(RSS_KAYNAKLARI)
@@ -414,7 +418,6 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
             "yeni_eklenen": len(tum_yeni),
         },
         "haberler": birlesik,
-        "harita_kayitlari": harita_kayitlari,
     }
 
     Path(cikti_dosyasi).write_text(
