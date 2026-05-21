@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LTTD3L198S');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Küresel Bakış — ekoloji-izleme.com</title>
+<meta name="description" content="Dünya genelindeki ekoloji, iklim ve çevre haberlerini Türkçe özetiyle takip edin.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ── HERO ── */
+.kg-hero {
+  padding: 120px 80px 80px;
+  background: linear-gradient(160deg, var(--dark) 0%, var(--forest) 60%, var(--dark) 100%);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(45,158,107,.15);
+}
+.kg-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 90% 20%, rgba(45,158,107,.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.kg-hero-globe {
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 340px;
+  height: 340px;
+  opacity: .07;
+}
+.kg-hero-globe circle { fill: none; stroke: var(--bright); }
+.kg-hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--bright);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp .7s ease .2s forwards;
+}
+.kg-hero-label::before { content: ''; width: 28px; height: 1px; background: var(--bright); }
+.kg-hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(56px, 7vw, 96px);
+  line-height: .9;
+  color: var(--white);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp .7s ease .35s forwards;
+}
+.kg-hero h1 span { color: var(--bright); display: block; }
+.kg-hero-desc {
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.75;
+  max-width: 540px;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp .7s ease .5s forwards;
+}
+.kg-hero-desc em { color: var(--leaf); font-style: normal; }
+.kg-stats-row {
+  display: flex;
+  gap: 40px;
+  border-top: 1px solid rgba(45,158,107,.15);
+  padding-top: 32px;
+  opacity: 0;
+  animation: fadeUp .7s ease .65s forwards;
+}
+.kg-stat { text-align: left; }
+.kg-stat-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 44px;
+  color: var(--bright);
+  line-height: 1;
+}
+.kg-stat-l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+
+/* ── FİLTRE ÇUBUĞU ── */
+.kg-filtre-wrap {
+  position: sticky;
+  top: 64px;
+  z-index: 100;
+  background: rgba(10,20,14,.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(45,158,107,.12);
+  padding: 0 80px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  justify-content: space-between;
+}
+.kg-tabs {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.kg-tabs::-webkit-scrollbar { display: none; }
+.kg-tab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 18px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.kg-tab:hover { color: var(--cream); }
+.kg-tab.aktif { color: var(--bright); border-bottom-color: var(--bright); }
+.kg-dil-select {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  background: rgba(45,158,107,.08);
+  border: 1px solid rgba(45,158,107,.2);
+  color: var(--cream);
+  padding: 7px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
+}
+.kg-dil-select option { background: var(--dark); }
+
+/* ── KART IZGARA ── */
+.kg-main {
+  background: var(--dark);
+  padding: 60px 80px 80px;
+  min-height: 60vh;
+}
+.kg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 2px;
+}
+.kg-kart {
+  background: var(--forest);
+  display: flex;
+  flex-direction: column;
+  transition: background .2s;
+  position: relative;
+  overflow: hidden;
+}
+.kg-kart::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--bright);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s;
+}
+.kg-kart:hover { background: var(--deep); }
+.kg-kart:hover::after { transform: scaleX(1); }
+.kg-kart-foto {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  opacity: .85;
+  transition: opacity .3s;
+}
+.kg-kart:hover .kg-kart-foto { opacity: 1; }
+.kg-kart-foto-placeholder {
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(135deg, rgba(45,158,107,.08) 0%, rgba(13,35,24,.6) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  opacity: .4;
+}
+.kg-kart-body { padding: 24px 26px 20px; flex: 1; display: flex; flex-direction: column; }
+.kg-kart-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.kg-dil-rozet {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  background: rgba(45,158,107,.15);
+  border: 1px solid rgba(45,158,107,.25);
+  color: var(--bright);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.kg-tur-rozet {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  background: rgba(240,165,0,.1);
+  border: 1px solid rgba(240,165,0,.2);
+  color: var(--alert);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.kg-kaynak {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: .05em;
+  margin-left: auto;
+}
+.kg-kart-baslik-tr {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: .02em;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 6px;
+  text-decoration: none;
+  display: block;
+}
+.kg-kart-baslik-org {
+  font-family: 'Crimson Pro', serif;
+  font-size: 13px;
+  font-style: italic;
+  color: rgba(180,200,188,.5);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.kg-kart-ozet {
+  font-family: 'Crimson Pro', serif;
+  font-size: 15px;
+  color: var(--cream);
+  line-height: 1.65;
+  font-weight: 300;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.kg-kart-etiketler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 16px;
+}
+.kg-kart-etiket {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(45,158,107,.1);
+  border: 1px solid rgba(45,158,107,.18);
+  color: rgba(45,158,107,.7);
+}
+.kg-kart-footer {
+  padding: 12px 26px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(45,158,107,.07);
+}
+.kg-tarih {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: .08em;
+}
+.kg-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--bright);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: gap .2s;
+}
+.kg-link:hover { gap: 9px; }
+
+/* ── BOŞ DURUM ── */
+.kg-bos {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 80px 40px;
+}
+.kg-bos-ikon { font-size: 48px; opacity: .3; margin-bottom: 20px; }
+.kg-bos-baslik {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.kg-bos-aciklama {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  opacity: .6;
+}
+
+/* ── YÜKLEME ── */
+.kg-yukleniyor {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 80px 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .1em;
+}
+.kg-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(45,158,107,.2);
+  border-top-color: var(--bright);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── DİL BAYRAKLARI HARİTASI ── */
+.kg-dil-harita {
+  background: var(--forest);
+  padding: 60px 80px;
+  border-top: 1px solid rgba(45,158,107,.1);
+}
+.kg-dil-harita h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--cream);
+  margin-bottom: 28px;
+  letter-spacing: .03em;
+}
+.kg-dil-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.kg-dil-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(0,0,0,.2);
+  border: 1px solid rgba(45,158,107,.15);
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+}
+.kg-dil-btn:hover, .kg-dil-btn.aktif {
+  background: rgba(45,158,107,.12);
+  border-color: rgba(45,158,107,.35);
+  color: var(--bright);
+}
+.kg-dil-sayi {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: var(--bright);
+  margin-left: 4px;
+}
+
+@media (max-width: 768px) {
+  .kg-hero { padding: 100px 24px 60px; }
+  .kg-hero-globe { display: none; }
+  .kg-filtre-wrap { padding: 0 16px; }
+  .kg-main { padding: 32px 16px 60px; }
+  .kg-dil-harita { padding: 40px 24px; }
+  .kg-grid { grid-template-columns: 1fr; }
+  .kg-stats-row { gap: 24px; flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+<script src="site-data.js"></script>
+<div id="nav-root"></div>
+<script src="nav.js"></script>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="kg-hero">
+  <!-- Dekoratif küre SVG -->
+  <svg class="kg-hero-globe" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="170" cy="170" r="160" stroke-width=".5"/>
+    <circle cx="170" cy="170" r="120" stroke-width=".4"/>
+    <circle cx="170" cy="170" r="80"  stroke-width=".3"/>
+    <ellipse cx="170" cy="170" rx="160" ry="60" stroke-width=".4"/>
+    <ellipse cx="170" cy="170" rx="160" ry="110" stroke-width=".3"/>
+    <line x1="10"  y1="170" x2="330" y2="170" stroke="var(--bright)" stroke-width=".4"/>
+    <line x1="170" y1="10"  x2="170" y2="330" stroke="var(--bright)" stroke-width=".4"/>
+  </svg>
+
+  <div class="kg-hero-label">Küresel Bakış</div>
+  <h1>DÜNYA<br><span>EKOLOJİSİ</span></h1>
+  <p class="kg-hero-desc">
+    Yabancı yayın organlarından derlenen çevre, iklim ve
+    ekoloji haberleri — <em>Türkçe özetiyle</em> takip edin.
+  </p>
+  <div class="kg-stats-row">
+    <div class="kg-stat">
+      <div class="kg-stat-n" id="statToplam">—</div>
+      <div class="kg-stat-l">İçerik</div>
+    </div>
+    <div class="kg-stat">
+      <div class="kg-stat-n" id="statDil">—</div>
+      <div class="kg-stat-l">Dil</div>
+    </div>
+    <div class="kg-stat">
+      <div class="kg-stat-n" id="statKaynak">—</div>
+      <div class="kg-stat-l">Kaynak</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FİLTRE ÇUBUĞU ══════════ -->
+<div class="kg-filtre-wrap" id="filtreWrap">
+  <div class="kg-tabs" id="turTabs">
+    <button class="kg-tab aktif" data-tur="">Tümü</button>
+    <button class="kg-tab" data-tur="Haber">Haber</button>
+    <button class="kg-tab" data-tur="Rapor">Rapor</button>
+    <button class="kg-tab" data-tur="Araştırma">Araştırma</button>
+    <button class="kg-tab" data-tur="Analiz">Analiz</button>
+    <button class="kg-tab" data-tur="Aktivizm">Aktivizm</button>
+    <button class="kg-tab" data-tur="Politika">Politika</button>
+  </div>
+  <select class="kg-dil-select" id="dilSelect">
+    <option value="">Tüm Diller</option>
+    <option value="EN">🇬🇧 İngilizce</option>
+    <option value="DE">🇩🇪 Almanca</option>
+    <option value="FR">🇫🇷 Fransızca</option>
+    <option value="ES">🇪🇸 İspanyolca</option>
+    <option value="AR">🇸🇦 Arapça</option>
+    <option value="EL">🇬🇷 Yunanca</option>
+    <option value="RU">🇷🇺 Rusça</option>
+  </select>
+</div>
+
+<!-- ══════════ KART IZGARASI ══════════ -->
+<main class="kg-main">
+  <div class="kg-grid" id="kartGrid">
+    <div class="kg-yukleniyor">
+      <div class="kg-spinner"></div>
+      Veriler yükleniyor…
+    </div>
+  </div>
+</main>
+
+<!-- ══════════ DİL HARİTASI ══════════ -->
+<section class="kg-dil-harita" id="dilHarita" style="display:none;">
+  <h3>Dile Göre Filtrele</h3>
+  <div class="kg-dil-grid" id="dilGrid"></div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-brand-name">ekoloji-izleme<b>.com</b></div>
+      <p>Türkiye'de ekolojik tahribatı bağımsız olarak izleyen, belgeleyen ve görünür kılan sivil bir gözlem platformu. Reklamsız, bağımsız.</p>
+    </div>
+    <div class="footer-col">
+      <h4>İzleme</h4>
+      <ul>
+        <li><a href="ihlaller.html?kat=Maden">Maden Projeleri</a></li>
+        <li><a href="ihlaller.html?kat=HES">HES & RES</a></li>
+        <li><a href="ihlaller.html?kat=Orman">Orman İhlalleri</a></li>
+        <li><a href="ihlaller.html?kat=Su Kirliliği">Su Kirliliği</a></li>
+        <li><a href="harita.html">Ekoloji Haritası</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>İçerik</h4>
+      <ul>
+        <li><a href="raporlar.html">Raporlar</a></li>
+        <li><a href="haberler.html">Haberler</a></li>
+        <li><a href="kuresel.html" style="color:var(--bright);">Küresel Bakış</a></li>
+        <li><a href="raporlar.html?tur=Veri">Veri Setleri</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="admin.html">Hakkında</a></li>
+        <li><a href="admin.html">İletişim</a></li>
+        <li><a href="admin.html">Gönüllü Ol</a></li>
+        <li><a href="admin.html">İhlal Bildir</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 ekoloji-izleme.com — Bağımsız Çevre Gözlem Platformu</p>
+    <div class="footer-coords">GPS: 39°53'E · 38.5°51'N · ZOOM 10x</div>
+  </div>
+</footer>
+
+<script>
+/* ── Dil bayrakları ── */
+const DIL_BAYRAK = {
+  EN:'🇬🇧', DE:'🇩🇪', FR:'🇫🇷', ES:'🇪🇸',
+  AR:'🇸🇦', EL:'🇬🇷', RU:'🇷🇺', Diğer:'🌐'
+};
+const DIL_AD = {
+  EN:'İngilizce', DE:'Almanca', FR:'Fransızca', ES:'İspanyolca',
+  AR:'Arapça', EL:'Yunanca', RU:'Rusça', Diğer:'Diğer'
+};
+
+let tumVeri = [];
+let seciliTur = '';
+let seciliDil = '';
+
+/* ── Veriyi yükle ── */
+async function veriYukle() {
+  try {
+    // Önce data.json (sunucu verisi), yoksa localStorage
+    let ulus = [];
+    try {
+      const r = await fetch('data.json?v=' + Date.now());
+      if (r.ok) {
+        const d = await r.json();
+        ulus = d.uluslararasi || [];
+      }
+    } catch {}
+
+    // localStorage'dan yerel eklemeleri birleştir
+    const yerel = typeof SITE !== 'undefined' ? (SITE.getList('uluslararasi') || []) : [];
+    if (yerel.length) {
+      const sunucuIds = new Set(ulus.map(x => String(x.id)));
+      ulus = [...yerel, ...ulus.filter(x => !sunucuIds.has(String(x.id)))];
+    }
+
+    tumVeri = ulus.sort((a, b) => (b.tarih || '') > (a.tarih || '') ? 1 : -1);
+    istatistikGuncelle();
+    dilHaritaRender();
+    kartRender();
+  } catch (e) {
+    document.getElementById('kartGrid').innerHTML =
+      `<div class="kg-bos"><div class="kg-bos-ikon">⚠</div>
+       <div class="kg-bos-baslik">Veri yüklenemedi</div>
+       <div class="kg-bos-aciklama">${e.message}</div></div>`;
+  }
+}
+
+/* ── İstatistikler ── */
+function istatistikGuncelle() {
+  const diller = new Set(tumVeri.map(x => x.dil).filter(Boolean));
+  const kaynaklar = new Set(tumVeri.map(x => x.kaynak).filter(Boolean));
+  document.getElementById('statToplam').textContent = tumVeri.length || '—';
+  document.getElementById('statDil').textContent     = diller.size   || '—';
+  document.getElementById('statKaynak').textContent  = kaynaklar.size|| '—';
+}
+
+/* ── Dil haritası ── */
+function dilHaritaRender() {
+  const sayac = {};
+  tumVeri.forEach(x => { const d = x.dil || 'Diğer'; sayac[d] = (sayac[d]||0)+1; });
+  const dilGrid = document.getElementById('dilGrid');
+  dilGrid.innerHTML = Object.entries(sayac)
+    .sort((a,b) => b[1]-a[1])
+    .map(([dil, n]) => `
+      <button class="kg-dil-btn" data-dil="${dil}" onclick="dilFiltrele('${dil}')">
+        ${DIL_BAYRAK[dil]||'🌐'} ${DIL_AD[dil]||dil}
+        <span class="kg-dil-sayi">${n}</span>
+      </button>`).join('');
+  document.getElementById('dilHarita').style.display = 'block';
+}
+
+function dilFiltrele(dil) {
+  seciliDil = (seciliDil === dil) ? '' : dil;
+  document.getElementById('dilSelect').value = seciliDil;
+  document.querySelectorAll('.kg-dil-btn').forEach(b => {
+    b.classList.toggle('aktif', b.dataset.dil === seciliDil);
+  });
+  kartRender();
+}
+
+/* ── Kart render ── */
+function kartRender() {
+  const grid = document.getElementById('kartGrid');
+  const filtreli = tumVeri.filter(x => {
+    if (seciliTur && x.tur !== seciliTur) return false;
+    if (seciliDil && x.dil !== seciliDil) return false;
+    return true;
+  });
+
+  if (!filtreli.length) {
+    grid.innerHTML = `
+      <div class="kg-bos">
+        <div class="kg-bos-ikon">🔭</div>
+        <div class="kg-bos-baslik">Kayıt Bulunamadı</div>
+        <div class="kg-bos-aciklama">Bu filtre kombinasyonuna uygun içerik henüz girilmemiş.</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtreli.map(item => kartHtml(item)).join('');
+}
+
+function kartHtml(item) {
+  const etiketler = Array.isArray(item.etiketler) ? item.etiketler : [];
+  const fotoHtml = item.foto_url
+    ? `<img class="kg-kart-foto" src="${item.foto_url}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=kg-kart-foto-placeholder>🌍</div>'">`
+    : `<div class="kg-kart-foto-placeholder">🌍</div>`;
+
+  const baslikEl = item.url
+    ? `<a class="kg-kart-baslik-tr" href="${item.url}" target="_blank" rel="noopener">${item.baslik_tr || item.baslik}</a>`
+    : `<span class="kg-kart-baslik-tr" style="cursor:default;">${item.baslik_tr || item.baslik}</span>`;
+
+  const orgBaslik = (item.baslik && item.baslik !== item.baslik_tr)
+    ? `<div class="kg-kart-baslik-org">${item.baslik}</div>` : '';
+
+  const etiketHtml = etiketler.slice(0, 4).map(e =>
+    `<span class="kg-kart-etiket">${e}</span>`).join('');
+
+  const linkHtml = item.url
+    ? `<a class="kg-link" href="${item.url}" target="_blank" rel="noopener">Kaynağa Git →</a>`
+    : '<span></span>';
+
+  return `
+    <article class="kg-kart">
+      ${fotoHtml}
+      <div class="kg-kart-body">
+        <div class="kg-kart-meta">
+          ${item.dil ? `<span class="kg-dil-rozet">${DIL_BAYRAK[item.dil]||''} ${item.dil}</span>` : ''}
+          ${item.tur ? `<span class="kg-tur-rozet">${item.tur}</span>` : ''}
+          ${item.kaynak ? `<span class="kg-kaynak">${item.kaynak}</span>` : ''}
+        </div>
+        ${baslikEl}
+        ${orgBaslik}
+        ${item.ozet ? `<p class="kg-kart-ozet">${item.ozet}</p>` : ''}
+        ${etiketHtml ? `<div class="kg-kart-etiketler">${etiketHtml}</div>` : ''}
+      </div>
+      <div class="kg-kart-footer">
+        <span class="kg-tarih">${item.tarih || ''}</span>
+        ${linkHtml}
+      </div>
+    </article>`;
+}
+
+/* ── Tür tab'ları ── */
+document.querySelectorAll('.kg-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    seciliTur = btn.dataset.tur;
+    document.querySelectorAll('.kg-tab').forEach(t => t.classList.remove('aktif'));
+    btn.classList.add('aktif');
+    kartRender();
+  });
+});
+
+/* ── Dil dropdown ── */
+document.getElementById('dilSelect').addEventListener('change', e => {
+  seciliDil = e.target.value;
+  document.querySelectorAll('.kg-dil-btn').forEach(b => {
+    b.classList.toggle('aktif', b.dataset.dil === seciliDil);
+  });
+  kartRender();
+});
+
+/* ── URL query parametresi: ?dil=EN veya ?tur=Rapor ── */
+(function urlParam() {
+  const p = new URLSearchParams(location.search);
+  if (p.get('dil')) {
+    seciliDil = p.get('dil');
+    document.getElementById('dilSelect').value = seciliDil;
+  }
+  if (p.get('tur')) {
+    seciliTur = p.get('tur');
+    document.querySelectorAll('.kg-tab').forEach(t => {
+      t.classList.toggle('aktif', t.dataset.tur === seciliTur);
+    });
+  }
+})();
+
+veriYukle();
+</script>
+</body>
+</html>
