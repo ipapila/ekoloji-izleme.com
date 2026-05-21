@@ -354,7 +354,7 @@ def main():
 
     if data is None:
         print("⚠️  Uzak veri alınamadı — boş yapıyla başlanıyor.")
-        data = {"ihlaller": [], "haberler": [], "raporlar": [], "_meta": {}}
+        data = {"ihlaller": [], "haberler": [], "raporlar": [], "makaleler": [], "uluslararasi": [], "_meta": {}}
         sha  = None
 
     mevcut_ihlaller = data.get("ihlaller", [])
@@ -387,11 +387,14 @@ def main():
     print(f"\n✅ {len(yeni_haberler)} yeni haber eklendi.")
     data["haberler"] = yeni_haberler + mevcut_haberler
     data["_meta"] = {
-        "guncelleme":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "kaynak":        "otomatik_tarama_v4",
-        "kaynak_sayisi": len(KAYNAK_RSS) + len(KAYNAK_WEB),
-        "ihlal_sayisi":  len(data["ihlaller"]),
-        "haber_sayisi":  len(data["haberler"]),
+        "guncelleme":      datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "kaynak":          "otomatik_tarama_v4",
+        "kaynak_sayisi":   len(KAYNAK_RSS) + len(KAYNAK_WEB),
+        "ihlal_sayisi":    len(data["ihlaller"]),
+        "haber_sayisi":    len(data["haberler"]),
+        "rapor_sayisi":    len(data.get("raporlar", [])),
+        "makale_sayisi":   len(data.get("makaleler", [])),
+        "ulus_sayisi":     len(data.get("uluslararasi", [])),
     }
 
     print("\n📤 GitHub'a yazılıyor…")
