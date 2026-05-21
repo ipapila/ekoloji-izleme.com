@@ -96,6 +96,7 @@
       <h2>İçerik Yönetim Paneli <span class="admin-badge">● Admin</span></h2>
       <div class="btn-group">
         <button class="btn btn-primary" onclick="aciTaramaModal()">⚡ Şimdi Tara</button>
+        <button class="btn btn-outline" id="btnYayinla" onclick="icerikGithubYaz()" style="border-color:rgba(45,158,107,.5);color:var(--bright);" title="raporlar/makaleler/uluslararasi → GitHub icerik.json → Flex">☁ Sunucuya Yayınla</button>
         <button class="btn btn-outline" onclick="aciImportModal()">⬆ JSON/GeoJSON İçe Aktar</button>
         <button class="btn btn-outline" style="border-color:rgba(240,165,0,.4);color:var(--alert);" onclick="aciDupModal()">🧹 Duplicate Temizle</button>
         <button class="btn btn-outline" onclick="doLogout()">Çıkış Yap</button>
@@ -108,7 +109,6 @@
       <button class="tab" data-tab="raporlar">Raporlar</button>
       <button class="tab" data-tab="makaleler">Makaleler</button>
       <button class="tab" data-tab="uluslararasi">Uluslararası Medya</button>
-      <a href="kuresel.html" target="_blank" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--bright);text-decoration:none;padding:10px 14px;display:flex;align-items:center;gap:6px;margin-left:auto;opacity:.7;transition:opacity .2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">↗ Küresel Bakış sayfası</a>
     </div>
 
     <!-- İHLALLER -->
@@ -758,7 +758,9 @@ function addRapor(){
   ["r-baslik","r-yil","r-yazar","r-ozet","r-dosya","r-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   resetChecked("r");const p=document.getElementById("r-foto-onizleme");if(p)p.style.display="none";
   const d=document.getElementById("r-pdf-durum");if(d)d.textContent="";
-  _veri.raporlar.unshift(y);tabloRender("raporlar");updateStats();toast("✓ Rapor kaydedildi.");
+  _veri.raporlar.unshift(y);tabloRender("raporlar");updateStats();
+  toast("✓ Rapor kaydedildi. Senkronize ediliyor…");
+  icerikGithubYaz();
 }
 
 function addMakale(){
@@ -771,7 +773,9 @@ function addMakale(){
   ["m-baslik","m-yazar","m-ozet","m-url","m-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("m-tarih").value=today();resetChecked("m");
   const p=document.getElementById("m-foto-onizleme");if(p)p.style.display="none";
-  _veri.makaleler.unshift(y);tabloRender("makaleler");updateStats();toast("✓ Makale kaydedildi.");
+  _veri.makaleler.unshift(y);tabloRender("makaleler");updateStats();
+  toast("✓ Makale kaydedildi. Senkronize ediliyor…");
+  icerikGithubYaz();
 }
 
 function addUluslararasi(){
@@ -786,7 +790,9 @@ function addUluslararasi(){
   ["u-baslik","u-baslik-tr","u-kaynak","u-ozet","u-url","u-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("u-tarih").value=today();resetChecked("u");
   const p=document.getElementById("u-foto-onizleme");if(p)p.style.display="none";
-  _veri.uluslararasi.unshift(y);tabloRender("uluslararasi");updateStats();toast("✓ Kayıt eklendi.");
+  _veri.uluslararasi.unshift(y);tabloRender("uluslararasi");updateStats();
+  toast("✓ Kayıt eklendi. Senkronize ediliyor…");
+  icerikGithubYaz();
 }
 
 /* ── DÜZENLE ── */
@@ -912,6 +918,7 @@ function editKaydet(col,id){
   const idx=_veri[col].findIndex(x=>String(x.id)===String(id));
   if(idx>=0)_veri[col][idx]=g;
   modal.remove();tabloRender(col);toast("✓ Kayıt güncellendi.");
+  editKaydetSonraSync(col);
 }
 
 /* ── FOTOĞRAF & PDF ── */
@@ -937,6 +944,95 @@ function dosyaYukle(file,klasor,onOk,onErr){
 /* ── GITHUB ── */
 const GH_REPO_KEY="ekoloji_gh_repo",GH_TOKEN_KEY="ekoloji_gh_token",GH_WORKFLOW_KEY="ekoloji_gh_workflow";
 const GH_DEFAULTS={repo:"ipapila/ekoloji-izleme.com",workflow:"update_data.yml"};
+
+/* ══════════════════════════════════════════════════════════════
+   icerik.json OTO-SYNC
+   raporlar / makaleler / uluslararasi → GitHub icerik.json (PUT)
+   Dosya küçük (<50KB), Contents API limiti yok, SHA çakışması yok.
+   Kaydedilince otomatik çağrılır; arka planda çalışır.
+   GitHub push'u update_data.yml'i tetikler → Flex güncellenir.
+══════════════════════════════════════════════════════════════ */
+async function icerikGithubYaz(){
+  const{repo,token}=ghAyarAl();
+  if(!repo||!token){setSyncDurum('local');return;}
+  const[owner,repoName]=repo.split("/");
+  if(!owner||!repoName){setSyncDurum('local');return;}
+
+  setSyncDurum('syncing');
+  try{
+    /* 1 — Mevcut SHA'yı al (varsa) */
+    let sha=null;
+    try{
+      const r=await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/icerik.json`,
+        {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
+      if(r.ok){const d=await r.json();sha=d.sha;}
+    }catch{}
+
+    /* 2 — Koleksiyonları oku ve yaz */
+    const icerik={
+      raporlar:    SITE.getList("raporlar"),
+      makaleler:   SITE.getList("makaleler"),
+      uluslararasi:SITE.getList("uluslararasi"),
+      _meta:{guncelleme:new Date().toISOString(),kaynak:"admin_panel"}
+    };
+    const icerikStr=JSON.stringify(icerik,null,2);
+    const content=btoa(unescape(encodeURIComponent(icerikStr)));
+    const payload={
+      message:`admin: icerik güncellendi ${new Date().toISOString().slice(0,10)}`,
+      content
+    };
+    if(sha)payload.sha=sha;
+
+    const putR=await fetch(
+      `https://api.github.com/repos/${owner}/${repoName}/contents/icerik.json`,
+      {method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
+       body:JSON.stringify(payload)}
+    );
+    if(putR.ok){
+      setSyncDurum('synced');
+      /* Push, update_data.yml'i otomatik tetikler (paths: [icerik.json]) */
+    }else{
+      const e=await putR.json().catch(()=>({}));
+      console.warn("icerik.json yazma hatası:",putR.status,e.message);
+      setSyncDurum('error',`HTTP ${putR.status}`);
+    }
+  }catch(e){
+    console.warn("icerik sync hatası:",e.message);
+    setSyncDurum('error',e.message);
+  }
+}
+
+/* Senkronizasyon durumu göstergesi (header'da küçük badge) */
+function setSyncDurum(durum,detay=""){
+  let el=document.getElementById("syncBadge");
+  if(!el){
+    el=document.createElement("span");
+    el.id="syncBadge";
+    el.style.cssText="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em;transition:all .3s;";
+    const grup=document.querySelector(".btn-group");
+    if(grup)grup.insertBefore(el,grup.firstChild);
+  }
+  const DURUMLAR={
+    local: ["☁ Yerel",  "rgba(240,165,0,.15)","rgba(240,165,0,.4)","var(--alert)"],
+    syncing:["⏳ Sync…","rgba(45,158,107,.1)","rgba(45,158,107,.2)","var(--muted)"],
+    synced: ["✓ Synced","rgba(45,158,107,.15)","rgba(45,158,107,.35)","var(--bright)"],
+    error:  ["✗ Sync?","rgba(232,92,42,.15)","rgba(232,92,42,.35)","var(--warn)"],
+  };
+  const[label,bg,border,color]=DURUMLAR[durum]||DURUMLAR.local;
+  el.textContent=label+(detay?` — ${detay}`:"");
+  el.style.background=bg;el.style.border=`1px solid ${border}`;el.style.color=color;
+  el.title=durum==="error"?`Senkronizasyon hatası: ${detay}`
+          :durum==="local"?"GitHub token ayarlanmamış, veri sadece yerel"
+          :durum==="synced"?"GitHub'a yazıldı — update_data.yml Flex'i güncelleyecek"
+          :"Senkronize ediliyor…";
+}
+
+/* editKaydet sonrası da sync çalışsın */
+function editKaydetSonraSync(col){
+  if(["raporlar","makaleler","uluslararasi"].includes(col))icerikGithubYaz();
+}
+
+
 function ghAyarKaydet(){
   const repo=document.getElementById("ghRepo").value.trim(),ti=document.getElementById("ghToken").value.trim(),wf=document.getElementById("ghWorkflow").value.trim();
   const mevcut=localStorage.getItem(GH_TOKEN_KEY)||"";
@@ -1160,12 +1256,31 @@ function dupTemizle(){
 function boot(){
   const t=today();
   ["i-tarih","h-tarih","m-tarih","u-tarih"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
-  // Etiket checkboxlarını render et
   tagWrapRender("h-tags-wrap","h",[]);
   tagWrapRender("r-tags-wrap","r",[]);
   tagWrapRender("m-tags-wrap","m",[]);
   tagWrapRender("u-tags-wrap","u",[]);
   initTabs();updateStats();tumVeriYukle();
+  /* Token varsa sync badge göster */
+  const{token}=ghAyarAl();
+  setSyncDurum(token?'synced':'local');
+  /* Sunucudaki icerik.json'u localStorage ile birleştir */
+  fetch('icerik.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{
+    if(!d)return;
+    ['raporlar','makaleler','uluslararasi'].forEach(col=>{
+      const sunucu=d[col]||[];
+      if(!sunucu.length)return;
+      const local=SITE.getList(col);
+      const localIds=new Set(local.map(x=>String(x.id)));
+      const ekstra=sunucu.filter(x=>!localIds.has(String(x.id)));
+      if(ekstra.length){
+        SITE.set(col,[...local,...ekstra]);
+        _veri[col]=[...local,...ekstra];
+        tabloRender(col);
+      }
+    });
+    updateStats();
+  }).catch(()=>{});
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
