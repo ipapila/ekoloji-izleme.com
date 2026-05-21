@@ -138,7 +138,7 @@ def uid():
     return 'r' + ''.join(random.choices(chars, k=9)) + str(int(time.time() * 1000))
 
 
-def html_cek(url, timeout=15):
+def html_cek(url, timeout=30):   # ← 15'ten 30'a çıkarıldı
     user_agents = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
@@ -316,6 +316,67 @@ def github_yaz(data, sha):
         return False
 
 
+# ─── DUPLICATE TESPİT YARDIMCILARI ────────────────────────────────
+
+def url_normaliz(url: str) -> str:
+    """URL'den UTM/tracking parametrelerini soyarak karşılaştırmaya uygun hale getirir."""
+    if not url:
+        return ""
+    # Fragment ve trailing slash temizle
+    url = url.split("#")[0].rstrip("/").lower()
+    # Tracking parametrelerini at
+    tracking = {"utm_source", "utm_medium", "utm_campaign", "utm_content",
+                 "utm_term", "fbclid", "gclid", "ref", "source"}
+    if "?" in url:
+        base, qs = url.split("?", 1)
+        params = [p for p in qs.split("&")
+                  if p.split("=")[0] not in tracking]
+        url = base + ("?" + "&".join(params) if params else "")
+    return url
+
+
+def ad_normaliz(ad: str) -> str:
+    """İsmi küçük harfe çevirip noktalama/boşluk normalleştir."""
+    ad = ad.lower().strip()
+    ad = re.sub(r"[^\w\s]", "", ad)   # noktalama at
+    ad = re.sub(r"\s+", " ", ad)
+    return ad
+
+
+def mevcut_setleri_olustur(ihlaller: list) -> tuple[set, set]:
+    """
+    Mevcut ihlallerden iki ayrı duplicate kontrol seti döndürür:
+      - ad_il_seti   : (normalleştirilmiş_ad, il) ikilisi
+      - link_seti    : normalleştirilmiş kaynak URL'leri
+    """
+    ad_il_seti = set()
+    link_seti  = set()
+    for i in ihlaller:
+        ad  = ad_normaliz(i.get("ad", ""))
+        il  = i.get("il", "").lower().strip()
+        url = url_normaliz(i.get("kaynak_link", ""))
+        if ad and il:
+            ad_il_seti.add((ad, il))
+        if url:
+            link_seti.add(url)
+    return ad_il_seti, link_seti
+
+
+def zaten_var_mi(kayit: dict, ad_il_seti: set, link_seti: set) -> bool:
+    """Kayıt zaten mevcutsa True döner ve nedenini loglar."""
+    ad  = ad_normaliz(kayit.get("ad", ""))
+    il  = kayit.get("il", "").lower().strip()
+    url = url_normaliz(kayit.get("kaynak_link", ""))
+
+    if url and url in link_seti:
+        print(f"  ⏭ Atlandı (aynı URL): {kayit.get('ad', '')[:50]}")
+        return True
+    if (ad, il) in ad_il_seti:
+        print(f"  ⏭ Atlandı (aynı ad+il): {kayit.get('ad', '')[:50]}")
+        return True
+    return False
+
+
 # ─── ANA FONKSİYON ─────────────────────────────────────────────────
 
 def main():
@@ -327,11 +388,11 @@ def main():
         sha = None
 
     mevcut_ihlaller = data.get("ihlaller", [])
-    mevcut_adlar = {
-        (i.get("ad", "") + "|" + i.get("il", "")).lower()
-        for i in mevcut_ihlaller
-    }
-    print(f"  Mevcut: {len(mevcut_ihlaller)} ihlal")
+
+    # ── Duplicate setleri (ad+il VE URL tabanlı) ──
+    ad_il_seti, link_seti = mevcut_setleri_olustur(mevcut_ihlaller)
+    print(f"  Mevcut: {len(mevcut_ihlaller)} ihlal | "
+          f"{len(ad_il_seti)} ad+il anahtarı | {len(link_seti)} URL")
 
     yeni_ihlaller = []
     toplam_eklenen = 0
@@ -346,16 +407,28 @@ def main():
         # İçerik çek
         arama_url = kaynak["arama"]
         if "feed/rss" in arama_url or "rss/search" in arama_url:
-            # RSS kaynağı
             items = rss_cek(arama_url)
             if not items:
                 continue
+
+            # ── RSS linklerini önden filtrele ──────────────────────
+            filtreli_items = []
+            for it in items:
+                norm = url_normaliz(it.get("link", ""))
+                if norm and norm in link_seti:
+                    print(f"  ⏭ RSS linki zaten kayıtlı, atlandı: {it['link'][:70]}")
+                else:
+                    filtreli_items.append(it)
+
+            if not filtreli_items:
+                print("  ✅ Bu kaynaktan tüm haberler zaten kayıtlı.")
+                continue
+
             metin = "\n\n".join([
                 f"Başlık: {i['baslik']}\nLink: {i['link']}\nÖzet: {i['ozet']}"
-                for i in items
+                for i in filtreli_items
             ])
         else:
-            # Web sayfası
             metin = web_metin_cek(arama_url)
             if not metin:
                 continue
@@ -374,22 +447,21 @@ def main():
             if toplam_eklenen >= MAX_YENI:
                 break
 
-            ad = k.get("ad", "").strip()
-            il = k.get("il", "").strip()
+            ad  = k.get("ad", "").strip()
+            il  = k.get("il", "").strip()
             tip = k.get("tip", "").strip()
 
             if not ad or not il or not tip:
                 continue
             if tip not in KATEGORILER:
-                # En yakın kategoriyi bul
                 tip = kaynak["tip_oneri"]
 
-            anahtar = (ad + "|" + il).lower()
-            if anahtar in mevcut_adlar:
+            # ── Çift yönlü duplicate kontrolü ──
+            if zaten_var_mi(k, ad_il_seti, link_seti):
                 continue
 
             # Geocoding
-            time.sleep(1.1)  # Nominatim rate limit
+            time.sleep(1.1)
             koord = nominatim_geocode(il, k.get("ilce", ""))
 
             ihlal = {
@@ -408,23 +480,27 @@ def main():
                 "aciklama": k.get("aciklama", ""),
                 "alt_kategori": k.get("alt_kategori", ""),
                 "kaynak_turu": k.get("kaynak_turu", kaynak["kaynak_turu"]),
+                # ihlaller.html uyumluluğu
+                "baslik":   ad,
+                "konum":    f"{il}{', ' + k.get('ilce', '') if k.get('ilce') else ''}",
+                "kategori": tip,
+                "siddet":   "takipte",
+                "tarih":    datetime.date.today().isoformat(),
+                "lat": koord["lat"] if koord["lat"] != 0 else None,
+                "lng": koord["lng"] if koord["lng"] != 0 else None,
             }
 
-            # ihlaller.html uyumluluğu için ek alanlar
-            ihlal["baslik"] = ad
-            ihlal["konum"]  = f"{il}{', ' + ihlal['ilce'] if ihlal['ilce'] else ''}"
-            ihlal["kategori"] = tip
-            ihlal["siddet"]   = "takipte"
-            ihlal["tarih"]    = ihlal["eklenme"]
-            ihlal["lat"] = koord["lat"] if koord["lat"] != 0 else None
-            ihlal["lng"] = koord["lng"] if koord["lng"] != 0 else None
+            # Setleri anlık güncelle (aynı tarama içi çiftleri önler)
+            ad_il_seti.add((ad_normaliz(ad), il.lower()))
+            norm_url = url_normaliz(ihlal["kaynak_link"])
+            if norm_url:
+                link_seti.add(norm_url)
 
             yeni_ihlaller.append(ihlal)
-            mevcut_adlar.add(anahtar)
             toplam_eklenen += 1
             print(f"  ✓ {ad[:60]} [{il}]")
 
-        time.sleep(2)  # Kaynaklar arası bekleme
+        time.sleep(2)
 
     if not yeni_ihlaller:
         print("\n✅ Yeni ihlal bulunamadı.")
@@ -434,7 +510,7 @@ def main():
     data["ihlaller"] = yeni_ihlaller + mevcut_ihlaller
     data["_meta"] = {
         "guncelleme":   datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "kaynak":       "otomatik_tarama_v4",
+        "kaynak":       "otomatik_tarama_v5",
         "ihlal_sayisi": len(data["ihlaller"]),
         "haber_sayisi": len(data.get("haberler", [])),
     }
