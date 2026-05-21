@@ -96,7 +96,7 @@
       <h2>İçerik Yönetim Paneli <span class="admin-badge">● Admin</span></h2>
       <div class="btn-group">
         <button class="btn btn-primary" onclick="aciTaramaModal()">⚡ Şimdi Tara</button>
-        <button class="btn btn-outline" id="btnYayinla" onclick="icerikGithubYaz()" style="border-color:rgba(45,158,107,.5);color:var(--bright);">☁ Sunucuya Yayınla</button>
+        <button class="btn btn-outline" id="btnYayinla" onclick="veriYaz()" style="border-color:rgba(45,158,107,.5);color:var(--bright);">☁ Sunucuya Yayınla</button>
         <button class="btn btn-outline" onclick="aciImportModal()">⬆ JSON/GeoJSON İçe Aktar</button>
         <button class="btn btn-outline" style="border-color:rgba(240,165,0,.4);color:var(--alert);" onclick="aciDupModal()">🧹 Duplicate Temizle</button>
         <button class="btn btn-outline" onclick="doLogout()">Çıkış Yap</button>
@@ -763,7 +763,7 @@ function addRapor(){
   ["r-baslik","r-yil","r-yazar","r-ozet","r-dosya","r-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   resetChecked("r");const p=document.getElementById("r-foto-onizleme");if(p)p.style.display="none";
   const d=document.getElementById("r-pdf-durum");if(d)d.textContent="";
-  _veri.raporlar.unshift(y);tabloRender("raporlar");updateStats();toast("✓ Rapor kaydedildi — sunucuya gönderiliyor…");icerikGithubYaz();
+  _veri.raporlar.unshift(y);tabloRender("raporlar");updateStats();toast("✓ Rapor kaydedildi — sunucuya gönderiliyor…");veriYaz();
 }
 
 function addMakale(){
@@ -776,7 +776,7 @@ function addMakale(){
   ["m-baslik","m-yazar","m-ozet","m-url","m-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("m-tarih").value=today();resetChecked("m");
   const p=document.getElementById("m-foto-onizleme");if(p)p.style.display="none";
-  _veri.makaleler.unshift(y);tabloRender("makaleler");updateStats();toast("✓ Makale kaydedildi — sunucuya gönderiliyor…");icerikGithubYaz();
+  _veri.makaleler.unshift(y);tabloRender("makaleler");updateStats();toast("✓ Makale kaydedildi — sunucuya gönderiliyor…");veriYaz();
 }
 
 function addUluslararasi(){
@@ -791,7 +791,7 @@ function addUluslararasi(){
   ["u-baslik","u-baslik-tr","u-kaynak","u-ozet","u-url","u-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("u-tarih").value=today();resetChecked("u");
   const p=document.getElementById("u-foto-onizleme");if(p)p.style.display="none";
-  _veri.uluslararasi.unshift(y);tabloRender("uluslararasi");updateStats();toast("✓ Kayıt eklendi — sunucuya gönderiliyor…");icerikGithubYaz();
+  _veri.uluslararasi.unshift(y);tabloRender("uluslararasi");updateStats();toast("✓ Kayıt eklendi — sunucuya gönderiliyor…");veriYaz();
 }
 
 /* ── DÜZENLE ── */
@@ -917,7 +917,7 @@ function editKaydet(col,id){
   const idx=_veri[col].findIndex(x=>String(x.id)===String(id));
   if(idx>=0)_veri[col][idx]=g;
   modal.remove();tabloRender(col);toast("✓ Kayıt güncellendi.");
-  if(["raporlar","makaleler","uluslararasi"].includes(col))icerikGithubYaz();
+  if(["raporlar","makaleler","uluslararasi"].includes(col))veriYaz();
 }
 
 /* ── FOTOĞRAF & PDF ── */
@@ -951,10 +951,10 @@ function ghAyarKaydet(){
   if(!gercek&&!mevcut){document.getElementById("ghAyarDurum").textContent="Token zorunlu.";return;}
   localStorage.setItem(GH_REPO_KEY,repo);if(gercek)localStorage.setItem(GH_TOKEN_KEY,ti);
   localStorage.setItem(GH_WORKFLOW_KEY,wf||GH_DEFAULTS.workflow);
-  const fu=document.getElementById("flexUrl")?.value.trim();
-  const fs=document.getElementById("flexSecret")?.value.trim();
-  if(fu)localStorage.setItem("ekoloji_flex_url",fu);
-  if(fs&&!fs.startsWith("\u2022"))localStorage.setItem("ekoloji_flex_secret",fs);
+  const _fu=document.getElementById("flexUrl")?.value.trim();
+  const _fs=document.getElementById("flexSecret")?.value.trim();
+  if(_fu)localStorage.setItem("ekoloji_flex_url",_fu);
+  if(_fs&&!_fs.startsWith("\u2022"))localStorage.setItem("ekoloji_flex_secret",_fs);
   document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Kaydedildi</span>';
   setSyncDurum("synced");
 }
@@ -972,10 +972,9 @@ function aciTaramaModal(){
   document.getElementById("ghRepo").value=repo;
   if(token){document.getElementById("ghToken").value="••••••••••••••••";document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';}
   document.getElementById("ghWorkflow").value=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
-  const _fu=localStorage.getItem("ekoloji_flex_url")||"";
-  const _fs=localStorage.getItem("ekoloji_flex_secret")||"";
-  if(document.getElementById("flexUrl"))document.getElementById("flexUrl").value=_fu;
-  if(document.getElementById("flexSecret")&&_fs)document.getElementById("flexSecret").value="••••••••";
+  const _furl=localStorage.getItem("ekoloji_flex_url")||"";
+  if(document.getElementById("flexUrl"))document.getElementById("flexUrl").value=_furl;
+  if(document.getElementById("flexSecret")&&localStorage.getItem("ekoloji_flex_secret"))document.getElementById("flexSecret").value="••••••••";
 }
 function kapat(){document.getElementById("taramaModal").classList.remove("open");}
 
@@ -1048,8 +1047,8 @@ async function runDurumIzle(owner,repo,runId,runUrl,token,log){
       log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*8}sn)`);
     }catch(e){log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);}
   }
-  const link=runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:'GitHub Actions sayfasını kontrol edin';
-  log(`<span class="warn">⚠ İzleme süresi doldu (~7dk) — ${link}</span>`);
+  const _rl=runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:"GitHub Actions sayfasını kontrol edin";
+  log(`<span class="warn">⚠ İzleme süresi doldu (~7dk) — ${_rl}</span>`);
 }
 
 async function otomatikYenile(log){
@@ -1176,32 +1175,19 @@ function dupTemizle(){
 function boot(){
   const t=today();
   ["i-tarih","h-tarih","m-tarih","u-tarih"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
-  tagWrapRender("h-tags-wrap","h",[]);tagWrapRender("r-tags-wrap","r",[]);
-  tagWrapRender("m-tags-wrap","m",[]);tagWrapRender("u-tags-wrap","u",[]);
+  // Etiket checkboxlarını render et
+  tagWrapRender("h-tags-wrap","h",[]);
+  tagWrapRender("r-tags-wrap","r",[]);
+  tagWrapRender("m-tags-wrap","m",[]);
+  tagWrapRender("u-tags-wrap","u",[]);
   initTabs();updateStats();tumVeriYukle();
-  /* Token kontrolü + sync badge */
-  const{token}=ghAyarAl();
-  setSyncDurum(token?"synced":"local");
-  if(!token)tokenBannerGoster();
-  /* Sunucudan icerik.json yükle ve localStorage ile birleştir */
-  fetch("icerik.json?v="+Date.now()).then(r=>r.ok?r.json():null).then(d=>{
-    if(!d)return;
-    ["raporlar","makaleler","uluslararasi"].forEach(col=>{
-      const srv=d[col]||[];if(!srv.length)return;
-      const local=SITE.getList(col);
-      const localIds=new Set(local.map(x=>String(x.id)));
-      const yeni=srv.filter(x=>!localIds.has(String(x.id)));
-      if(yeni.length){SITE.set(col,[...local,...yeni]);_veri[col]=[...local,...yeni];tabloRender(col);}
-    });
-    updateStats();
-  }).catch(()=>{});
+  /* Token kontrolü */
+  const{token:_bt}=ghAyarAl();
+  setSyncDurum(_bt?"synced":"local");
+  if(!_bt)tokenBannerGoster();
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
-  /* Her açılışta şifre sor — auto-login kapalı */
-  SITE.logout();
-  document.getElementById("loginScreen").style.display="block";
-
   const importModal=document.getElementById("importModal");
   const importDrop=document.getElementById("importDropZone");
   const importFileInp=document.getElementById("importFileInput");
@@ -1216,84 +1202,91 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("importIptalBtn")?.addEventListener("click",()=>{importModal.style.display="none";});
   document.getElementById("importUygulaBtn")?.addEventListener("click",_importUygula);
   if(importModal)importModal.addEventListener("click",e=>{if(e.target===importModal)importModal.style.display="none";});
+  /* Her açılışta şifre sor */
+  SITE.logout();
+  document.getElementById("loginScreen").style.display="block";
 });
-/* ══════════════════════════════════════════════════════════════
-   SYNC BADGE
-══════════════════════════════════════════════════════════════ */
-function setSyncDurum(durum,detay){
+/* ═══ SYNC BADGE ═══════════════════════════════════════════════ */
+function setSyncDurum(d,det){
   let el=document.getElementById("syncBadge");
-  if(!el){
-    el=document.createElement("span");el.id="syncBadge";
-    el.style.cssText="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em;cursor:pointer;transition:all .3s;";
-    const g=document.querySelector(".btn-group");if(g)g.insertBefore(el,g.firstChild);
-  }
-  const D={
-    local:  ["☁ Yerel",    "rgba(240,165,0,.15)","rgba(240,165,0,.4)","var(--alert)"],
-    syncing:["⏳ Sync…",   "rgba(45,158,107,.1)","rgba(45,158,107,.2)","var(--muted)"],
-    synced: ["✓ Synced",   "rgba(45,158,107,.15)","rgba(45,158,107,.35)","var(--bright)"],
-    error:  ["✗ Sync?",   "rgba(232,92,42,.15)","rgba(232,92,42,.35)","var(--warn)"],
-  };
-  const[label,bg,border,color]=D[durum]||D.local;
-  el.textContent=label+(detay?` (${detay})`:"");
-  el.style.cssText+=`background:${bg};border:1px solid ${border};color:${color};`;
+  if(!el){el=document.createElement("span");el.id="syncBadge";
+    el.style.cssText="font-family:\'JetBrains Mono\',monospace;font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em;cursor:pointer;";
+    const g=document.querySelector(".btn-group");if(g)g.insertBefore(el,g.firstChild);}
+  const D={local:["☁ Yerel","rgba(240,165,0,.15)","rgba(240,165,0,.4)","var(--alert)"],
+    syncing:["⏳ Sync…","rgba(45,158,107,.1)","rgba(45,158,107,.2)","var(--muted)"],
+    synced:["✓ Synced","rgba(45,158,107,.15)","rgba(45,158,107,.35)","var(--bright)"],
+    error:["✗ Hata","rgba(232,92,42,.15)","rgba(232,92,42,.35)","var(--warn)"]};
+  const[lb,bg,bd,co]=D[d]||D.local;
+  el.textContent=lb+(det?` (${det})`:"");
+  el.style.background=bg;el.style.border=`1px solid ${bd}`;el.style.color=co;
+  el.title="Token ayarlamak için tıklayın";
   el.onclick=()=>aciTaramaModal();
 }
-
-/* ══════════════════════════════════════════════════════════════
-   TOKEN BANNER
-══════════════════════════════════════════════════════════════ */
 function tokenBannerGoster(){
   if(document.getElementById("tokenBanner"))return;
-  const b=document.createElement("div");
-  b.id="tokenBanner";
-  b.style.cssText="background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.3);border-radius:4px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--alert);";
+  const b=document.createElement("div");b.id="tokenBanner";
+  b.style.cssText="background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.3);border-radius:4px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--alert);";
   b.innerHTML=`<span style="font-size:18px;">⚠</span>
-    <div><strong>GitHub token ayarlı değil.</strong><br><span style="opacity:.8;font-size:10px;">Raporlar, makaleler ve uluslararası kayıtlar sadece bu tarayıcıda görünür — sunucuya gitmiyor.</span></div>
-    <button onclick="aciTaramaModal()" style="margin-left:auto;padding:6px 14px;background:rgba(240,165,0,.2);border:1px solid rgba(240,165,0,.4);border-radius:3px;color:var(--alert);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;white-space:nowrap;">Token Ayarla →</button>
+    <div><strong>GitHub token ayarlı değil</strong><br><span style="font-size:10px;opacity:.8;">Raporlar, makaleler ve uluslararası kayıtlar sadece bu tarayıcıda görünür.</span></div>
+    <button onclick="aciTaramaModal()" style="margin-left:auto;padding:6px 14px;background:rgba(240,165,0,.2);border:1px solid rgba(240,165,0,.4);border-radius:3px;color:var(--alert);font-family:\'JetBrains Mono\',monospace;font-size:10px;cursor:pointer;">Token Ayarla →</button>
     <button onclick="this.parentNode.remove()" style="padding:4px 8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;">×</button>`;
   const w=document.querySelector(".admin-wrap");if(w)w.insertBefore(b,w.firstChild);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   icerik.json OTO-SYNC
-   raporlar / makaleler / uluslararasi → GitHub (küçük dosya)
-   Her kayıtta otomatik çağrılır; GitHub push update_data.yml'i tetikler
+/* ═══ VERİ.JSON OTO-SYNC ════════════════════════════════════════
+   raporlar / makaleler / uluslararasi → GitHub data.json
+   Mevcut data.json'u çekip sadece bu 3 koleksiyonu günceller,
+   geri kalanına (ihlaller, haberler) dokunmaz.
+   guncelle.py bu koleksiyonları .get() ile okuyup Flex'e iletir.
 ══════════════════════════════════════════════════════════════ */
-async function icerikGithubYaz(){
+async function veriYaz(){
   const{repo,token}=ghAyarAl();
   if(!repo||!token){setSyncDurum("local");return;}
-  const[owner,repoName]=repo.split("/");
-  if(!owner||!repoName){setSyncDurum("error","Repo formatı hatalı");return;}
+  const[ow,rn]=repo.split("/");
+  if(!ow||!rn){setSyncDurum("error","Repo formatı");return;}
   setSyncDurum("syncing");
   try{
-    let sha=null;
-    try{
-      const r=await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/icerik.json`,
-        {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
-      if(r.ok)sha=(await r.json()).sha;
-    }catch{}
-    const icerik={
-      raporlar:SITE.getList("raporlar"),
-      makaleler:SITE.getList("makaleler"),
-      uluslararasi:SITE.getList("uluslararasi"),
-      _meta:{guncelleme:new Date().toISOString(),kaynak:"admin_panel"}
-    };
-    const content=btoa(unescape(encodeURIComponent(JSON.stringify(icerik,null,2))));
-    const payload={message:`admin: icerik ${new Date().toISOString().slice(0,10)}`,content};
-    if(sha)payload.sha=sha;
-    const r=await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/icerik.json`,
+    /* data.json SHA */
+    const mr=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/data.json`,
+      {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
+    if(!mr.ok)throw new Error(`data.json okunamadı (HTTP ${mr.status})`);
+    const md=await mr.json();
+    const sha=md.sha;
+    /* Mevcut içerik */
+    const mevcut=JSON.parse(decodeURIComponent(escape(atob(md.content.replace(/\n/g,"")))));
+    /* Sadece 3 koleksiyonu güncelle */
+    mevcut.raporlar    = SITE.getList("raporlar");
+    mevcut.makaleler   = SITE.getList("makaleler");
+    mevcut.uluslararasi= SITE.getList("uluslararasi");
+    mevcut._meta = {...(mevcut._meta||{}),
+      guncelleme:new Date().toISOString(),
+      rapor_sayisi:mevcut.raporlar.length,
+      makale_sayisi:mevcut.makaleler.length,
+      ulus_sayisi:mevcut.uluslararasi.length};
+    /* Yaz */
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(mevcut,null,2))));
+    const pr=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/data.json`,
       {method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
-       body:JSON.stringify(payload)});
-    if(r.ok){
+       body:JSON.stringify({message:`admin: içerik güncellendi ${new Date().toISOString().slice(0,10)}`,content,sha})});
+    if(pr.ok){
       setSyncDurum("synced");
+      /* Flex için update_data.yml tetikle (token workflow yetkisine sahipse) */
+      fetch(`https://api.github.com/repos/${ow}/${rn}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}})
+        .then(r=>r.json()).then(d=>{
+          const br=d.default_branch||"main";
+          const wf=localStorage.getItem("ekoloji_gh_workflow")||"update_data.yml";
+          fetch(`https://api.github.com/repos/${ow}/${rn}/actions/workflows/${wf}/dispatches`,
+            {method:"POST",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
+             body:JSON.stringify({ref:br})});
+        }).catch(()=>{});
     }else{
-      const e=await r.json().catch(()=>({}));
-      setSyncDurum("error",`HTTP ${r.status}`);
-      toast(`⚠ Sync hatası: HTTP ${r.status} — ${e.message||""}. ⚡ Şimdi Tara modalından token'ı kontrol edin.`,5000);
+      const e=await pr.json().catch(()=>({}));
+      setSyncDurum("error",`HTTP ${pr.status}`);
+      toast(`⚠ Sync hatası: HTTP ${pr.status} — ${e.message||""}`,5000);
     }
   }catch(e){
     setSyncDurum("error",e.message.slice(0,40));
-    toast("⚠ Sync hatası: "+e.message,5000);
+    toast("⚠ "+e.message,5000);
   }
 }
 
