@@ -368,13 +368,10 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
         try:
             eski = json.loads(p.read_text(encoding="utf-8"))
             gorulen_idler = {h.get("id", "") for h in eski.get("haberler", [])}
-            # Google News URL'leri her seferinde değişir (opak base64);
-            # aynı makale farklı ID alabilir → başlık normalleştirme ile
-            # ikinci filtre.
+            # Başlık bazlı ek dedup (Google News URL'leri değişse de yakalanır)
             gorulen_basliklar = {
                 re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
-                for h in eski.get("haberler", [])
-                if h.get("baslik")
+                for h in eski.get("haberler", []) if h.get("baslik")
             }
             log.info(f"Mevcut dosyada {len(gorulen_idler)} haber.")
         except Exception:
@@ -382,11 +379,8 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
     else:
         eski, gorulen_idler, gorulen_basliklar = {"haberler": []}, set(), set()
 
-    # harita_verisi_cek() artık çağrılmıyor: ihlal kayıtları haber değil,
-    # harita verisidir; data.json'daki "ihlaller" anahtarından okunur.
-    # Eski uygulama her çalışmada yüzlerce harita kaydını webhook üzerinden
-    # sunucuya gönderip "eski verilerin yeniden yüklenmesi" sorununa yol
-    # açıyordu.
+    # Harita verisi çekme KALDIRILDI — eski veriler yeterli,
+    # tekrar çekmenin anlamı yok ve haberler listesini kirletiyor.
 
     log.info("\n── RSS Kaynakları ──")
     rss_haberler = rss_tara(RSS_KAYNAKLARI)
@@ -403,7 +397,6 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
             if baslik_norm:
                 gorulen_basliklar.add(baslik_norm)
 
-    # _puan alanını çıktıdan kaldır (dahili kullanım)
     for h in tum_yeni:
         h.pop("_puan", None)
 
