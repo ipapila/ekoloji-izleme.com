@@ -24527,9 +24527,12 @@
       "tip": "Maden Ocağı",
       "siddet": "kritik",
       "tarih": "2026-04-01",
-      "lat": null,
-      "lng": null,
-      "koordinatlar": {},
+      "lat": 39.0,
+      "lng": 35.0,
+      "koordinatlar": {
+        "lat": 39.0,
+        "lng": 35.0
+      },
       "alan_ha": 0,
       "durum": "Aktif",
       "belge_no": "Nisan 2026",
@@ -27304,7 +27307,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye’nin üzerinden geçen maden silindiri &nbsp;&nbsp; Evrensel",
       "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPYmJaeFlEZ3ctY0VPTExmdzg2LWxUc1JwR3h1MWRvYjByX2IyQUZqQ3pxWnNvZnUtWTRWNDJrTUt2V1hoUTVhZENXZ0VfalNtcXFYdndad2k3dUlCTHJVU2dvTVFwRGc3dzREdmpGNmFlMEdkc19YcFZGMElwTjN5STEwYmc0UFZpUWc?oc=5",
-      "id": 255
+      "id": "255"
     },
     {
       "baslik": "İzmir'de orman yangını kontrol altında: Çok sayıda ev tahliye edildi - NTV Haber",
@@ -27314,7 +27317,7 @@
       "etiket": "Orman / Maden",
       "ozet": "İzmir'de orman yangını kontrol altında: Çok sayıda ev tahliye edildi &nbsp;&nbsp; NTV Haber",
       "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPdHBWNXB1MkRMa3RLQ3pMVXVOS19vSDFMbWZDajlpTnpsZ0wwSUVmVmY2a1pHUVlOb3NqSFRjaXdEOEJoSzg1MTRkcVdzUGtSN2l3cFotc3BsWTRxVDdqcEhNbHNJcFhRQnAxd0F5MXc1ZHYyZFFOalhSU2ZBaVlqVzJyLV9tMVdYREZnSGJuY2Q0ZHB6R2luMzl0UWc5WjdCSm9lZWdZR3ptV21I0gGyAUFVX3lxTFBJUVpDRFR0WmlqdUlobGRiUWwwNTh2NDdWbDdjRlJMN0hxRGVkd0NreXF6LWJBcUV3cEN0UG9ka3NJWHhDcnJfM05FU1lMXzRscE93UEhOWDIwMFR5VTlNRUNXVlh4UGdHUDg2bThxa1c4aUFkT1RXZTFnZlI4Mkc1cFcyOUptUEd5d2ZwWFZabnlUZ2VFbXdhVmZGaU05Slgzb2hDT0tlWlhiSEhwWUwwS0E?oc=5",
-      "id": 256
+      "id": "256"
     },
     {
       "baslik": "Enerji ve maden alanlarına yönelik düzenlemeler içeren kanun teklifi TBMM Genel Kurulunda kabul edildi - Anadolu Ajansı",
@@ -27324,7 +27327,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Enerji ve maden alanlarına yönelik düzenlemeler içeren kanun teklifi TBMM Genel Kurulunda kabul edildi &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxNUDZCX2FlSlJQNWtkLXFwb0FmbDIxeWlOVWNob2NtbUFoNUZ6SEo5VVZDYTc1dk9xLVE3MW5wQjlTZ2dFc0dva2trT0NWaGxnZlNnTTFMbUkwSWJiRlQwZzBsNTJzQjBlSXJTYVdhaHRtNW5oWFprdUVzZ1BwUndxQi12Vml2QWZHOTZndVViMkQ4QWhqeWFDQzBGa1JrcWtrS1c1eFVPeTZVZWQzdnpFTjNGSUVwemRmdmNPb3d0QWlyU0ZHd0tWcU9SRmFZY096S2hyTG94X1FBdw?oc=5",
-      "id": 257
+      "id": "257"
     },
     {
       "baslik": "Zeytinlikleri madencilik faaliyetine açacak kanun teklifi komisyonda kabul edildi - Medyascope",
@@ -27334,7 +27337,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Zeytinlikleri madencilik faaliyetine açacak kanun teklifi komisyonda kabul edildi &nbsp;&nbsp; Medyascope",
       "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQajByRTBPc3d3amxKRnRwemZwemktVFFISzBacFZEbkI1UUltZVlVSmlEaDJMb1VrQ2NOM2FiUzRXUTQ2bUdXMm5JWmk0QllUY3VEQzQtczhkUnRCVEdRcDZoQmoxamI2SnhnYTQ2OVc2SXMwX2gxeVdqNlNtSkkzc3lJdHB3SEQ1Z0dz?oc=5",
-      "id": 258
+      "id": "258"
     },
     {
       "baslik": "BM, Tarihi İklim Adaleti Kararını Kabul Etti",
@@ -27344,7 +27347,7 @@
       "etiket": "İklim",
       "ozet": "Birleşmiş Milletler, Uluslararası Adalet Divanı’nın geçen yıl aldığı tarihi iklim krizi kararını büyük bir çoğunlukla kabul etti. Dünyanın en büyük fosil yakıt üreticisi ve seragazı salıcısı ülkeler oylamada ret oyu verirken, Türkiye çekimser kalan 28 ülkeden biri oldu. Uluslararası Adalet Divanı’nın ülkelere iklim değişikliğiyle mücadele konusunda yasal yükümlülük getiren danışma kararı, Birleşmiş Milletler (BM) Genel [&#8230;] The post BM, Tarihi İklim Adaleti Kararını Kabul Etti appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/bm-tarihi-iklim-adaleti-kararini-kabul-etti/",
-      "id": 253
+      "id": "253"
     },
     {
       "baslik": "Kazdağları'nda da ağaç katliamı yapıldı: \"Sözde yangını önlemekti amaç ama kuru dallar yol kenarlarına atıldı - T24",
@@ -27354,7 +27357,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Kazdağları'nda da ağaç katliamı yapıldı: \"Sözde yangını önlemekti amaç ama kuru dallar yol kenarlarına atıldı &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNeS1yaFFPeEk1YWhiNVNsWmtFbjR1UXhmZll5QkRjZTJjUTgwWmp6LVpWa2piZFpQODYxOUZKNVFjNGN4SnNnLVJoVm1jWHc1bVpzelNNM2JxQ0MyWGFia0xyZnBRWV96SDZmWVV5STNkeHRDaUlySDhBcEVVT01ESVRHX0tRdHVkeFc5aU5wVzJPOTM2eUtGa0hRMUY1QWFrVU4xU1RYZlpyNkt6bnAzZkVFNW1TaFF3OFVvc1NYY3lIdkx4Qy15TWg4OEhnMnAtcThiRUhwVXA?oc=5",
-      "id": 254
+      "id": "254"
     },
     {
       "baslik": "Zeytinlikleri madenlere açan madde Meclis'te kabul edildi - agos.com.tr",
@@ -27364,7 +27367,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Zeytinlikleri madenlere açan madde Meclis'te kabul edildi &nbsp;&nbsp; agos.com.tr",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQdE84a3pjZ1VoY05Gam0xcmkzNVAtQjFhSzBhZmwwelpxMm9iZVZ5c0plOGVzWEw4bjNWUkJZUU9aMVlGbWZPa3FvY2ZmUkZSUGVlT0lMQlQ1ME5XZjFZaGJaTkdsSkV2cHJ2XzVtc0d5cXlhczJoS3lvLVNCWjlVMzl3aUtvQnVrekNfcUo0YllGaUlOQnNfRHRSRGY?oc=5",
-      "id": 252
+      "id": "252"
     },
     {
       "baslik": "\"Kirli hava insan hakları ihlali\" uyarısı: Karadeniz Ereğli'de gözler Erdemir emisyonlarında - ankahaber.net",
@@ -27374,7 +27377,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "\"Kirli hava insan hakları ihlali\" uyarısı: Karadeniz Ereğli'de gözler Erdemir emisyonlarında &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQSnNyWEd1Nkh2UjVuRWVWWGx3V1czNHdKMldXUU5Pa3BXUXB5SHBGNzNwc1JLYkVqb0JFZUd5VVhDVVFCaG56NF9Jcl9yT1pvbktDa3VjSGYyTGk2eFpnVjN6b2loSnczRjJTTF9UcWhmbFFoUkNwblZxanBFQklBQ1IyTDlIQ19qbHkza0xRLVJzWmJ4b19ydG5qMnpUX0x3LUxmdGU5X2drT3hUUTFZOUwwXzV6cnFXNlZrTVZKY0toWENzeTVvcA?oc=5",
-      "id": 251
+      "id": "251"
     },
     {
       "baslik": "Türkiye’nin Yeni İklim Gerçeği: Yoğun Yağışlara Rağmen Kalıcı Kuraklık",
@@ -27384,7 +27387,7 @@
       "etiket": "İklim",
       "ozet": "Yoğun yağışların yarattığı geçici rahatlamaya rağmen Türkiye’nin hidrolojik dengesi sessiz fakat derin bir dönüşüm geçiriyor. Bilimsel analizler, son yıllarda hızlanan kuraklık eğilimlerinin artık yalnızca dönemsel bir iklim dalgalanması değil; toprakta, ormanlarda ve su döngüsünde biriken etkilerle birlikte kalıcı bir ekolojik baskıya dönüştüğünü gösteriyor. YAZI: Dr. Bikem Ekberzade 2026 yılının ilk aylarında etkili olan yoğun yağışlar [&#8230;] The post Türkiye’nin Yeni İklim Gerçeği: Yoğun Yağışlara Rağmen Kalıcı Kuraklık appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/turkiyenin-yeni-iklim-gercegi-yogun-yagislara-ragmen-kalici-kuraklik/",
-      "id": 245
+      "id": "245"
     },
     {
       "baslik": "Kömürde Kurulu Güç Artarken Üretim Düşüyor",
@@ -27394,7 +27397,7 @@
       "etiket": "İklim",
       "ozet": "2025’te küresel kömür kurulu gücü %3,5 arttı, ancak kömürden sağlanan elektrik üretimi %0,6 azaldı. COP31&#8217;e ev sahipliği ve başkanlık yapacak Türkiye&#8217;de ise, 2015 yılında 70’in üzerinde olan kömür santralı projesinden geriye yalnızca bir aktif proje kaldı. STK&#8217;lar anlamlı bir COP başkanlığı için Türkiye&#8217;nin kömürü zirvede bırakması gerektiğini vurguluyor. Global Energy Monitor’ün yeni raporu küresel enerji [&#8230;] The post Kömürde Kurulu Güç Artarken Üretim Düşüyor appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/komurde-kurulu-guc-artarken-uretim-dusuyor/",
-      "id": 246
+      "id": "246"
     },
     {
       "baslik": "COP31 Başkanı Kurum: “Elektrifikasyona Dair Küresel Tartışma Başlatacağız”",
@@ -27404,7 +27407,7 @@
       "etiket": "İklim",
       "ozet": "COP31 Başkanı Murat Kurum, elektrifikasyona dair küresel bir tartışma başlatmak istediklerini söylerken, “Bugün nihai enerji tüketiminin yaklaşık %20&#8217;si elektrikle karşılanıyor. Bu oranı mümkün olduğunca arttırmayı hedeflemeliyiz. Hem elektrik üretimini karbonsuzlaştırmak hem de elektrifikasyonu aslında hayatın her alanına yaymak gerekiyor” dedi. COP31 Başkanı ve Çevre, Şehircilik ve İklim Değişikliği Bakanı Murat Kurum, Danimarka’nın ev sahipliğinde gerçekleşen, [&#8230;] The post COP31 Başkanı Kurum: &#8220;Elektrifikasyona Dair Küresel Tartışma Başlatacağız&#8221; appeared first on İk",
       "url": "https://www.iklimhaber.org/cop31-baskani-kurum-elektrifikasyona-dair-kuresel-tartisma-baslatacagiz/",
-      "id": 247
+      "id": "247"
     },
     {
       "baslik": "Kırklareli'ndeki orman yangını söndürüldü - BHA - Birlik Haber Ajansı",
@@ -27414,7 +27417,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Kırklareli'ndeki orman yangını söndürüldü &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQT0NQbXViQ3Y5MWV5TVhaamtvZjFlczd5R2ZaVHE3M3JpRmdFMXYzVnVFWWEyLTNhNDVFMmhkT2NmUDlrLWdjMEZfWVFKUEFEYUdqTEFuTDFsLWJnZHl5cjc4T0ZmQmZoUnRSeXVZUmRRcVRVVGZKYTItaGpTbEIyTVFObw?oc=5",
-      "id": 248
+      "id": "248"
     },
     {
       "baslik": "EGEÇEP’ten Milas’ta acele kamulaştırmaya karşı 96 dava - Ege'de Sonsöz",
@@ -27424,7 +27427,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "EGEÇEP’ten Milas’ta acele kamulaştırmaya karşı 96 dava &nbsp;&nbsp; Ege'de Sonsöz",
       "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQYldncTAzRVZhWUJDTlpmZmRpdzk4ZDhQR3JrYjRaVkZMbUwyb2dYUmRJeVVrUW5DNENEd05vcHhsZmhZbUlGTVh6aFF2b01nbEQxODB5c0JyNF9tWEpEZDZ6cWE4NXhWdUZzcE5oTTFOTUxLOXd3LUM0bVpsYXBmWjhmZW9NNVHSAYwBQVVfeXFMTTB4YTVwODB3Q3BoeGJzTkJKd3kwWFdYUTFUdElvMVZsWWhCeDFaZ29sLTBXZUVaWktJRU9CcDh6dTRqOTRZQm5WYm84Mk1QMU5EYW51Szk4aUxQYWljZ2ZyWklyX2dqQUJla1FMVDdQWjBwZ0tzQjA5Ulhia2M1WE5kSGRvLWVHLUphMUI?oc=5",
-      "id": 249
+      "id": "249"
     },
     {
       "baslik": "Acele kamulaştırma kıskacında Muğla köylüleri: 'Kamu biziz!' | Çepeçevre Yaşam - Evrensel.net",
@@ -27434,7 +27437,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Acele kamulaştırma kıskacında Muğla köylüleri: 'Kamu biziz!' | Çepeçevre Yaşam &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQZVppTmFZTllmc2I2LUtuZDF5dTlTVzBEYzE3UzJ1T1JiVkY0aUxCSVVvTTlURkg0LWFLd05Nbm5YMWFFX0JKcVpsS1J2OEJocnZabUR1VEtBR2hfSFhIZGRtMFNUbDNxV3EyTTBqbC1zMGlHT1loV2Q2Tzl3eWNnS3lJVEFrUkU1UUc2QW5NaWtDcWxtY2M1Nk93VEJ1d1d0d0VGdHRqZ29xeFY2Sk1F?oc=5",
-      "id": 250
+      "id": "250"
     },
     {
       "baslik": "Filistin: İsrail geçen yıl Batı Şeria'da 685 çevre ihlali gerçekleştirdi - TRT Haber",
@@ -27444,7 +27447,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Filistin: İsrail geçen yıl Batı Şeria'da 685 çevre ihlali gerçekleştirdi &nbsp;&nbsp; TRT Haber",
       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPREp0aVFhTXBzdGJiZlhiMUdMcGxVdU5JSk5NOWMzU0ZsNFFMZ1JZdUVSdWplTmluR2dxeTczenlTN19TR2lZTjk4bWRubjhGTDQxQVY2MW9BNmYteG1yVnJGS29NYUg5RlZidUdjRnVndU9VSklGQUdXTGNzcXFFX1ZYVnlMaDdIMTBFOHV0Z2UzMHJkbWxmSWxnUjBDMHJfb3lFQlNHTWRtOVRickhQc3NVNWU5ejAycWs0?oc=5",
-      "id": 242
+      "id": "242"
     },
     {
       "baslik": "İzmir'de ortaokulda Kürtçe müzik soruşturmasında tarafsızlık ihlali iddiası - Evrensel.net",
@@ -27454,7 +27457,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "İzmir'de ortaokulda Kürtçe müzik soruşturmasında tarafsızlık ihlali iddiası &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOQXVuOVNVZlJ3d296UGhudlI3cFI4Zk9lRUM0Q3FwaVRWT3otR0RHcmFQRVdGblpLWHc1dGJhN1BRUmw2YnVJbl9KSl80dHEyaWs5V0dGeWcxS3RBaDV5WWFQdnFCNjkxY2FLVk9TclRNdGI3Vm9iMDFyR3h1cFFTX1M0aThEeWZ5TXZnTDdjREYzNGdjbmZ3bXZRemRTOUxVNTJyaUltWElOTHVWamgtcTdTZw?oc=5",
-      "id": 243
+      "id": "243"
     },
     {
       "baslik": "Orman değiliz, artık lunaparkız -1 - yesilgazete.org",
@@ -27464,7 +27467,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Orman değiliz, artık lunaparkız -1 &nbsp;&nbsp; yesilgazete.org",
       "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9OMktxVVRwd3p0aDVLVS02MmU1SHdPS3llUy16WldVS3ZJM1Y5TmxOTjlVcE13TC11QWVvTmV1aWFheS1lVkp3MWhIRmJxUDBobzlUUzFJZElEdHNHZi1zRV9VeWhfcU1o?oc=5",
-      "id": 244
+      "id": "244"
     },
     {
       "baslik": "Hatay'da çıkan orman yangını söndürüldü - Evrensel.net",
@@ -27474,7 +27477,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Hatay'da çıkan orman yangını söndürüldü &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQV3loUzJUR1RFT2hLT2x0R0Q0MGJjTURfOXpLczJfX1NuWGlwdHBBYWdnVTd2RGxPanFqeE9FMmw5dURnd1p5bXBfa1I1S3lmYWstbW9NZUpHSVpLSTVyekR6ZjJjQnpTZFJ1eHV6SHhZSS0zWk5sWnBQZDVGcXFVNU53?oc=5",
-      "id": 239
+      "id": "239"
     },
     {
       "baslik": "Adıyaman'da halk doğa katliamına karşı tek ses oldu: 3 kez reddedilen maden firmasının ısrarı sürüyor - Halk TV",
@@ -27484,7 +27487,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Adıyaman'da halk doğa katliamına karşı tek ses oldu: 3 kez reddedilen maden firmasının ısrarı sürüyor &nbsp;&nbsp; Halk TV",
       "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxObnFPa29QV196LXVJeFFPQi13ZEdfbFlZNEF0ZlhDVFlJZTdlMWZfMktaNDNNZkRwcFdYbFZ5RDZTLUU2OUtVa0x5YjVxcmd2VzVBamtQMjEyUW9fMEJ5YkQ2UUFNNUVBRDEzMkhCZHJ5bV9RSHRGT1YwWklIWFBxSmMyZ1BKMmROd3lHUFpsM294ZVZvem5BeVR5QlZrU3R6RWdJRHdqaElLQ2wzbXNFYUM4QWZXOFYwRExMSDlpVWJMamR5NWZLUmZyVWpjSE52SHRZ?oc=5",
-      "id": 240
+      "id": "240"
     },
     {
       "baslik": "Aydın Çine'de Maden şirketinden doğa katliamı - Yeşil Günebakan",
@@ -27494,7 +27497,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Aydın Çine'de Maden şirketinden doğa katliamı &nbsp;&nbsp; Yeşil Günebakan",
       "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOZTVNRUZ0U3puN0dkc2NVSXRyQUVOSmJ3dVplRTNJdzUwZlJuNTVBSWZWc3VtamVpZWk5NXo4S0l0WldBNGtJamdBb0JYdXg3cVRKV3JUamxwS25CQmZ1WURHZVJJdTNBQWI5N1NkOWpCN3BOV3B2THVRUFg2bV9Lc2VEYzhHdWVwbncw?oc=5",
-      "id": 241
+      "id": "241"
     },
     {
       "baslik": "Marmaris yangını neden söndürülemiyor? - BBC",
@@ -27504,7 +27507,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Marmaris yangını neden söndürülemiyor? &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5jbzFVUHdqemxiTU5BMFRaYkg3a1lKLURDWnF3Y2ozd2hzdm4yZ2J6VmRUVXNtOHdxeXZfeEgyZDQ0bl9LenJkVXFqalBHV1lJdTFRVTFOMkszSUdKSW9J0gFkQVVfeXFMTmNpWXAtWU1RN3RyTXhjanAyMXJjTFBJeDFBZzNTdlpCNms5UVBHaUtkYkQyRnotald1eUIzMDdWUFF4VDBjVW55ZVl0YTMzZU1KUlNWdTUtcWpiUkpUVUVfdWt3UQ?oc=5",
-      "id": 237
+      "id": "237"
     },
     {
       "baslik": "TİP’ten Orman Yangını Raporu: “Doğal varlıklarımız bilinçli şekilde savunmasız bırakılıyor” - Sözcü Gazetesi",
@@ -27514,7 +27517,7 @@
       "etiket": "Orman / Maden",
       "ozet": "TİP’ten Orman Yangını Raporu: “Doğal varlıklarımız bilinçli şekilde savunmasız bırakılıyor” &nbsp;&nbsp; Sözcü Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQTXRTTUJJMmNwZDYwSmRlZzBlVE8wRWJ0dzhzRGxMRGNPWjNkUzkyWjBUWjRkX2h0RzVKVktTUkhqSldvcy1YSUg0UVg4QXNOMm5JUHRSTW1tT3dSSDRmZDI5bHgwaFpzekg1YjFSMENfeGxHMjM5cWF1emZPakxHT1owWHlSMWVTRkVyQ1F1Y3FSTm9XdkRWM1lPV0pjSGdMaFpmRHVwWWZEZlRfeTZ4QmRmY3VtbUVWR2RVZVJaTk1BMFk?oc=5",
-      "id": 238
+      "id": "238"
     },
     {
       "baslik": "Şehirler Dünyanın Yeni Durumuna Ayak Uyduramıyor",
@@ -27524,7 +27527,7 @@
       "etiket": "İklim",
       "ozet": "Bakü’de devam eden Dünya Kent Forumu’na katılan delegeler, savaşların, çatışmaların ve iklim değişikliğinin kentsel geleceği hızlı bir biçimde şekillendirdiğini ancak şehirlerin bu değişimlere ayak uydurmakta zorlandığı uyarısında bulundular. Azerbaycan’ın başkenti Bakü’de devam den 13. Dünya Kent Forumu’nda (World Urban Forum –WUF13) konuşan delegeler, savaş ve iklim değişikliğinin şehirleri hükümetlerin müdahale edip yeniden inşa edebileceğinden daha [&#8230;] The post Şehirler Dünyanın Yeni Durumuna Ayak Uyduramıyor appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/sehirler-dunyanin-yeni-durumuna-ayak-uyduramiyor/",
-      "id": 236
+      "id": "236"
     },
     {
       "baslik": "Elektrik Talebinde Soğutma ve Sanayileşme Yapay Zekayı Geride Bırakabilir",
@@ -27534,7 +27537,7 @@
       "etiket": "İklim",
       "ozet": "Yeni bir rapora göre, tüm senaryolar göz önüne alındığında küresel elektrik talebinin 2040 yılına kadar %40 ila %70 arasında bir düzeye varabileceği düşünülüyor. Popüler inanışın aksine, bu artışın en büyük kaynağı sadece yapay zeka veya veri merkezleri değil; gelişmekte olan ülkelerdeki soğutma (klima) ihtiyacı ve sanayi sektöründeki büyüme olacak. Bain &#38; Company, Küresel Enerji ve Malzeme [&#8230;] The post Elektrik Talebinde Soğutma ve Sanayileşme Yapay Zekayı Geride Bırakabilir appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/elektrik-talebinde-sogutma-ve-sanayilesme-yapay-zekayi-geride-birakabilir/",
-      "id": 234
+      "id": "234"
     },
     {
       "baslik": "Balıkesir’deki orman yangını kontrol altına alındı - BHA - Birlik Haber Ajansı",
@@ -27544,7 +27547,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Balıkesir’deki orman yangını kontrol altına alındı &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxOc29QQ3BwM1d1d21OYS1mV3hyZ1paZ1EzRTJRd2tpc3lOZUFDTTRoUjF1S1JPdVRXbmdFdC1PS1NneV9WYmRiRjJHd1k2aUtnNkJJM1ZCaDBSMDBialVTbmNKR1pHVEswem82TU5YZl85UTBIekV1Xy1lT0xxMmNuZUxJYWUxMVJLM2VFbjN0ZHFIUjg?oc=5",
-      "id": 235
+      "id": "235"
     },
     {
       "baslik": "23 İlde Bazı Alanların Orman Statüsü Kaldırıldı",
@@ -27554,7 +27557,7 @@
       "etiket": "İklim",
       "ozet": "Cumhurbaşkanı kararıyla 23 ilde belirlenen bazı alanların orman statüsü kaldırıldı. Cumhurbaşkanı Recep Tayyip Erdoğan&#8217;ın kararı ile, 23 ilde bazı alanlar orman sınırları dışına çıkarıldı. Artvin, Aydın, Balıkesir, Bingöl, Bursa, Denizli, Elazığ, Gümüşhane, Karabük, Kocaeli, Kütahya, Malatya, Mersin, Muğla, Rize, Sakarya, Samsun, Sinop, Şanlıurfa, Tokat, Trabzon, Uşak ve Zonguldak illerinde bazı alanların orman sınırları dışına çıkarılması [&#8230;] The post 23 İlde Bazı Alanların Orman Statüsü Kaldırıldı appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/23-ilde-bazi-alanlarin-orman-statusu-kaldirildi/",
-      "id": 232
+      "id": "232"
     },
     {
       "baslik": "Türkiye'nin ciğerleri yanıyor: Orman yangınları neden söndürülemiyor? - Cumhuriyet",
@@ -27564,7 +27567,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye'nin ciğerleri yanıyor: Orman yangınları neden söndürülemiyor? &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPc2JIcWlkc09wU0ktbGdMSGNUU2hTS3hoOHQ3QjVhSGMzMXlWRUVDVmhnaFowUmNhYjhreWNuR0d1MG9US1FNeVRRZ0JERGZ6NVZFVGxQRVRobXVLZWJvX3NiVzZmdEZuRWdSS3J3Z3BkQ1ZVZ3ZyRWVDMDhOcjJlVlFtZ0s3MlBkNnZKRHYwSC1UaWxUUTA3aXByTWhDTHVNMjNpQzBXNW1IZ0lmWW9OT1REWQ?oc=5",
-      "id": 233
+      "id": "233"
     },
     {
       "baslik": "Çevre kimin umurunda, şirketlere talan izni yağmış - Son Dakika Türkiye Haberleri - Cumhuriyet",
@@ -27574,7 +27577,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Çevre kimin umurunda, şirketlere talan izni yağmış - Son Dakika Türkiye Haberleri &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQUGZYYUtCcDIwOV9rcG1JcFZlTzRnQURBcWxLM2ZYN0FYQ1BKazRxNGlLRlRXUDlSVHFGdXdlNU5PM0pNZFBNSlB1RkRWNUVVbjFKbXhDbFp1NlVUbUpTVjVZRWFsZlRGMkVVeHd4UXU5bHRFM0pHUE1yUnZYTzFDT2RTbHNlZmJ6c2NqVXkxb1BNZDZXUjMybjBzSQ?oc=5",
-      "id": 231
+      "id": "231"
     },
     {
       "baslik": "Resmi Gazete kararlarıyla birçok ilde acele kamulaştırma kararı verildi - Doviz.com",
@@ -27584,7 +27587,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Resmi Gazete kararlarıyla birçok ilde acele kamulaştırma kararı verildi &nbsp;&nbsp; Doviz.com",
       "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNdmVxYm5TZzcyRHRrRFJLVnNIV1JHSEtVNEFQNEUwSHlvbjZoMHlqUk5IR09JS1FJa2MtT0d0Vi02blR2S2xzbUtpeF9SbDR5ZmY2UEtQVF96VzlULXZpaTBjQ2hLQUZfQ3d6RHY2LVlDbVY5SmtMVG5hLWxKaHpQaS11T3VSRWZ6OVhlQnRlUGREU0s2MEN3NFViSTE4bGpnRHlRTk80RzU0M0VZeXN0dTlidHlqSlJId0N2M1Z5OGs1ZWU5T3ZmNTNB0gHSAUFVX3lxTE1aNHpmS2tjUW1GcWFQaGVMbmF2SlhQU3ZLY2dYanFwcWdEU3JMdktKMzJsTzRwQzY4eUZGRVF2WVRIODhzS1Z3TUNsM0MzaXctYkt6dkt0U0tRU2xQdGZiQVBtSTdJTTV4TXpFNU9YS0lYd20tdFFBSnhtUjZ1YTFFc05sWkkzTVB2bkpjak5rNXRPbzRCZThkNlRXQkZrdmpsTXlzMFNjUm1sTzl0MXZPMjlVdUFSNkVGbFNGbWFpeDFtYmRaZHQwR1EyWGZ2OVAyZw?oc=5",
-      "id": 230
+      "id": "230"
     },
     {
       "baslik": "Türkiye: Avrupa Konseyi'nin AİHM kararının uygulanmaması nedeniyle ihlal prosedürü başlatılması kararı konusunda Sözcü tarafından yapılan Açıklama - EEAS",
@@ -27594,7 +27597,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye: Avrupa Konseyi'nin AİHM kararının uygulanmaması nedeniyle ihlal prosedürü başlatılması kararı konusunda Sözcü tarafından yapılan Açıklama &nbsp;&nbsp; EEAS",
       "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPQnEtRldFR2lqaUI0MHVCcVNzSGp4Q1VqQW9wY3NGaXpfSV9tZFdxNTR1dXJGQWx0ZXRJYUFIU29ZM2EyYVNBNzdaQWNxOWxPZ2cyLU5FcWtzNjhxMlh4NzVLVEVINEkybVFPOFNTRVJsdnRPQWExbzhERDVuRVc2emdYSzZlWEwxZHptTllBc0FNWWRGbW1jQi1EVHpaaFY5eFhNcjl6MXpuNXo5MHhiYlVpakVGQnhyUThObVN4bmdWZlJlYWplU015LWUyTW85VHBpQ1dOUVNJSEpkc0E?oc=5",
-      "id": 229
+      "id": "229"
     },
     {
       "baslik": "Beykoz'daki orman yangını 9 saatte kontrol altına alındı - Yeni Mesaj",
@@ -27604,7 +27607,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Beykoz'daki orman yangını 9 saatte kontrol altına alındı &nbsp;&nbsp; Yeni Mesaj",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNRUtGakt3RHJNeXV4UkRPMmRxek0yRG5NMndHeUlHalNFa2hkdzZxSkxtdHVrazExZElOVU42blFjV2N4dVdRS2VBRlozemNzXzdoYkprelRwYkctRnVjc2NpM3NWVEh2YlkxM25uSVJCYWlVWFhQbW1mZ00wanNYX0dWSk1HRlFtYnFVMVQ1d0ZHa1FxekdSTnRDZWp3UQ?oc=5",
-      "id": 227
+      "id": "227"
     },
     {
       "baslik": "Son Dakika... İstanbul Sultangazi'de orman yangını! - Cumhuriyet",
@@ -27614,7 +27617,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Son Dakika... İstanbul Sultangazi'de orman yangını! &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQclhnaVlvdFVkTXJ5S1RxYjNCUXY5RF80eWs2S1pfbkV1Ymx4MDh2cEpVUFd4dUFlSjJydi1mVEF5akNRdGZsWUl2UTRpaWo1NzA1ZGJGa0FINHFhTVJ6anNUUFdjMG1URXh1SGs2ZU12WXhUVzgwQ2dEcXVfZjdHSWtqMFVUYVdDR0tXdG55amZxQTNpb1JrNg?oc=5",
-      "id": 228
+      "id": "228"
     },
     {
       "baslik": "Orman Yangınları ve Sonrası - Doğruluk Payı",
@@ -27624,7 +27627,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Orman Yangınları ve Sonrası &nbsp;&nbsp; Doğruluk Payı",
       "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPSjJadGcxTXdzekNXaHNIQlVadEpiTGNQVmc0TnR6SHN4S3dpN0Fkc0xva2NCZnlVYTR3U2h1NHItRGFBWEQ2Xy1pbS1nR0FTYXlXOXFCYnhTZ01LWlZnZmJqR2x6NDdvV1pfelRmdkp6WlNtamcyMGZOcWpjUlRLTTkxONIBiwFBVV95cUxPUVNfd29BVVRQaGVhSDhQRDZYQS1GZ3NwY1BPMmNQYkdUbHRkdjBDSzRoRl83VzZ0ZW5HRHVfRGZ6cFdJZ3NuM2JaSmQxNlZJanhxR09MU0hKaFZvWDUtZndjYzZHWmlONnJmZ2N4bkVRbzh4dmd2WjFIVHNwQjhUb1piNjBMRnpraEdz?oc=5",
-      "id": 224
+      "id": "224"
     },
     {
       "baslik": "Kahramanmaraş Kuzey Çevre Yolu İçin Acele Kamulaştırma Kararı - Maraş Son Haber - Maraş Son Haber",
@@ -27634,7 +27637,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Kahramanmaraş Kuzey Çevre Yolu İçin Acele Kamulaştırma Kararı - Maraş Son Haber &nbsp;&nbsp; Maraş Son Haber",
       "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPajJXRVp4QjM3bzdLMDd4QVFKTTRxOXBab2RHYUN3R1lvZTRobkNfMF94M2g0RGZJSllDS094ZHBUZmlnOVBIREF0THQ5U2l0RGU4SDRaSUxGYVlnZjVoNm8xcExvUFR3djIzRXlnTjNNOTRsMGdRNFNMVG42S3E0UzE3ZVdZLWhoei13eDJocXhDd9IBmgFBVV95cUxPWkRPb3VwMkFrVDQxcjh2U0J0U1lhYWVtYXR4SmFfeUtIemxHM2cwZk11alZYYU9wWHh5UzY5WVk4WWV5OV9GZ2lkc1ozd21scUdvRFpINVhlZjNTMk12TG92VHhLTHFfXzVYcWNlcks2YU9waDgxczB1LXNJUzREMXFDMVNEM0s0WmZRUElfOWlra0xQVU54WnRR?oc=5",
-      "id": 225
+      "id": "225"
     },
     {
       "baslik": "Kuşcenneti Milli Parkı'nda Doğanın Saf Merhabası - Balıkesir Gerçek Haber",
@@ -27644,7 +27647,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Kuşcenneti Milli Parkı'nda Doğanın Saf Merhabası &nbsp;&nbsp; Balıkesir Gerçek Haber",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOU1ZRUDVZSGF1TmY3azRyTTl6V2FmUmpvRS1FZi1xNTF1bk1qSC1kWUFURzRaVzNWY3FoQ1NjQkZaM2pxVWQxa25JZEdYNUszcFMxNi1KLXlXeFRxUDlwbEtWUDB2STdhczVKSHMxUWtBeFM4N25XTHRjWTg0enNTVWZxbUNtdTZRdzg0eUEwRXNKNkFZdEdvdkU5QUJ0QQ?oc=5",
-      "id": 226
+      "id": "226"
     },
     {
       "baslik": "Çevre örgütleri, Afşin-Elbistan Termik Santrali önünden seslendi: Türkiye, yeni kömürlü santral yapmamalı, kömürün vadesi doldu - ankahaber.net",
@@ -27654,7 +27657,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre örgütleri, Afşin-Elbistan Termik Santrali önünden seslendi: Türkiye, yeni kömürlü santral yapmamalı, kömürün vadesi doldu &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxORTI3ZEdxRzZId3NXcVZlNnBJeDFsZVZEMXA1eFE1MnNGVHFrQlE3ZDdkRnV5UFRES2huWWNJdS1Nclg4bV9IMkRfSGlrYmlnUG9RQkZfb0RpcHZxbG90aERTZEt1SjM2dmRqeXdDWHZHWnd2aHd6YXU4VnYtUldrZ1dfaXpGOG14VmFQRVBoTy10Qkc1NG5pQlA1MVVkNnJFb1kyLUJxRXdqM29CV1ZKU2Y1RFAydWU0TURaTDBUeV9NT0g0NVFUODhWTmgteW1vUnBIcWp5VnR5OFBTR0p4ZkxwUWhRUVJoamphNlNSeUJxWUkwc1E?oc=5",
-      "id": 219
+      "id": "219"
     },
     {
       "baslik": "AİHM'ye en çok hak ihlali başvurusu Türkiye'den geldi - DW.com",
@@ -27664,7 +27667,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "AİHM'ye en çok hak ihlali başvurusu Türkiye'den geldi &nbsp;&nbsp; DW.com",
       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNLWt3WmJVRlJnY1AwbkZIQUlOZU04M3VxVmdBcXp3bDhYZ0F6ejZZaFdWbGYzeWRGY0JEMXBEQlQ1eDdzZmE1TUg2eHZzZi0zekZkRHRNbGs1VXZrWXdHZndhS2FBYVljaHhwWWxPbHc2Z3JUdlpjbFNQU3lHb3d2ZWNKUlVHbnNyYXFRLXRqQXE2VlQ4LS0wT2JSam9zdW1ESmNvSFd5ZlTSAagBQVVfeXFMTzNmbnhmU0FKU1hVOTFIc1pYTXNfaW5FLUdBOW5kWEE5VTU3bG9LaVJrclNJbDgtNERzTU92WXYxbjhQMW5neDlJdmlnOTVjRDFZSE96clc3NzF3Z01zWGFGWUgxcUVKYlZhUmNpNEkxeHg3MDgyaXBKelhaWFZydjdteExmUjZvT1RacTBPYU9oaDdFdmdzREVMN3V6TXJPemdHR2RxTUJz?oc=5",
-      "id": 220
+      "id": "220"
     },
     {
       "baslik": "Türkiye orman yangınlarıyla mücadele için ne kadar harcama yapıyor? - Euronews",
@@ -27674,7 +27677,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye orman yangınlarıyla mücadele için ne kadar harcama yapıyor? &nbsp;&nbsp; Euronews",
       "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQeGR5NDVLRDFuY2UtcGV6d2JKWDlRRnRfdml4ckpQT19TQ1VGWHFESFdaa2FrTV8xeE9ZcXdQZEFYM1c4Vklha0NtV18xRGlHQVBLYk4yQzRFeXFhc1hwWUZLY3kxMVVGZFBOTGlmWWV5RWs5ZVd2MU9wUUxOek5CeG5fRGtNaEdrWGw2Y3BpenF2b2d6RHJ4Z1ZFdHppYnVZMzVr?oc=5",
-      "id": 221
+      "id": "221"
     },
     {
       "baslik": "Bolsonaro: Amazonlar'daki orman yangınlarını STK'lar çıkarıyor - Euronews",
@@ -27684,7 +27687,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bolsonaro: Amazonlar'daki orman yangınlarını STK'lar çıkarıyor &nbsp;&nbsp; Euronews",
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNVjVab2JTRGJvOHg2RDNwQmxRdVo3SDNMQTlVNXJwT2xLZk5FXy1FTF91MTAxaTV1b3BIUFBEUFRYOENTbHZ2ZVVXNHI2cEdYRVYyUGs2M3pCeFRzRVRsVFNQaU5mc1JydkZRZmNVM2xJR3pmSVZZT0tsYnpVM1dYd2ZERnFiQkwyYmlnM19iSGhtUlc3RnRFYjd4MHh3RnhLUXpuTUdkazZYRU1PVFlPSHF4bHhiZDQ0SHc?oc=5",
-      "id": 222
+      "id": "222"
     },
     {
       "baslik": "Milli Parklar yasası ne getiriyor ne götürüyor? - Evrensel.net",
@@ -27694,7 +27697,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli Parklar yasası ne getiriyor ne götürüyor? &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPVUM5V3pPTEZiajFzenZGcWtyQnZMa0gwS2V5dDZMdlFBQlJZRFl6ZjBLTU9OZG1UeDc5clNxMXNHNGJDV2dUNlh0ZS16eXg3a0RYRVY0eUp0VXNoamMzc2xJdUxWWjNfem1GNkdvUlBONDNPTEZNaXRpM1dMT0I2WXJfT3NmdVJTRUIwSW93?oc=5",
-      "id": 223
+      "id": "223"
     },
     {
       "baslik": "Çevreyi kirletenlere 2026'da verilecek cezalar belli oldu - Anadolu Ajansı",
@@ -27704,7 +27707,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevreyi kirletenlere 2026'da verilecek cezalar belli oldu &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNQkRWQTdYa1EzeldSVTBzWlBtUy1DdFpQREFjQVU4Z0pNXzdDdHNwU0ZXVHhKOF9GRXlHM1A1YWhQT0gxUGNXMlpBck8wMVBqWDZnSWNHQzRKLUdjR1hlT1Vua3RxRUoya1dHT2wzUlZJM2tHQ2ktaE1yVVRqc25ZRkVjWjZSNHJkaVhhbUl5WnFVaGx6ampDUTZLWDA?oc=5",
-      "id": 213
+      "id": "213"
     },
     {
       "baslik": "Ankara Büyükşehir Belediyesi’ne 1,6 Milyon Liralık Çevre Cezası! - Aksu TV Haber",
@@ -27714,7 +27717,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Ankara Büyükşehir Belediyesi’ne 1,6 Milyon Liralık Çevre Cezası! &nbsp;&nbsp; Aksu TV Haber",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOTlNqNmJUbFVLVE1NVVltLVlaVUVnQW95OGNsNG5SMlJiWEsxSExueGpmXzl2YTRNQWtVaUJtVXRLM0hZRGR4anEtR2dTTHR1ZG9UQnFYS1RyZXptSkM1TVZfdTBpTkExNk1ILXlMY3hwMHhTOG1NbW9UN2dLd0lWS09rWUU5MkxGaGl3czVxS09QaVR5eEVVNw?oc=5",
-      "id": 214
+      "id": "214"
     },
     {
       "baslik": "İnsan hakları örgütlerine göre, ABD lityum madenciliği ile yerlilerin haklarını ihlal ediyor - Anadolu Ajansı",
@@ -27724,7 +27727,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "İnsan hakları örgütlerine göre, ABD lityum madenciliği ile yerlilerin haklarını ihlal ediyor &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPOERNeWE1WDlBZUxwaFBOVVFqTXJldVpsSHV3SlU5N1FBMEh0N3U1S3dLSnNtTGV6blNaTHJodUxkZGRuLS1DR0lQdW9OR1NsNjZuNEVObE1LOUd4UUlHRUtjaXBmM08yWlZvQk5ydXVoQTBWV3JIZzV6VUhzZ1ZwU3ZHQWM3U2dXdFgzQ0xQajdPUTlJUjhrTzBPVUJNcHpnTW95OHN4U3Z1UjBKa0ljWkdsZ09CZVNHNjZnalItaEhWZTdmcE1IQUZn?oc=5",
-      "id": 215
+      "id": "215"
     },
     {
       "baslik": "İzmir Barosu'ndan 180 bin liralık bilirkişi ve keşif ücretine tepki: “Hak arama özgürlüğünün ihlali anlamına gelmektedir\" - ankahaber.net",
@@ -27734,7 +27737,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "İzmir Barosu'ndan 180 bin liralık bilirkişi ve keşif ücretine tepki: “Hak arama özgürlüğünün ihlali anlamına gelmektedir\" &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxNSzNUSWJzNGZkdy00NWYxal90V0hMcjl6d0s3NzBSZG5vb0ZlNXphMGZieE5uckVQS1lFTGN1b3JkSklrNUYxbkVMYXBRU2FiUzdDV0Q4NGVURjJ0RlE2UkhiU0RfaFRuNE5GYUduWk5vSDdDUXBWUkdnX2c0Mk83Y0RqaEdrTy1fTk5ndlRyMnVSRHFGb2pkcklkZ2NraWN1R0FiQzI1UVhXY1VDS0xfdTBDZFM2N2NqZndTa0NvTHAxTUN1eGVkelZ6dU5UZ2dZWUVSUkVYNUFIX2RXTm1lakxVLUtfWXRPa1hlbjFpTQ?oc=5",
-      "id": 216
+      "id": "216"
     },
     {
       "baslik": "Enerji ve maden düzenlemesi kabul edildi - Bigpara",
@@ -27744,7 +27747,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Enerji ve maden düzenlemesi kabul edildi &nbsp;&nbsp; Bigpara",
       "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNWThOM0NyNEQ2bnhuTVhuYlp6MDV4aTFYQnRzaTdLYlRZV3RlQ01hSC1lR0hiUm9uSDJxZkp4UVBnamZNSHpZdmFjVUhNaG5JUHFnQk0yTVhlMU1DeWZXeEJnbWt4X0lxUE1lMGplZE84dEplenVhejFzZ2ZSZHJVekp2cEVyNzBHeUtheGI4NlRmV3BsTjE5Z1cyUnFKX3RPNk8wZ1NpVGtJTWdybzBiQ2d3WHE4Q0h4Sm9WVTVjU1FZTmxySHFkUVRB?oc=5",
-      "id": 217
+      "id": "217"
     },
     {
       "baslik": "Kaçak ağaç kesimine karşı ormanlar 7 gün 24 saat korunuyor - TRT Haber",
@@ -27754,7 +27757,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Kaçak ağaç kesimine karşı ormanlar 7 gün 24 saat korunuyor &nbsp;&nbsp; TRT Haber",
       "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPUFNfRlNfeU52TkVWMFZRcHhYNzZhS2llQWRRZldxR3V6bnctMnlBSTFHVWNtVmI5SnpQdkVpZ2k1UnY4ejQwUWFzOXNNeG16aGVCWkNQRW02MFdpMTZBelQ4R3k2dnEtTkdUTEhhUWZ6Tk82S1pWdTBqZkxoU01ya2NxeU5EWUlGbWNMaDhHTklJZjI2c0ZKdkF5YlkyRXpZUFVUb1REMV9rLTQ?oc=5",
-      "id": 218
+      "id": "218"
     },
     {
       "baslik": "Birçok ilde acele kamulaştırma kararları Resmi Gazete'de yayımlandı! - Cumhuriyet",
@@ -27764,7 +27767,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Birçok ilde acele kamulaştırma kararları Resmi Gazete'de yayımlandı! &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQSW9aQV9FNlFRXzMxRHhVTVBoam1PSThSLUd0OUd0enNyejBXaEIyUlIycllnekxINUdleDhzYk1sOC15TGw3RnFPOVNZVHZkOHowOVBHVUloWjduTzBONDNfb1JIVFBqYW9rb2VvMGRMOVF1cDlMNEZYTHBPN3AzUXV5SndOLXloWWtoZWN6TDdsUTctVFJ5THFhcDFqSjZadlMwaUR1djJrMVVmTEVoWnV2Yw?oc=5",
-      "id": 211
+      "id": "211"
     },
     {
       "baslik": "Enerjide acele kamulaştırma kararları - T24",
@@ -27774,7 +27777,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Enerjide acele kamulaştırma kararları &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNc1huYi1uXzgteWRCdnR6S3NPUTJkSExVS20wdUFfRmk5RmNHN2Q1alI2dW00X0hkUlhBT0k1VXMyRkFSNjRkYW9YWXl4ZmE5WkhnUmZiblg2OXJWWlJUN3pKZWZ0XzVZOUdQeWZFRnl5eW82UkVPcDNCT3VGTDNKYWNxWW5VN3Z1M3V2UzVpSEI?oc=5",
-      "id": 212
+      "id": "212"
     },
     {
       "baslik": "Çevre, Şehircilik ve İklim Değişikliği Bakanı Kurum'dan kentsel dönüşüm çağrısı - Anadolu Ajansı",
@@ -27784,7 +27787,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre, Şehircilik ve İklim Değişikliği Bakanı Kurum'dan kentsel dönüşüm çağrısı &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPRUItUHAwNlZuV3VLSmhDbGNQanM0SGlQX2tpQTNzbEVMLWFjaEVXNV9sTHZaTDVPMEt2WWVMbEM2SF82Vk4zM3FjMUJsMHZ4bjl4S1E1V05yMlV6S0QyUHY1dFdNSjVLWlZzV2g0SnJZd19lQjNIQjlOZWlaLVRxRHI4eHlqTTREakJXT2N1MzhJUVFfNlE3N01zSHdZTmdHUV9yMlZUUkM4ZVdsUGxLdTFDQ1h6Zw?oc=5",
-      "id": 209
+      "id": "209"
     },
     {
       "baslik": "Hızlı tren ve çevre yolu projeleri için acele kamulaştırma kararı - 24 Saat Gazetesi Ankara",
@@ -27794,7 +27797,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Hızlı tren ve çevre yolu projeleri için acele kamulaştırma kararı &nbsp;&nbsp; 24 Saat Gazetesi Ankara",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNa0oxRGMxaFQ3VHRXZ3JOOTNyNV9nVE1sSzFpdFBYQWVCa2VTaXRoaTlGTFZNZFpEdlRON1psallEX1EwYkk4Q0tOWWNSUnZqTk1WS19jY2pWUE85bktIQUg2SHoxNVJKNjA2NExxQTZPWVQ3Y2lYTDM0dmtwQ3F0ZXR6NXgwTV9EN2J5WmI4SlpBaVlKU3F5bElqcUI?oc=5",
-      "id": 210
+      "id": "210"
     },
     {
       "baslik": "xAI’ın çevre kirliliği davası sürerken, firmanın kural ihlaline devam ettiği iddia edildi - Milliyet",
@@ -27804,7 +27807,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "xAI’ın çevre kirliliği davası sürerken, firmanın kural ihlaline devam ettiği iddia edildi &nbsp;&nbsp; Milliyet",
       "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNcWJ3dW13ZXNqM1ctRnRfUDllUDl6akRqa2thTWtrd1VwVXRTd2xZd0FqbUdSUTBIS0Y5STloV21FNHI0V21ROVRpOWU5WVNmTFVnTmp4N1AxSGh4bWFEZlMzeEl1WEJaX3dPS1NmaWxVVmFVWjItRWRTMk0zOVJGdHFGSElRWHp3c0J5SElUa0lnUVgzeFIwQXo1U2VBalc4SGRUb3VHVlFxRlVfR1VjSldORVJBWjZvYnVyd0dDSDNGMnBhMUxJYWJmQlpnUQ?oc=5",
-      "id": 204
+      "id": "204"
     },
     {
       "baslik": "Çevre, Şehircilik ve İklim Değişikliği Bakanı Kurum'dan kentsel dönüşüm çağrısı - Anadolu Ajansı",
@@ -27814,7 +27817,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre, Şehircilik ve İklim Değişikliği Bakanı Kurum'dan kentsel dönüşüm çağrısı &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOLU9lU1h4alVYMHNnT1VYVVg2dTZWSjY4TXNUNXB2c3FsVWp5YUJhMFZxSTBGeDcwdlBkdmhuNVU0bkE2YUFzNkdzYnB3RlZ3X0gyQlVqanV5d0xfTk5ObS00NTJVSzZMVE1FSlJVdWlmY2Q1d0g5VDIxVGRqZGVBd3FFMWlvd01VUFY0UE5RaTRralh1MllYcFlsWkNXdTZWV1J4ZjFSbnNyNmdYb05mS0VPSQ?oc=5",
-      "id": 205
+      "id": "205"
     },
     {
       "baslik": "BAKANLIKTAN SOMA TERMİK SANTRALİNE CEZA - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
@@ -27824,7 +27827,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "BAKANLIKTAN SOMA TERMİK SANTRALİNE CEZA &nbsp;&nbsp; T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
       "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBjOFlxS0F0cFdiNno1M3VxR3ZDM2ZveEJqMUJoRXd0U2V0ZXRuYjZzWkdXQnZhdjA1M2JvN0RYUE1rU0dxbmxFaVEyQWJ4V001cGRnQl9PTjB2LWtuOEhmVTRFZVRUV1BuTFU2eFhiVlVvZzM3eVdNeDdxZWVwVUk?oc=5",
-      "id": 206
+      "id": "206"
     },
     {
       "baslik": "Enkazın Ardındaki Distopya: Çevre ve Halk Sağlığı Tehditleri - greenpeace.org",
@@ -27834,7 +27837,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Enkazın Ardındaki Distopya: Çevre ve Halk Sağlığı Tehditleri &nbsp;&nbsp; greenpeace.org",
       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPOGxUdHQ5aDhvQUtnbnJzN240V19fRDNpOVZaMUtKWllHWXhiU3VZQ0ZaTDJJcnhRR1VsSmRDcG43dldGeHRnQ19aUFFPZmVGMDNDcWJtZEVobTVySWJDcTdhU2pSdGNDUUJPSDZwVGctVjRxWXJYaE5jWFpiek56YVREOWNsRWdYYkpSYi1KeGtqd3A0TVdnVlVhZzhmOURu?oc=5",
-      "id": 207
+      "id": "207"
     },
     {
       "baslik": "Osmanlı'dan Cumhuriyet'e koruma altında 3,4 milyon hektar doğa mirası - Saray Medya",
@@ -27844,7 +27847,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Osmanlı'dan Cumhuriyet'e koruma altında 3,4 milyon hektar doğa mirası &nbsp;&nbsp; Saray Medya",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOOVl3eWstLVNzYXNmVUlBdFdFWWdWUFFNWmlFMnBLV2t5ZGZKVzVzazE3OWVhUHREX0k0SmdkLS0wTG9qYjlXdmpuNXpybUpkaF9GU1RxYkJaQlItb2RyUDhvMWZwRWlISTItUWlKOGZSTTZQdktfTnFGekF2cGZBY1VvQm9lUmZNTEJQSXMwM3YtMGlmc0pwYmxWSXpURFE5SjVkYjQyR0oxMjAxYkww?oc=5",
-      "id": 208
+      "id": "208"
     },
     {
       "baslik": "BAKANLIK, ‘ÇANAKKALE YANGINI VE MADEN SAHASI’ İDDİALARINI YALANLADI - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
@@ -27854,7 +27857,7 @@
       "etiket": "Orman / Maden",
       "ozet": "BAKANLIK, ‘ÇANAKKALE YANGINI VE MADEN SAHASI’ İDDİALARINI YALANLADI &nbsp;&nbsp; T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNR3lyTlp4bXdHMlJYTUpMTV9oMU9fa0RZOGFoTlZmSmRDYVJRYUE3MV9mRmRReFVPRnV6eEZva0RseWt5R200VF9iSG5nQjhmUjgtYm1PNWdDLUx0RkRXZlJCaXVMSnk3eHlJQlhjSzRrRHpqSnRRRzd3ODdXSGo2SndjNk1ZbDNvYmZHRXNjbXh5WWZCV1JLbkVCcTZRN0I0?oc=5",
-      "id": 192
+      "id": "192"
     },
     {
       "baslik": "Denizli orman yangını kontrol altına alınmaya çalışılıyor - BHA - Birlik Haber Ajansı",
@@ -27864,7 +27867,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Denizli orman yangını kontrol altına alınmaya çalışılıyor &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNSUxON19pdVh1X0d3VjUyS2lWTGNMWllBcmZ2QnNZWnR6NlFHOFh6eEtkMXhDM0szVGZWaEtIbXhRek9iNUlBQWxrZnZidzNrS2NJbHFkdndnSlVFNm5uSEM2endJY2VRVjJBekw1XzVxQzEySmlLZi1iT1hHVjV6Sl9md1Q0dmhiV1BuRy01VzA2eVpPUFBCVnVoUQ?oc=5",
-      "id": 193
+      "id": "193"
     },
     {
       "baslik": "Bursa'da yanan ormanlık alan için \"ÇED gerekli değil\" kararı alınmış, maden sahası ilan edilmiş - T24",
@@ -27874,7 +27877,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bursa'da yanan ormanlık alan için \"ÇED gerekli değil\" kararı alınmış, maden sahası ilan edilmiş &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQY2FVU2lHemMzYWk1YzhKX0FpMzBUWmhnTjZLbUxibDAtTE5nbjVXWXpaQzZYZUY4SExGX054aHBseUtaOWE3V0ZVMzVudjA0OFF0VjR6TWIzQklFS2VRdmpqcy1OYzdFbFBGODYxclBGUUpCcmprZHNIb29XM1Z0TVdDc0NmRkpNanNsd0MwQ2IydVVneWtpRHNWaVhiaEFWTjc5SU5NdmU4Y1JpbGlTbS1qSU04aVpnR2VtNXZaQnJrM2py?oc=5",
-      "id": 194
+      "id": "194"
     },
     {
       "baslik": "İznik'te orman yangını ikinci gününde söndürülmüştü: AKP'li patron yangından bir gün önce maden onayı almış! - Evrensel.net",
@@ -27884,7 +27887,7 @@
       "etiket": "Orman / Maden",
       "ozet": "İznik'te orman yangını ikinci gününde söndürülmüştü: AKP'li patron yangından bir gün önce maden onayı almış! &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQVldHQ0RSU0RFaWpyLUJNcmpZekNMYUhOcTg1cW1HbTg2Yk9BTWROelVXOFVDYkQwekdYSlkxX1YxWVV3U3k3T01IYnNWSzRYQ1FjOGtDN2FaRTIycnYzM1ljdi10UncxUTBHcUQ4TUhSS2pyeDR3OTlOUjVCOXpyLVFQY1pXZXl2eVdmWUo0NmZ6TVF1WWwwMXZEMC10VW5sQ0NfanVuR1NaOURHaVBaM2QwOWd5VHRVQzc4cHpxYkRKNzJOMG9GcEVQR0U5d0RQRWFmbWpoLVExQQ?oc=5",
-      "id": 195
+      "id": "195"
     },
     {
       "baslik": "Bursa'daki yangın nedeniyle Harmancık krom madeni geçici olarak kapatıldı - Diken",
@@ -27894,7 +27897,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bursa'daki yangın nedeniyle Harmancık krom madeni geçici olarak kapatıldı &nbsp;&nbsp; Diken",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOSXZlc0pQLXRFWTB5aENRdElsN2ZNbHp2V1plVmZTUzdRMFh3ZnpjRWZCZmoxcG1wQnFxUC03MmFHT1dDeUFkZFQweWw4R0ZYd3AwaDBfUkFncnNudHIyd2VyZFJPVkVLYWNrdWZST19XZFVTTUhWRVRYN2xBWk1obFg5cGRqRndCYzd2ZXFSRmVfQ1F4dUJMTHRjSGhuQ2M?oc=5",
-      "id": 196
+      "id": "196"
     },
     {
       "baslik": "Son Dakika... İstanbul'da orman yangını: Nedeni belli oldu! - Cumhuriyet",
@@ -27904,7 +27907,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Son Dakika... İstanbul'da orman yangını: Nedeni belli oldu! &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQRDhtTVZrS1NBVzF6X1QyTnkxOXdWR2Y1Q3UwVWw1Q3IxSmNUeTFwUTJwS3dWNkdUZ01SRWl6NGc5cHljeDhTN1hLRFR1TGhZRHNpLUpZR3dISk9ra2piZjFERDBVYjVabFh5bVV6TDExcGdUU3VfU1FjT3NxN2ZYbXZQNlJoTEp2ejVsbGo5QTloLTVBMlp3QXU0a25LMF9rTWw3Tg?oc=5",
-      "id": 197
+      "id": "197"
     },
     {
       "baslik": "TTB Eskişehir Orman Yangını İnceleme Raporu Yayımlandı - Türk Tabipleri Birliği",
@@ -27914,7 +27917,7 @@
       "etiket": "Orman / Maden",
       "ozet": "TTB Eskişehir Orman Yangını İnceleme Raporu Yayımlandı &nbsp;&nbsp; Türk Tabipleri Birliği",
       "url": "https://news.google.com/rss/articles/CBMiREFVX3lxTE9HcDdZMjNnbERLeXpEWnhuOXF2WXJHN3FFTjhDc3EzekVDSEFHRWxrdVpBeENVYVBXanNFQm9yN0pqVVNr?oc=5",
-      "id": 198
+      "id": "198"
     },
     {
       "baslik": "Ormanlarda görünmeyen yangın: 10 yılda 109 bin hektara maden izni verildi - soL Haber",
@@ -27924,7 +27927,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ormanlarda görünmeyen yangın: 10 yılda 109 bin hektara maden izni verildi &nbsp;&nbsp; soL Haber",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQdkpDcDJQVzZNTi1YR3lCQ21jclVNbTJkYkZ6WFRLTjV5b3RWVVh2TjdwTXdabk5qZm5PQkltbG9GY3RnTnh6c0R6azZHUXNZUllyeDFvRlo0bF91cGI5MnBYUEZzc1kzblJwZUVKWUYtSDZpZWJQWkdxMHNkbFZKd0tZX3VBRUFMWTdpV0xfUkxzTGpoVkxjT3dQdFpkVkN5UGRCQVMxcGtYU09NOUZj?oc=5",
-      "id": 199
+      "id": "199"
     },
     {
       "baslik": "Ormanlar İçin Asıl Tehlike Yangınlar mı Yoksa Maden Ruhsatları ve HES’ler mi? - VOA Türkçe",
@@ -27934,7 +27937,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ormanlar İçin Asıl Tehlike Yangınlar mı Yoksa Maden Ruhsatları ve HES’ler mi? &nbsp;&nbsp; VOA Türkçe",
       "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQQlh3M2tfRkNhSkpPLWZBcFhFeWk0SDcwQXdfTHRFSW03Ty11dS1XNHZreHh2SHAzS3RBelVPcGdfeC1rbzNOSTVGMEFTd3FFa0R4MGk2VWZnZDJpa0NPVGQxWnlLdl9reFBKZ0xjc0U4NDNkSjFJb1BpMElvMzZBbmlyS1U4MUpaY3R4ZmxsbFhYd1llNUhnWThZZDRnZ3ItUWRRR2d5YS1ieTDSAa4BQVVfeXFMTnEwQk9Xc2VVNUtITExNTjV3UGlvMEhUNmRsdjIteHZrVEh1ZHpxTV9lNGpSd1FZOFloWmpyVHNpd3BjajBMX2tDbWU1RWF3d0VWTFlNVzlZRFBoVnVaX3dSZ25JbzRLUnMwZWFmVXdjSmk1MlkyV0E4dGpjcG5NT2pNQk5SWWtGdFNQaGVUTjl2T0xSMjY0Y3I1Smp5X0ZSZm5mQ1RDVUhZN2RLeXVn?oc=5",
-      "id": 200
+      "id": "200"
     },
     {
       "baslik": "Madenle yok olan orman alanı yangınla yok olandan fazla - Son Dakika Türkiye Haberleri - Cumhuriyet",
@@ -27944,7 +27947,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Madenle yok olan orman alanı yangınla yok olandan fazla - Son Dakika Türkiye Haberleri &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOTVlGVHg4S3RuaUEzbC1Ud0NCUGtNS0xDTjVBRGJSM1N1ZW9qeENqN2twVGNZSWRuZWxNeVZpSXZObmdsdDhXMktkODNicnhHWHVTbkZjX01qTlJUbWFaeDNGenFxNEVtTXhpLXNrYWUzM19FbjBXanRReGZkTHBKaFpONUxnS2NFV1owblkxSnV1TC1QempXZFgyanR6WWZPejlxLUtMSXBEbkQ0X0JEOFlR?oc=5",
-      "id": 201
+      "id": "201"
     },
     {
       "baslik": "Türkiye'de Rize'den büyük bir alan ormansızlaştı - DW.com",
@@ -27954,7 +27957,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye'de Rize'den büyük bir alan ormansızlaştı &nbsp;&nbsp; DW.com",
       "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOS2JmZ0J6Y1EtbGEtTVNvcTZYVkpZQXNkOUlHczVRMXBSUzdqS3JNNENpd1N6S1FMOEU5aGVnbVdJTm5mSXF4RWVCQkVmd1pDV3pjazVYa0FNRHJaWi1JVXFJSFNnTW5sWjNEWEVhQ0ZTcWF2NVNoeEJSVW5mWTNkQ3Y0V0xuLUV1Z0R3N29scnVmSDJNOVFTZUlqclV6bl9Rck1ub0ZUeEF1T0dIcmfSAa4BQVVfeXFMTkpjZTRWdU9IVWFkNjhaQV9iRVRVM2k1X2h1QjBJdTg0NFJGd0RSNW1JQ01hV2dSVzlRTGlISTNNcThNbDBHWDRRSUFnc1B6b1NoejJ0ZER1bkw3R1pxYXZISnB1RFRpTU1ZX3piTEtVT2ZoamY1RmdPeDBrdGtLUTEwbU5KNkw3a0JJdDNCdm5VSU9FX0VGQmF5THVEdVZIT0d4bmR3OFIyOWU4OXFR?oc=5",
-      "id": 202
+      "id": "202"
     },
     {
       "baslik": "Türkiye’de son 15 yılda yaklaşık Tuz Gölü büyüklüğünde orman yandı - ÖZYALVAÇ",
@@ -27964,7 +27967,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye’de son 15 yılda yaklaşık Tuz Gölü büyüklüğünde orman yandı &nbsp;&nbsp; ÖZYALVAÇ",
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPdE1CMjY5Sk9USHlZUE0yc0czekVTb1dtSUo5SW5zNHMwVHNScWhUVW5jRGtUUnhsNkdWZWNlSHRya2prQnkzdlZIVHVQN1dRajV2a1FwNHBFUk53cFFRTGZWbzA2cXNKMldpLTVZdDlBZ1ZsQXlfblE0a24wY2lTTy1VYWltRW1HbUZQaUY3T0Vzc3NxQ3VoRVZhNA?oc=5",
-      "id": 203
+      "id": "203"
     },
     {
       "baslik": "Kuzey Ormanlarındaki madencilik faaliyetleri İstanbul’un nefes almasını giderek zorlaştırıyor - yesilgazete.org",
@@ -27974,7 +27977,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Kuzey Ormanlarındaki madencilik faaliyetleri İstanbul’un nefes almasını giderek zorlaştırıyor &nbsp;&nbsp; yesilgazete.org",
       "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPcU4zRG5aOGtLYk5Cb3BJSExGamZ1djZDaVhoNVNvUzA3aHBIc0d5dGlONTlmaGdqOXBoRGI3bW1HMFJMRWZCZXpmVk1XRm5wenVmYjlQT1p0VmlIbEcwZjVIVllxajJRREtKMzlQYmZLZFEzRldpYzNiQ2YzcFZxbHI4Q2ZFYi1VMVR1bnBmaDVvcDV5ZjlteEd2VEk1bnkwdHNnLXpoSy1nOEFOaGcxb0JkTjFfN3Ru?oc=5",
-      "id": 185
+      "id": "185"
     },
     {
       "baslik": "Türkiye alev alev yanıyor, uzmanlar uyarıyor: Hazırlıklı olmazsak daha büyük orman yangınlarıyla karşılaşabiliriz - Independent Türkçe",
@@ -27984,7 +27987,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye alev alev yanıyor, uzmanlar uyarıyor: Hazırlıklı olmazsak daha büyük orman yangınlarıyla karşılaşabiliriz &nbsp;&nbsp; Independent Türkçe",
       "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5PUUZDTGV4eEZTNEcyN2NaTlktd0hBZVVUemVZdElzUk1Ja0NiaXh0SFY1WEtQRDY0dFAwNUw3ejhIekVvdXhhZ04wcnA?oc=5",
-      "id": 186
+      "id": "186"
     },
     {
       "baslik": "Dikmeceliler, acele kamulaştırma kararına karşı dava açtı: Bizi, kendi topraklarımızdan kovdular - T24",
@@ -27994,7 +27997,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Dikmeceliler, acele kamulaştırma kararına karşı dava açtı: Bizi, kendi topraklarımızdan kovdular &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxQZWUweUVLR2dMVzdGMmRsSVhJa1pWQTBsZFkxY3RHNEo4aUlBc1JuOXRMUnNQTjlLVnY0RmJ5UGdpZmxGM0NoblhDOWxyN3dwQmhpdTVyLU1vYnhSWmpnR0g2dnRDbU9BN0hUeWlYSkp6NFFXaHFpSVh6UGhRUTZsUk1jaXZwZFEtdU1LeFIxellWY2pLNnNKNkZFYXZWMUFRMjlkazV3M042ZDNYOFNkV2NkMHhqMlNhTHVfMVBDM1hlQ0xfUGcwR0RDX2F0YU1IR2daMWd3alJDRDQ?oc=5",
-      "id": 187
+      "id": "187"
     },
     {
       "baslik": "CVK Maden'in Çanakkale projesinde ÇED süreci sonlandırıldı - Analiz Gazetesi",
@@ -28004,7 +28007,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "CVK Maden'in Çanakkale projesinde ÇED süreci sonlandırıldı &nbsp;&nbsp; Analiz Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOTlN4V2lwLTV3bEZFM0Fvb3g3SmV3eDh6cUVyTURqVWhiTWlHVC1nTjZ2RWdnNGlnZEVvQkZPZ0JQRFVNdHYyTnNjLVEycmVPQ1gtMUJqcmJ2Tk52RXNCazZlcHlHQU5yazNVZjBqc1Uza1FoOXE1NzNzRjM1aVh0ZWRyaHcyOExneE9EbTBZTjI4TjYyUkZQTmx0aVo0RnEt?oc=5",
-      "id": 188
+      "id": "188"
     },
     {
       "baslik": "Yeni Maden Yasası ne getiriyor?| Haberler - Gazete Kadıköy",
@@ -28014,7 +28017,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Yeni Maden Yasası ne getiriyor?| Haberler &nbsp;&nbsp; Gazete Kadıköy",
       "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE1Idk1qQ25ySXhmV0lrVWE4dHZNQkpYQzBXM0dFbmJzZ0lwYlFQak5HZFl0ZkVMRnhILWNwcWJINFo5dHMtSVUzTW52ZDJtdE9RTVJyandvN2w3MUZHSkU1T1NFX1BRM01LVmYwbEctalBpa1FaR2JUbVZ3?oc=5",
-      "id": 189
+      "id": "189"
     },
     {
       "baslik": "Zeynep Kuray: ‘Beni şikayet eden şirket Akbelen’de orman katliamı yapan şirkettir’ - Media and Law Studies Association (MLSA)",
@@ -28024,7 +28027,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Zeynep Kuray: ‘Beni şikayet eden şirket Akbelen’de orman katliamı yapan şirkettir’ &nbsp;&nbsp; Media and Law Studies Association (MLSA)",
       "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQdFR0ajhrcjNIUW14NXppcVBydjI1R2tRZjBqcmgxOUtDbU1CSjRSWElOUmloenB1UGFvLWp3VS0wRWl1eFA2QVVBV3R0VFVSNHJMU3BKRXhZVG1IS0FMa3VEMXJsNzdQcGk3dzctamh5aEZhZ1ByUU1zVWFINTV2alJKSUxMcENkVUNoX01qNnZQYUtPUndtU2I3WktPTnFCbkppZlZvUGVvbjFx?oc=5",
-      "id": 190
+      "id": "190"
     },
     {
       "baslik": "Hepsi Birer Hazine: Milli Parklar - TRT Haber",
@@ -28034,7 +28037,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Hepsi Birer Hazine: Milli Parklar &nbsp;&nbsp; TRT Haber",
       "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQQnhzNDRJZk02Uk1OaW5NNXNjWkx4UTBEU3BmTnZGNHhrT0RaZW1Eb0cyU0dwcjBhRHhsRVJIek9lbXhLazM0dk5qVlk0czU3Q3dDbXAzYVA5Z1kyZW40SWZpb20yVnRub3NlMUs3d2lWbk5xRFpaakVlNmJKbGJoMU5SWVJlbjg?oc=5",
-      "id": 191
+      "id": "191"
     },
     {
       "baslik": "BM İklim Şefinden Çin’in İklim Çok Taraflılığındaki Liderliğine Övgü",
@@ -28044,7 +28047,7 @@
       "etiket": "İklim",
       "ozet": "Stiell Kasım ayında Türkiye&#8217;de düzenlenecek COP31&#8217;de Çin&#8217;in liderliğini sürdürerek ve genişleterek ve COP33&#8217;teki İkinci Küresel Değerlendirmeye kadar olan kritik yıllarda temiz enerji yatırımlarını artırarak getirilerin katlanabileceğini vurguladı. Birleşmiş Milletler İklim Değişikliği Çerçeve Sözleşmesi İcra Sekreteri Simon Stiell, jeopolitiğin ve iklim alanındaki çok taraflılığın bu yeni döneminde, Çin’in iklim konusundaki liderliğinin her zamankinden daha önemli olduğunu [&#8230;] The post BM İklim Şefinden Çin’in İklim Çok Taraflılığındaki Liderliğine Övgü appeared ",
       "url": "https://www.iklimhaber.org/bm-iklim-sefinden-cinin-iklim-cok-tarafliligindaki-liderligine-ovgu/",
-      "id": 1
+      "id": "1"
     },
     {
       "baslik": "İklim Krizi Sosyal Bağları Kopararak Toplumsal Krize Neden Oluyor",
@@ -28054,7 +28057,7 @@
       "etiket": "İklim",
       "ozet": "İklim değişikliği genel olarak çevresel ve ekonomik bir tehdit olarak kabul edilse de, Sidney Üniversitesi tarafından yapılan yeni bir araştırma, bunun aynı zamanda insanların hayatta kalmak için güvendiği ilişkileri zayıf düşüren ve büyüyen bir toplumsal kriz olduğunu gösterdi. Nature Human Behaviour dergisinde yayımlanan yeni bir araştırma, iklim değişikliğinin tam da bu bağlara en çok ihtiyaç [&#8230;] The post İklim Krizi Sosyal Bağları Kopararak Toplumsal Krize Neden Oluyor appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/iklim-krizi-sosyal-baglari-kopararak-toplumsal-krize-neden-oluyor/",
-      "id": 2
+      "id": "2"
     },
     {
       "baslik": "13. Dünya Kentsel Forumu Azerbaycan’da Başladı",
@@ -28064,7 +28067,7 @@
       "etiket": "İklim",
       "ozet": "Forumun uygun fiyatlı ve dirençli konutlar, iklime uyum, altyapı geliştirme ve kapsayıcı kentsel büyümeye odaklanması bekleniyor. Küresel liderler, politika yapıcılar ve kent uzmanlarının hızlı kentleşmenin getirdiği zorlukları ve sürdürülebilir kentleşmeyi tartışmak üzere bir araya geldiği Dünya Kentsel Forumu&#8217;nun 13. Oturumu (World Urban Forum- WUF 13) dün (17 Mayıs) Azerbaycan’ın başkenti Bakü’de başladı. 22 Mayıs&#8217;a kadar [&#8230;] The post 13. Dünya Kentsel Forumu Azerbaycan’da Başladı appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/13-dunya-kentsel-forumu-azerbaycanda-basladi/",
-      "id": 3
+      "id": "3"
     },
     {
       "baslik": "Prof. Dr. Türkeş: “Ülkelerin İklim Eylemi Karnesi Çok Zayıf!”",
@@ -28074,7 +28077,7 @@
       "etiket": "İklim",
       "ozet": "Ülkelerin iklim eylemini değerlendiren Prof. Dr. Murat Türkeş, “Dünya’nın sera gazı salımlarını azaltım ve genel olarak iklim değişikliği mücadele karnesi 10 üzerinden yalnızca 1 olabilir” dedi. Gezegenimize ait son veriler alarm veriyor. 2025 kayıtlara geçen en sıcak üç yıldan biri oldu. 2015-2025 dönemi ise en sıcak 11 yıl olarak kayda geçti. Paris Anlaşması’nda kabul gören [&#8230;] The post Prof. Dr. Türkeş: &#8220;Ülkelerin İklim Eylemi Karnesi Çok Zayıf!&#8221; appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/prof-dr-turkes-ulkelerin-iklim-eylemi-karnesi-cok-zayif/",
-      "id": 4
+      "id": "4"
     },
     {
       "baslik": "Engelli Bireylerin Hakları İklim Politikalarının Merkezine Yerleştirilmeli",
@@ -28084,7 +28087,7 @@
       "etiket": "İklim",
       "ozet": "Engelliler Haftası ve Dünya İklim Günü dolayısıyla bir açıklama yayımlayan ENKAD, iklim krizinin gündelik hayatımızda yaşamlarımızı doğrudan etkileyen bir insan hakları krizi haline geldiğini belirterek engelli bireylerin ve özellikle engelli kadınların afetler ve iklim krizinin etkileri karşısında çok daha yüksek risklerle karşı karşıya kaldıklarını vurguladı. Engelli kadınların insan haklarına eşit erişimini güçlendirmek amacıyla çalışan hak [&#8230;] The post Engelli Bireylerin Hakları İklim Politikalarının Merkezine Yerleştirilmeli appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/engelli-bireylerin-haklari-iklim-politikalarinin-merkezine-yerlestirilmeli/",
-      "id": 5
+      "id": "5"
     },
     {
       "baslik": "IEA Başkanı Birol: “Petrol Fiyatlarının Artması Başka Sektörleri de Etkiliyor”",
@@ -28094,7 +28097,7 @@
       "etiket": "İklim",
       "ozet": "İran&#8217;daki savaş öncesine göre petrol fiyatlarının yaklaşık iki kat arttığını söyleyen IEA Başkanı Birol, bu yükselişin birçok ülkede enflasyonu artırdığını da vurguladı. Lojistik hatların koşulsuz ve hızlı şekilde yeniden açılması gerektiğini söyleyen Birol, 1970&#8217;li yıllarda bazı ülkelerde üç haneli enflasyonların görüldüğünü hatırlatarak benzer bir sürecin yaşanmaması gerektiğini ifade etti. Uluslararası Enerji Ajansı (IEA) Başkanı Fatih [&#8230;] The post IEA Başkanı Birol: “Petrol Fiyatlarının Artması Başka Sektörleri de Etkiliyor” appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/iea-baskani-birol-petrol-fiyatlarinin-artmasi-baska-sektorleri-de-etkiliyor/",
-      "id": 6
+      "id": "6"
     },
     {
       "baslik": "Uluslararası Adalet Divanı’nın Tarihi İklim Adaleti Kararı BM’de Oylanacak!",
@@ -28104,7 +28107,7 @@
       "etiket": "İklim",
       "ozet": "BM&#8217;nin iklim kriziyle adil ve yasal bir şekilde mücadele etme kararlılığı, önümüzdeki hafta New York&#8217;taki BM Genel Kurulu&#8217;nda yapılacak kritik bir oylamada test edilecek. Yeni bir siyasi karar tasarısı kapsamında, her üye devletten Uluslararası Adalet Divanı&#8217;nın (UAD) iklim adaletine ilişkin bir dizi tarihi kararını desteklemesi isteniyor. Eğer kabul edilirse bu, hükümetlerin fosil yakıtlarla mücadele etmek [&#8230;] The post Uluslararası Adalet Divanı’nın Tarihi İklim Adaleti Kararı BM’de Oylanacak! appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/uluslararasi-adalet-divaninin-tarihi-iklim-adaleti-karari-bmde-oylanacak/",
-      "id": 7
+      "id": "7"
     },
     {
       "baslik": "Gözlüçayır Köylüleri “Antimuan Madenine Hayır!” Dedi",
@@ -28114,7 +28117,7 @@
       "etiket": "İklim",
       "ozet": "Köylüler, madenin mevcut faaliyeti nedeniyle gördükleri zararı anlatarak isyan etti. Tarlalarına izinsiz girildiğini, bin yıllık çınar ağaçlarının kesildiğini, derelerin atıklarla kapatıldığını söyledi. Derede artık balık kalmadığını, kurbağa bile yaşamadığını ifade eden köylüler, şirketin taahhütlerine inanmadıklarını ve madenin kapasite artışını istemediklerini belirtti. Balıkesir ili İvrindi ilçesi Gözlüçayır köyü yakınlarında antimuan madeni kapasite artışı projesi için Halkın Katılımı [&#8230;] The post Gözlüçayır Köylüleri “Antimuan Madenine Hayır!” Dedi appeared first on İklim Haber .",
       "url": "https://www.iklimhaber.org/gozlucayir-koyluleri-antimuan-madenine-hayir-dedi/",
-      "id": 8
+      "id": "8"
     },
     {
       "baslik": "Mogan Gölü'nde çevre ihlali: Ankara Büyükşehir Belediyesi'ne milyonluk ceza - Yeniçağ Gazetesi",
@@ -28124,7 +28127,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Mogan Gölü'nde çevre ihlali: Ankara Büyükşehir Belediyesi'ne milyonluk ceza &nbsp;&nbsp; Yeniçağ Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNdFRjWS1tQVFzSmdNTWVYQmVfX052enluZUNORjU5SFFDN2hiVUdNTlNNU2hyekdpQ0ZaRUNORDZfUng1MmxYZE43SlBlTHBBR3Jza3V0Y0pTYi1XQlpuekUzandQRzU1NUpITFB6SjVmWGx2QkNzVEVPSmZpeUVFUVJ5T1plNnFkcHpTbE5BdDg4TWsxeW9ManlDVEFLYzFfU0ZkNHlKcENJY2RsVmt1MVU3VkM2UDBROFQyVGlITQ?oc=5",
-      "id": 9
+      "id": "9"
     },
     {
       "baslik": "Çevreyi kirletenlere 4 ayda 47.7 milyon TL ceza - Yeni Asır",
@@ -28134,7 +28137,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevreyi kirletenlere 4 ayda 47.7 milyon TL ceza &nbsp;&nbsp; Yeni Asır",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQbWNvNi1lNE9NR2wxRndSZV93Q0p4ek54UjA5bGFqdXQ0VmVUSm0xU3ZCdTd5Z1ZjUFZUR2F3S1luZHBuODBpdk16dE9lMU5CVjVMRWx1QVhjeWlOZDBpU0JVVkFlRGZhNV9mYmlYem1pM0tHSmxELXRXZHFKTlYwSUFjblppc0s1M1VyOGxjelhsVzNZZWZ6U3hhc3c?oc=5",
-      "id": 10
+      "id": "10"
     },
     {
       "baslik": "“Sistematik çevre ihlali endişe veriyor” - Haber Ekspres",
@@ -28144,7 +28147,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "“Sistematik çevre ihlali endişe veriyor” &nbsp;&nbsp; Haber Ekspres",
       "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFB0bFpySWdKMUNJcHZMMnoyRkN5aDN4ZXBLaFRaLVVMc3IxV0Z5WklJSWlTZl9uTGt4NXNwZVRxX1V0aExEUnNVSmdxemU0SkUzNG5rLVY2TFZIbVBfR3c0ZGFJVUVsVm5iVzVYUFhZb0xVeXlmd1htV0hn0gF_QVVfeXFMTXp6eUlQNklYRjVTdW84YjFtRDlXU0piVFRnaVNNVktZWVNvQk05XzU0YlV6N2E1SzZMdTBPdVFJZmo3cGhzbUVCTjhuU2hBUGFINFBoVFZqSGUwVi02R2E5MFZLWG5nT2VjQXBUb1dES2ctcjFTWWJJVkZtZmxhQQ?oc=5",
-      "id": 11
+      "id": "11"
     },
     {
       "baslik": "Çevre örgütleri, Afşin-Elbistan Termik Santrali önünden seslendi: Türkiye, yeni kömürlü santral yapmamalı, kömürün vadesi doldu - Cumhuriyet",
@@ -28154,7 +28157,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre örgütleri, Afşin-Elbistan Termik Santrali önünden seslendi: Türkiye, yeni kömürlü santral yapmamalı, kömürün vadesi doldu &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMi_gFBVV95cUxQakRYZWFVZ3VSRWNYUFZlUWdnSmVtalRXeW96R2JKMkcxd2d5ZHA2T0w5Y3JhVDlLMV9DNFpRWXZpbUhkaXZEWDZvUS1obVpxZWFDQjJkQTBUMXNVSEpJS2pjcFE4dl8wcE5sSmFOYnltMi1JTHhHNVMtRUxsVHJxaGN4TDlnejZKa05aeXktdHVfUWdGRG5NWmFIOVM3ZUQ5Uy12RHdPbzNkcXM5WGswNEpIOXY3SUZfdDFFMzR0bkZrUmk2eWd4VS1FWkhxMDJiRWY1d3RyVGNsWW01NElJbERNS2tmOGFVbGNwYUlkZlUzTjJiYVc0QkNNMUotdw?oc=5",
-      "id": 12
+      "id": "12"
     },
     {
       "baslik": "Aliağa gemi söküm tesislerinde yeni çevre ihlali iddiası - Denizcilik Haberleri",
@@ -28164,7 +28167,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Aliağa gemi söküm tesislerinde yeni çevre ihlali iddiası &nbsp;&nbsp; Denizcilik Haberleri",
       "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONTJXV25lbjRkOHVLYzFjUTFzdEhSc1ZOVTRSLUdUUFRnUUFGOUVoRm1Sd3ktT3dBUE1zclVEanZoRmdmakpDNnRXVmxZb1dvdVliM0xqVGRuc3l3dDJ3XzBHeVZ2bHMtT080UVcxOUtDeUpDaHlhZkNYRElEUHNFaC10Z1BPSkVIbklUUlNlcGRwTVFH0gGaAUFVX3lxTE1GVkhWdEN2ZUpZNXBIZ3dhMElWOWhpeXAzQ0RDaWdYTnpIQ3U0SVhzRlRvQ1BNeWhyVlVXVkhwVWsyWkVCVW1pMDJCSVdaTkxFTGlSYS10WWlyX0dxTVNJWFFGdjBPd1p1cVpPclcwenJQWi02YVNwZjd5RDVhNmxGOXprWmQwakRJZVhmYjBkMFI4RnJKbEFwQlE?oc=5",
-      "id": 13
+      "id": "13"
     },
     {
       "baslik": "Çevre Kirliliği, İnsan Hakkı İhlali ve Dahası: En Çok Çabalayan Otomobil Markaları Belli Oldu! - Webtekno",
@@ -28174,7 +28177,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre Kirliliği, İnsan Hakkı İhlali ve Dahası: En Çok Çabalayan Otomobil Markaları Belli Oldu! &nbsp;&nbsp; Webtekno",
       "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPTkV2bDE4WXU1NkpFS250bF9mQUpDbkd6a256SjJDS0dCa2pQdUVxeUktNkZQX0dzcl9nNTl0TGpCU1JrVWdFejVwd1I4NlhWcDhwQ2lMM0x2NVpXYjhKN2R4b0lTREU4LXA1ZkNjcmRwVXpPbVRwUlVUcXp6d2VXRGJEckFUcXM5Y0dxa1c2ZUtaYlE?oc=5",
-      "id": 14
+      "id": "14"
     },
     {
       "baslik": "Atıkları usulsüz depolayan Buca ve Foça Belediyelerine rekor ceza: Aynı ihlali 3 kez yapmış! - Sabah",
@@ -28184,7 +28187,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Atıkları usulsüz depolayan Buca ve Foça Belediyelerine rekor ceza: Aynı ihlali 3 kez yapmış! &nbsp;&nbsp; Sabah",
       "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPRU5paURLbl94SjhCa1lMQ29XbHNOT1pjNXQ2aGczdWY5SGVLVjBpMHZRMk1USmRyLTBJd3Jkdm1ld1dUTXkwZHVvNklDZ1ZXMWpob2ZCODM0c1R2cnMwbXJiLTVPTDgzZ0RwMWw5Ynd1enZ2Qm5GejNiWFVCVFFhX0ZablRrWGxPMU8zR2J3UHZtQXZHYng0UEctV0dzQlpILUVLLTBxMS1FMVhiQ0hoeXZPZEJkV0VoYUd6OVVjVFRFMTRZUTZQbdIBywFBVV95cUxPZjNhRlJZRjU0eG85bktKZ3E2bW5CUFl5NE1tZXdmWW5HTUsyM0hOSUdzWHJyWkstNVZyU0l6bnI4c00tWUswc2czcndDOVN6QkhBa2JacTZZN002ei1wQ2lRRXdkV2M2RDlzRjFaa0E0UjdOdll1UV9SUEEyX3dvQ015SnRtb0JsQkVzRmFSa1R1cDBqYmQydkZFWVVZV29hZURsWTVWTkM5dkJjbjgyMFJJRjlDUHhxNWpvT0lVS2FxSElBTXk3Z2dibw?oc=5",
-      "id": 15
+      "id": "15"
     },
     {
       "baslik": "Soma’da çevre kirliliğine yüksek ceza - BHA - Birlik Haber Ajansı",
@@ -28194,7 +28197,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Soma’da çevre kirliliğine yüksek ceza &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE52Z0FXbDBHQUZwZkhNdUlvQk9sbWFEcmVCbGVJZ0N2QWNzZ2xVdjR2SGxuQnZ5UzJoeHc4QW5veHdpemNzbUIwbUUwRlA0Nzh3QUg5bUpVUHdoY3N6NnJZTXFCakh1NVgtREVScUppczZVamJPM09jZXlHNXlSZw?oc=5",
-      "id": 16
+      "id": "16"
     },
     {
       "baslik": "Aliağa gemi söküm tesislerinde yeni çevre ihlali iddiası - Cumhuriyet",
@@ -28204,7 +28207,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Aliağa gemi söküm tesislerinde yeni çevre ihlali iddiası &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQY2c0SVFKNGlaM2dBSHk3WUxtWnZ6TFVmQzhpNVdid2xXOUpDOERhRllxdnd5ZUc3TTh2b0FVMTFFUVBFVUFCaGFnYm80MnRiZHdZS1FqdHJCalRySFlOaG1Ha0s4X1EtWUdFS0Q5YlZjWjAyVHNfWmpHLUptQWstQnNvSVlqa0ZrUmpIbGlkWVNWLWgxSzFpMHZNbVVLbGVOTmc?oc=5",
-      "id": 17
+      "id": "17"
     },
     {
       "baslik": "Hava kirliliği çocukların sağlığını tehdit ediyor| Haberler - Gazete Kadıköy",
@@ -28214,7 +28217,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Hava kirliliği çocukların sağlığını tehdit ediyor| Haberler &nbsp;&nbsp; Gazete Kadıköy",
       "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPQW1QaXhuZTlGdHVjQ2g4YWgtVW84X0tEajFHUkNNejVxRFZ1anJXLWhfS19ZMXc2RkY0Y2tWb2dKSEdpTTQtejUxdVI3cWRha1NXbVhYd0hpa1NoWDNTbkdaSEJFX0E1eTNDeTVzS1hudmVkQTVmS0Z0MXdnbHFSMUtHQnJxS09BM2lhd09ZRUR2WEU?oc=5",
-      "id": 18
+      "id": "18"
     },
     {
       "baslik": "İstanbul Barosu Sazlıdere'den seslendi: Türkiye artık su fakiri ülkeler arasında - Bianet",
@@ -28224,7 +28227,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "İstanbul Barosu Sazlıdere'den seslendi: Türkiye artık su fakiri ülkeler arasında &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNdllFeEV2Zko4S2Qtb2pXWHVQc3BJblhMbFRrdUhYNXgyeFNScVJwa2Rud0ZoNXB3aGpJd0oyb3QxVUJUcEswRC13UXBLYmFzQ25fVzBKTF9sWGg3VGpiZG8tYU5JQTc1MG5EQTBnQ0hLN3FtRlg3WVpSeE5LQUk4Qlg2UXFwSnFFd21NYjZLMzc1c0piQnRIdmhlMVl2YXhxZFltdUhBMXpsa2tMcFJTVg?oc=5",
-      "id": 19
+      "id": "19"
     },
     {
       "baslik": "Çevreyi kirletenlere 2025'te verilecek cezalar belli oldu - Anadolu Ajansı",
@@ -28234,7 +28237,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevreyi kirletenlere 2025'te verilecek cezalar belli oldu &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxORXNmQTBWZ0VxVERueEkxbnpnRTA0bFZkenU3cnJLbzM0T2YzZUtyM0ZiOF9zZFdNN0RHcWRLWElXMDItVEdvZ2hvMjI2eFdjTzE1OGREejN3dUZyTzV0VjBTcHZVS0VtanZlZFN3OWZZc0p0eXhfUzdFZkRNa3dZTVBXRFg4b1c0MHZ4MzM3c0pIdVA1YzhDX21CZHk?oc=5",
-      "id": 20
+      "id": "20"
     },
     {
       "baslik": "BAKANLIKTAN BURSA’DA ÇEVRE DENETİMİ BUSKİ’YE 2 MİLYON TL İDARİ CEZA KESİLDİ - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
@@ -28244,7 +28247,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "BAKANLIKTAN BURSA’DA ÇEVRE DENETİMİ BUSKİ’YE 2 MİLYON TL İDARİ CEZA KESİLDİ &nbsp;&nbsp; T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOZlNZNjgwdjlVaHB1OVIwTkVtLXBTWUxfY1g3Wm5kTjlFeDFfdkhtSDFTU1dXYjM1QXJQb3JhSjJMOFlvYi1uQnlfeXoycm5lazg1YkdDNy12NWhqYWhtSnV5UzduMG84YzlUSTgya19LVFZDcVFxT0NHVTNxemcxQU8wLUJzZEN3Ry10a1hwajhOREZEeWZDaUYxS2ZKQko5dGRpWWJ1emN2N0hkMVpz?oc=5",
-      "id": 21
+      "id": "21"
     },
     {
       "baslik": "Çevre Aktivistinin Tutuklanması Türkiye’nin COP31 Eş Ev Sahibi Rolünü Zedeliyor - Human Rights Watch",
@@ -28254,7 +28257,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre Aktivistinin Tutuklanması Türkiye’nin COP31 Eş Ev Sahibi Rolünü Zedeliyor &nbsp;&nbsp; Human Rights Watch",
       "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQcWtHZmlWQ19lbFNLV3p0MDhxc2wxWTM1Tmk2WHdWNmZ1bnVVNTZfUVZxSGpwY3JXaTJqaHJkVV9FRTFNSWd0d0w2cENweDZSNjBqMnRGYkVCMmJFTEJyWUJoQzc0R1NMYkhtb3UtYVZpdTZJOUhTaUVfWTd4Uzc4V0lGTDJTdjI5MVlSV0ljZ1ZvTnNpQUtLMU1ZTlBjNy1TdUo4MkIzVVYwM213SE55Q3V4NXY?oc=5",
-      "id": 22
+      "id": "22"
     },
     {
       "baslik": "'Denize beton, doğaya darbe': Göcek ve Dalaman koylarında çevre talanı meclis gündeminde - mugladevrim.com.tr",
@@ -28264,7 +28267,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "'Denize beton, doğaya darbe': Göcek ve Dalaman koylarında çevre talanı meclis gündeminde &nbsp;&nbsp; mugladevrim.com.tr",
       "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQRS1xZHNvcHlUekY5U1ZWZ05tNlNlcjYxVHluUXpvcTVkUWItYkh0QzIzTEhtVzBUNy1lNWpmbUxkWFQ0bTFpaEpYajdyUWJQa3NnYnFYTEdBSjVxQjBWMFhZcWE0OUtVM09jUkpLRHQxMXYzYTZQbTkweGJpOUhzamZKQ0dVS3VQeGFRNWpIMGQ4Y3ROazdqMFdad0YyXzlZTWhBcnZFMW9yRHZ4YjdBZlNNaExvQWdQbDJDVFMtc3pxQndENVJndGR6cFJaUUxqSVVrazF6Mzcxdw?oc=5",
-      "id": 23
+      "id": "23"
     },
     {
       "baslik": "Rekabet Kurulu'ndan Şişecam’a dev 'rekabet ihlali' cezası - Odatv",
@@ -28274,7 +28277,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Rekabet Kurulu'ndan Şişecam’a dev 'rekabet ihlali' cezası &nbsp;&nbsp; Odatv",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQbU9pVVl6T011dmdKM2pBVFI5RzlMcFpfLVAzcUlwNHNUNV9Ga0VlVGlnR0hsUHZOUFRPUVBHaUo5dV9iMU13OXZMV1ZYSWluUW5LaDl6UU5tZHFBLVVlYjVud2UxbEYtU2JTSlZ2bjhjTGx4UDcxWWRHb2JOaXNyc3o2eTV6YW9YalJiYlJ6RERuSU9sYzhzdg?oc=5",
-      "id": 24
+      "id": "24"
     },
     {
       "baslik": "Kanal İstanbul: Montrö tartışmalarının gölgesinde uluslararası çevre hukuku rafta - Bianet",
@@ -28284,7 +28287,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Kanal İstanbul: Montrö tartışmalarının gölgesinde uluslararası çevre hukuku rafta &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNak5OUFVGSFk5bUpVN0d4cUZlb2lob1VFMGNJSlNBdE9vRE4yYk8zRHd0Z2NkN1VKWmkwZzlVNWtkMjdIS0FmeXBWWHFGeGhzUm5uNGVWNnVYR1VqWnpwM1RYVkVlbGZDU05uZWJVMXN0SlF1b0RkTVlyOGtjNjVLMjl1NXY1YmZsRDc2SGRxNThHS1NIOE00dE9HOU9SYUgzT2paMHR3MzBHZnZBdDhjVy1n?oc=5",
-      "id": 25
+      "id": "25"
     },
     {
       "baslik": "Çevre, Şehircilik ve İklim Değişikliği Bakanı Kurum'dan kentsel dönüşüm çağrısı - Anadolu Ajansı",
@@ -28294,7 +28297,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre, Şehircilik ve İklim Değişikliği Bakanı Kurum'dan kentsel dönüşüm çağrısı &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOdXgzTlpKU04wU25MVjlzMmRDdU5DSmhGTS0ya2x0MV9mWDM5OFk2V2x3MmxYd1prR1lIWFZYendSaWxuTE9lMnFNSUV4ZUNOc1dGbWFqSy16TjN4SnY2YXdWYXdXMXdBTGQ3a1VRQ0kwUXhncFBwalM1ZEVRVjdJcjNrS3VGcG5qVG04aW8zSC15bGNpNnk0czVlOVpmRTRpUnJJT2tuMVZ2MmZhejVtelVVcGNITG9T?oc=5",
-      "id": 26
+      "id": "26"
     },
     {
       "baslik": "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı, BUSKİ'ye 2 milyon lira ceza verdi - Anadolu Ajansı",
@@ -28304,7 +28307,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı, BUSKİ'ye 2 milyon lira ceza verdi &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQR0pxVm9kTmd5TDEyaGdmTXpGWHZrQUZFeHY0N1UzZmlpVVFUUEF6a0Jhbm14WlloUTZ1RG0tTnMwN21YTlVqV2F4cjNGR3UtYzh4VWdhNTQ4Z0hHQndJaHlSc2ZGOWVYOFVBSkhsOHRCdmJRbWwxcHpfalVmeThSR2o5b01IM3dSdGtoQWdtSzY0SlhQT1FiMGVERC1HWGlMcW1LUURtM05JUldYT1VhQ2xSS3JCTkJPTUU5S3Q2Nmo2MVRLdXlEek1ZRQ?oc=5",
-      "id": 27
+      "id": "27"
     },
     {
       "baslik": "İngiltere merkezli insan hakları örgütünden Çinli madencilik şirketlerine \"ihlal\" suçlaması - Anadolu Ajansı",
@@ -28314,7 +28317,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "İngiltere merkezli insan hakları örgütünden Çinli madencilik şirketlerine \"ihlal\" suçlaması &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOUWNEUWJSeS1TTzNKYWp5dWpsOFBXTkt0UGlQc3EzYzdEaFM2X0tZemJXa1E4TUxyVjhYMFRLamFLdk9RSURaalpLQmczM1MyekFWV3N5R1pQbXRhOXFfTDJmc2ZKWDB1OXRDTE1IaHBfcXVldGNjR0prY0dlR09IMHVZczRHR0dRM0tsdk1vU29Gcll6UUJmQXdBV2oya2lZQkVtRHJTS2tZbGtNNTNIcy10VkdteGIyVmZ2dTBWYjBMU0poQWRr?oc=5",
-      "id": 28
+      "id": "28"
     },
     {
       "baslik": "[Bir konu/k] Türkiye’de doğa mücadelesi vermek: Bir çevre suçuna nasıl engel olunur? - yesilgazete.org",
@@ -28324,7 +28327,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "[Bir konu/k] Türkiye’de doğa mücadelesi vermek: Bir çevre suçuna nasıl engel olunur? &nbsp;&nbsp; yesilgazete.org",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOX0NscUZ4TkI5QThuWkZieVVvZXMyS2wzNFQtd1hhbU15MTN1ZnROZTRIakNNMHJWZjc1NmdSMWZoak1uLTVKR0tGT2VJQnhuamp6RGY1VklmbHdaTjU1dzY0NVZsTFpMQXB3eVVVc0ktNHk2enYxMkFCMDZ4TWRlbWs0U3NESHdEdmdGSVYzVUR1Mjh4SjJJTg?oc=5",
-      "id": 29
+      "id": "29"
     },
     {
       "baslik": "Çevre gazeteciliği saldırı altında - Bianet",
@@ -28334,7 +28337,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Çevre gazeteciliği saldırı altında &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4zX2xtN0NTVmJYMjROTHZEN2NqQ0gxX01aT2FlY2NsYkZTWm9SOWxPbFNVd0RTTU5iaGNrUVNnZ2NLdHJfZ2ZNVXhzUXNWRDBORzBoQTlQTDZ3Y0VPdkV3aHpmMmlZaW9lN09ZRWhYaGJIZHBw?oc=5",
-      "id": 30
+      "id": "30"
     },
     {
       "baslik": "Türkiye'nin ilk \"İklim Kanunu Teklifi\", TBMM Çevre Komisyonunda kabul edildi - Anadolu Ajansı",
@@ -28344,7 +28347,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye'nin ilk \"İklim Kanunu Teklifi\", TBMM Çevre Komisyonunda kabul edildi &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOc1A3clpNM3B3QW14QWJDN0JQWDA5LXdzTEhXOGl1bTlUWnkxMG9uWUZCcV80R2hYUzlNYS1iTlVFRzZDSXdIbU1HSTNPSm9ucEZsLWgwQm1VOEl4c0R4TXQ2elVTX0pZNGlBQ2dpRHhJelpxZDNiS09VZVlMZ1dhdzZWWkNSdTRfNllqclRfTXlPb3N1NGE2c2ZSTWxVcjBzUE1YaUFuanhmNGtlR1pMaVh5blY?oc=5",
-      "id": 31
+      "id": "31"
     },
     {
       "baslik": "\"ÇEVRENİN KORUNMASINDA ULUSLARARASI İNSAN HAKLARI MEKANİZMALARININ ETKİN KULLANIMI\" KONULU EĞİTİM TBB'NİN EV SAHİPLİĞİNDE GERÇEKLEŞTİRİLİYOR - Türkiye Barolar Birliği",
@@ -28354,7 +28357,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "\"ÇEVRENİN KORUNMASINDA ULUSLARARASI İNSAN HAKLARI MEKANİZMALARININ ETKİN KULLANIMI\" KONULU EĞİTİM TBB'NİN EV SAHİPLİĞİNDE GERÇEKLEŞTİRİLİYOR &nbsp;&nbsp; Türkiye Barolar Birliği",
       "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxQSHZrU05Fa0RuSkhiVmIzSF9wci1CVnJzbFV6NmJlekFMZDRQZ2w1MFZHeG9aTkhTd0ExQTlEaTZiTG92M3NfejFCWmFZV0ZjVWRYY0c1NmJwQ2dOVGU5LVI1OGNCWEtvQUQ5OXdOYWhtdFEyWjlPT05Makc3WExxQUVwUElqS0hnWmJsaE1EWm54WjdwQTgwMXZ4aHNSMFhHNDROOV9CV29kMzNVRkpVc1lIZEpjOFBlT1V6bGlNRUVfbDJkdEtXNmdSTWU3NzgzVWFDdXgtcnU1enM?oc=5",
-      "id": 32
+      "id": "32"
     },
     {
       "baslik": "Türkiye: Osman Kavala'nın haklarının ihlali ağırlaşıyor - Human Rights Watch",
@@ -28364,7 +28367,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye: Osman Kavala'nın haklarının ihlali ağırlaşıyor &nbsp;&nbsp; Human Rights Watch",
       "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBiZWt6bkFJQkxzY1BfS25iMFFYYmJzNlZBZ0JwZnZmQ0xpSlM2N0NrRy11emMzUWJWdEJsYlZwMU1OWk03RW9aSmlBVU13N1lkZ21HcmtpMW0?oc=5",
-      "id": 33
+      "id": "33"
     },
     {
       "baslik": "Türkiye Kömürle Çalışan Zararlı Termik Santrali Genişletmeyi Planlıyor - Human Rights Watch",
@@ -28374,7 +28377,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye Kömürle Çalışan Zararlı Termik Santrali Genişletmeyi Planlıyor &nbsp;&nbsp; Human Rights Watch",
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNLWZmWmFqbjJFSjNMajVTUVNGOG1wb1dCSGlRcURXeFgxdkpZWG9hRkVOTHlTRDdSMWdOREFCbzlyT0hYdUJ2QkxzWGpabEwwSmFFd0ZZYlNVVV85QUVPaFprMmV1YnFnaXBRNUVDMTY1dlRaci10RkpDTGZ3TzJ3SA?oc=5",
-      "id": 34
+      "id": "34"
     },
     {
       "baslik": "Zeytinlikler, 'Zeytincilik Kanunu'na rağmen madencilik faaliyetlerine açılabilir mi? - BBC",
@@ -28384,7 +28387,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Zeytinlikler, 'Zeytincilik Kanunu'na rağmen madencilik faaliyetlerine açılabilir mi? &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1xZ1NJSmlteGlBOE5CRUNsSlZQdDVpZzdCdTZJTkVROVpCN283SEFWRE9DRFROb2JBaXJTemQybmNvWk4wUTV0c0VrbGFpSGRGMm9KOWJIZjhpb0wtcHN30gFkQVVfeXFMTWVDOGdfdEV6bjNQbnBUYXh6TEFtSTRqcHluMVNJcWtHbElKTVFnUWUyU0FsdklKOVRlQTNpSTloSFFUUk5sbTdZbkRXNGQ5UEJOTjN0cWFDMTNvZEpoNmtlRGdkVQ?oc=5",
-      "id": 35
+      "id": "35"
     },
     {
       "baslik": "Bursa'daki orman yangınında kaçıp 7 yavrusuyla maden ocağına sığınmış - Hürriyet",
@@ -28394,7 +28397,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bursa'daki orman yangınında kaçıp 7 yavrusuyla maden ocağına sığınmış &nbsp;&nbsp; Hürriyet",
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNTi1VQnFkVXZ2RDRCN19sTzktRnFfazA1dU9ITkFacmREYnFjVEUyVTJIa3lZTWJZWG41Q09URlp4RFlCMW1fOVdtTmlMV25uRHgzWXVvM3JsSm9aRkJrcXBUSFlvZmd6bTlnQWJfUGgyanI3eFo5cXpNSTFjcEZqWWpudEszUkpnWHVGMmpjbnN2VE5oUTF3TFp4TzRENXM3Y3VCUWFsUGd4a0xGQXBVSzBvWQ?oc=5",
-      "id": 36
+      "id": "36"
     },
     {
       "baslik": "CVK Madencilik'ten Bursa'daki yangınların ardından KAP açıklaması - Bloomberght",
@@ -28404,7 +28407,7 @@
       "etiket": "Orman / Maden",
       "ozet": "CVK Madencilik'ten Bursa'daki yangınların ardından KAP açıklaması &nbsp;&nbsp; Bloomberght",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPSDVJLUtXbnZqcF9rWW9yRmxsdnQ1dVlDNmF5MEpTaW56bWxmeGhXQ2dzWTFybmZ2ak1YRlgxRk8zRGYtM0VDNGlEcy10X1JiQ05EU0ljNi1iQUFSZDNhVEdWeWxEOEtJbHRaa00ycVZZWW5PWGVaWGdzMng2U1hwMmVfZktoWVMya3IwSW5fbTdfOW9nR28yMw?oc=5",
-      "id": 37
+      "id": "37"
     },
     {
       "baslik": "İzmir'de neden bu kadar yangın çıkıyor? - BBC",
@@ -28414,7 +28417,7 @@
       "etiket": "Orman / Maden",
       "ozet": "İzmir'de neden bu kadar yangın çıkıyor? &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9kNVZmYW00XzFkT2xrbjZ1YzJhMjV1eE51ZWs0dDlhRV9DSWRwS21XU3ctMHlSOHJjMzFva2FfeGo0X04zWHR5NHhNc2NudDBLcERfblhFOXlSNmxs0gFiQVVfeXFMUEJQVTdkZXNhbVFYSzVsVGF6ZmNuaE1iVk9GU0ZWOTRHRVlDSWFtdWsxNjJwakJ3Q2NtQzJGSVl5OUFtT0dfRXpvX1RKNWxCVXNwN0U0ZVk2SEdoWE50anc4cUE?oc=5",
-      "id": 38
+      "id": "38"
     },
     {
       "baslik": "Gelibolu'da orman yangını - BHA - Birlik Haber Ajansı",
@@ -28424,7 +28427,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Gelibolu'da orman yangını &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5aREdKcGwtVzkxNmw2X2xOMlhVVEIwcXVTdnNYN2VxdmpIQzlCLThxN2RWZWlGOFRfbWZ5Q0ZVUHVBS0RGOFp6TzNFanFwNkRjLUg1aHRPaHBfeDRuQ28zSjJkTEoyTDYyOUhuSVo0RUR4dw?oc=5",
-      "id": 39
+      "id": "39"
     },
     {
       "baslik": "Doğaya çifte tehlike: Bir yanda yangın, bir yanda maden - Politika Haber",
@@ -28434,7 +28437,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Doğaya çifte tehlike: Bir yanda yangın, bir yanda maden &nbsp;&nbsp; Politika Haber",
       "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQZTk2dC1qNFAyeGU1LTVCRWUzYUJYaHdIZTJUdEhxYVlaQkJLcE5UdUphYXRYMkxHbUw1R3BHZGRwVE10dFFWSmh2VjFqRnBSOW5VNndZR0J5ZXdDbUpUY3dFTHdjU0hrWjlBWFNiNlQ4ZEljR3N0YlZQVlRjYlV4S0NYbkRXOG8?oc=5",
-      "id": 40
+      "id": "40"
     },
     {
       "baslik": "Bursa orman yangını: Patlamalar yaşandı, kül yağmuru uyarısı yapıldı - İndigo Dergisi",
@@ -28444,7 +28447,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bursa orman yangını: Patlamalar yaşandı, kül yağmuru uyarısı yapıldı &nbsp;&nbsp; İndigo Dergisi",
       "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOUVVIMlA4LXZGclZ3bFhvZC1RTk5tNDQ0QjJPMUlNWXYxWUFBLWJpUlhSa1FVRVJzVXV5bjNlQmtiTVh3UzlsQmhzT3hZUmpJWTRlUVZoc0xYdi13d3dsb2tueXgwN1VremlnNFkxc1UtOWg3dm4zQzUyX01zRFhfSmJTME5rbGxaWkFYckNB?oc=5",
-      "id": 41
+      "id": "41"
     },
     {
       "baslik": "Bursa Harmancık'taki yangın kontrol altında - NTV Haber",
@@ -28454,7 +28457,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bursa Harmancık'taki yangın kontrol altında &nbsp;&nbsp; NTV Haber",
       "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQZ0VoUkxNT0dkY0pNQklLVHNKeVEya2IzV1J4QkhQR0FqMlFzcnRfWlljdnlBQUN5TnFKQ2VyOEctUk42TnpUWGVMRUhfaUUwa2Y2QmgzMkhvSV9oRm80VS1YaTk4ckdMenQyX05xT0NoVHNtaXJfdUttNS02S1ZpWG1fRGVqMTBVVFU1VElta0RIMVFQbGJwTk81RmptdTZId19fa1NB0gGrAUFVX3lxTFBJazczNUFsTnMybWFadG5HWm5jeGsxczBva0M4TElzb1NJdVhpb2piMlFPelp4eFRFT0Z4ckVrNzZlMF80eG5GOUdoZHkxQUNaVWh0TnotZXM4VEpTeUh5Wk1nVTJyeHRwZ09BZHN2ZUwxR1lISm9wMWJ6d2JBMjdPRTJMSmh0ZGN4dEoydnlWajhFOVozbjN3Ymw5aE1jYndOX2RfYjlMM25faw?oc=5",
-      "id": 42
+      "id": "42"
     },
     {
       "baslik": "Yeni yönetmelikle denize komşu ormanlarda madencilik faaliyetinin önü açıldı - Kısa Dalga",
@@ -28464,7 +28467,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Yeni yönetmelikle denize komşu ormanlarda madencilik faaliyetinin önü açıldı &nbsp;&nbsp; Kısa Dalga",
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNM2tJQXM2ZGl4ei1IWVVsMDBCWWJ2V05paWhtclVTZ2ZEUmwwWWtXWlpCQlRmM0xZMTFOS05vTVQwQjBQVjBTT2hqb1YxZG94RmNvbWRxX2o1WllmZ1R5Vktab2NzV2JmUnFXNDF4aWdzN1V5RjV1QjNOTzRqOUFxM1JSbkJsTlE0QW14a0Fib0l5NUxxWHc0eF9zakRiNzRVSUlBbDlXb2t5U3Yta0lPaHhBcEhCODg3b3fSAb8BQVVfeXFMTkZONWhoLTNIZ3ctYnBGUDVEQnVyanItOWZpU0lZRk9fdk9KQWNuM3F5VkYwNHdkX2tyWjlKUHpOdHZVa3E4TG9YVTBGTUZDQ29Kd3NXaFlkYXZ5SS12STBlSEdYNGc5UjlETExMMHhrZms5Zy1VTnVXSmNmZkVwaGt6UUhUajBYZnlWazNXZlMtclZ6Q1h5eC1RbjhuN0tBSUk2aTlCYjhiWjc2VW9LcDZhMFgzTEtnZEpFN0I5bkU?oc=5",
-      "id": 43
+      "id": "43"
     },
     {
       "baslik": "Sındırgı'da orman yangını - Yeni Mesaj",
@@ -28474,7 +28477,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Sındırgı'da orman yangını &nbsp;&nbsp; Yeni Mesaj",
       "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5jVFJiMkZmNHdWbWp1SkhRSjFsa3U2VXh1WVVNSFV4Z21tSllSbFA2UlppUU5KcUdjZG5ZU1VqNXhCS1FBeHp4MGZwbUtvdnE3bFVKT1ZxdTlVZVh2ODRpRUFsVkgzMXBYT0hQTTZKWVFOcDZIeWJhenBXY2xOUE0?oc=5",
-      "id": 44
+      "id": "44"
     },
     {
       "baslik": "Ormanlar, maden ve enerji uğruna yok ediliyor| Haberler - Gazete Kadıköy",
@@ -28484,7 +28487,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ormanlar, maden ve enerji uğruna yok ediliyor| Haberler &nbsp;&nbsp; Gazete Kadıköy",
       "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQQ0paSnB4UjFpWk1hUzR4Y3AxRWJrTEo5SmdmdWl5ZmdDckJvVDJpTUVCN1lEaUpxSmNaRWdlazM1YnNFR2pqaEM3OHlYOFViTmdYdEd4Z00wOVk4SjVFaklldUk1SDJxME5OQ2otSFl3LXJHWWEtLUhxTXR3dEdkelMxX3RMWUs0OW9DMg?oc=5",
-      "id": 45
+      "id": "45"
     },
     {
       "baslik": "Adana, son 10 yılda Türkiye'nin en çok yangın yaşayan şehirler arasında - BHA - Birlik Haber Ajansı",
@@ -28494,7 +28497,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Adana, son 10 yılda Türkiye'nin en çok yangın yaşayan şehirler arasında &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQdWNDX0dXREJrdk1FZHR5Z0xneGFHMmxESmdkRlB1VHlRNWhRSmM3Z3RySkZiSDZhSmFGTTFGYTVIZE1HWTBFYktsUnN1cERpNzRGOGZKaXppOG5raS16Q3UtVHFyNVJJd0xWM0tsejc4VzlYZm0yOUlyWVhKdTF0LUN3LVBHS1JFSm9YNndIbFR5anNqbXdUbjhER3JGSlF3Mi1JWHZMN3A?oc=5",
-      "id": 46
+      "id": "46"
     },
     {
       "baslik": "Kütahya'da çıkan orman yangını, köylüler ve orman personeli işbirliğiyle büyümeden söndürüldü - Anadolu Ajansı",
@@ -28504,7 +28507,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Kütahya'da çıkan orman yangını, köylüler ve orman personeli işbirliğiyle büyümeden söndürüldü &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxPRlJLT0EyQ2dpTzhaQ1pyRXgxbnpGRnVIYzhCX0RNWlVrdTA4a0gxYl9MM0N6M2ZobDhRQWF3NHdfTFBXWDhsRndtQldKaDBrV0xPbklXSGZ5d0lHckNHQXphbXFvQzlpU0s0Q1c4bEliZUV1WC11cTZmN3UzS05sLTljX0lNbmlmQ2VkY0NfYXo3dzhQX1dRQ011UGFJcHJsakJnTGZfU1FSMGxxdXp0d0w0N0hoS0FJMkhpM001S1lldU5GdnBXT2duZw?oc=5",
-      "id": 47
+      "id": "47"
     },
     {
       "baslik": "Türkiye’de orman yangınlarıyla mücadele yeterli mi? - DW.com",
@@ -28514,7 +28517,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye’de orman yangınlarıyla mücadele yeterli mi? &nbsp;&nbsp; DW.com",
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPSWhMWXJwMUxnZHBDRHVzWk5rSFRDTURCdWZzaWNTLWwtXzIyMFhoMk5PUVRQRDhySXNUWHJrandFakE4U2FFVWRPR0lHNUpXaTlqN3Exa1VSNVJqclRKaWFrYzk4M0VJLS1KYTZ5MGFucjh1dzE4SUJqNUNVc0pyc25iaGhNU2psajYzeVpCcVVmelNRR1d5a0FzLWFBOENXSm1SYtIBpAFBVV95cUxNZlpFUnVBdEhfQzBhWUlfOV82TmcyWGNNUnR6SWJPbjJTNDZCQktOYmNHUExvX1dBZ2V0T3FabWlfbnF0dlhLeHpJMVVyZ3JCT0JRdG5VRjVSR3lGVGxLZ09ub0phX0xkaFE4OVpQSXotaXRmazB4d2ZVWFlLbElUZERSbHJNOWFBTWpxR2IxOFJBNmh6QS04cWw3UmRjWnRZU0h5Qg?oc=5",
-      "id": 48
+      "id": "48"
     },
     {
       "baslik": "Ağaç yerine beton ve maden: Cumhurbaşkanı kararıyla orman kıyımı - Evrensel.net",
@@ -28524,7 +28527,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ağaç yerine beton ve maden: Cumhurbaşkanı kararıyla orman kıyımı &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPY1ZNWVBmaGhOUG9yV3FLQ2UwQ2g1ZjZTV3p3dmdvc3dycUNUQWNCdkxVWDZqZUp3NzNmbkVDSTN2b2RDVjRaQmhjbVUzY0ZVRUppUWRnT0J6U2VTemw4NGdIWUJNaEgtdkZRS3ZZZzhNNkk3X2lfRzliSEo4d0xKTTF0dDFOcWlSaFlaYU1jMUhETEJqZGoxUHRsNjgtM3VQSGF3UQ?oc=5",
-      "id": 49
+      "id": "49"
     },
     {
       "baslik": "Türkiye'nin ormanlarına karşı en büyük tehdit ne? - BBC",
@@ -28534,7 +28537,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye'nin ormanlarına karşı en büyük tehdit ne? &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBlbEhBTlNWam5KbWFzWE5hN2c5MmlmdUdreUMzWnM2N1NIMHZQdlZMbHRNcy1zSG84dHhaWnR6clJWTzk4VU84azNCd3pfU2VsZHFmSV9EZ3ZmWk160gFiQVVfeXFMTVY5YTBoZk1EVEJjTzlpMkx0bmxycnotNkJOTm4zWTh5WUN3Y1RvY1poQS1kUlM1VWlycTAyaGtVSTBfM2FJTFZFTVp5cTNRaU5YVnd3MVFkeWRBVnhOenp5ZFE?oc=5",
-      "id": 50
+      "id": "50"
     },
     {
       "baslik": "\"Yapılaşmaya açılan ormanların telafisi yok\"| Haberler - Gazete Kadıköy",
@@ -28544,7 +28547,7 @@
       "etiket": "Orman / Maden",
       "ozet": "\"Yapılaşmaya açılan ormanların telafisi yok\"| Haberler &nbsp;&nbsp; Gazete Kadıköy",
       "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPQjF3Z3JvU0xpSlJIODFnV0R5ZnhzOTlFTzNyN2NTc05GejBSSEI4ZFdrM1lmVGd0VVEyVlo4UllDbTZydXl6SHBTYVBBdmgxcS1xVFZSV0pvM1pHVHplNFJaeDFaY1dwT0EyRDZ2TXpUNS1McVpVN1o3YTR3UEYwR2hNT3NOdTdBRWc?oc=5",
-      "id": 51
+      "id": "51"
     },
     {
       "baslik": "Türkiye'de ormanlar maden kuşatması altında - DW.com",
@@ -28554,7 +28557,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye'de ormanlar maden kuşatması altında &nbsp;&nbsp; DW.com",
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQYkV2WlBBbnpSWXNUQTBVTjJVdWVIX3VvbWNYb1o3d2hBbWxaSXJSZHg5LWloTk9PbzY3NkdoeWhjX2FObUhpUWZjTFE4NnZxLWVaRmRWWlRqdzZFZXlnUkl1bUM2TXVMNS1WcWl4NDJvbFY3MDJ0dW5IM0huTjViVENjVGI5S1VFQ3puYnp6elc4SGYtd0ZKUi1EY0ZnZEM5OF9YQ9IBpAFBVV95cUxNdnVSWmVyMEFhVWNlaG9XRnRvcEZWT1RJLW8tMzZlSFJYYnZ1cno1NDJtVWhxQlFSQ0cwaUpuamV5Sm5ETmtncHdXekRxWlBVdnpDTHEybFAwcDE5UG5jYzRieDlxSFNYRkxpWFRLb25qTEhzbDJKTzZfMDZmU0JYeG1sV3FLQ25MeWU2ODh0cWZXN2x4UE9SQzhaU2hMTkR6MFQ0bA?oc=5",
-      "id": 52
+      "id": "52"
     },
     {
       "baslik": "Bursa’daki orman yangını soruşturmasında FETÖ bağlantısı: 1 kişi gözaltında - BHA - Birlik Haber Ajansı",
@@ -28564,7 +28567,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bursa’daki orman yangını soruşturmasında FETÖ bağlantısı: 1 kişi gözaltında &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQUjFZMFo4SXVzZ29WZ1RDWmpiWnFKYm41bFJSSFNnVlJLd21vbVlpT0xtelUwTkplaGhjdjB2bUdYdWdTc3lLeFAwS0xwM3AwejhDc0FwLTBZbXNnTkJoR0dKdXVrNTFpOWZsaGU5RlUxdUxMSkdtUlRvVFRKMGQycnBzOW1OVm84R3dnSlUtU2tKdGVyRXZicTNQWVFFN2JSM3pzVmMzSXZwMDl6M3pR?oc=5",
-      "id": 53
+      "id": "53"
     },
     {
       "baslik": "Toprak yaşam, maden zehir - Bant Mag.",
@@ -28574,7 +28577,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Toprak yaşam, maden zehir &nbsp;&nbsp; Bant Mag.",
       "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBnb1M5dUNQUUh0aGlESVZNMkJsX2gtaVZxRjN1ZVVOeURCOXlhLWw2OGFqOUYwalJFMHlWeWtHT3Y1bjAwQUpVd21JOTZneXhlX0pFUFdhUTM?oc=5",
-      "id": 54
+      "id": "54"
     },
     {
       "baslik": "Hatay'da yanan arazinin ihaleye açılan maden arazisi olduğu iddiası - Teyit",
@@ -28584,7 +28587,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Hatay'da yanan arazinin ihaleye açılan maden arazisi olduğu iddiası &nbsp;&nbsp; Teyit",
       "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOdll3YmJacVBGd1V6ZDI2Q29LTmhucEpxSlBOQzlHVGtiOWNqWEc1TW4ydDMyQ2dzNGp3MXk2R3BVWjZKck15cVRuZjdXQ0lqR0pIQjU2ZnlKMk1FQUhaX1FQV2Y3NnhGeDZ6WkREejc0ek1oYi1Vb1NaRXJRYzhuaXh2QTNVQU5sNTF6Z2hnQ0paWjRwTkE?oc=5",
-      "id": 55
+      "id": "55"
     },
     {
       "baslik": "Marmaris'teki orman yangını önlenebilir miydi? - DW.com",
@@ -28594,7 +28597,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Marmaris'teki orman yangını önlenebilir miydi? &nbsp;&nbsp; DW.com",
       "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxObzBDa3llclNIcEhUVlQwbDc4N1NRU1E4SzJXcG5mMUVza0MwdkxjbDVRX3E2SVFTdW9taGlWTUs4UnZKYlR5VkhUYVJ1S3ZONmMwYU4xY2QtVGpaYm9UR1hSalVCc2tEX0g3OEZVTHFfandoWHpUazlWd0trMmpLLTFnSlBSYU82STZGVVdMaHdVWmVXM1N30gGXAUFVX3lxTE44bDB4NTNZeEpuLUc5ZWJ3cnIyZFJFa0d5Y2xHNGhWQ2QwdVM0UWd3Q21OMm5sdWRXNGZsc2xOS3FLUWJjMDVOUnI1eU83YWc2a25zRXBZS2NqTkdrRE43bTVrNms1TXZlSG95N1REc0ktVjk0TlpnN2EzNTMwRjROWHNTTU5zUDN1Wk9sNEl4WDI0dU5yMWs?oc=5",
-      "id": 56
+      "id": "56"
     },
     {
       "baslik": "Ormanlar için yeni tehlike; maden şirketlerine lisanssız enerji üretim tesisi kurma izni verildi - T24",
@@ -28604,7 +28607,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ormanlar için yeni tehlike; maden şirketlerine lisanssız enerji üretim tesisi kurma izni verildi &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPRGhRTUFvak9lRXdObTJwRGhweFpDUVVFMHppdE5MaFZfUTNyb1ctSjNWbnRTVVpBaXJGaU81X1ZIdFk5dFV3WVhaaGhnRUE3a1dac2tlVjl6WXZ4U2tsVHVWYnpoa2RnLVRfaW5lbS1aYUJueWJFVTM0Y1hLSjl4eUNYWExjMVlUTDhjZkNBRHFJZGJOdG1HRlFyTTlRTEJDTElRbGlZSjAzcjdjY1NkWG5mdVBSRXRGc1lTelhsRzVwb3RNdW4w?oc=5",
-      "id": 57
+      "id": "57"
     },
     {
       "baslik": "Türkiye'de 21 ilde 63 orman yangını - DW.com",
@@ -28614,7 +28617,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye'de 21 ilde 63 orman yangını &nbsp;&nbsp; DW.com",
       "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPOGpVbFF6UlFxYWtaNDBfdm4xODM2N2FjZGUyN0pKX3lBUElkVzZGUHlVVzNHb1RTLUhha3c3Mkd1bFVfNEZxVXlBS0NwVHJ5bnB3T2hYRC1jX0o4dFR5SWcxZTZKWDFNLWNaNVE1Z2g2VFpVdV9TcW9MZk1SZFdWVTRKZHQ1TTFKamfSAYoBQVVfeXFMUFBkYzFQTFFZZnlXMHNRbnpaNS1PSzRhVjVpMkpzZGxyTHZPZmVyOFFXYnh5YkNOU2JsX1ktc3VZLWl3WmlJZi10bUYzY1JFUzhzWHNwbVM2a0VsQjI0b3dvWlJaNC01UjQwdmlrcTZoYW1qbm9QZzNxcjBhdTJMTjBoU2tPVGxCV2xB?oc=5",
-      "id": 58
+      "id": "58"
     },
     {
       "baslik": "Maden sektörü, ruhsat güvencesi talep ediyor - Ekonomi Gazetesi",
@@ -28624,7 +28627,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Maden sektörü, ruhsat güvencesi talep ediyor &nbsp;&nbsp; Ekonomi Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNSVllRmxtQmkyRkFaLWdKdzF3MFRoM0piRl9ZNGZXd3FNQ1BmX0xDa1N2NTVFUWZUdE9SaVNJaTVkZEJsTGdZMVVBVlFlS2xpd1BFZ1dQaklidUdKY05KRUJqTENEXzVfR2lBVjFTSmR4ZlBIUmQ1Y0w4ckhyeEpHUnI4U2dpSXh4QkVTOXlUTzZ6QjkwUUJZN2RDNTNVUjg?oc=5",
-      "id": 59
+      "id": "59"
     },
     {
       "baslik": "Beş ilde orman yangını: Ekipler havadan ve karadan müdahale ediyor - BHA - Birlik Haber Ajansı",
@@ -28634,7 +28637,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Beş ilde orman yangını: Ekipler havadan ve karadan müdahale ediyor &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPcHlqYnExRjREaDBmRVkwVEFPVGVUdlpjeDNuazR1YUNTU0Z2RXNIYmVwVFFkamU3VlBadXNwTGstS2hwVF9QUzF5b25xX1pMOGhIWjkzdnlDWnl4TElzNElIc25ldUJZbXJuQUxiZ3BYeThaTjRBOGNpTk53UFZfY2Nla2dranZYNFdZa3UtbTdadm5JencwQlhleXBtdkE2ZkE3dA?oc=5",
-      "id": 60
+      "id": "60"
     },
     {
       "baslik": "Bursa-Balıkesir sınırında orman yangını: İki mahalle tahliye edildi, iki kişi gözaltında - BHA - Birlik Haber Ajansı",
@@ -28644,7 +28647,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bursa-Balıkesir sınırında orman yangını: İki mahalle tahliye edildi, iki kişi gözaltında &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQNEVhOTJ2Vlk3ejctVzdZOTgwbHlvczZwWmltNU9MNjJONGdHZXJjeEZEMEZla3diQ2VqU1VqYkItVTN6R2dWeldLOEthLTNvNEZUOHFRZWpoWmNadVE5TmRhMWZuTEhLdjA3bktucjF1ZUZmU0FkclM5N21uOTdXXzdsZVJ3YTZrT0kxWUlQZUpDbkQtaHRMbFJnMTdBbVNmLVlPN3dUM0tqZ3ZrVVRrMm5XX1BHaW9TZFN6eUNKblA?oc=5",
-      "id": 61
+      "id": "61"
     },
     {
       "baslik": "Karabük’te orman yangını 2. gününde: 4 mahalle ve 1 köy tahliye edildi - BHA - Birlik Haber Ajansı",
@@ -28654,7 +28657,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Karabük’te orman yangını 2. gününde: 4 mahalle ve 1 köy tahliye edildi &nbsp;&nbsp; BHA - Birlik Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPTUJGY2oyVG9ZZVptSEs2V2ZrOTdMTnlMVV93OGhNUlFkSzlibk5fSkpsdERZZUdSLTB5b2NacUJzTVlQMlpIeXNpbXl2WG1UZVRVYk9MRThaWnRiTm14bGxGVnVXUkExUnVYajV2WU45azB1UFhBMFFRVzFCaWJsbEZJQkNXQU9QdjVaRElPUjRHeGxCVkt1UDZyQlFwUG1fbE9WczJqRQ?oc=5",
-      "id": 62
+      "id": "62"
     },
     {
       "baslik": "Adana Aladağ'daki orman yangını iki ilçeye sıçradı - Anadolu Ajansı",
@@ -28664,7 +28667,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Adana Aladağ'daki orman yangını iki ilçeye sıçradı &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxQU0VtRHBrd2JfLVM0VHpsd3gwN0JRYXpBRVlaUmQzelBidXRDNW5JTGpIYTdZNEZNQ2tCdW5vT2lZeGxWSW5iOTcteVpuUXlod2pVRUlzckRjcnNiSGl5S3lOM25tVXROVEU3WXIxaGYzeUp1M2NVQzFNS0MtZGZCS0lZa1VGd3NpREw1Tm85RjZ3YTA?oc=5",
-      "id": 63
+      "id": "63"
     },
     {
       "baslik": "Orman yangınlarının önünü açacak yasa Meclis'e geliyor - Sözcü Gazetesi",
@@ -28674,7 +28677,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Orman yangınlarının önünü açacak yasa Meclis'e geliyor &nbsp;&nbsp; Sözcü Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPTHBRMDlWWUVGOXQ4MWo5dDJnMm9kWWJEaE1sUTV0TjJ1bm5WZ05IcjdDUUxKMF9uTFAxQkFETnhOMWQ5WWxZUi1TU09PbEN6RFhBdzJlOXpzNXdTY1NrdlJTODN5Tnh4NF84UzZYRjlZR1Z1aWJyZzI5VVJZeWZieVlGNXA2LUNEUEh4RkQ5N2hUcVBSU0E?oc=5",
-      "id": 64
+      "id": "64"
     },
     {
       "baslik": "Kürdistan’da ekolojik soykırım projeleri - Yeni Yaşam Gazetesi",
@@ -28684,7 +28687,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "Kürdistan’da ekolojik soykırım projeleri &nbsp;&nbsp; Yeni Yaşam Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBIYWNfTzVkbWw3VDYxQWg5ZWExbW1Na19ROWRQMzlqampDUF9OekpoN25XSTBtY1I0Rk5DdXpwQ0hfbHNjb3NfdjVjanE1LTA4akRhQjRhaGgwMmR5ek9PREJVTkYzRUN1bkZ3QkJpb1Q5Qk1KNFc0NHJBVQ?oc=5",
-      "id": 65
+      "id": "65"
     },
     {
       "baslik": "Dersim Çemişgezek’e HES tehdidi - Bianet",
@@ -28694,7 +28697,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "Dersim Çemişgezek’e HES tehdidi &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9na3VWMHBFNUpJbmFUX2stdGZ1ajNCRU5qd0hmRU0wR1BKVGdiOFVDaGIyYnFTeWFOYVZjdHFLM1ZSaUZHT3puSnlUbWhwQU9SallVckpDTmV5S0dRWWh2VDNVVTRlU2QxTDNzVXBYcw?oc=5",
-      "id": 66
+      "id": "66"
     },
     {
       "baslik": "Çevre tehdidi haritası: 'Doğa ve yaban hayatı koruma'da sondan dördüncüyüz - Diken",
@@ -28704,7 +28707,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "Çevre tehdidi haritası: 'Doğa ve yaban hayatı koruma'da sondan dördüncüyüz &nbsp;&nbsp; Diken",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNUHNqTzI3YkQ4MmdTRHh3bXhlOWNJSHVMZWs0TjRocnJhTE81bi1zcDcxcXZ2ZW50ZW1oNVF6UkFvYU5DY2RxeWpEV3I2VURyZnNQN3NZTkl0dW9LY2pvbTJRbGpROTI4THY3WUVxQmVjYTJQb3JMWU9iaGhvd2VmcWdSc3lGdTA2NGhRTXg1ZjdyRW85SVRVY2xOdEFvdw?oc=5",
-      "id": 67
+      "id": "67"
     },
     {
       "baslik": "AKP döneminin ekolojik yıkım projeleri: Türkiye artık bir enkaz - yesilgazete.org",
@@ -28714,7 +28717,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "AKP döneminin ekolojik yıkım projeleri: Türkiye artık bir enkaz &nbsp;&nbsp; yesilgazete.org",
       "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQb2lQZS1sMHhMQkhYaTQ2VUZvNDJEUURPV09oTWYtazBfYi1heUZyNnVvSW4tWE1uUE5hZlVvOFEzbWtvRXQ3ZDczc094cEhjb2lvekZ0ZmVKZ2xfUmU4OXRYeXV3RFNEbzZFdlhjaWxHZWRnWjM1U21XeXdpQjlqSzBEVEM4RzB3V1BzQXhfRVg?oc=5",
-      "id": 68
+      "id": "68"
     },
     {
       "baslik": "İşte Türkiye'nin çevre tehdidi haritası - T24",
@@ -28724,7 +28727,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "İşte Türkiye'nin çevre tehdidi haritası &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFA1dkFJUE9LZnhQQXZVWUpseXFOdjQwbHNmcGhYNUVORC1MTHZ5MVFaZGdYYVdHQXQwVnZRbGZQaDNQRHBCVWJtTE1BcTV2MHBISENScUtmQWtfVnF2VGl1V2RKT1I4T2tJOU4zaXRBU2ZwczlXNkRlUEZn?oc=5",
-      "id": 69
+      "id": "69"
     },
     {
       "baslik": "MALÇEP: Malatya dağlarında ne ağaç ne de ot kaldı - Politika Haber",
@@ -28734,7 +28737,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "MALÇEP: Malatya dağlarında ne ağaç ne de ot kaldı &nbsp;&nbsp; Politika Haber",
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPMkFub2QyVUdESWNucy1wVHpmd3RGSlJ5aE5ocDNuSWFrZG83ZlhKOWc3TzFFYUJPZTJKVm1tOUxqQ1VfT1VhUGNwUnZ2NWdzd0g5SXlNcjBtekFyd3E0dTdGSTgtZVpsSXRfOTVNRVRKN3IyTU55UHlNUGQ4eVZGMQ?oc=5",
-      "id": 70
+      "id": "70"
     },
     {
       "baslik": "Dersimliler ve çevreciler Munzur Gözeleri için tam koruma istiyor - Bianet",
@@ -28744,7 +28747,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "Dersimliler ve çevreciler Munzur Gözeleri için tam koruma istiyor &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxQRURXalprZG10S25MdXRsTUpacTBSYl93bVpmM3Z6Z3hZX3pJenc0U0w2bng4NThpd2pmcDJZV2FQcnM2Znoycmk2OG9GX0JOX3owZ0Z5ZE4wbFIzc080dFBNM3lVdHNaT0JvTndPdVNyWUJlcGdnMlhBTnR1WngxTGNXWDBZZEYzdjZOMmJwbUktMDAwaW1rOTBqNWkxZw?oc=5",
-      "id": 71
+      "id": "71"
     },
     {
       "baslik": "Malatya'da yurttaşlar, maden çalışmalarına tepkili! - tele1.com.tr",
@@ -28754,7 +28757,7 @@
       "etiket": "HES / RES / Baraj",
       "ozet": "Malatya'da yurttaşlar, maden çalışmalarına tepkili! &nbsp;&nbsp; tele1.com.tr",
       "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBJeE91UkhHc2drZ2ljSjJockFGSkRsM3hjVko3X19jdFI5SEJ6c0IwNTgyLW9JSHhGUXpHWTlNMWpudC1udTA2ZXk1ZjhkM0NYNGpaZW1hVkJZaVJJSVY1RUxBMERzZUIwM0dzWE42cmVldHBOZUg2NnJpdW53UdIBgwFBVV95cUxNSW1nQ1JDLTY0N0RFbUxGVjNIaE5pNW5VYjE0ZFpXcmZRQVM1Tzl5Z0h0SjRHSDlyU2FHZk5wd3dNN3JpOWJQSlBkUlhsaHZfZUdIdi1nMlppcDA5c19LTDU1dkJQZmhaVnVsZXZyQ0V2NGNHOG1BNEFibW83M0FUV01Ybw?oc=5",
-      "id": 72
+      "id": "72"
     },
     {
       "baslik": "Akbelen'de acele kamulaştırma kararı durduruldu - Demokrat İzmir Gazetesi",
@@ -28764,7 +28767,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Akbelen'de acele kamulaştırma kararı durduruldu &nbsp;&nbsp; Demokrat İzmir Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPeWd2V1FmN0ZlX21Vajc5TEh2dnFpd2lGa09XZlVLTldjcXBucmY2WTRKMlVzcld2RW5hQnU4a01JdUFfd1AwYXlWRS1yV2JRWDJLa3hvNHpDRW91QVhHZUp2NFhhWnNtOFJwX1NmWWRQeF9feE4xNThDQ2tpTW0yelBNcDZpdXV3UGNacUsxSndqMV800gGiAUFVX3lxTE5PV2JIajROTi1lQXJSbnY0aFFnTVh2U0xjMGE0UUhTVWhYZUItSU1HcnFuOGtwXzhlNlpmekxPbVlWQjNVWG9UM19zeTBpMkhYekx2UlhfR2RreGlmaUtieG9KLTVBMHZhaUx2cTljSUhySGI0dmxJNTF5bnRHVXo3S2tmbURfR2dudm5vT2R2N0JpZEJ3aXgzeEhBMEVrS3Y5dw?oc=5",
-      "id": 73
+      "id": "73"
     },
     {
       "baslik": "Torba kanun teklifi Bayındırlık Komisyonu'nda... Bakan Yardımcısı Bulut'tan milletvekillerine \"acele kamulaştırma\" yanıtı: Toplumu rahatsız edecek, vatandaşları mağdur edecek uygulama mümkün değil - ankahaber.net",
@@ -28774,7 +28777,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Torba kanun teklifi Bayındırlık Komisyonu'nda... Bakan Yardımcısı Bulut'tan milletvekillerine \"acele kamulaştırma\" yanıtı: Toplumu rahatsız edecek, vatandaşları mağdur edecek uygulama mümkün değil &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMizAJBVV95cUxQY01wZGoxc3laS3dJWFhuUFlxcG9PN1B0ZFpmRUI4Z1BXWGN5SnBBdmpNQnMtVlZnMUJ1RHk5QXdOLW94XzhrOTZhMWZmNkp5NmZYVkdMU2VqNk42cUlEdVV5Qm9ZZVlqR0VnXzZCd0pZXzBuVUthU1FZOTRZSHphVDNmTFZpSFJ6cmhMYW1fd0RwOFdjbWVfOXQ3NVpUTDBYRkk4VE95UG81V2pFN0w2SjQ2dmVFSkpvRjdCQ1c4bXRXX3ZabFFESzJiX0k3RDYwemxhZzBGQzNLTnJoNmlKeWRpcW1qS0RHV19meU1Xd3ZjSlBGNEt2NG0wdy0wYjNFVjJ5bmw5azRUeUZDbnNITFp4VnlOZWxyVGVIZHRaRm95UUxzdzgwdXNBa01aY2NkQzl2X3pXaENMaVowV1B5NTN2ak9ndm5Vb3RaRg?oc=5",
-      "id": 74
+      "id": "74"
     },
     {
       "baslik": "HSK’den acele kamulaştırma ve ÇED davaları için 'ihtisas mahkemesi' kararı - Evrensel.net",
@@ -28784,7 +28787,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "HSK’den acele kamulaştırma ve ÇED davaları için 'ihtisas mahkemesi' kararı &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOVDhmWUtfTFVheklyOEZwWjlRMXFXdnZ5anR1dkhhM1BOd3hjczZ6bVdsTmlNbk85TE5tQlJTMHYxVWtUUXhKdTlNcG1OdWJTVGFLYUs2NENaalVIaHJlOTBPQ1FiS0NITEZpWUhQNFZiMjViUkNwX0hzNWxpWUZXVWxZaWplV3FIZUFIWm1IOXhGVWt0eEZvbjFFZEYzTWhDaklaZDZYWTZpWnlEcHZ3?oc=5",
-      "id": 75
+      "id": "75"
     },
     {
       "baslik": "Resmi Gazete'de yayımlandı: Birçok ilde acele kamulaştırma kararları - Gazete Oksijen",
@@ -28794,7 +28797,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Resmi Gazete'de yayımlandı: Birçok ilde acele kamulaştırma kararları &nbsp;&nbsp; Gazete Oksijen",
       "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPWTNoZ2docEs2d1NZTktlMEE0cXMwLXlPOTFtRHI2dEtXVXJOR3R5VHY2RE5LbW5DZzE0Nm1lTkw1VkxJUHZ4STliZ1ZMTTJRVlRrU3FqV3ByZS1td01VblJCcENTblhOaDQ0aEd2NTdtRU9PdXlPRFM3bHJ2MTNzR1pxdU5GbFVRRTdvN243VEdhLVJ0VGdwUXU3RjhOVEJndGpadUd1MVRUbGs?oc=5",
-      "id": 76
+      "id": "76"
     },
     {
       "baslik": "Milas’ta acele kamulaştırmaya karşı 96 dava: “Bu topraklar maden sahası değil, yaşam alanıdır” - Cumhuriyet",
@@ -28804,7 +28807,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Milas’ta acele kamulaştırmaya karşı 96 dava: “Bu topraklar maden sahası değil, yaşam alanıdır” &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQMWl5NXNfUGRkeHJGRnlqXzFqeGhrVWN2UDA3bmthLThpTjVMa05ZaG1zdE5NYXhyMGsycEpmMzFtcE5ubHJHMHFITjAxVHJTcDV2b1FOOExMdmtuUzJrcmRIWmYwNmJoU0JLOXpyZXVQbjE3SDE3TmRhX3k2MHFqOGlKTEd3cW1lcjFIWGF1TjhZOExDSDlJUUttZHNNVDFmbmV0Y25ncnVId0Y3Q3JPb2NfZktqRTBEMVpFTFMweHNqTjV2YUFUcFRmU21GZWZOUEE?oc=5",
-      "id": 77
+      "id": "77"
     },
     {
       "baslik": "‘Acele kamulaştırma’ kararı hukuka aykırı bulundu - Yeni Yaşam Gazetesi",
@@ -28814,7 +28817,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "‘Acele kamulaştırma’ kararı hukuka aykırı bulundu &nbsp;&nbsp; Yeni Yaşam Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPb21fSlp0SjI4SDdFckpueHJhX0ZHVGoyMGt0bHVld2VHa3gyTVFEZ3dVS2YwTmZYMDdDR3FITVRYSGdoWEhkNThYNWI1OHdrd2w1TGI3aTZQeDZRVVFKcjNhVW9YUWlYVVRJTnRYVmE5SUZxbmN0alpKMThYd0t1YktubWpWZw?oc=5",
-      "id": 78
+      "id": "78"
     },
     {
       "baslik": "Resmi Gazete'de yayımlandı: Acele kamulaştırma, özelleştirme, ÇED ve turizm teşvik kararları davalarına ihtisas idare mahkemeleri bakacak - Evrensel.net",
@@ -28824,7 +28827,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Resmi Gazete'de yayımlandı: Acele kamulaştırma, özelleştirme, ÇED ve turizm teşvik kararları davalarına ihtisas idare mahkemeleri bakacak &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMigwJBVV95cUxOVTBLbnhGVWltR29TZm1PcjJDY1o4S3JnLTFBamI1cjc5N1J4azFULXU3Tk1LYmFqNnJXTGJNanh1bVNlQ2ZxTHJkLUhBNmRjbUZYb3JBdGp3RXlJbUg1Nk82dlhqNEhJcWdVNTNRc3JoZ1MxVFFmbnJFYWhja2JUMHlvSFk4STUtZlV2YnRWc1RaZGlUWThNR1d0a044a3RsRDN1aXV5NFJpZFVBRDZMbVdPamFLZE5tdi01NlFQbXJlak4yV2xQb1QwbG1xUFloUUVpRUZYRlN2OUpuclNSZmlCa3ZrNGlYSndQTWtfNlkzekRUbmozTUFCd2xDaDV6eWRv?oc=5",
-      "id": 79
+      "id": "79"
     },
     {
       "baslik": "Akbelen-İkizköy’deki maden talanı çevre mahallelere de yayılıyor: Şirketlerin ‘acelesi’ var - Cumhuriyet",
@@ -28834,7 +28837,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Akbelen-İkizköy’deki maden talanı çevre mahallelere de yayılıyor: Şirketlerin ‘acelesi’ var &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxOZ0JRVS10NTlrYUI4d3lEX1BWTEgyRDJCNHl1cmVIdDhmalpwNHNCOWd1bmVxVGpPLXZwMmd3Y2xRbjA0SFpRVHNtTm9Ud3A0UmxZU0p2QklNUldXaG5BUjBZMHlOdWQxQTV6c3lVbE1ZZF8xQmgybzF0cExVSlRnZmt2WlFsMEJnSHhoblVHckI3bDF4a25ZUUR1Z00tODRmRUwzWGpDMTlNTFFFWjZIdzI4cW4zVUxVZjFkNkJBR2FwYjNLdnhCRUQ0S1FraFU?oc=5",
-      "id": 80
+      "id": "80"
     },
     {
       "baslik": "887 Mülk Sahibini İlgilendiriyor: Acele Kamulaştırma Kararı Resmi Gazete'de! Çevre Yolu İçin Hangi Arsa ve Tarlalar Kamulaştırılacak? - www.canakkalekalem.com",
@@ -28844,7 +28847,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "887 Mülk Sahibini İlgilendiriyor: Acele Kamulaştırma Kararı Resmi Gazete'de! Çevre Yolu İçin Hangi Arsa ve Tarlalar Kamulaştırılacak? &nbsp;&nbsp; www.canakkalekalem.com",
       "url": "https://news.google.com/rss/articles/CBMi-wFBVV95cUxOVEZlVWpFZkdrNmdBRUozdTVnX3ROaWEwRUlGVmQzb0tkRzdVWGg3N0RjWWltUUtXZEltWk01WGxKY1JHU1dkMG9ZOG83ZHZDbUoyUjJ0U2VmOEtqVVl4Uk03RnhTRWFiTFVwQkI0SlJSbDExWnhjbHBqTEdqNlpJV0VDdVF1LW1ycHJCMi05cm5Ta1NqOWk3NWttY1htakJjdExzb0tRZ2JFZkdWSG9xVVpaSmpuS2VaSUJMUEF5enM3ZnZkVDJ4NG9NVnN1d2lNamg4VEhNZlRtdkpOOTJvdmVFNEFZb0UwYjY0MXREaHozeEtVRUUzUWMxMA?oc=5",
-      "id": 81
+      "id": "81"
     },
     {
       "baslik": "Kuzey Çevre Yolu’na acele kamulaştırma kararı çıktı - Kahramanmaraş Manşet Gazetesi",
@@ -28854,7 +28857,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Kuzey Çevre Yolu’na acele kamulaştırma kararı çıktı &nbsp;&nbsp; Kahramanmaraş Manşet Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQODJVWXdSRVk0N1JDZ1Zyd1dUNkpmZVoxeVphU0Z0ZU9ld0Z5NWlFWndIMEVWRndpVV8yS2N2a0FtdThBdjFLU3NadlhNY01CbURyb2RyV2kzODdkZl8tLWpuVTVhcGhuTEdSS2FBYjdCSmhjdWlXUXlzZ1NfVHJLanRwZVM?oc=5",
-      "id": 82
+      "id": "82"
     },
     {
       "baslik": "Muğla’da acele kamulaştırma, kuraklık ve su sorunu - tarimdunyasi.net",
@@ -28864,7 +28867,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Muğla’da acele kamulaştırma, kuraklık ve su sorunu &nbsp;&nbsp; tarimdunyasi.net",
       "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxQRWZkVUpCYzlyVFR5MEF4LU5TeUk3OU95azJpY1Z3a3ZLMVlpVmdIaVZWWWhjYXBJcHVPT3hCZkdXRTVDenlURmVDUTFnU1N0SXdCZU85cVF5RDBVdzA0VWtPUEVmVDNKNDRMdVJsbWUxTFFneGdHRDY1NUhlOUR5ZFJzaXRCd0UyeV9RY1dETHE4cUU?oc=5",
-      "id": 83
+      "id": "83"
     },
     {
       "baslik": "Trabzon Güney çevre Yolu İçin Acele Kamulaştırma Kararı - Analiz Gazetesi",
@@ -28874,7 +28877,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Trabzon Güney çevre Yolu İçin Acele Kamulaştırma Kararı &nbsp;&nbsp; Analiz Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPNklfdC1TbXNsNGVKYV9CSE9EQ25NN1RCZFRLSkNzS0dYYjBrMEx1c1hySXBpQU1FYXk2REdkSDRLZ0t4cnF6OXNFOTZoUzY4TmlneDF0MjZmUVZodnlCWDlMZ0JqWXlLOU5Ha3dzUWhBSGpuVUVsLXBueUxXRGltUFR2MXJPT01vbEZURmM4OFBIWHh6Z3c5TmZJZzlLUHRxYnNV?oc=5",
-      "id": 84
+      "id": "84"
     },
     {
       "baslik": "Kahramanmaraş’a Dev Ulaşım Hamlesi! Kuzey Çevre Yolu İçin Acele Kamulaştırma Kararı - Aksu TV Haber",
@@ -28884,7 +28887,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Kahramanmaraş’a Dev Ulaşım Hamlesi! Kuzey Çevre Yolu İçin Acele Kamulaştırma Kararı &nbsp;&nbsp; Aksu TV Haber",
       "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPLTlaUzdBT2gxbW5LV00xcnZXeGxscEhCRGdnaHV2SzlnRWxmVkd6WmFqYUxnLXFLT212LUlJaXhyLU5iN0xubkJwRjlpUlYwOE9fRWhBNGExS0ViOVlKa3djM25Hd2I4MWZHOXZneFptV1NKOUk0eFlzNW92bmxwdWw0UHk3X3llaWljMUZIVGFPbVdJWjdON2RrZmRTQ2dvV1FoSEx2M1pWT2tvNnc?oc=5",
-      "id": 85
+      "id": "85"
     },
     {
       "baslik": "Enerjide acele kamulaştırma kararları - Anadolu Ajansı",
@@ -28894,7 +28897,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Enerjide acele kamulaştırma kararları &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPQ2xmazgxT29uV1JkTXVoLWxXZXB1bEtUMUpPX094VGVDX1QzQ2wyTUp5dGRvZnhkdHl6cHlQelI0cnpmZTFxMzJQMEhtb2lZcHJjb2pxdTN3djBCOU1xODlKdU9yLW9kRDZKeVE2QnpacDlDd3ZMRGRCWFFtVFd4NXA5TzM?oc=5",
-      "id": 86
+      "id": "86"
     },
     {
       "baslik": "3 ilde 250 bin sosyal konut projesi için acele kamulaştırma kararı - A Haber",
@@ -28904,7 +28907,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "3 ilde 250 bin sosyal konut projesi için acele kamulaştırma kararı &nbsp;&nbsp; A Haber",
       "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQRkpkUDBETW9JMVJZVk8yc0JGeEs2ek5fVC1NUEVBZUVpLTdwRkFOWFJfaTMyZ19oaUFnWjlHNDUyRlNsdmxranpLeVNaR3VwLWtiWEJlQ21QLWY4bk4yVnBqX3k0Z0JmQjQ5NEZ5TjJ0RmUzbU81RTB6M3pyV3Z6b0Y5OFdnRGtla2hBVTFuOGFIX0IzYTFDR0h3Y2VWZTJPZnZCS05VUkVqUDI5Tm93WQ?oc=5",
-      "id": 87
+      "id": "87"
     },
     {
       "baslik": "TOKİ: Malatya'daki kamulaştırma tartışması ile ilgili neler biliniyor? - BBC",
@@ -28914,7 +28917,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "TOKİ: Malatya'daki kamulaştırma tartışması ile ilgili neler biliniyor? &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5jMkxJdXhzd2Q1QjBLRUJHcGxKTFJrMk5IZFV0d0pORVlnNlZ6ZzIwU2dENERXa24tUmFPOVFLdEpsVDY0Qk5UajhXelVwMnFCZjZIcGJZcWtUbW5L0gFiQVVfeXFMUFFZdzRhOUFMMnFFcHh1WG5ETzIwZXRUOXpHckpzQlYwbFI4NEp3U05aM3RCWUY3dWVBekZoT1I3THBZZ3FUZV9QOUVUanZzY0R1dFNlTnN6MERHVHdXNVhoQXc?oc=5",
-      "id": 88
+      "id": "88"
     },
     {
       "baslik": "Akbelen'de Acele Kamulaştırma Kararına Yargı Engeli - Analiz Gazetesi",
@@ -28924,7 +28927,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Akbelen'de Acele Kamulaştırma Kararına Yargı Engeli &nbsp;&nbsp; Analiz Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPQ1NqSG9jdHotV0hiN0h3OVJNT0lJM3d1YXZMREtySks5bm9sc1dqTmV3VUpzWENLMlU4RHJzT3dRRzdzNGYyN004aHZkb1ZJcUdNOWJJdktJVTlwbW9MMDR6QmFuTG11cnFkTGRka3dFRG1BUGFvbkNBZm03by10RDBrbTBCV3pHMThDTGFHT04zRl9heVFGMXRuMFk?oc=5",
-      "id": 89
+      "id": "89"
     },
     {
       "baslik": "Resmi Gazete'de yayımlandı: Enerjide acele kamulaştırma kararları - Cumhuriyet",
@@ -28934,7 +28937,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Resmi Gazete'de yayımlandı: Enerjide acele kamulaştırma kararları &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOMFBvVWRCQ01pVlFILXhwaHh2VU0yQ3Q4ZEkyXzJWd1pDb3IydTBYTmtLUUFoX1VvSGJtdi1KVkZMYWNuVlhOUzh6bkJsM2YxZVZ2NmgzeDNKZ3RZMWM2SDYyYzNtSU05WDdPUE5tOWxtS3pJR3VJSjNBSHR3LTZOS0NjVlJYd0RvTGFRQlAwa3c4dEtxdXFvWmkyU0NKZmZ6YzljRmgxc0FXNkFaa0tR?oc=5",
-      "id": 90
+      "id": "90"
     },
     {
       "baslik": "Hatay Samandağ’da “acele kamulaştırma” krizi: Köylüler kepçelerin önüne yattı - T24",
@@ -28944,7 +28947,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Hatay Samandağ’da “acele kamulaştırma” krizi: Köylüler kepçelerin önüne yattı &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOSEk4WWNQYjBlWjBoQVlZWHl4YUh5c1pqcVNIYXFyYzZmU2Etd1psMVMwLV9CaVVTTExYX1dPZGxhdjdpODVKcjh1MEJaN2xCYm9EeHZfaGpPUWNDWnQ0N29RNTVqeUtxbDRvSWIxaHhveXhjeXpaWldDaGJhU0tpdXRORWhSU3ZsNGFFdlJsZG9WM201Q3YwNUdjdlVnazAwV3Z2U1lGbTU?oc=5",
-      "id": 91
+      "id": "91"
     },
     {
       "baslik": "Zeytinlikler: Enerji ve madencilik düzenlemesi neden tartışılıyor? - BBC",
@@ -28954,7 +28957,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Zeytinlikler: Enerji ve madencilik düzenlemesi neden tartışılıyor? &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1IQll1VkhORzRjRXNjYkw5aDdjaXo5TmhYTk9sLXE1Q0gwMWc4MWJ3Y0RxTWJVVFd2b1h2SDFQa2JGZ1VlUnVrbGVyaVZCeTYzTF9OSXhYb0p3YlJv0gFiQVVfeXFMUGFiendnMlljV3JGTzJLeGRodmpWZkVhSmhfSjNkMTIwTDVOYzRVV0s4T1lvQk9OVGYxU1cyMFp4a2ZtNnZSRTlvT1BtWE5EMG44RjZRczExZFJ6bDJuZmJ5NkE?oc=5",
-      "id": 92
+      "id": "92"
     },
     {
       "baslik": "Antiocheia Ad Cragum Antik Kenti çevre düzenlemesi için acil kamulaştırma kararı - Arkeolojik Haber",
@@ -28964,7 +28967,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Antiocheia Ad Cragum Antik Kenti çevre düzenlemesi için acil kamulaştırma kararı &nbsp;&nbsp; Arkeolojik Haber",
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOdWZEN2ZhTFRtYzJDS0FULWNTMDRrODBlNzRia00zQ18yZUZnbG1USWFOc3RmRzYzbkVMTUJ2QkJ4dzhpb2NvemtjcFNiSUhFUk9OaXcxOFluMDRsZVV3bW5hQi1YcjJTWEo5UVlRdFNRb3FfbXZSRk0xc1hRZ09XblVPNXRxcXBzdUJNelhEY1VtVTlPQjZaUnFJU1A4S0E5U0c3WjBIWXBLVGlIQmtYTDRwU0Q1THJrWmxrSFdoaVJzUlE?oc=5",
-      "id": 93
+      "id": "93"
     },
     {
       "baslik": "Almanya Hasankeyf'i Yok Edecek Ilısu Barajına Kredi Vermeyecek - Bianet",
@@ -28974,7 +28977,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Almanya Hasankeyf'i Yok Edecek Ilısu Barajına Kredi Vermeyecek &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxNZVNvc3IyVHRMWlZybzJucnVNSEpBeHFaVTdRbjd3dzZ5eUJwMy11Y1hvWHozd3RhUE9iRmx0SERpRF9yY0l4ME95WWZWSGE3SFB6Wm9JX3N3dEROYUZoTmljNXdTQjV1ZXhhTUJ4VG03bWJQSldLY05LUWxlRUdBWFljWGlLTVRNQndtUDFYekUzZmxESEJMemJR?oc=5",
-      "id": 94
+      "id": "94"
     },
     {
       "baslik": "Trabzon Güney Çevre Yolu için acele kamulaştırma kararı - Sabah",
@@ -28984,7 +28987,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Trabzon Güney Çevre Yolu için acele kamulaştırma kararı &nbsp;&nbsp; Sabah",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPRFpaU3UxNVdKRmJjMnE4a0F2TGRfSFJNNmtXMHBZV1pSYjhJYXNOVVROM1ljUEZ4RkZZdEZPN2ZXN21mbmI1Qnh5WGdna29ndlBnMlpodWgwTFh0ekZqT1FJSng3WG5vaEJ4bmRaOXVsR3JfUDFPS2pEenRVZFhmVWpSejJRSXFSbzVteWx4Z1RBdjRGNHJvZXBpRGnSAZ8BQVVfeXFMTzN4ZG94VmxnOXdFWUh0QjFzN3haODEwaV9TODRVVDJOSld2eXRKaVNyZEREVzJmYl9QUGF0RjNJZU05Z0Q0ZnU5NG1XXzV2Tjh3bVQ1bXdHdTNwRUVsTkdGZmdUY2RDZm9oUWx1TzNuV2g1ckU0Z3JnM1lFeGxKUXN2cUdpNWl4MEs1Wm9jaE9KaWdrS2wzbEtQVWFTWVRZ?oc=5",
-      "id": 95
+      "id": "95"
     },
     {
       "baslik": "Enerji santralleri için acele kamulaştırma kararları Resmi Gazete'de - Anadolu Ajansı",
@@ -28994,7 +28997,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Enerji santralleri için acele kamulaştırma kararları Resmi Gazete'de &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPSG11al9RZG9pZFJaZGJDandqb2JPSGs2R01NWjViVGVKRjE1SjR6Y1BWSVFFS0l6ZzJCTGZTUi1EZldidnhST1FBalppNVFqTWU4UnJwTnRNOXhrbGVLQWtubHZ4Vk1OaUFvV2JWUmc4cG8yZ29zQTcxRUhZbGVZZTNvT1k0dXExUzJjSG9tWWFjdEI0NHA2MVQ1d3ZxemFfRmdlVHFOQQ?oc=5",
-      "id": 96
+      "id": "96"
     },
     {
       "baslik": "Erdoğan'ın imzaladığı 'acele kamulaştırma' kararı yargıya gidiyor - Gazete Duvar",
@@ -29004,7 +29007,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Erdoğan'ın imzaladığı 'acele kamulaştırma' kararı yargıya gidiyor &nbsp;&nbsp; Gazete Duvar",
       "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNQV9NaElUQ2RlWXNVZHpyQUdxZF8wd2dXUlZXaUF1XzdKSENYNTZ6NzZzaGcyNUxaODdOdkhRbjJZXzQya205RDljRWU5bWlZTkdOUWtJRzc3OTVNRHpOOE5QVmJFOW90WDgxQzJSbnduZktnRGMwazJUb2pxYzMyNUhHY1VvcjVjYWRaLWJ3dnh3RzZpSEFNTF9PeTNnMHBxeUJCcnFGSnp4eTBFVVcydlhKUXR5Z9IBuwFBVV95cUxNbklnbExjTm5pWk9aRUUxQ2pkN2Y2SnY3c1QtU3dfQWQ1NWFsVFoyZno3SmxIQllBUTJ6YXRpUERZME5LUWdEUUhlRGVsaW9mN1BYb2hweVJLZEt1bUE2UzlzM2VlYks5cENpM3h6V0U1VVQ4TjZ2MEZvYTNuQXBtUmVvZkhNU2JHWlZERV9SeU4tVDFaanU4dHJ6dF95OEtiSHJGYnBHY2VkeVh3QXZHU3NvWkdYNnVkdWhF?oc=5",
-      "id": 97
+      "id": "97"
     },
     {
       "baslik": "HSK'den ÇED davaları için ‘ihtisas mahkemesi’ kararı: ‘Yatırımcılara dikensiz gül bahçesi sunmak için kurulan mahkemeler’ - Evrensel.net",
@@ -29014,7 +29017,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "HSK'den ÇED davaları için ‘ihtisas mahkemesi’ kararı: ‘Yatırımcılara dikensiz gül bahçesi sunmak için kurulan mahkemeler’ &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxPWUZjSUh5MnRRZTZEQ0VCV0N5SEVfSTd6cjhCT1ZWMkg1alhoYUl2aVYyVXp2S2sxeUpXZHlDZFpmMW9Ta29RSHhFc3ktQzZkVUQ1UUctVFlPUm14c0lPYmE2NWNMaWU2OFV4N2JhREhXd29QRmgxNnUyaDVjSWNXcThXWllTY1BTQXd2UVJmekN3ZThTMWxjQ2kwcmRRQ0poZnhKY0duMW9RQWs1czhFWWhBc2I0bzk1YU1BRTRidmR6bTJDM3B4LUFQTk5HNjF4LXI2M2Q1VU00blRXN2pIY0RUbnZ6Z1lZdVE?oc=5",
-      "id": 98
+      "id": "98"
     },
     {
       "baslik": "Güney Çevre Yolunun Akçaabat geçişine acele kamulaştırma - Sabah",
@@ -29024,7 +29027,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "Güney Çevre Yolunun Akçaabat geçişine acele kamulaştırma &nbsp;&nbsp; Sabah",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNYkIzd1dEZkF2MUNKdXlXN1FNY01ZeDJJbGdqRkh1Ukk5ZnVZSnRxd0E1ZG9OenBUY213OTQ3VWdSV1haTU1vV0NUNHNxX05iWVNGcXB1X21lSG11Q3dmRklCMm9KcUp5d1JnSlhsc2ViM0FBcFNUaS1QdTNicjVUcEYxVFpLRUNoRUt4OEdmNDNWdFN1dGY0YUlkZ3Bad9IBoAFBVV95cUxQdDhWT3E5QXFDaGhZemVIVXlXVWJjOHBEcEY1WURVUE4zZUVHS2VmejYtWXVPdjNYU1JTMjF5N2tPRmVEVHY4d2JlQ3VLY2JmMHBRYXZwcDdqM0xtRWNveGxYZ3hpSENjeEJZLTBlMlFic3RDWUlway15VVgtRHZld3picmFDTUR3WE9nbnktRk16OGFWMWplTFdFeGlTOURN?oc=5",
-      "id": 99
+      "id": "99"
     },
     {
       "baslik": "İstanbul Ataşehir'de Acele Kamulaştırma Kararı! Hangi Bölgeyi Kapsıyor? - www.canakkalekalem.com",
@@ -29034,7 +29037,7 @@
       "etiket": "Kamulaştırma",
       "ozet": "İstanbul Ataşehir'de Acele Kamulaştırma Kararı! Hangi Bölgeyi Kapsıyor? &nbsp;&nbsp; www.canakkalekalem.com",
       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOVFBoWWxEdjhsNF9pMWFCa0Z3emRvSkw4aEhCMTZjVm9WckNTVV9wa00ybGkzRXBUTHRrZmhHSnNCM0hNYmVNRWhXLXRRVVc1ck1heFdHcWNMVG9NSERNOVNDTFJvY282cEtURnFsZUZvUTFVZElMUzB6V19jVDZVTnNRQmN3QkV0NWhyTjYxblpOeDZ5M250d1BWcVBobmNRcF9xbjVvQWxWdw?oc=5",
-      "id": 100
+      "id": "100"
     },
     {
       "baslik": "Muğla'da 2025'te 30 maden ocağı projesine ÇED olumlu kararı - ankahaber.net",
@@ -29044,7 +29047,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Muğla'da 2025'te 30 maden ocağı projesine ÇED olumlu kararı &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQSXNlWkdtWlNfeWp0VGVPNG9USWFOUU9BaTB5d25wd2RlN1pkVWVVNm9iWXhCR1NwSmw5cnFRaWYwNjVlY290M05zdERpUUJqdklqaFlyMDB4dVB3Y0lzZFF2c2VuLWkzdGN5bjQ5N3JaZ1JDLTZSOFU1OUhqdUlZWlNXbU80dVBhcmozTU9LcTBHc2JheGpKX2ViNGY3Tkk?oc=5",
-      "id": 101
+      "id": "101"
     },
     {
       "baslik": "Bin pınarlı İda’dan bin madenli Kazdağları’na - Bianet",
@@ -29054,7 +29057,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Bin pınarlı İda’dan bin madenli Kazdağları’na &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNWVhxOVcybU1OZ2VtTEd1ZVhoZkZzampiLWFSOXJyY205RjBxaktPYjRRTzY2MkdXd0dJRnVCZXRXMHYwUEljYVJSSzg2M1N5Z0VSR2ppZXVFUzA3LW5ETGNQdGZjNWx4eV9LVlc4dVBYTUZpZDB0b3pvcmZweC15cw?oc=5",
-      "id": 102
+      "id": "102"
     },
     {
       "baslik": "Kirazlı Altın Madeni projesinde mülkiyet TÜMAD’a geçti: 13 yıllık karar tartışmaya açıldı - Evrensel.net",
@@ -29064,7 +29067,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Kirazlı Altın Madeni projesinde mülkiyet TÜMAD’a geçti: 13 yıllık karar tartışmaya açıldı &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQRDMzTE02UHhNSFl6Wno1SUNaWEgxUkluQ3NBQXB1Rml2Y2lJN09lY3NuUEIxaDRvOEJDelRENURXeEpJNk5FRm0tR2wxdHFOQkJSSk8zWUZIaThGQVpwTjB2b002eEhKOHdKdll0WnBGaU9TWG9abWtzd1hVZTlSUGpEWFJqd0JSeFN0WjU0azRxOXJNS2ZTdWJKb2s5UkFYTThic2Z6azFhN0pfMU1WSzJOMHBaX2JvMEdxb0Z1TktKZFU?oc=5",
-      "id": 103
+      "id": "103"
     },
     {
       "baslik": "Zara’da maden dayatması sürüyor: Yürütmeyi durdurma talebi reddedildi - İlke TV",
@@ -29074,7 +29077,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Zara’da maden dayatması sürüyor: Yürütmeyi durdurma talebi reddedildi &nbsp;&nbsp; İlke TV",
       "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxQMjRiQlVvVHcxMmlKWlJ3TjZ3NHI1aEhqbWxBOTJLeDZyMlkyMjNzSEFkUk5CT2ZNSkNmak9CUTZweGx3cG5hdkpWVlpHX0hfeV9Vd0xtbDE2Smp0YUZ0REtxUlg0SC1EMkwwb1publ9DYnZCNlZJV3h5VWgxS2wwck45N0p2dlRFWE9LUDVZY0RvcU0?oc=5",
-      "id": 104
+      "id": "104"
     },
     {
       "baslik": "Bursa'da yanan ormanlık alanın maden sahası ilan edilmesi için \"ÇED gerekli değildir\" raporu alınmış - Gazete Oksijen",
@@ -29084,7 +29087,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Bursa'da yanan ormanlık alanın maden sahası ilan edilmesi için \"ÇED gerekli değildir\" raporu alınmış &nbsp;&nbsp; Gazete Oksijen",
       "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQSC1NWU5QYVVKQmxRMXNxamhwOS1ldHhNaVl0NDJISTJzUW9yNkNLQWVQcWZuOTJGc2thaXdSZmt1RXIwaTJsZG85dG9Od1YzRWg2bnRla1h1TkxBR3pTWFFERWNUR2RXVGxSZjVJaHpadG82MENVWmxkUUZ1X3BvWDhnNjY1ZGUzOXdDQkVpZS1ETVZjM0hHck1qc1BzdngyNDd0bVZtRW52VVVMUkRXanVxQ251cDlXU0lITnhkMEN0ZkcteEFPUDhLaWVsdUFhSDVEVQ?oc=5",
-      "id": 105
+      "id": "105"
     },
     {
       "baslik": "Zeytinlik mi maden mi?: Enerji arzı yasa tasarısı neden tartışılıyor? - Euronews.com",
@@ -29094,7 +29097,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Zeytinlik mi maden mi?: Enerji arzı yasa tasarısı neden tartışılıyor? &nbsp;&nbsp; Euronews.com",
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNWW5jdXEyVi1oaGNGajFtZVZjTXdHM0Q3QW5mblE3UkxQZDJCSVc5OTVzYzNScTR3d0V6T1hvTDJVMVgzYXA4bHBNZlU4VjZ1V184WVV3VllxdHNGVHlnaWljQjdrb1k0UDl2V1BCY01aOHpEOHZLdHJhTlg3T3haU0pJTXB4cDZJUWttMmRPQzhzc0ZrZEFwc2RwWTJwS1VuMk95TDZXdjdCZVZPaFlkRmdhclU1WnZYYUNYd1VJQ2Y5SXM?oc=5",
-      "id": 106
+      "id": "106"
     },
     {
       "baslik": "Enerji ve maden alanlarına yönelik düzenlemeler içeren kanun teklifi TBMM'de - Anadolu Ajansı",
@@ -29104,7 +29107,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Enerji ve maden alanlarına yönelik düzenlemeler içeren kanun teklifi TBMM'de &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQYkFGLU5pY0YxemF6Sl9XMG9uNXh6d3Z1Zi1YcWhfbGtPN2l0YzBGQ0tLS0JURHQ5OWQtWXh1amRYdm9zSFE5U251SDA3MTVNOTRUeGY0WmxOWFZoUVJUb2tINl9uWlJVdEpsdUNpLVJsdVd6b0d3X2MtMHBWTHhma01Hb3FzanNHZ1FLdkhET1llQnBIRTdFY0dURWRWSTdCVVhXN2NQbWlBOTZXSW04akhUNXdLSnBE?oc=5",
-      "id": 107
+      "id": "107"
     },
     {
       "baslik": "Zeytinlikten madene: TBMM’de kabul edildi - Gazete Kadıköy",
@@ -29114,7 +29117,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Zeytinlikten madene: TBMM’de kabul edildi &nbsp;&nbsp; Gazete Kadıköy",
       "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNTGN5Zndfek9EUG9HT3dNR1pMemlqR2Rnc1RSRk9MZ2RwSmEyWWpKZGdWYkYtaW5ZWTJIc0Fhd3F6Y29VLW8yQ0JxN0JMdlVGb2o4M2Y0MU1nOU5YaUFyQmFSTU9YbGd0M3NCLVI4SDF3ejh2V3VjSmh3ZWY0WGJHdTc5bEZBUQ?oc=5",
-      "id": 108
+      "id": "108"
     },
     {
       "baslik": "ÇED OLUMLU KARAR İLANI (Kabadüz-Favori Maden) - Ordu Büyükşehir Belediyesi",
@@ -29124,7 +29127,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "ÇED OLUMLU KARAR İLANI (Kabadüz-Favori Maden) &nbsp;&nbsp; Ordu Büyükşehir Belediyesi",
       "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPVFR0bmFTNTJyUmxkRTB2cDdrRi1WbGdFbVYxMzhfcU9SQkRjUWtCcUVxMmtKN045RFluMTN0ZE5lMmpNVkV1YThqRG5tNUJNOGFrYnB1NUdTRFBoT19pNWlqcG8wdTB1Unpqd2dPNUtkUV9NeTdPcUFmb21oWmpHR0RtUQ?oc=5",
-      "id": 109
+      "id": "109"
     },
     {
       "baslik": "Mega madenlere karşı, verilerle doğa mücadelesi: Zamanla yarışıyoruz - Bianet",
@@ -29134,7 +29137,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Mega madenlere karşı, verilerle doğa mücadelesi: Zamanla yarışıyoruz &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNa3NaeHB1dDNITzN3cUlURHB2WWRKdDNKWGxEZ0tCb21HTjVIYURBdE5IVm1rdFlnVVNIamlqZm14U3o5dF9sRVBkV1huc1BULVE2LXR3ZG1ld2JzbGc4aGtDdUc0enNJc2VvM3RJWnlxVHZwM241X2U1QVhMNHE5VGtVOXk5cDljNF83QTE3TExmOUdPSnZaY0t5dHR3M28?oc=5",
-      "id": 110
+      "id": "110"
     },
     {
       "baslik": "Türkiye’deki maden talanı haritalandırıldı: 1,5 yılda Trabzon ili yüzölçümünden fazla alan maden şirketlerine satıldı - Evrensel.net",
@@ -29144,7 +29147,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Türkiye’deki maden talanı haritalandırıldı: 1,5 yılda Trabzon ili yüzölçümünden fazla alan maden şirketlerine satıldı &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxOQUFVNllJeDhPSXN3cXRIR2o0VmJvYmVPTW93VUM3aTI3ZHd0T1dpbTRGZlo1Y0hPQ2xQT2NmU3Y0bWFQbk5fLWlqcDcxbXRtblg2MEF3T1BKM0p3c2thSzBSZFVOVWEzd1BVQ3kxYmlvUGlIa2d1M2VGd0ZEYXgwOW5va3l3dDEzbDNmU3pkbUpkMnkyaWxaTmVQSHNiYUUxcWllc1NQMlRLXzk3NVMyVDNJdFNRSEVuT0N6OFIwU08wbG9yRHEtUlA1RnJ1YXR5eDAwNDNINlBLczJGZDh1bGw5MXRRc1Bj?oc=5",
-      "id": 111
+      "id": "111"
     },
     {
       "baslik": "Sivas Dipsizgöl'de maden ocağı projesine ilişkin hazırlanan bilirkişi raporuna, bölge halkı itiraz etti - ankahaber.net",
@@ -29154,7 +29157,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Sivas Dipsizgöl'de maden ocağı projesine ilişkin hazırlanan bilirkişi raporuna, bölge halkı itiraz etti &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxPeVhISUIyMzk4WkpYQ0c5U2VxNlM0alcyWWpteE4zTC1yYTZrNnhuMWtnR0VpWTl6c0ZhVGx4YkhhQTNua1N6MzJrNWpETldaeXhkeFJGd3V1bnBSNHdDcWlPR19QMnZ3YWVQdXVQOXFaSzZ2a2hTSGdEeWpTaGtvQ19DbDJrTEJTWXl1bWhBSXFWQVVJRkh5NHpPakdXY0hmR1o3UkVYbHFBVDFrZDJiMTF1ZGstbkdsdlE5bi04aGY5UXhYcmQ5QlFNVkswSmhoZnRDN2gzOFNDQQ?oc=5",
-      "id": 112
+      "id": "112"
     },
     {
       "baslik": "Zeytinliklerin madencilik faaliyetlerine açılmasını öngören tartışmalı yasa teklifi kanunlaştı - Euronews.com",
@@ -29164,7 +29167,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Zeytinliklerin madencilik faaliyetlerine açılmasını öngören tartışmalı yasa teklifi kanunlaştı &nbsp;&nbsp; Euronews.com",
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQblE3X0xLakdsY1RIb21jRDVYVEdJakc2Q1R1eGVxMnFnZUJnVzJNMnRoSUZ0SWowSlBNRzA3dmdCTTUyc1ZOMHFNMTBwWDNwd0R5c0Y0MThfMFYzME84TWM5TkNUc01WVlVxTUk2QzBMMjZ6N3JDZFFYRFhnSVJaTXV4Q0M0ejAyNUViV3dBUG9vY2tCLUVaV2JjMWwxZFAzcWNicDIzNFVrZ3J2MmdianhGQU0zT3lvQmhXLXJLLVRLT2c?oc=5",
-      "id": 113
+      "id": "113"
     },
     {
       "baslik": "Muğla’da 48 saatte 5 maden projesi için “ÇED gerekli değil” kararı verildi - Gazete Oksijen",
@@ -29174,7 +29177,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Muğla’da 48 saatte 5 maden projesi için “ÇED gerekli değil” kararı verildi &nbsp;&nbsp; Gazete Oksijen",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQMzBmRWJZY3IwaDhReDctOVJDXzFuRF9KWVNQVDNzS2VVQWFRVkRmQXdWdzFoSi1jN01aUFZxaU1kc3RLNmtqbDVWaUszNW54NzlZY1NXam1ucWFwMl9wUk0zaHhwZm1aXzZMYTdYSzZMTnNIOXRIa3VYeE1QQ2F4M2J4MUQ3MUdoYzNqNGVubW0wM1MzemZGY29KXzI5X242R0NqMEdZVXpzUWJIeFo0TVdB?oc=5",
-      "id": 114
+      "id": "114"
     },
     {
       "baslik": "Madenciliğe alan açan yasa, TBMM’de adım adım geçiyor - Bianet",
@@ -29184,7 +29187,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Madenciliğe alan açan yasa, TBMM’de adım adım geçiyor &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbjJzcl9TNV9pa2J2REhtWUZ6MjZ4X25takN0RXNJVGVGLVNYeHlpaXpkOFQwSlQtc0pBaG1YQ0dPTHptcTRubHI4UDdwUjhlSHN5U3hUNUVCWjBaNkZ4QnBaM1pSWGFTLWdzYlBoVmdMRVNZTG5rSWt5d1ZtMG5pWkJ4UlB6R3ZHLTh3?oc=5",
-      "id": 115
+      "id": "115"
     },
     {
       "baslik": "Zara’da maden dayatmasına karşı köylülerden itiraz - Evrensel.net",
@@ -29194,7 +29197,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Zara’da maden dayatmasına karşı köylülerden itiraz &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNUkxScFM1Z1J6dHFsaDE2LVg4b3E2bVZudHJhdDNuMTlJMUl3MDhLcVgxZDZEbmNTTzdZRmNOeF94WWFyZDUzTUlPNGdzOU80SWhhQ1FsSlFmWnpRaWZNeEpFMEQyeFQxcFd4ZlF6OE10aFNtZHpDWlpRZlJidC1uellsSk9SM2J4T2Y0dFBqalk?oc=5",
-      "id": 116
+      "id": "116"
     },
     {
       "baslik": "1985'den beri 30 kez değiştirildi: 'En tehlikeli maden kanunu teklifi' TBMM'de görüşülecek - Gazete Oksijen",
@@ -29204,7 +29207,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "1985'den beri 30 kez değiştirildi: 'En tehlikeli maden kanunu teklifi' TBMM'de görüşülecek &nbsp;&nbsp; Gazete Oksijen",
       "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPSGp3RmFtYUo1WVdMd1U1WkdIc1YxN1M2T0Z0enhxTjFmdXIyRmY1eVBKVGpUdDZ4aGZiTFdfQjZWWUtQT0RDQzBET3B3SWJlQncyQlRJa1JRbC1QZzNiR0dWc1Z0dVpPVGMxMF9aLWRXSWxwazFwNEFTTzdzWHlWcFROQ2hlak1BRzFLQmZvcTBTUmdkU1JLVXV2WEFQeDAtY0N0aVFSSHlRQ2w4RjdUUWwxQk5mNEw5b2IwN2d0SWdFbDJX?oc=5",
-      "id": 117
+      "id": "117"
     },
     {
       "baslik": "Yasa Meclisten Geçti, ÇED Kalktı: %93'ü Maden Ruhsatlı Gümüşhane'de Ne Olacak? - gumuskoza.com.tr",
@@ -29214,7 +29217,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Yasa Meclisten Geçti, ÇED Kalktı: %93'ü Maden Ruhsatlı Gümüşhane'de Ne Olacak? &nbsp;&nbsp; gumuskoza.com.tr",
       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOOElHTEpXdXJZR0VQa3lYSXYzRGJQZl8yU0JaT2k2YlJiUThOMmhUOWlPb2xGT2FOa2ZjWEtxMk9jUTY2ZGhRMDVlaEFmal9WNS12SWZWVHQzVkl1RGd2cmhwNHpxMWdyeU84b0NCdDBvQkJMSUFlMlhfSF8ybTVySGpYUzd2bTVRZ3BkNi1NaTFtdVFDUHZYUl91RzlVZUpRRW5BYzVnY3dxQVVPd3h6dFUxekVHUTDSAbwBQVVfeXFMT0JSOGJPU0o5S2N3X2U1b2lxTFdrU0p3b2MzWmRBTUpRRXNVa05mWlBLNjJEaFh2VTlNejF4aDZHZmR4N1hVRWMxY0FocUtTbWpYUWQybVJHc01xcUVYUm9oZlk1SVJuQ1pKbGJROXl2bWk3NE84WTdKYy10UmRhYjZON2laT09kWGQ5VDhFeDUyOVBCTkdBWGtKd0p2SHBJOUdHRi0wMFFzdEFMSkxrbjVFQ3VKbmxfaVlOOXc?oc=5",
-      "id": 118
+      "id": "118"
     },
     {
       "baslik": "Sömürge yasası yetmedi, koşulsuz yağma istiyorlar! Maden patronu vekillerin teklifi Meclis'te - soL Haber",
@@ -29224,7 +29227,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Sömürge yasası yetmedi, koşulsuz yağma istiyorlar! Maden patronu vekillerin teklifi Meclis'te &nbsp;&nbsp; soL Haber",
       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQbDRGbVJrVnJJU3JEZl84UHRFb1BDSUZYcXZmemZkWWtOWWlMZ0o5QjdiQW9XUmI5eGlSX2hUTExzS0FSUHdqaS1tYk13TXNORVBrTTdqR0VpTnVxMDdvdGgyRUZQX3ZQcVhOZUpDX01qd1NaakR4Si1pSWxqWXZYSXJWb2xJOEdaV1IxaVJ2b0hINFRJM2RqcHZSTkRXYkxTcmNlSFRGTENuNGhTejhpbXVFbkNvRm8xcVNJVGVn?oc=5",
-      "id": 119
+      "id": "119"
     },
     {
       "baslik": "Muğla'daki ormanlık alana maden ocağı projesine \"ÇED olumlu\" kararı - T24",
@@ -29234,7 +29237,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Muğla'daki ormanlık alana maden ocağı projesine \"ÇED olumlu\" kararı &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQdlA5WmFHR3ViZWhnaVpqNXkyNmU0VEZZT1hma25hekotV053QWVmam51UXNsZk1hVkdUcW1lYlplRXBieTM3NXZZM0hzZkdvQTlSVzVZM2duMGZPYzlsMWtWLTZIWHg4UU5aS3lUMnk3ekVTMWY5My0tVm92Y1dncngyb0RaaGRlMHNHR2dIRk5VVlVZQUVBMklZeUdyRHM?oc=5",
-      "id": 120
+      "id": "120"
     },
     {
       "baslik": "Nermin Yıldırım Kara: Hatay’da ÇED’siz 120 Maden Faaliyete Başladı! - Ekogündem Gazetesi",
@@ -29244,7 +29247,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Nermin Yıldırım Kara: Hatay’da ÇED’siz 120 Maden Faaliyete Başladı! &nbsp;&nbsp; Ekogündem Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxQQzZzZE9TdkFfTmkwaGpuM21oQXBGVnZCUlEtM0Vyb24xWm1fUWJUeHp6S3RxbnlpaE9VSDlNcVhjZF84Y1ZiRnFNRHNCUnd3dmJBcmMyRU1ud1poWDRya0JiRlM1OUFlbmZrNnRrNEJoV3h5TmFVeE9EZVJ0Wi16aGcybXEwSHlnd05jeS0xelVRcHJpakhZQkptUHB2QQ?oc=5",
-      "id": 121
+      "id": "121"
     },
     {
       "baslik": "Bursa-Kirazlıyayla’da ÇED freni: Doğa için mi, maden için mi? - Medyascope",
@@ -29254,7 +29257,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Bursa-Kirazlıyayla’da ÇED freni: Doğa için mi, maden için mi? &nbsp;&nbsp; Medyascope",
       "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOc3huOFBwdEVDZXZsbUV2SHAyMG9EOVI4NEwyZUMwTkhQdTVTN3FBbHAyZ1JmV0YwRzkwanc2WGpJWVVOdDNVRndxWkRwMXJHWjRrZk1hcFRfZGlPMG9NX3l0aTNFMEQyQ1NDMlBmdHBsZWo5eUtBSDRjbkdoQVNHbzJ4dlR6dWxIZVF6bmx3?oc=5",
-      "id": 122
+      "id": "122"
     },
     {
       "baslik": "Kaz Dağı’nda yeni altın madeni için ÇED başvurusu - İlke TV",
@@ -29264,7 +29267,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Kaz Dağı’nda yeni altın madeni için ÇED başvurusu &nbsp;&nbsp; İlke TV",
       "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1ERW1RTVE3RThpVEJ3RTNGdEItY1VDZW5ROHlsT1VqOEtLcjNBVlpObFVyaFVGQVRZWktTeUQ3cUhvekVrbXpxWllfQmxjdUUyWmVBUmVoZnhleWQ3TVVwZ2Vlc2cyRFVXRG1LT0c4UFFHTDBFdzRyeFpLdw?oc=5",
-      "id": 123
+      "id": "123"
     },
     {
       "baslik": "Malatya Kuluncak’ta maden sahası genişletme projesi için verilen 'ÇED Olumlu' kararına dava: 10 Aralık’ta keşif yapılacak - ankahaber.net",
@@ -29274,7 +29277,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Malatya Kuluncak’ta maden sahası genişletme projesi için verilen 'ÇED Olumlu' kararına dava: 10 Aralık’ta keşif yapılacak &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMi7gFBVV95cUxPZ3EyWFhSdzlfakRKYkl2LWZ6MERTT0ZxVFhlODREZHdIVkdJdjFLTnliejNoUnplTWlDQU1QNEs4dHNBOTItSkRfaGtDdjBwbVQySldxbFVKa2ZURFNGWmVMNVpGSTJmanpEU09CbUVRTDlfcVpZLW50blBzMzIxQXFMUHJkbHMwd3NvWXFvT1AyeHE2WnFTLVplQkZHblVCRUYxZUgzQThyNTR1YjJ6eElwbWljVTliTlV0RnphV2ZoV21VTFdJUGl2MTA1QktveXlQZnlHckJ0Nk94R2wxejZiZDcyQVo1YlpON3hn?oc=5",
-      "id": 124
+      "id": "124"
     },
     {
       "baslik": "Artvin’de orman talanına onay: Maden projesine ÇED olumlu raporu verildi - Yurtsever",
@@ -29284,7 +29287,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Artvin’de orman talanına onay: Maden projesine ÇED olumlu raporu verildi &nbsp;&nbsp; Yurtsever",
       "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPZVJuc3M5Y2Nsc2dzT2NBS1pwUTg3ZlVUTlZKNzRIRi02MXRydnNaMUlOZjhJeVptaDgxb1lwX1psVDItNkhJbU43RzZJamRPWWpoSzU3M0hFYWM1blVGdEh6RGxsLV9VTEM5aFprZVg5UTlXM3hTOS1mSmpQNF96eDVZVEZqYlBlS191eUQ0NmU0ZzZ4aFBpUDhoZTE3S1dvWHctajEzY3lILXp40gGyAUFVX3lxTE9oeldtWE4zOV9POWVaVEQ0QTR6dE10Q0hOODEzZ3l3dk5KMFc4TXdWcFhYdnZiY3NpRGZNY25mRW55ekd4WjFDTk9nVTFSR0RvekRMcS1xcjE3RjhPclowalIyYkZVZXduX2RTdFE2LXlRUWU4TFl6TG96bDdud3ZmSVJnR1BzZTZBb0pQVk83RS0yMG56aXhuVWZGZGRGVlFyZTRuODk1RmQ2Z1IzaDdXY2c?oc=5",
-      "id": 125
+      "id": "125"
     },
     {
       "baslik": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti - ankahaber.net",
@@ -29294,7 +29297,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxPSkpnLTh6XzFRelE3ai1kelp2OXgweUxobW5rX0VUMFZKWFlwWjQtRWlUWXZCcURzTGN6Z25Kb3VRYmNBUXNSb1o5ZnpwMF9sUUZqYnVZd0E0NTIwVjcwLXVGZnl2XzdYclhad2pxaFFtY2kwbFh6V3lOZEd2LWpOQjlnbmtPSXQ0RGphcmVxQmFJYTV0anQxRWNWTW5jaXBGcDE2eEx3VU9uRV9MV3Q0R1FtSUp5Z3dMeGhFcFc5UzBKTzBUWDRjOGQtSXh5Q3MwYjdPQ3c4VUR0LXc0M2FLbnBwTkR6QUt5OFJiTFJ2U0JURnRISUE?oc=5",
-      "id": 126
+      "id": "126"
     },
     {
       "baslik": "Madra Dağı’nda antimuan arama çalışmaları için ÇED süreci başlatıldı - Evrensel.net",
@@ -29304,7 +29307,7 @@
       "etiket": "ÇED Kararları",
       "ozet": "Madra Dağı’nda antimuan arama çalışmaları için ÇED süreci başlatıldı &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOcWxLY1BGZWtESFlKRTM1UE5uRjlMd1RkOXFjSk9IZUNZcThYdEFMYXFneWplcm94bTBEenBMT2ZVbjN0V05VRkUtZG0tejZQZXp4LTFsX3pGZ285Z0xyUmliQ0lkbzlUbEZuUG5ERzRTdzVUUFBiRzAwV2stSkFLVnV1LWNyV2lLNWRsX2F4U2xkQkgzVFVmTVhoaXJEZHotbjNOeEFLd0o?oc=5",
-      "id": 127
+      "id": "127"
     },
     {
       "baslik": "Ormanlar kaçak ağaç kesimine karşı teknolojik imkanlarla 7 gün 24 saat korunuyor - Anadolu Ajansı",
@@ -29314,7 +29317,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ormanlar kaçak ağaç kesimine karşı teknolojik imkanlarla 7 gün 24 saat korunuyor &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxNTjFlODFMbTd0Z00zWlNiUW1fUHBITk0yQUhZSEJPbkRrNmNKVmJaaUtzZlhCNVVpRVNPNHhyUllrb3RpMFJiTzJzRGxHZW4zV2p6R2swb0JlbVk2amxkYm9TOTJpa0U1NEVFMml4QTR3Y0xWT055dWw2cW1EN05HdkdRemZsRzBKeXZxaG5mMWJmdDdTdW4xYzZuOFgxUVg5WTNrdVlsUVVMOFlGZlRqcjlwVUd1cElMSEFHMzVtdDBBZ2hUVHIwd1pBbnRQRlk?oc=5",
-      "id": 128
+      "id": "128"
     },
     {
       "baslik": "Koçarlı’da Ağaç Katliamı Kamerayı Patlattı - Aydın Times",
@@ -29324,7 +29327,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Koçarlı’da Ağaç Katliamı Kamerayı Patlattı &nbsp;&nbsp; Aydın Times",
       "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1XZHhIVXFtVmlXbHFZc29DY3NhT1BBcGNiSTVaT1lRRnlJS0VQOURtdUw3b1pJQ2xkQi1KR1c2d1NTQ2hvSmdoR2I5Qm5Fd3hoZ0wyYU9PSFpOODB5YVd0Y1YzWGVKYkQ5UHRBb1U3Z3RSc3ZVal9F0gF8QVVfeXFMT09wNGdaT3Nva1VIWndZNVkwYk1FU3pNX2dCNnJfcnd2NWtiYVpOd2RrT2tWTUVCTTczMENIdzVvSE9Mc3hndkZiVXA1S0YzbVU2OFJieEZHTXdGNGRXYjYzWU9kT1NhRW1KZV9nMmVSczF6cEs0TFYyeDVBOQ?oc=5",
-      "id": 129
+      "id": "129"
     },
     {
       "baslik": "YK Enerji: \"Şirketimizin izinli ya da izinsiz herhangi bir alanda ağaç kesimi yapması söz konusu değildir\" - ankahaber.net",
@@ -29334,7 +29337,7 @@
       "etiket": "Orman / Maden",
       "ozet": "YK Enerji: \"Şirketimizin izinli ya da izinsiz herhangi bir alanda ağaç kesimi yapması söz konusu değildir\" &nbsp;&nbsp; ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQNHJTMlQ2NWFiSVdBbUVaTGFXQmI2WlEyeUdleW9FZE5Pb2xINGVldTFwdUpmRk9wSnMtbDZDYzBGblFLRHRyUXBnMmh6YzNKei1XdEZ6VEJzdkNIU2NaYzZNb3JTZ3NvYkd5RUkwLTdVTHJ4Rk5ERWtSR1ZCMTB4UUVyeTRZOG14UFZWd3hzckxXSGZMNlVaQXd5UTR6Wi1aNU95MkNHR1VnZmhZSmFReGpVQXJZWEtIT01zdlloSGpkYmVDTkVKR2dYV255RVplR2pDYjF1VHF2Zjlk?oc=5",
-      "id": 130
+      "id": "130"
     },
     {
       "baslik": "Zeytin Ağacı Katliamı İddiası: 3 Bin Asırlık Ağaçlar Kesildi! - alanyagazetesi.com.tr",
@@ -29344,7 +29347,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Zeytin Ağacı Katliamı İddiası: 3 Bin Asırlık Ağaçlar Kesildi! &nbsp;&nbsp; alanyagazetesi.com.tr",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQMmFZTVNSWEV3OTZ3Q0pBc3BzWDVRWFJIZUsxNnNHemwwZ2h4SHpJWUJHMTdudXNmRHI0eU8yQldjOExNR21ZQkpiNGQ4REJhT0s1eUViS2JIVFBzT093T2NhTGtWZ0owRTFhMFowd2t6cmlwMlE4ampJeHgxX2djT2JZNEdBZnd5U2FIMmlURVJMT0RfNjFxQVAydTQ2VHc?oc=5",
-      "id": 131
+      "id": "131"
     },
     {
       "baslik": "Didim’de festival uğruna ağaç kestiler - Yeni Asır",
@@ -29354,7 +29357,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Didim’de festival uğruna ağaç kestiler &nbsp;&nbsp; Yeni Asır",
       "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxNWWs2UkhxdmFzekJ2alpwZGtJUnFHdG1VOEtSamRKdk00OENvZS1mSE9LMUlRb3o2a21pemxqb1daOXduNmd3M2xLSHlfSmc0RFdIanQ5ZXhTczJ4ZERTNENLakljaTJhT0xvM1V5LUYwZF93RXg1VDdhRzRWMFdfVUl4QlFJek9mZ3pTSzNVbw?oc=5",
-      "id": 132
+      "id": "132"
     },
     {
       "baslik": "Türkiye’nin tek biyosfer rezerv alanı: Macahel bölgesinde ağaç katliamı - birgun.net",
@@ -29364,7 +29367,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Türkiye’nin tek biyosfer rezerv alanı: Macahel bölgesinde ağaç katliamı &nbsp;&nbsp; birgun.net",
       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOZkxQaFhZZmpZeUtiSkYxeDJOTTRJRzdscGp3Tzc5OTJPZEhJTVR4X0NobDQ3REdSUnptNkNoU0ZPUW1jLXhidkNwV0Z5TmlxNmxBMmFQNWdNbjNBbTUybzlJeHdJWGhKR3VxUmFvZHBtTEE0ZEdaYjluTlJtc2pXMFN6bmttazh2cWhvcWNhekxKS3QwOUpOZmNRRnJVRDVubVFYWnJsZFk?oc=5",
-      "id": 133
+      "id": "133"
     },
     {
       "baslik": "Akyaka'da otopark için ağaç katliamı - T24",
@@ -29374,7 +29377,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Akyaka'da otopark için ağaç katliamı &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQU1IyMUxmWi11OUc2dDBoNmRGVnFaR3VsNVpPTWdIOXZmLWdYUk55ZkpSdi1sN0RCanlhZ0h4UGNJa3N4NUI5QjJQUl91UEo4UkNndl9LbXpsYVBSYktpTk5VNHZFbW1VZWFOVEhndUg3VnhIanpmTkRKU0VFcGtXYUs1Uk1pODdkYUxxVGhZNA?oc=5",
-      "id": 134
+      "id": "134"
     },
     {
       "baslik": "Akbelen’de ağaçları kesen şirketle OGM arasında 'ağaç katliamı' protokolü imzalanmış! - Cumhuriyet",
@@ -29384,7 +29387,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Akbelen’de ağaçları kesen şirketle OGM arasında 'ağaç katliamı' protokolü imzalanmış! &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPLUZDUTNxTDlYUEQyby15SzlBMTFVVWtyNkhkTU5waXZYZTMtaEhfYzJGNHQyaXlYRlVoaW9kTVRXZXc4YXFCcmN3OHhnT0NORHBXN1Z4aVlfSkFjUU9FNGszbGNkQjVWMTZKeVdLbl9hYjNELWRselFiQmFVd3NNb2xIYlpuWUZTbDc1N3FmNUNiUjdmcVpBR3llY21kYjZkUHZYRUgwSTI1SjV2ZUl6MDY5UVJ5QTdadm1JaXczNjBzSG1HbUE?oc=5",
-      "id": 135
+      "id": "135"
     },
     {
       "baslik": "Şırnak'ta ağaç kesimleri gençleştirme mi, doğa katliamı mı? - DW.com",
@@ -29394,7 +29397,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Şırnak'ta ağaç kesimleri gençleştirme mi, doğa katliamı mı? &nbsp;&nbsp; DW.com",
       "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQVHJ2dGl0amdnRTl5RkJkV3RqSDc1S2g4YTFMZzBRTDJKbU5INTlJSGVBcFhjOWNFVzROSkVQWTRmX0RPbkdJa3ZMY1Jjakx3dUpTQUczVTNFOTNlT0pQOWdNUUoxcDRvME9zT1pqSEtHVng0MlBWMDJRUmVrclJMUWhDNjhucGw0NUFiQ3ZpWE40UER5UG4zdjZmSXBlVlcyMUpCY3RrbGRQSEtfM3FfZFUtV3pZaXhLM19tOVBPamVWbEQwUXdfaXVWdlVETFNqSFHSAdIBQVVfeXFMUEhRbFJ5R18zU1ZaOW1xTll0elBTQnAtaS1KQXcwQ0txQkt0OWtpWFhZTkVwQXlsQlpxTG1UMVRFa21kVWprVlgtNW5PNXNFdnkxQUhtV3JDUHRfZi1BRkV0bmxwclc0SjhCb3g0WGtjWmVZQWR2MWczN1NnQmNvRkdIeDRibDk4eUdBeUx4dG9zcEpUelg4VThBNzFnVXZaNnpfTF9vbjI4dTFvUzAxcFpWZ3lXeFlWSERuN1NEbnlOSzZ2VXk1dkdyVjkzNTNvVnBB?oc=5",
-      "id": 136
+      "id": "136"
     },
     {
       "baslik": "Akbelen'deki orman direnişi 9. gününde: Jandarma kesim alanını kapattı - BBC",
@@ -29404,7 +29407,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Akbelen'deki orman direnişi 9. gününde: Jandarma kesim alanını kapattı &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5CaXoxZVRwaEVjV2hpdk9XMkdEQ3BXdzJ1dXdyZGx6UkVBcEk3bm5VeHA1SzFaUElVVWFaVmlJSEhQM2E1Q2E3alFJcXVTNUE1VDFaTnl1ZmtNR2t50gFiQVVfeXFMTnlHejdtdTZKd01FRUpFREJOMmZ6SkJUUEd2Z2M1WUtXamltZ2QzS0hRTnFLdVBJN1dqOTBiTHZsNVFtRVZrZ3Iwb08zcFlWMEJfOERaQlY3YVlvT2oyMHFjZkE?oc=5",
-      "id": 137
+      "id": "137"
     },
     {
       "baslik": "Şırnak’ta Ağaç Kesimi Tepkisi - VOA Türkçe",
@@ -29414,7 +29417,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Şırnak’ta Ağaç Kesimi Tepkisi &nbsp;&nbsp; VOA Türkçe",
       "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1qQlQ4Ym5ETkx4NWQ5c3BGZWswLUFyWkZ1bDI5SjlQYm9PVjgxTlRnSW9oelROX0k2LXRMcU1vVkNTd3pPODE3RE8xWlJiLWtsUGVPbU1LdjBPUXdUdm9WWXB2NVhpT0ZPNlp4VlBsaElzN0RUM0JRZNIBe0FVX3lxTE5RZTQySVplQjZOWGxTdk91Q3ZsVHFxTVpLa0t4bEUzcVl2UkFZMlJBQjJUUnpsenp1bDljTjZITWFiVHM0R2pUOVZpSV9GeWtiLVhZU1kzaTVzcmlIMDFTMTdHN2JVa1ZPNnBtbi0yUTZ6VGZUcEM4eVh0bw?oc=5",
-      "id": 138
+      "id": "138"
     },
     {
       "baslik": "Bolu'da ağaç katliamı: Savcılık harekete geçti - NTV Haber",
@@ -29424,7 +29427,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Bolu'da ağaç katliamı: Savcılık harekete geçti &nbsp;&nbsp; NTV Haber",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOQ3gzNjhWREpscmEyQUVGVEphZzR1LXl6ZmRrM1RQS0VqTzZFbUNxajJOU25ETGxWSkFSOUtKMVVRT3lFcjZmb3d4cFdsMER2TF9nU1lpU2dIVW8xTk5Pel9rd0JDaHJYb3Q1b0lyM3hVX3drVDlpeU8wbFMxUnRsb3dpRWcxSTZ5VGR1bnV1VmZrak9lbHQzUHVaTWx4QdIBowFBVV95cUxOeHY0czBLSVpobGJMYlJMOHVrRlZFMk5YbEh5TS0wMGtzZW9WSXlKWFpHUGxCNUpNckc2UmkyT3RBMl9MNE1TSzRWUk1HU0hTMmN6N2dpWXZiT3hDSzBPdUV2ZWJad0dReEd4Qm5tbnJ1TGQzbGlNUnpPZ1FCb2ZkMWp0Mjh4Y0t6Q0puV3YtUDlEQW5wbFNEa21tcU01Q0ZuNHNz?oc=5",
-      "id": 139
+      "id": "139"
     },
     {
       "baslik": "Akbelen aktivistlerine 'orman işgali' davası: Bir adım dahi geri atmayacağız - Gazete Oksijen",
@@ -29434,7 +29437,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Akbelen aktivistlerine 'orman işgali' davası: Bir adım dahi geri atmayacağız &nbsp;&nbsp; Gazete Oksijen",
       "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPaF9BelFDbWNCMEcxZlJmcGNEQVJMT3dsc19nLS1ielBuRzhDQUlUNWIwTWU5SHZCclRQblRtcG95Sml5ZTk0Q1ZUNHVHQXU4dGlMVlFLWDB5SE5WUUtWY1pUbnZCbFhENUtsSENlUlJNUE1KUnhmdXhtWXNfNW9mRkNyZmdlV0xScGVjV1d4SGpNTjBpR1hlaW9pMGU5OG04Umo0Y1BBQjdLdm1Xd3E4VU9FdWw?oc=5",
-      "id": 140
+      "id": "140"
     },
     {
       "baslik": "Giresun’da Ağaç Katliamı - Yapı.com.tr",
@@ -29444,7 +29447,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Giresun’da Ağaç Katliamı &nbsp;&nbsp; Yapı.com.tr",
       "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5TWU9tZmZVU1hQZW5sMUExcFB1NHJERHdpZUhzN3JvOGloVGYwZDFJbTlIanZxa3ZyNXBGU0YyeU8xVFd5dXJuLTk3M08xdVljbGFVZFhrYVBMUmZ0cUR2X3A3MWE3NS1aVnNqemJkMVVjWGtXc3c?oc=5",
-      "id": 141
+      "id": "141"
     },
     {
       "baslik": "Keşan’da Sarıkız bölgesinde ağaç katliamı - MEDYA KEŞAN",
@@ -29454,7 +29457,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Keşan’da Sarıkız bölgesinde ağaç katliamı &nbsp;&nbsp; MEDYA KEŞAN",
       "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9ISTlyVGZlOGFDX0hLeHctWGFiMG40Q2U0aklVTHQzemdsS3RFREFmMTJpVmlxbVZmTUpfNkZ6MDdIY1pOY1ZvSFlwYXVsczZSa1BhSm9VRS0tRm00eFJJczQycU40VFB1NFRFenk3djF0anQ5b1dmV2N30gF_QVVfeXFMUENqc0s1Qm4yZldGUHpwTHoyUjN2ejZaYV9qMFdnQ1l3QmNxZmhJd0xEbVgtZ3E4WWhOMG1vUTE3WjRMMVphYkptNm1PWVcwNmtTU1BtZHJsdmhRN3FVanVTZFowR2JNWU4yNVVYZmdvMkIyZFk1Wll3djVRby1UUQ?oc=5",
-      "id": 142
+      "id": "142"
     },
     {
       "baslik": "\"Sel felaketlerinin nedeni ağaç katliamı\" - Kısa Dalga",
@@ -29464,7 +29467,7 @@
       "etiket": "Orman / Maden",
       "ozet": "\"Sel felaketlerinin nedeni ağaç katliamı\" &nbsp;&nbsp; Kısa Dalga",
       "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNSFpzUm5tRnJxb1h4ZkFuLWtUeVNtdEhMS1B1LWo1OWZaUC1JbE5yZjhLXzVtTUlSSHlwM0ZXY09zYWtDN0FZN0tzUnZmclJNWnlXM0MxODZRaFEzZE1vLVBVRzNPa0lRSWV3WEh5QXJpT08xVWViRlpZUFlXTXN0RklCeEc5d9IBiwFBVV95cUxQODhfaV9SbXp1LXZJVGhCLXg3N0g3c2FyZzlfOXBuN0hoR2lrMHRGZk5yTUFqTmdQd010UXhRdlVBb1RlNHFkaUpkajBMdGJzeklHeGRfSXhfRk1ZSWZiTzIwaFpKcFNIamRQdHhTb3ItczdDVVk1RXJBcWJ6WWQtN3RCUVNoUzJDLTFN?oc=5",
-      "id": 143
+      "id": "143"
     },
     {
       "baslik": "Akkuyu Nükleer Santrali inşaatında ağaç katliamı yaşandı - Evrensel.net",
@@ -29474,7 +29477,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Akkuyu Nükleer Santrali inşaatında ağaç katliamı yaşandı &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQMEV2Wk5UdWRNMGxFSnhENm1WWDlDcTJOVm5mVF80a094WWkyU2VMOUxpaklSLVdNbTRfRzBTSGxuU2FKWVM5Z21rNnJQNkktdE1HQ3o4OUE2ZGtuUXQzWE4wb1o0VGFqcnJJNEhyTzdsaXltZzNHb3lUVHNGSVp1czVxYmM2MHZHekI4MzNlb1ZlbGdyU3RFRXBR?oc=5",
-      "id": 144
+      "id": "144"
     },
     {
       "baslik": "Akbelen Ormanı'nda dört yıldır direnenler anlatıyor: \"Bir tek ağacı bile kaybetmemeliyiz\" - BBC",
@@ -29484,7 +29487,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Akbelen Ormanı'nda dört yıldır direnenler anlatıyor: \"Bir tek ağacı bile kaybetmemeliyiz\" &nbsp;&nbsp; BBC",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBwWkFZbFhwUGVPdmlnZVhrRFpNaWhubXhZTEFXTGFUbnJKaVlHdmdPTm04R1lwOE5wbHlncXk1OG9ubFpwZlhZblJFNGowN1dzT1BPVldRWlpoc0to0gFiQVVfeXFMT3pyNlU2Sl9Ub182Qm5PcG91Q0dJRzlsRURWRXd2V3YzQWQ2UGdBUHZPUi1RbGJVaG4yQTRDTG9sbWZNUzE2WVlub0xwTG5jVDBxNGh5dWgxV1ZhMXFXc0NrdEE?oc=5",
-      "id": 145
+      "id": "145"
     },
     {
       "baslik": "Sinop'taki kesim orman işletmeciliği - Anadolu Ajansı",
@@ -29494,7 +29497,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Sinop'taki kesim orman işletmeciliği &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQRWpfbDdTakJjdDcxYTFST0NQRGVpTmtLdzdoek5zaWxBU2lmRUpyWjQxLUNsVjE4SktlT2VJbTNiU1NiUjlyQk0yYnFOcUwxa3VUbVVraVo3Tjg2TGJRUTczQXNfY3ZtVHRnWE05aHRoZEswaVUyMGVmTEU3bWQwVQ?oc=5",
-      "id": 146
+      "id": "146"
     },
     {
       "baslik": "Hilton’dan ağaç katliamı: 1345 ağaç kesilecek - Evrensel.net",
@@ -29504,7 +29507,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Hilton’dan ağaç katliamı: 1345 ağaç kesilecek &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNZnRZa00tdnlrUDVJZ2IyeTRoaXF6bTh3YU1ZRzFEelZEaGg3OGxjaWhGN0tmUlcwbGZCMW9YWkU4TFotZnM3OFlSSzJ0X25VSHZ1TWo1eVBSemdDZHBiNi1SZWdvVGpOQ083dzJ0alA0MHBaek9kell3RDlyOU52UlR4Q1JvYUtZ?oc=5",
-      "id": 147
+      "id": "147"
     },
     {
       "baslik": "Mersin'deki ağaç katliamı: Çevre örgütlerini harekete geçmeye çağıran muhtarın serası tahrip edildi - Medyascope",
@@ -29514,7 +29517,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Mersin'deki ağaç katliamı: Çevre örgütlerini harekete geçmeye çağıran muhtarın serası tahrip edildi &nbsp;&nbsp; Medyascope",
       "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQT2txQzNxNDJSYndCSC1UR3ZRQnI4SnZFUXpxUUE3Rm5zYzJLYW10Vk5NRmFzTEh5V3JvSUhHaVNzYWJJVjY4dXlMMmMyUm11T2xfZmIxbXJfZmJxTldadE9leHBzV2k5ZVdyUjNVXzZDcXZwUjh1aDZ0S19xOGFfcXJybzFoaTBMUS1vN3ZQUlhLNzNJUm1BaWF0SGc0cDBBWjBFVS1iUGlCSFpaVTlMM0ZaSmVJcTlkdWJDdUZ1MlZIWTEwRk9xbUlZRQ?oc=5",
-      "id": 148
+      "id": "148"
     },
     {
       "baslik": "Orman cenneti Antalya'da yeşil kıyım: Çıralı'da yüzlerce ağaç kesildi, halk isyanda! - Antalya Körfez",
@@ -29524,7 +29527,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Orman cenneti Antalya'da yeşil kıyım: Çıralı'da yüzlerce ağaç kesildi, halk isyanda! &nbsp;&nbsp; Antalya Körfez",
       "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxObnJUdnZUMVNBUTcxTGhJeXNyTjZKaTNubTg4ZzZjRFcyeHE5eHFTOHY5QmR6ZmxHNmdGbkNaNG40eXJPeDZfUm1sSmRtTTVEYmN3bnRpb3I4Y05abjJkeUVydGhPR1JPMkVyQVhmOEJtR2k3czgwU1JjR01ILVhMbERVNkRWRS1BdFFnYTlXQnpwWi05Q0ZSLVJmc1BIY0JOOWctejRzTVg1VXFqU2c?oc=5",
-      "id": 149
+      "id": "149"
     },
     {
       "baslik": "Ormansızlaştırarak insansızlaştırma - 1+1 Express",
@@ -29534,7 +29537,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ormansızlaştırarak insansızlaştırma &nbsp;&nbsp; 1+1 Express",
       "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9NbnlnOEhlaWdVcWZCTUpGMm43cEpiZlV0bFhpWWtvdnM5RUR5V1gxQmtnamNFRVZkMUdTNUlZbW5Vb2NHWUw4S3RLcFJyVFJoeXpYUTBYM1pzeFdyYkkzb3d0NmZoemhISnhn?oc=5",
-      "id": 150
+      "id": "150"
     },
     {
       "baslik": "Alamos Gold, Kaz Dağları’ndan gitmeyeceklerini açıkladı: Ağaç kesimi için Orman Bakanlığı'na 54 milyon TL ödedik - Independent Türkçe",
@@ -29544,7 +29547,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Alamos Gold, Kaz Dağları’ndan gitmeyeceklerini açıkladı: Ağaç kesimi için Orman Bakanlığı'na 54 milyon TL ödedik &nbsp;&nbsp; Independent Türkçe",
       "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE1MV2xsUWV4T01udUZkVVFFakRSa0lINGlUOHo2STVsUk1qbXFEYXA0dE5aSFdtd2FLclNZSTBnT0Zlclk5U1dvRUc3THk?oc=5",
-      "id": 151
+      "id": "151"
     },
     {
       "baslik": "İBB'nin Çırağan'daki ağaç katliamı büyük tepki çekmişti! Görüntüler ortaya çıktı - Sabah",
@@ -29554,7 +29557,7 @@
       "etiket": "Orman / Maden",
       "ozet": "İBB'nin Çırağan'daki ağaç katliamı büyük tepki çekmişti! Görüntüler ortaya çıktı &nbsp;&nbsp; Sabah",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNVFNVcElCakxkUE5wc3puY3RKd0x2NWNTSlpfcHJUVGdCc2U1dGNrY25vTTdDTzlrOVZrTU12YVE2TmxURlk4UDVnNzZqZFZsVjMxR1hMQkFiX3NKYjBGeHlTemY0elJUdnFSQjN0R0ZqeEZaSklKWFhIVTRoeDZnUzB0SEhXamt3TjczY3Z0YWw2NmJuUndBajVVb3NRSndoUHdhTGUtVzNWSTJ3cFln0gGyAUFVX3lxTE03Yms4Y3hoZ0xtaWxXUUtwZ2RLY0x5MGhqN3hubWp4S25VVmhqMHJrcjNQQlZHMFB5YUZFckFnbEhLUHQyajN5dnhpZkw1WkczeFpCMkdEdUtYdmgwRzBMTW9IVlJFM1J2dXpVbnc2aGlNcGVJbFNwOXlEblMySi1QeGl0VmpZZHgtZVNkYjRFOVpIT29LdVY5eW1feEMxb0ZfU0ZNTVVKYThPS2pHb2RYOHc?oc=5",
-      "id": 152
+      "id": "152"
     },
     {
       "baslik": "Akbelen direnişi 9. gününde: 'Akbelen Ormanı kazanacak!' - Cumhuriyet",
@@ -29564,7 +29567,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Akbelen direnişi 9. gününde: 'Akbelen Ormanı kazanacak!' &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPdVZRaEMyb1lKU2FCWTFRcm4xYUVkc3ZwVTAtcDJmOThLWnVDcm82aXBNd0pjZ3NrTVZpbTVscjFjMGpvLUcyQmYtVktkajh1ZzE2Nm5DcG5QWE9wVUd0cFhQYUtQNVl6WnR3VWxrd3JYbUk3cms2SW83VTMtdU9OdE9mRnlxYmFfWUoyVzhiclhEWEd6VHc1dk1Hc25vQQ?oc=5",
-      "id": 153
+      "id": "153"
     },
     {
       "baslik": "Ardahan'da orman kesimine tepki: 'Bu katliamı durduralım' - Gazete Duvar",
@@ -29574,7 +29577,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ardahan'da orman kesimine tepki: 'Bu katliamı durduralım' &nbsp;&nbsp; Gazete Duvar",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNOVFFNGJmTGRyXzdvRTdwZ1g3TkY3QWFxdmZHd2daQWNlQWQ3MU5GVzd0dWV0bHUxaWJoU28yYzB0SkdsaG5aUmU3eXA1SC1PYk5VYXZBbkdaNkpWUWJUWEo5d2d6bkhnM01FVVN3djlxdWRQOWctTVQwRWFZVjB5a19GVFBFOXBnYlNYZzVDZlFaT3FocGVvQldmbEJDN2fSAaQBQVVfeXFMTllvb1F0b0g0Yl91bEd3bXdGNWZNY3NvRUJsMHRRMi1xSk9tSWh2T05nZnU2ejZaU2ZOTlhhdXF3Q0EtNGRISEU1a3BCZlRGRm9RVjJYeGQ3SFFxNDNoSDhPTThsaURsbUN3eFV2WUZYdnJSZ1g5RWE3empJUEF5QnpaU1JmQlUtOE5sX21OVVRpaDBLN1lFNXFmNElETXNvTGdqZE8?oc=5",
-      "id": 154
+      "id": "154"
     },
     {
       "baslik": "Karacehennem Ormanları'nda ağaç kesimi: Orman biterse hepimiz biteriz - Gazete Duvar",
@@ -29584,7 +29587,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Karacehennem Ormanları'nda ağaç kesimi: Orman biterse hepimiz biteriz &nbsp;&nbsp; Gazete Duvar",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQaDVVci1zX1NVNG9yRk5ISGJuazhraTNOZWdvRF81NWh2c2t6ak1SWmhISGMtTXZYbFdtYzNJMGFSQ20wMW5JNzZ3NU51MkRhWkVpMUprRGFrV05ySE92aDJUY2pCWW5iUkNqbjdHMC1iem50eC14Tkp6b3R6YnAtN0p0TFdEalFob2FyM292Y2FIOVU5NF9hVFNlUWRrRUduNUk2aVlJbHFKcjRsb253YzJB0gG3AUFVX3lxTE9wNnBVTEE5VVpXM1VlcmdJZmhMQ0V6bDFzRWdZZ0o1Y0Y3T2FvR1gxbjA3bFprYWFseHVkZUF4QV81aENiM2NCM3lKMjAtNnEtY1hyYTA5U284ZDRMTDhFUGxfMUx0cnRxLW5ZOEVEeklsN3FSOHNkMTVVREJoQXgxT0Y0R0pDNy1Sa2liYjMzX0RFcUJLWkVRdmNVM2V5ZmFUS29WcDV1MVU5NEpwbkNTUGhXX25WQQ?oc=5",
-      "id": 155
+      "id": "155"
     },
     {
       "baslik": "Ağaç Katliamı Davasına Orman Müdürlüğü Katılmadı - Yapı.com.tr",
@@ -29594,7 +29597,7 @@
       "etiket": "Orman / Maden",
       "ozet": "Ağaç Katliamı Davasına Orman Müdürlüğü Katılmadı &nbsp;&nbsp; Yapı.com.tr",
       "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQYkhuSi10RlRpOVBsNERQRFZoVWxJdnhYNUt3UVVuWDdFZFVGN25sMjA5VEpheUpZWEhfNW9GUnNKb1lKMURwYTdENWxpMDVpMDU4eTMzSkd0NWZ4X1duVVAtXzhfcVNDWDZGeGoxV09IT0QtOWtRdGR3RlRhcEJhelJudjM3Zy0wTWtZTm5EcC1BSHhCR3h3?oc=5",
-      "id": 156
+      "id": "156"
     },
     {
       "baslik": "Koruma altındaki milli parklar şirketlere açılıyor - Bianet",
@@ -29604,7 +29607,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Koruma altındaki milli parklar şirketlere açılıyor &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOWlYzakt6VEVsOEdFUVBjUkFNdkhXNUctaDlCVi1DVDA4c1A2eWVMR0U5aFJ0bi1qaUltMERJdFJnUEFrdVNfb1cwajZkVE91OUMwcmlmRGUxcEt0d1E4RGdkMFRkbHVPbzIyRy00Q29rbzVVdFVGYnA1c3hXSXBZVTQ3UkNtb3YwdkE?oc=5",
-      "id": 157
+      "id": "157"
     },
     {
       "baslik": "Türkiye'de korunan alan sayısı 692'ye yükseldi - Anadolu Ajansı",
@@ -29614,7 +29617,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye'de korunan alan sayısı 692'ye yükseldi &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPejNnbmkwcWNuaDktZ0JjdnY5emlaV0w4akdPN2lJNlBveXZoTndxZHJPNXZkeDdULUtGM3ZNTmJxMFlKSl9Od1Zvdl9vQjVvOWY3cXhWYXMxaGlWMDJXdmh4LTlSdDJMczFQWjVPS05ZZUhrOTVSYUY1dWk4UjQ1VzAtX1hQTUktTERVU0dR?oc=5",
-      "id": 158
+      "id": "158"
     },
     {
       "baslik": "Türkiye’de kaç tane Milli Park var? İşte özel statü ile korunan alanlar - Gıda Hattı",
@@ -29624,7 +29627,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye’de kaç tane Milli Park var? İşte özel statü ile korunan alanlar &nbsp;&nbsp; Gıda Hattı",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNU29qSUVPSHpseXVUckhidWpfdjlMRFVaenl3TllBMFBaV2w4ZzlGMU1GN19GM2ZpQ3pRLWwtdlRtN3lZZDJLYUY3TWItSWpYV21JbDI0SGVoeWMzZFQ5UmNJM1VybzhfWVdveFpXU09aQ3hQRUFBbTl3VXgtOFVJLWptSEV6TmJDTXlKSzAteXo3azVTZzVLS3hlYmZYOW80VmpSc29qN3F3eUg3REJB0gG0AUFVX3lxTE9mdmhHYjFnY3p5Slc4SG5sTXFfaTgyQ1hsVE5sQU5OeVVzd0h6Slc5SV9IbENvWS1zVUtvdDB5RWF6WDhnUXBEMW9xMnlNQ3lKUDlLLXQtYnVrd0hmQ3ZCOVJIb2E2N2pwT3BRM1hnUHFxQ1JqOGtPM0d0dGJwMUZJUHE0UVp1TGIwU1ZnTFFoRHVxeEtzeHZvRUJDeDdGT01mcHNEOENxaU9DMmtTcDQ0ZDJKMQ?oc=5",
-      "id": 159
+      "id": "159"
     },
     {
       "baslik": "Doğa için değil rant için yasa: \"Milli parklar ranta açılamaz\" - birgun.net",
@@ -29634,7 +29637,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Doğa için değil rant için yasa: \"Milli parklar ranta açılamaz\" &nbsp;&nbsp; birgun.net",
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxObU92c29jVUI4bUhrVHJtZWVuZjB6Y0xVWWIxNnhOM1NzVXc4ZldONlo5N3JQZmRkYXdxWkdvYVVCSjBnSzdhZVU4THUySUZDMVpQd1BjVXl4RWlQWUQ3bGFIelpMWjlMN1IxMTdQRnNsYWc2S2hyeUVxWU8tdTFIWlZBbU1rRlB1NmYzZ3djXzZ4c2pBTkkwYlVBdw?oc=5",
-      "id": 160
+      "id": "160"
     },
     {
       "baslik": "Türkiye’nin tüm doğa mirası ve tarihi, kültürel zenginlikleri risk altında - Evrensel.net",
@@ -29644,7 +29647,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye’nin tüm doğa mirası ve tarihi, kültürel zenginlikleri risk altında &nbsp;&nbsp; Evrensel.net",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQNUVfUHNncEU5c19UZ3Y5X3RuZEdsSDhMRjI1NjM1VXNYSW9UZDJXYW04emN3R19lVTZ3SElaR1dSYWRwLTh6UEE0dm1tNzVqa3Z0dlBzcC1GQ1dicWJ2RGh4aDNocTlLa2duVzdObjkxeWtUY2Joc0cyY0l0RVNBVWc0MkFfNDlKakNsTFZNUmhLRlg2cVFuWlhsVEExMHNucVJieVR0RTctMlI1NGlPZlVn?oc=5",
-      "id": 161
+      "id": "161"
     },
     {
       "baslik": "Milli parkların ölüm fermanı - Cumhuriyet",
@@ -29654,7 +29657,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli parkların ölüm fermanı &nbsp;&nbsp; Cumhuriyet",
       "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOcEV2eko4WGEzZklSbUVIejhGcHphWGM4U0VqTTFXcDY3OTdVcnlZQjFaUEl2WjJkUHlLdDlPTHhVUzdfd0pBQ0RDb0tvYVRacWhnRzVSNk1uRERlQ3hpSWZZNHVRYnd6MnpMWG1oLWg0VktZa0xRbHowQTNneW1SNUxvRVFfY2o1bUV2anhnRQ?oc=5",
-      "id": 162
+      "id": "162"
     },
     {
       "baslik": "Milli parkları tehdit eden kanun teklifi - Gazete Oksijen",
@@ -29664,7 +29667,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli parkları tehdit eden kanun teklifi &nbsp;&nbsp; Gazete Oksijen",
       "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOc2lsU3lzMXRnSEhPNkFqdkV4cUtTdW1ZVFRtSjV5emZiWVBfQV80X2FfWHhUdXhIdlBBSzgzLUxvOGZrU19UeUxhUGVaR195VXBrZWtwM0ljek9hWEJJS0NWR3AtazB4dkdGSFU1LXNzWDY1QlRnb2RmUTI1NHNsc3k2UFNLYkJJ?oc=5",
-      "id": 163
+      "id": "163"
     },
     {
       "baslik": "Giresun ve Tokat’a yeni koruma: Türkiye’de alan sayısı 692'ye yükseldi - Yeniçağ Gazetesi",
@@ -29674,7 +29677,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Giresun ve Tokat’a yeni koruma: Türkiye’de alan sayısı 692'ye yükseldi &nbsp;&nbsp; Yeniçağ Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPQnVncFE1TlgtdmFfMmpxakxSRTFlcGRzQlItQWY4R1JXQ3VpRHQzbW93QUpWM3ZkWjlUZXZmV1VaTVFDQzF4RUVoYngyaW5uQm9mSDJvNHBmS3VDN1dpVG4yMVFjcnRWMHNJd1RKYlN4REgtSlFjR0cya2ZCVnVtZ1ZLaGpHWmRhNEM0VVhmME5aZjdva01wZWNiV1k4TzdpM181ZzdxUmpPNXVrUUZF?oc=5",
-      "id": 164
+      "id": "164"
     },
     {
       "baslik": "Milli Parklar Kanunu Teklifi’nin ilk 5 maddesi TBMM Genel Kurulu’nda kabul edildi - Bianet",
@@ -29684,7 +29687,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli Parklar Kanunu Teklifi’nin ilk 5 maddesi TBMM Genel Kurulu’nda kabul edildi &nbsp;&nbsp; Bianet",
       "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPd3ZDUVpSMFZkTU9GZ3pSZXk3dzZTb0FBV19PODRFYndQM3FyVnlRaG1XVnByOGx1d1RGSFA0UG9IMFJreUtmTGRWcE9xOWktb2YteVIxSktkN0NhM1ZoRDg3TVJDU044Y3pQUGl0WE1HR1dtOGt2RmF0TEptQ0gyczB5QlBEOEVVY1dBaUdoQnVkOXdtZy1XWjhmS1Fjbnc0RVhfM2hid2hFTUVNRGxtdQ?oc=5",
-      "id": 165
+      "id": "165"
     },
     {
       "baslik": "Büyük Menderes Deltası: Türkiye’nin Sulak Alan Hazinesi - Arkeolojik Haber",
@@ -29694,7 +29697,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Büyük Menderes Deltası: Türkiye’nin Sulak Alan Hazinesi &nbsp;&nbsp; Arkeolojik Haber",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOamdvaDU0Y2V2dWlXMXdHelVmVTN1b253SlotQzl1QlVFZGtTWG0tb3JEY0FqdGk3cFZHYUJ0WVI5Z3dvRGtyMGRreUd2R1NZcmdmQVhzLXlLTDhfUkhSTFRtS1YyWnpnNl8xd3N3SmhlS0pvY3U2V2huREZLX2Rvd3FNb2tNblBjc1hxNEJTR25nSUF5dmFndFdYOElHR0k?oc=5",
-      "id": 166
+      "id": "166"
     },
     {
       "baslik": "ULUDAĞ MİLLİ PARKTIR! - greenpeace.org",
@@ -29704,7 +29707,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "ULUDAĞ MİLLİ PARKTIR! &nbsp;&nbsp; greenpeace.org",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE96RjcxQkMxMUd4ZXZodGFKUnZzWGZVSzJ5UGJlNmh5YnV2Y09HeGIwb2tLTUpoSUFqT0wxVEJ3bHdFLUpBenkyd253WXVFYUVzaXE4SldaSDB2bFJVOGhBQ1FqU1d5V25hMl9CUw?oc=5",
-      "id": 167
+      "id": "167"
     },
     {
       "baslik": "Türkiye’nin milli parkları - TRT Haber",
@@ -29714,7 +29717,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye’nin milli parkları &nbsp;&nbsp; TRT Haber",
       "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE5vSmx2RHFwREloUlR0QWtLUVlKMlFmQnNTaXU2QW9pTWdsZXp2UTFiYVZrX3hfYUIyU1E1b1dHUEh5UTc2bGZ5dXJaMnlEaVlmbDd0Mmd0NWg4UWFndzE0ZTR6c0pJcHIwZS1pTzg0NmhJNExoU3Z3bC1iTVpvUQ?oc=5",
-      "id": 168
+      "id": "168"
     },
     {
       "baslik": "Türkiye’de en çok ziyaret edilen milli parklar - Saray Medya",
@@ -29724,7 +29727,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye’de en çok ziyaret edilen milli parklar &nbsp;&nbsp; Saray Medya",
       "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQSTM4bUtMMGxTV09LWEtzQjc1SVdrVjk3OHFOV1NYU0lhWERSTWdTd3N2b0NNcHY2bFFSdzViUi1zbmREeGRDeGhjMC11aW1lczhzMnVIWWthOFJyalBPRFBBTDQ5cTFqZXRoZzM3amtneVNVVEhIcnVfa08zbDZONGlXMHhzVmh6a3VSdTYyUQ?oc=5",
-      "id": 169
+      "id": "169"
     },
     {
       "baslik": "Tarım ve Orman Bakanlığı'ndan, 'Milli parklar düzenlemesi' açıklaması - DHA | Demirören Haber Ajansı",
@@ -29734,7 +29737,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Tarım ve Orman Bakanlığı'ndan, 'Milli parklar düzenlemesi' açıklaması &nbsp;&nbsp; DHA | Demirören Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQNXlJYjFOb2RFRXdhWkx0M0pibFlhMnN4UjFqUXFEY2ZValhGOUpEMHFJSEJDemVEaVhTNF9Ea3JVZ0VjbDBIQ3hITHNzdk1sMDBHaEhaMFVqeS1JcGNOTjJoc3Azci1GbmRxYnlFRV9rbHdnQm5naGpHQmpDMFF6MkZlWUVHVkpRMFpxTmpqSlVSSjc2SWVVNklZejlxUEp0ZEtKaGZB0gGqAUFVX3lxTE93dkVmRVpHMXF2VHVWZXlUMDZXNXpzWXlGeW5BWEppX3RwdFBlajZkUDJqZzF6bWNHRWQ4Q2FVazhjT0tBWnBOS3VBNFRNUzgzU0F0R0RpNlhWUEkyRU1DdDB4WXVPY19nVU9DMEZYaC1PeFZ3dVZ0SHVjWk9vSkFBeEpHVXVjaEp0UnV1bkZiSWdZc0pYRkhETHcyeGx2YTR4Z3F1cUJMYTlR?oc=5",
-      "id": 170
+      "id": "170"
     },
     {
       "baslik": "Bolu'daki tabiat ve milli parklar için koruma tedbirleri alındı - Anadolu Ajansı",
@@ -29744,7 +29747,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Bolu'daki tabiat ve milli parklar için koruma tedbirleri alındı &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQWlZCOEhEcC1EWHRMYmFUZHVhWkw5TzE0VzRzUG1kSnRTcUFhZlYtWWlPZUZWdEM2bVFhaGExYnI4RWk1Z2xKbFpxNS1yQjQxTkpMTW8zZG5tZ01NRERxYmZ3cUMxV1FJZ1hhZk05VS1OZmxKRUVkZVBfN3oxeDhkcTZmaU1nX3FHbTlUR3l0UF9MdzlnVWhsdXIxOWhISTlYX3k2dg?oc=5",
-      "id": 171
+      "id": "171"
     },
     {
       "baslik": "Milli parklar ve tabiat parkları Kurban Bayramı'nda ziyaretçilerini ağırlayacak - TRT Haber",
@@ -29754,7 +29757,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli parklar ve tabiat parkları Kurban Bayramı'nda ziyaretçilerini ağırlayacak &nbsp;&nbsp; TRT Haber",
       "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQSzFuUkRIZEFveDNBSng1bDRIN0dwcFdlb1hfZFZwVkszWU1DRVl6endJR25kR1QtUHZHRkFnejhoc0Q2MlgyVjlFVVhtWGNyYU1UeVItVHNGaXlxTzlzMEptSmNCOXd3anllSHF4bzl2NUVjT3FtbHJDRnBTdUxIN2x5ODhqYkpxdk1RcGN3b1p1RmEwY3VKWTdhQlFoSDRJcjBIZnZOcW5EeklYZXF0dXF0TDk5dDFjQlNqcDF3UVV5bTNudkRsbA?oc=5",
-      "id": 172
+      "id": "172"
     },
     {
       "baslik": "Milli parklar ve tabiat parkları Kurban Bayramı'na hazır - Anadolu Ajansı",
@@ -29764,7 +29767,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli parklar ve tabiat parkları Kurban Bayramı'na hazır &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxNNS1tRWFDZDZHeWRUd19aUjlrTnE2eXROVlo3SE14dk9oMDFkMXVVQ1NkSlRCUm1KMGtIaFpGc3JvUXFyUElWYnZBSllxRHhFSnplbWVsbXFtdXgxRHBoMkFjYjNIUFFkdFEtYmRPSDNvcER2Q3h6Qk5hMWk5a3NhT0F3QXBvNkk5dml4ZWZnYmVoY3Q3VTBBeW53?oc=5",
-      "id": 173
+      "id": "173"
     },
     {
       "baslik": "Kanun teklifinin ilk 5 maddesi geçti: “Milli Parklar turizme açılacak, kaçak avcılığa fırsat tanınacak - T24",
@@ -29774,7 +29777,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Kanun teklifinin ilk 5 maddesi geçti: “Milli Parklar turizme açılacak, kaçak avcılığa fırsat tanınacak &nbsp;&nbsp; T24",
       "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPTGlFWmw5akZKcGhrdzgxampQUkhWMGFLRWswWlhiWVEzM1FlcUtnVzNBZlVmYTgxY0JNcHVha29BbDdfaW9YQVZZYmlHMEd1UGsweF9WTjJZUVhJcmZFTDZLMmZBcjVIS1ZRRTdia3hPbWtCZXNHa3F4c3gtMFIwTk92Y1d5dWZ5aU43aHItN2hvYTNhbFlJbHF1VWVwQ196dXU3aEV0M1hGYkdwRTdVM1YxZTc2ZnhMc3IxbEpvbWtUYVlUYkJKOGF4b1g?oc=5",
-      "id": 174
+      "id": "174"
     },
     {
       "baslik": "“Milli Parklar Ranta Kurban Edilecek” - Yapı.com.tr",
@@ -29784,7 +29787,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "“Milli Parklar Ranta Kurban Edilecek” &nbsp;&nbsp; Yapı.com.tr",
       "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQMF95NXB2aGpBeGgwUG5VN2hWVWZkbkVUeGNwT1pTeTF5aVVkVlNKRWtfS2RWMmozQTdsOFI3NmFIdUZSRFU2V3lYaWhfMjlmay03czh5eTI4V3owQTVQaWhXeVlHb2dicU10ckVUTDMwemx5b244dmpJUThFbWZFYi1KWkZBdw?oc=5",
-      "id": 175
+      "id": "175"
     },
     {
       "baslik": "Bayram tatilinde milli parklar ve tabiat parklarını 5 milyon kişi ziyaret etti - DHA | Demirören Haber Ajansı",
@@ -29794,7 +29797,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Bayram tatilinde milli parklar ve tabiat parklarını 5 milyon kişi ziyaret etti &nbsp;&nbsp; DHA | Demirören Haber Ajansı",
       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOdU5ERXBhaENwdmZWc1NqWkN5WVNtWmVBZ0ltYk1rY0owdHdJYkI5cHEtdXlicmtQZDhnT1k1TURBRVpBdUJTLXoxOWJqdEgtVmJWRzhJbUk3c21NTWFYUWs4enRMQzR4VjROOTl2dVRHRXpsYUpTbXo4c2NQYVdEVUlTZnhCblNoRk93N0FmWFFUZEJ4aTBBbzROaWU3cmJsYWVBYnZNOUtiQlVEdzdBQTVPRE45VW8zZ2R5TWh30gHCAUFVX3lxTFA1UWpSWTBwMTJteFctaWtubVJSaHZ4RFo0WnJmWXM4amZ4emFIRmVBdjg5bTVQM0RocTBzWVczTk1oQW8zcXlxQ0x2d2Z5VjN4OUZBR09KOHRVU2gxWjcxdUdZREFIV0hURkhpY0t1TXBzaUc1VmZucVl4bUFkOG9jbUszd1RiTzhMb1dmTWFwWVZYUzJWU3BjQW4tUVhNYnNwemVmWEZkWHJlQ2s5X0hDUWpaNF9raUFrYy1xTkQxS2Vn?oc=5",
-      "id": 176
+      "id": "176"
     },
     {
       "baslik": "Müdür Çelik’ten “2 Şubat Dünya Sulak Alanlar Günü” Mesajı - Kanal23",
@@ -29804,7 +29807,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Müdür Çelik’ten “2 Şubat Dünya Sulak Alanlar Günü” Mesajı &nbsp;&nbsp; Kanal23",
       "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNZC1WRlpIa2l3akprdVpqT19QZ1ozV29zdmpOZnAzRTB2ZjFnTmMwTm94NW9yR0RxeW9iTTcyUnFpSFpNdHphQXFoVmp4ek5JM0JueFdwNXg2Vi1FWlNSRU5CNlRGcWp6X0M2aFVfWkI5TjJ0bEtIV1htSnowVW50bG9wZWdOQVl1bFpkc3g4djEzQmRpSUFHTTlNSkZfZkUwUXc?oc=5",
-      "id": 177
+      "id": "177"
     },
     {
       "baslik": "Türkiye'de 131 sulak alan koruma altında - Anadolu Ajansı",
@@ -29814,7 +29817,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Türkiye'de 131 sulak alan koruma altında &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQblhpcUlEV1kxNGs4dndscXVlVU9PZTlOUUd2UnpYVm5mMFZNam1EQlZQNHpnNmtGQVFpNmxUR19HUGRtakJHclpnNUhkYTZGcWM5V1pOMUFIZHh2ZjBNSzNLNDUxTVFMWWFYLVM5UmE3LVBCdXc3TkRvOGpuVS1jSTFHOUtKUnhZSEd5bGQzX1ZOTm83Nlhaaw?oc=5",
-      "id": 178
+      "id": "178"
     },
     {
       "baslik": "Milli Parklar Kanunu’na tepkiler büyüyor l Doğal yaşam alanları, koruma bölgeleri 'talana' açılıyor - Nûmedya24",
@@ -29824,7 +29827,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli Parklar Kanunu’na tepkiler büyüyor l Doğal yaşam alanları, koruma bölgeleri 'talana' açılıyor &nbsp;&nbsp; Nûmedya24",
       "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQTF90dS0ydS0wQnlOZ1BadFhDTGt2NkQybnF5WWsyazJzTTNQVnJCbldWc0luLXFDUnpaLXVNWG5YVkYtTHl1VGVGUmN0Slp4REpnRXhUNnFEa2xvZElwZW1ucHBJWEZxTXZqdDBzdHNXSTdwQlVQaXIwbVNackFMaHFsUnZ3V2Jjd1lwelJqNkFMSnNaQVcxbWxxTkpraF9USnNTZVl5YXBqd011YVJtNkFfV3ZORFdzUVVHSEp5SQ?oc=5",
-      "id": 179
+      "id": "179"
     },
     {
       "baslik": "Aygun: Milli Parklarda altyapı-üst yapı yapılarak, yaban hayatı bozulacak - Çerkezköy Haber",
@@ -29834,7 +29837,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Aygun: Milli Parklarda altyapı-üst yapı yapılarak, yaban hayatı bozulacak &nbsp;&nbsp; Çerkezköy Haber",
       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPaEd0dHdKbndULVdJcjl0bl9ycUhMUlBTa0NTVlJfdGttX2FFa0ZjazhRRzNoclBpYk9QQi1RbGVpV3BZUU9KUUVaUDNHTzNTamhybzhqMThobGV5Y0tnYWRmcUVVa2w3bllULXJXU0FKZS1nZUJfMFZ5eWgyNFpyNEdxck1HLW94emRueV9fVHhMUUYtdm5zX29vblNsNnZXYXJPQTNud1RsUjNSM1ZCRGFjVFBtYlHSAbwBQVVfeXFMT01Zb0Y3dGRkejc0RFRxWU1sWEJINGZVM01sbjRUYnNJdVNrY3I5anpleUhrQjZMQlZXRG56cEVfREU2SlBDY3RIbjZ4cGVEUkZzVGpDNXFseTh4M19pWlMwbVNTcHd5ZjNfbUlYb1RwVTNoNjQwSTYtTkl4dDVCWGRETXM2Z1FMSzZYd3BYWldzcVlwR1hIYmR6STQzOUloeWtVaTJQcjRPcWZKMHJ6WWRBMEdubG9CdXRBSW4?oc=5",
-      "id": 180
+      "id": "180"
     },
     {
       "baslik": "Gala Gölü Milli Parkı 250'ye yakın kuş türüne ev sahipliği yapıyor - Edirne Haber Gazetesi",
@@ -29844,7 +29847,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Gala Gölü Milli Parkı 250'ye yakın kuş türüne ev sahipliği yapıyor &nbsp;&nbsp; Edirne Haber Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPY3ZQRVQ5NTNpOUU3QkVDTS1laVhZaXNaVlllRFVLOWY2S3pXZ0gzMzktOUF0cU5HM3dja0ExektXaHZZUkxpZjQ5dEt5WTBQVTc5QWZGTEVTejFNVGlLTV9zbGR5dTk4b3d0RzNsWWUyZmtSZjlhOFBNdUJETTRmZ2NKYWw3NmxCX3RwaHBldmtXTTRlckZmUGRvb1JnMUptV0Zz0gGoAUFVX3lxTE1pM3U2S21jODFJSDNILV91U0NVeGFJUHRpRzlsRjJLRHJsd3A2R2dkc0EzRWxLSDRUYmlxREt0RDBSSzkyR0hyb050MHYybTB0Tlh0dGUyVVczSzJaWHZ6cG83aEZpTDh5bW9YY3hzNUs1SXpXRlM3LUpsS0l3OGtOUDFSUTVyalBjbTdCRUZ3N0ZPc0NtWlJPUzM1cUNQeGlEdVJDS1Ruaw?oc=5",
-      "id": 181
+      "id": "181"
     },
     {
       "baslik": "'Kuş Cenneti' Gala Gölü Milli Parkı'nda 232 kuş türü tespit edildi - Anadolu Ajansı",
@@ -29854,7 +29857,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "'Kuş Cenneti' Gala Gölü Milli Parkı'nda 232 kuş türü tespit edildi &nbsp;&nbsp; Anadolu Ajansı",
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQbmV0QTlLSjJrRGh5Z1ZPSlpQbVZtRlllNHpUdmpFX1AxR2J5c19XZ2duS2x3NHRaVF95dzFnUGFoaWJlZExOXzhQdnQwRGNJZ1gyMlpwODZJUDJnbE83Q25jTzRCU3hUYmI1S0M2VHdKdkJtaEtTd3pWcjRYc3duWmFpM08yRGN0V3huNE1qc1gzVlRad01uYTFBeEo2d2hDVzNGYQ?oc=5",
-      "id": 182
+      "id": "182"
     },
     {
       "baslik": "Dr. Baran Bozoğlu | Doğa koruma, çölleşme ve erozyonla mücadelede neler oluyor? - Independent Türkçe",
@@ -29864,7 +29867,7 @@
       "etiket": "Çevre İhlali",
       "ozet": "Dr. Baran Bozoğlu | Doğa koruma, çölleşme ve erozyonla mücadelede neler oluyor? &nbsp;&nbsp; Independent Türkçe",
       "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5NUkR0U0s3eTVvTUhxLTF2VkFqWGZIOHNPeEdDbXdzRTNveTNBMGV5RmZzYnc3TWtZRVpHYWliSGR3MWo1NXBaNU1Ndw?oc=5",
-      "id": 183
+      "id": "183"
     },
     {
       "baslik": "Milli Parklar Kanunu'nda değişiklikler Meclis'ten geçiyor : Muğla'nın Eşsiz Ekosistemi Risk Altında! - Marmaris Manşet",
@@ -29874,12 +29877,12 @@
       "etiket": "Çevre İhlali",
       "ozet": "Milli Parklar Kanunu'nda değişiklikler Meclis'ten geçiyor : Muğla'nın Eşsiz Ekosistemi Risk Altında! &nbsp;&nbsp; Marmaris Manşet",
       "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQWDd1SHpwUm5FYlZyU3F0M09aR2tJVzJjQU1CekpBbTh2M3N4Zzdtb2VOVlVxdnhoOThpNTBLRUdJaTBsekxReGkzaFd0Y1VsTUJfdW5NakU1QnNLbUxVbDZzdXVkQXYyVFp1bGNEeUR1QW5tMTZ6M1RIZUlfeHU1NGZUYVlZWGw0dlZSdGNWUE0yZ0NBMUU0S3lzQ1MySzFiUU1mZG1UQXdTSEQ5WVJ2X0lkQjMyU2JDMzR0WDdia2NZdFFUc2tlTjVEWHNNZUJXZWfSAdcBQVVfeXFMUG1fRVJSNEpGdW4xWU1LNTNQLWwzbk9jaHhmMmh2dUZTVjZWWGRfQ0Q5akJRNFUxRzdIUU9XMWwtdzUyRW90aS00dEhnb3d0QW1nVlNleUpuSVVVREladEZfNFV5czY5bDhGQzJZTnBrZklvaC1GbnlKVFAwMG9vRDE3bGV2dDZRZ0RDRXhtbHZMejk1VnY0c0IweTlQNTg2Q3dxcmpILWRFUFVjVDdQdWU1UktFRVhRUm1fdUlPRURxV0pmZUF3dXpka0Y1a19RRERLeFFXMFE?oc=5",
-      "id": 184
+      "id": "184"
     }
   ],
   "raporlar": [
     {
-      "id": 22,
+      "id": "22",
       "baslik": "Madencilik & Orman Tahribatı Türkiye | 2020 – Mayıs 2026",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29895,7 +29898,7 @@
       "foto_url": ""
     },
     {
-      "id": 21,
+      "id": "21",
       "baslik": "DEVLET NE KARAR VERDİ?",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29910,7 +29913,7 @@
       "foto_url": ""
     },
     {
-      "id": 20,
+      "id": "20",
       "baslik": "Ortadoğu Savaşlarının Doğaya ve İnsana Etkisi: İklim, Ekoloji ve Adalet Üzerine Kapsamlı Bir Analiz",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29924,7 +29927,7 @@
       "foto_url": ""
     },
     {
-      "id": 19,
+      "id": "19",
       "baslik": "TARIMSAL AFET VE ADALET",
       "yil": 2026,
       "yazar": "TMMOB Ziraat Mühendisleri Odası",
@@ -29937,7 +29940,7 @@
       "foto_url": ""
     },
     {
-      "id": 18,
+      "id": "18",
       "baslik": "KAYIP VE ZARAR FONU DETAYLI ANALİZİ: COP31’DE ÇÖZÜLMESİ BEKLENEN KRİTİK DOSYA",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29947,7 +29950,7 @@
       "foto_url": ""
     },
     {
-      "id": 17,
+      "id": "17",
       "baslik": "Gezegeni Kurtarırken(!) Bombaların Altında Kalan Gerçek",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29957,7 +29960,7 @@
       "foto_url": ""
     },
     {
-      "id": 16,
+      "id": "16",
       "baslik": "İklim Krizinin Görünmez Suç Ortağı: Savaşın Ekolojik Maliyeti ve Sistematik İnkar",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29967,7 +29970,7 @@
       "foto_url": ""
     },
     {
-      "id": 15,
+      "id": "15",
       "baslik": "Ekoloji Haritasi – Son 48 Saat Raporu",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29977,7 +29980,7 @@
       "foto_url": ""
     },
     {
-      "id": 14,
+      "id": "14",
       "baslik": "Mahkeme Kararlarına Rağmen Yaylalara Jandarma Eşliğinde Maden Girişi: Türkiye'de Ekolojik Yıkımın Güncel Coğrafyası",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -29987,7 +29990,7 @@
       "foto_url": ""
     },
     {
-      "id": 13,
+      "id": "13",
       "baslik": "Ilımlı Bir Teklif: Fosil Yakıt Endüstrisini Ulusallaştırın",
       "yil": 2020,
       "yazar": "Kate Aronoff/ March 17, 2020",
@@ -29997,7 +30000,7 @@
       "foto_url": ""
     },
     {
-      "id": 12,
+      "id": "12",
       "baslik": "MUĞLA DEM PARTİ EKOLOJİ KOMİSYONU RAPORU",
       "yil": 2026,
       "yazar": "GÜVEN GÖKNAR / MUĞLA DEM PARTİ EKOLOJİ KOMİSYONU EŞ SÖZCÜSÜ",
@@ -30007,7 +30010,7 @@
       "foto_url": ""
     },
     {
-      "id": 11,
+      "id": "11",
       "baslik": "Türkiye'de Ekolojik Yıkımın Güncel Coğrafyası",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
@@ -30028,7 +30031,7 @@
   },
   "makaleler": [
     {
-      "id": null,
+      "id": "makale_1",
       "baslik": "https://www.ekoiq.com/iklim-degisikligi-kaynakli-goc-uzerine-teorik-ve-kuramsal-bir-degerlendirme/",
       "yazar": "Prof. Dr. Murat TÜRKEŞ, Boğaziçi Üniversitesi İklim Değişikliği ve Politikaları Uygulama ve Araştırma Merkezi, İstanbul",
       "tarih": "2026-05-21",
@@ -30044,7 +30047,7 @@
   ],
   "uluslararasi": [
     {
-      "id": null,
+      "id": "ulus_1",
       "baslik": "From local shores to shared seas: youth climate action linking Egypt and Europe",
       "baslik_tr": "Yerel Kıyılardan Ortak Denizlere: Mısır ve Avrupa'yı Birleştiren Gençlik İklim Eylemi",
       "kaynak": "Salma Abbass",
