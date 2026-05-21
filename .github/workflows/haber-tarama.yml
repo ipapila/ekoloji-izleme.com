@@ -1,49 +1,40 @@
 name: Haber Tarama
-
 on:
   schedule:
     - cron: '0 */3 * * *'   # Her 3 saatte bir
   workflow_dispatch:
   workflow_call:
-
 permissions:
   contents: write
-
 jobs:
   tara:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
       - name: Bağımlılıkları yükle
         run: pip install requests beautifulsoup4 lxml feedparser
-
       - name: Haberleri tara (tarayici.py)
         run: python scripts/tarayici.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: haberler.json doğrula
         run: |
           if [ -f haberler.json ]; then
-            python3 -c "
+            python3 << 'EOF'
 import json, sys
 try:
     d = json.load(open('haberler.json', encoding='utf-8'))
-    print(f'✓ haberler.json geçerli — {len(d.get(\"haberler\",[]))} haber')
+    print(f'✓ haberler.json geçerli — {len(d.get("haberler",[]))} haber')
 except Exception as e:
     print(f'⚠ haberler.json sorunlu: {e}')
     sys.exit(1)
-"
+EOF
           else
             echo "⚠ haberler.json oluşturulmadı"
           fi
-
       - name: Değişiklikleri commit et
         run: |
           git config user.name  "ekoloji-bot"
