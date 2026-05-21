@@ -1002,8 +1002,8 @@ async function yapiTarama(mod){
     if(!dr.ok)throw new Error(`GitHub API: HTTP ${dr.status}`);
     log('<span class="ok">✓ Workflow tetiklendi…</span>');
     await new Promise(r=>setTimeout(r,4000));
-    const runId=await sonRunBul(owner,repoName,token,log);
-    if(runId)await runDurumIzle(owner,repoName,runId,token,log);
+    const run=await sonRunBul(owner,repoName,token,log);
+    if(run)await runDurumIzle(owner,repoName,run.id,run.url,token,log);
   }catch(e){log(`<span class="warn">✗ ${e.message}</span>`);}
 }
 
@@ -1014,13 +1014,13 @@ async function sonRunBul(owner,repo,token,log){
     const data=await r.json(),run=data.workflow_runs?.[0];
     if(!run){log('<span class="warn">Run bulunamadı.</span>');return null;}
     log(`Run #${run.run_number} → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);
-    return run.id;
+    return {id:run.id, url:run.html_url};
   }catch(e){log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`);return null;}
 }
 
-async function runDurumIzle(owner,repo,runId,token,log){
-  for(let i=0;i<30;i++){
-    await new Promise(r=>setTimeout(r,6000));
+async function runDurumIzle(owner,repo,runId,runUrl,token,log){
+  for(let i=0;i<50;i++){
+    await new Promise(r=>setTimeout(r,8000));
     try{
       const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
       const run=await r.json();
@@ -1029,10 +1029,10 @@ async function runDurumIzle(owner,repo,runId,token,log){
         else log(`<span class="warn">✗ Workflow ${run.conclusion}.</span>`);
         return;
       }
-      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*6}sn)`);
+      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*8}sn)`);
     }catch(e){log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);}
   }
-  log('<span class="warn">Zaman aşımı.</span>');
+  log(`<span class="warn">⚠ İzleme süresi doldu (≈7 dk). Workflow hâlâ çalışıyor olabilir — ${runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:'GitHub Actions sayfasını kontrol edin'}.</span>`);
 }
 
 async function otomatikYenile(log){
