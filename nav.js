@@ -111,7 +111,7 @@
     </li>
 
     <li class="nav-item">
-      <a href="makaleler.html" class="nav-link ${current === 'makaleler.html' || current === 'uluslararasi.html' ? 'active' : ''}">Makaleler
+      <a href="makaleler.html" class="nav-link ${current === 'makaleler.html' ? 'active' : ''}">Makaleler
         <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
       </a>
       <div class="dropdown">
@@ -124,12 +124,30 @@
         <a href="makaleler.html?tur=Analiz"><span class="dot"></span>Analiz & Araştırma</a>
         <a href="makaleler.html?tur=Akademik Makale"><span class="dot"></span>Akademik Makaleler</a>
         <a href="makaleler.html?tur=Röportaj"><span class="dot"></span>Röportajlar</a>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a href="kuresel.html" class="nav-link ${current === 'kuresel.html' ? 'active' : ''}">Küresel
+        <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+      </a>
+      <div class="dropdown">
+        <div class="dropdown-label">İçerik Türü</div>
+        <a href="kuresel.html"><span class="dot"></span>Tüm İçerik</a>
+        <a href="kuresel.html?tur=Haber"><span class="dot"></span>Haberler</a>
+        <a href="kuresel.html?tur=Rapor"><span class="dot"></span>Raporlar</a>
+        <a href="kuresel.html?tur=Araştırma"><span class="dot"></span>Araştırmalar</a>
+        <a href="kuresel.html?tur=Analiz"><span class="dot"></span>Analizler</a>
+        <a href="kuresel.html?tur=Aktivizm"><span class="dot"></span>Aktivizm</a>
+        <a href="kuresel.html?tur=Politika"><span class="dot"></span>Politika</a>
         <hr>
-        <div class="dropdown-label">Küresel</div>
-        <a href="uluslararasi.html"><span class="dot"></span>Uluslararası Medya</a>
-        <a href="uluslararasi.html?dil=EN"><span class="dot"></span>İngilizce Yayınlar</a>
-        <a href="uluslararasi.html?kat=İklim"><span class="dot"></span>İklim & Çevre</a>
-        <a href="uluslararasi.html?kat=Araştırma"><span class="dot"></span>Bilimsel Araştırmalar</a>
+        <div class="dropdown-label">Dile Göre</div>
+        <a href="kuresel.html?dil=EN"><span class="dot"></span>🇬🇧 İngilizce</a>
+        <a href="kuresel.html?dil=DE"><span class="dot"></span>🇩🇪 Almanca</a>
+        <a href="kuresel.html?dil=FR"><span class="dot"></span>🇫🇷 Fransızca</a>
+        <a href="kuresel.html?dil=ES"><span class="dot"></span>🇪🇸 İspanyolca</a>
+        <a href="kuresel.html?dil=AR"><span class="dot"></span>🇸🇦 Arapça</a>
+        <a href="kuresel.html?dil=EL"><span class="dot"></span>🇬🇷 Yunanca</a>
       </div>
     </li>
 
