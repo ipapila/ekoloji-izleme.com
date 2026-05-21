@@ -1,6 +1,9 @@
 name: Veri Güncelleme + Flex Push
 
 on:
+  push:
+    paths:
+      - 'icerik.json'          # Admin panelden veri girilince otomatik tetiklenir
   schedule:
     - cron: '0 2,8,14,20 * * *'
   workflow_dispatch:
@@ -36,7 +39,7 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/contents/data.json" \
             -o data.json
           echo "data.json boyutu: $(wc -c < data.json) byte"
-          echo "Haber sayısı : $(python3 -c "import json; d=json.load(open('data.json')); print(len(d.get('haberler',[])))";)"
+          echo "Haber sayısı: $(python3 -c "import json; d=json.load(open('data.json')); print(len(d.get('haberler',[])))")"
 
       - name: data.json'u Flex sunucuya gönder
         run: |
@@ -51,4 +54,18 @@ jobs:
             echo "⚠️  Webhook başarısız (HTTP $HTTP_STATUS)"
           else
             echo "✅ Flex sunucu güncellendi."
+          fi
+
+      - name: icerik.json varsa Flex'e gönder
+        run: |
+          if [ -f icerik.json ]; then
+            HTTP_STATUS=$(curl -s -o /tmp/icerik_resp.txt -w "%{http_code}" \
+              -X POST "${{ secrets.FLEX_WEBHOOK_URL }}?dosya=icerik.json" \
+              -H "X-Webhook-Secret: ${{ secrets.FLEX_WEBHOOK_SECRET }}" \
+              -H "Content-Type: application/json" \
+              --data-binary @icerik.json)
+            echo "icerik.json HTTP Status: $HTTP_STATUS"
+            cat /tmp/icerik_resp.txt
+          else
+            echo "icerik.json bulunamadı, atlanıyor."
           fi
