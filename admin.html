@@ -756,9 +756,19 @@ async function veriYaz(){
       makale_sayisi:mevcut.makaleler.length,
       ulus_sayisi:mevcut.uluslararasi.length};
     const content=btoa(unescape(encodeURIComponent(JSON.stringify(mevcut,null,2))));
-    const pr=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/data.json`,
-      {method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
-       body:JSON.stringify({message:`admin: içerik güncellendi ${new Date().toISOString().slice(0,10)}`,content,sha})});
+    /* SHA çakışmasına karşı retry — 422 alınca taze SHA ile tekrar dene */
+    async function _githubPut(currentSha){
+      const body=JSON.stringify({message:`admin: içerik güncellendi ${new Date().toISOString().slice(0,10)}`,content,sha:currentSha});
+      return fetch(`https://api.github.com/repos/${ow}/${rn}/contents/data.json`,
+        {method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body});
+    }
+    let pr=await _githubPut(sha);
+    if(pr.status===422){
+      /* SHA eskimiş — taze SHA al ve bir kez daha dene */
+      const rr2=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/data.json`,
+        {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
+      if(rr2.ok){const md2=await rr2.json();pr=await _githubPut(md2.sha);}
+    }
     if(pr.ok){
       setSyncDurum("synced");
       /* FIX 2: Direkt Flex/Plesk webhook push — GitHub Actions beklemiyor */
