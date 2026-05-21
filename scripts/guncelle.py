@@ -174,21 +174,6 @@ def get_remote_data():
         except: return None, None
     return None, None
 
-def get_icerik_json():
-    """Admin panelinden girilen raporlar/makaleler/uluslararasi verilerini icerik.json'dan çek."""
-    raw = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/icerik.json"
-    try:
-        r = requests.get(raw, timeout=10)
-        if r.status_code == 200:
-            d = r.json()
-            print(f"  icerik.json: {len(d.get('raporlar',[]))} rapor, "
-                  f"{len(d.get('makaleler',[]))} makale, "
-                  f"{len(d.get('uluslararasi',[]))} uluslararası")
-            return d
-    except Exception as e:
-        print(f"  ⚠️ icerik.json okunamadı: {e}")
-    return {}
-
 def update_remote_data(new_data, sha):
     token = os.environ.get("GITHUB_TOKEN")
     if not token:
@@ -209,11 +194,9 @@ def update_remote_data(new_data, sha):
     if r.status_code in (200, 201):
         print(f"✅ GitHub güncellendi — "
               f"{len(new_data.get('ihlaller',[]))} ihlal, "
-              f"{len(new_data.get('haberler',[]))} haber, "
-              f"{len(new_data.get('raporlar',[]))} rapor.")
+              f"{len(new_data.get('haberler',[]))} haber.")
     else:
         print(f"❌ Hata {r.status_code}: {r.text[:300]}")
-
 
 
 
@@ -375,29 +358,19 @@ def main():
                 "makaleler": [], "uluslararasi": [], "_meta": {}}
         sha  = None
 
-    # ── icerik.json'u oku ve admin verilerini birleştir ──────────
-    # Admin panelinden girilen raporlar/makaleler/uluslararasi
-    # data.json'dan bağımsız küçük bir dosyada tutulur.
-    # guncelle.py her çalışmada bu veriyi data'ya ekler → Flex'e gider.
-    print("\n📋 icerik.json okunuyor…")
-    icerik = get_icerik_json()
+    # Eksik koleksiyon anahtarlarını ekle (eski data.json için)
     for col in ("raporlar", "makaleler", "uluslararasi"):
-        icerik_items = icerik.get(col, [])
-        if icerik_items:
-            mevcut_ids = {str(x.get("id","")) for x in data.get(col, [])}
-            yeni = [x for x in icerik_items if str(x.get("id","")) not in mevcut_ids]
-            data[col] = icerik_items  # icerik.json her zaman otorite
-            if yeni:
-                print(f"  +{len(yeni)} yeni {col} eklendi.")
+        if col not in data:
+            data[col] = []
 
-    mevcut_haberler = data.get("haberler", [])
-    mevcut_urls     = {h.get("url", "") for h in mevcut_haberler}
+    mevcut_haberler  = data.get("haberler", [])
+    mevcut_urls      = {h.get("url", "") for h in mevcut_haberler}
     mevcut_basliklar = {
         re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
         for h in mevcut_haberler if h.get("baslik")
     }
 
-    print(f"\n  Mevcut: {len(data.get('ihlaller',[]))} ihlal, {len(mevcut_haberler)} haber")
+    print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal, {len(mevcut_haberler)} haber")
 
     # ── Haberleri tara ──────────────────────────────────────────
     print(f"\n🔍 RSS taranıyor… ({len(KAYNAK_RSS)} kaynak)")
@@ -405,22 +378,22 @@ def main():
     id_sayac = sonraki_id(mevcut_haberler)
     for kaynak in KAYNAK_RSS:
         for h in rss_cek(kaynak):
-            baslik_norm = re.sub(r"\s+", " ", h.get("baslik","")).strip().lower()
-            if h["url"] not in mevcut_urls and baslik_norm not in mevcut_basliklar:
+            bn = re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+            if h["url"] not in mevcut_urls and bn not in mevcut_basliklar:
                 h["id"] = id_sayac; id_sayac += 1
                 yeni_haberler.append(h)
                 mevcut_urls.add(h["url"])
-                if baslik_norm: mevcut_basliklar.add(baslik_norm)
+                if bn: mevcut_basliklar.add(bn)
 
     print(f"\n🌐 Web scraping… ({len(KAYNAK_WEB)} kaynak)")
     for kaynak in KAYNAK_WEB:
         for h in web_cek(kaynak):
-            baslik_norm = re.sub(r"\s+", " ", h.get("baslik","")).strip().lower()
-            if h["url"] not in mevcut_urls and baslik_norm not in mevcut_basliklar:
+            bn = re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+            if h["url"] not in mevcut_urls and bn not in mevcut_basliklar:
                 h["id"] = id_sayac; id_sayac += 1
                 yeni_haberler.append(h)
                 mevcut_urls.add(h["url"])
-                if baslik_norm: mevcut_basliklar.add(baslik_norm)
+                if bn: mevcut_basliklar.add(bn)
 
     print(f"\n✅ {len(yeni_haberler)} yeni haber eklendi.")
     data["haberler"] = yeni_haberler + mevcut_haberler
