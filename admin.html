@@ -57,7 +57,6 @@
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(45,158,107,.3);border-top-color:var(--bright);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .dil-rozet{font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 6px;border-radius:2px;background:rgba(45,158,107,.18);border:1px solid rgba(45,158,107,.3);color:var(--bright);letter-spacing:.06em;text-transform:uppercase;}
-/* ── ETİKET CHECKBOX SİSTEMİ ── */
 .tag-wrap{background:rgba(0,0,0,.18);border:1px solid rgba(45,158,107,.12);border-radius:4px;padding:14px 16px 10px;margin-top:4px;}
 .tag-section{margin-bottom:10px;}
 .tag-section:last-child{margin-bottom:0;}
@@ -493,88 +492,23 @@
 </div>
 
 <script>
-/* ─────────────────────────────────────────────────────────
-   ETİKET SİSTEMİ — harita kategorileriyle birebir eşleşen
-   ───────────────────────────────────────────────────────── */
 const ETIKET_GRUPLARI = [
-  {
-    lbl: "Harita Kategorileri",
-    items: [
-      "Ekolojik İhlal","İklim Olayları","Acele Kamulaştırma","Kültür Varlığı",
-      "Milli Park","Özel Çevre Koruma Alanı","Maden Ocağı","Taş-Mermer Ocağı",
-      "Termik Reaktör","HES","GES","RES","Nükleer Enerji","Jeotermal",
-      "Orman Alanı","Sulak Alan","Kıyı İhlalleri"
-    ]
-  },
-  {
-    lbl: "Ek Konular",
-    items: [
-      "Yaban Hayatı","Biyoçeşitlilik","Tarım & Köy","Su Hakkı",
-      "Atık & Kirlilik","Kaçak Yapılaşma","ÇED Kararları",
-      "Hava Kirliliği","Deniz Kirliliği","Toprak Kirliliği"
-    ]
-  },
-  {
-    lbl: "Eylem & İçerik",
-    items: [
-      "Direniş & Eylem","Hukuk & Dava","Nöbet & Gözaltı",
-      "STK & Kampanya","Resmi Açıklama","Sosyal Medya",
-      "Bilimsel Araştırma","Politika Analizi"
-    ]
-  }
+  {lbl:"Harita Kategorileri",items:["Ekolojik İhlal","İklim Olayları","Acele Kamulaştırma","Kültür Varlığı","Milli Park","Özel Çevre Koruma Alanı","Maden Ocağı","Taş-Mermer Ocağı","Termik Reaktör","HES","GES","RES","Nükleer Enerji","Jeotermal","Orman Alanı","Sulak Alan","Kıyı İhlalleri"]},
+  {lbl:"Ek Konular",items:["Yaban Hayatı","Biyoçeşitlilik","Tarım & Köy","Su Hakkı","Atık & Kirlilik","Kaçak Yapılaşma","ÇED Kararları","Hava Kirliliği","Deniz Kirliliği","Toprak Kirliliği"]},
+  {lbl:"Eylem & İçerik",items:["Direniş & Eylem","Hukuk & Dava","Nöbet & Gözaltı","STK & Kampanya","Resmi Açıklama","Sosyal Medya","Bilimsel Araştırma","Politika Analizi"]}
 ];
+function tagWrapRender(containerId,prefix,secili){const el=document.getElementById(containerId);if(!el)return;const seciliArr=Array.isArray(secili)?secili:(secili?[secili]:[]);el.innerHTML=ETIKET_GRUPLARI.map(g=>`<div class="tag-section"><span class="tag-section-lbl">${g.lbl}</span><div class="tag-grid">${g.items.map(item=>`<label><input type="checkbox" data-tag="${prefix}" value="${item}" ${seciliArr.includes(item)?'checked':''}>${item}</label>`).join('')}</div></div>`).join('');}
+function getChecked(prefix){return[...document.querySelectorAll(`input[data-tag="${prefix}"]:checked`)].map(el=>el.value);}
+function resetChecked(prefix){document.querySelectorAll(`input[data-tag="${prefix}"]`).forEach(cb=>cb.checked=false);}
+function renderTagChips(etiketler){if(!etiketler)return'<span style="color:var(--muted)">—</span>';const arr=Array.isArray(etiketler)?etiketler:[etiketler];if(!arr.length)return'<span style="color:var(--muted)">—</span>';return'<div class="tag-chips">'+arr.slice(0,4).map(t=>`<span class="tag-chip">${t}</span>`).join('')+(arr.length>4?`<span class="tag-chip">+${arr.length-4}</span>`:'')+' </div>';}
 
-function tagWrapRender(containerId, prefix, secili) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  const seciliArr = Array.isArray(secili) ? secili : (secili ? [secili] : []);
-  el.innerHTML = ETIKET_GRUPLARI.map(g => `
-    <div class="tag-section">
-      <span class="tag-section-lbl">${g.lbl}</span>
-      <div class="tag-grid">
-        ${g.items.map(item => `
-          <label>
-            <input type="checkbox" data-tag="${prefix}" value="${item}"
-              ${seciliArr.includes(item) ? 'checked' : ''}>
-            ${item}
-          </label>`).join('')}
-      </div>
-    </div>`).join('');
-}
-
-function getChecked(prefix) {
-  return [...document.querySelectorAll(`input[data-tag="${prefix}"]:checked`)]
-    .map(el => el.value);
-}
-
-function resetChecked(prefix) {
-  document.querySelectorAll(`input[data-tag="${prefix}"]`)
-    .forEach(cb => cb.checked = false);
-}
-
-function renderTagChips(etiketler) {
-  if (!etiketler) return '<span style="color:var(--muted)">—</span>';
-  const arr = Array.isArray(etiketler) ? etiketler : [etiketler];
-  if (!arr.length) return '<span style="color:var(--muted)">—</span>';
-  return '<div class="tag-chips">' + arr.slice(0,4).map(t =>
-    `<span class="tag-chip">${t}</span>`).join('') +
-    (arr.length > 4 ? `<span class="tag-chip">+${arr.length-4}</span>` : '') + '</div>';
-}
-
-/* ── SITE PATCH ── */
-(function patchSITE() {
-  if (typeof SITE === "undefined") {
-    window.SITE = {
-      get: k => { try{return JSON.parse(localStorage.getItem("ekoloji_"+k)||"null");}catch{return null;} },
-      set: (k,v) => { try{localStorage.setItem("ekoloji_"+k,JSON.stringify(v));}catch{} },
-      getList: k => SITE.get(k)||[],
-    };
-  }
-  if (!SITE.getList)   SITE.getList   = k => SITE.get(k)||[];
-  if (!SITE.upsert)    SITE.upsert    = function(col,item){const l=this.getList(col),idx=l.findIndex(x=>x.id===item.id);if(idx>=0)l[idx]=item;else l.unshift(item);this.set(col,l);};
-  if (!SITE.delete)    SITE.delete    = function(col,id){this.set(col,this.getList(col).filter(x=>x.id!==id));};
-  if (!SITE.bulkImport)SITE.bulkImport= function(col,items){const l=this.getList(col),ids=new Set(l.map(x=>String(x.id)));const y=items.filter(x=>!ids.has(String(x.id)));this.set(col,[...y,...l]);return y.length;};
-  if (!SITE.nextId)    SITE.nextId    = function(col){const l=this.getList(col);return l.length?Math.max(...l.map(x=>parseInt(x.id)||0))+1:1;};
+(function patchSITE(){
+  if(typeof SITE==="undefined"){window.SITE={get:k=>{try{return JSON.parse(localStorage.getItem("ekoloji_"+k)||"null");}catch{return null;}},set:(k,v)=>{try{localStorage.setItem("ekoloji_"+k,JSON.stringify(v));}catch{}},getList:k=>SITE.get(k)||[]};}
+  if(!SITE.getList)SITE.getList=k=>SITE.get(k)||[];
+  if(!SITE.upsert)SITE.upsert=function(col,item){const l=this.getList(col),idx=l.findIndex(x=>x.id===item.id);if(idx>=0)l[idx]=item;else l.unshift(item);this.set(col,l);};
+  if(!SITE.delete)SITE.delete=function(col,id){this.set(col,this.getList(col).filter(x=>x.id!==id));};
+  if(!SITE.bulkImport)SITE.bulkImport=function(col,items){const l=this.getList(col),ids=new Set(l.map(x=>String(x.id)));const y=items.filter(x=>!ids.has(String(x.id)));this.set(col,[...y,...l]);return y.length;};
+  if(!SITE.nextId)SITE.nextId=function(col){const l=this.getList(col);return l.length?Math.max(...l.map(x=>parseInt(x.id)||0))+1:1;};
   SITE.SESSION_KEY="ekoloji_admin_session";
   SITE.isAdmin=function(){return sessionStorage.getItem(this.SESSION_KEY)==="1";};
   SITE.login=function(pass){const H="ZWtvbG9qaTIwMjU=";if(btoa(pass)===H){sessionStorage.setItem(this.SESSION_KEY,"1");return true;}return false;};
@@ -583,144 +517,54 @@ function renderTagChips(etiketler) {
 
 const SESSION_KEY="ekoloji_admin_session";
 function today(){return new Date().toISOString().slice(0,10);}
-function sessionAktifMi(){return sessionStorage.getItem(SESSION_KEY)==="1";}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2800);}
 function doLogin(){const p=document.getElementById("passInput").value,e=document.getElementById("loginErr");e.style.display="none";if(SITE.login(p))gosterAdminPanel();else e.style.display="block";}
 function doLogout(){SITE.logout();location.reload();}
 function gosterAdminPanel(){document.getElementById("loginScreen").style.display="none";document.getElementById("adminPanel").style.display="block";boot();}
-
-function initTabs(){
-  document.querySelectorAll(".tab").forEach(tab=>{
-    tab.addEventListener("click",()=>{
-      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-      document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
-      tab.classList.add("active");
-      document.getElementById("tab-"+tab.dataset.tab).classList.add("active");
-    });
-  });
-}
-
-function updateStats(){
-  const cols=["ihlaller","haberler","raporlar","makaleler","uluslararasi"];
-  const lbls=["İhlal","Haber","Rapor","Makale","Uluslararası"];
-  document.getElementById("statsRow").innerHTML=cols.map((c,i)=>
-    `<div class="stat-box"><div class="n">${SITE.getList(c).length}</div><div class="l">${lbls[i]}</div></div>`
-  ).join('');
-}
-
+function initTabs(){document.querySelectorAll(".tab").forEach(tab=>{tab.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));tab.classList.add("active");document.getElementById("tab-"+tab.dataset.tab).classList.add("active");});});}
+function updateStats(){const cols=["ihlaller","haberler","raporlar","makaleler","uluslararasi"],lbls=["İhlal","Haber","Rapor","Makale","Uluslararası"];document.getElementById("statsRow").innerHTML=cols.map((c,i)=>`<div class="stat-box"><div class="n">${SITE.getList(c).length}</div><div class="l">${lbls[i]}</div></div>`).join('');}
 const SIL_KEY={ihlaller:"ekoloji_ihlal_silinen",haberler:"ekoloji_haber_silinen",raporlar:"ekoloji_rapor_silinen",makaleler:"ekoloji_makale_silinen",uluslararasi:"ekoloji_ulus_silinen"};
 function silGetir(col){try{return new Set(JSON.parse(localStorage.getItem(SIL_KEY[col])||"[]").map(String));}catch{return new Set();}}
 function silEkle(col,id){const s=silGetir(col);s.add(String(id));localStorage.setItem(SIL_KEY[col],JSON.stringify([...s]));}
-
 const _veri={ihlaller:[],haberler:[],raporlar:[],makaleler:[],uluslararasi:[]};
+function kayitSil(col,id){if(!confirm("Bu kaydı silmek istiyor musunuz?"))return;_veri[col]=_veri[col].filter(x=>String(x.id)!==String(id));SITE.set(col,SITE.getList(col).filter(x=>String(x.id)!==String(id)));silEkle(col,id);tabloRender(col);updateStats();toast("✓ Silindi.");}
+function tabloRender(col){const sil=silGetir(col),vk=(_veri[col]&&_veri[col].length)?_veri[col]:SITE.getList(col);const data=(vk||[]).filter(x=>!sil.has(String(x.id)));if(col==="ihlaller")_ihlalRender(data);else if(col==="haberler")_haberRender(data);else if(col==="raporlar")_raporRender(data);else if(col==="makaleler")_makaleRender(data);else if(col==="uluslararasi")_ulusRender(data);}
+function _ihlalRender(d){document.getElementById("ihlalerTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:200px;font-size:13px;">${i.baslik}</td><td style="font-size:12px;">${i.konum||'—'}</td><td style="font-size:11px;">${i.kategori||'—'}</td><td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td>${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;"><button class="det-btn" onclick="editKayit('ihlaller','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('ihlaller','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
+function _haberRender(d){document.getElementById("haberlerTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:220px;font-size:13px;">${i.baslik}</td><td style="font-size:12px;">${i.kaynak||'—'}</td><td>${renderTagChips(i.etiketler||i.kategori)}</td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;">${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}<button class="det-btn" onclick="editKayit('haberler','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('haberler','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
+function _raporRender(d){document.getElementById("raporlarTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:220px;font-size:13px;">${i.baslik}</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${i.yil||'—'}</td><td style="font-size:11px;">${i.tur||'—'}</td><td>${renderTagChips(i.etiketler)}</td><td style="font-size:12px;">${i.yazar||'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;">${i.dosya?`<a class="det-btn" href="${i.dosya}" target="_blank">↗</a>`:''}<button class="det-btn" onclick="editKayit('raporlar','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('raporlar','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
+function _makaleRender(d){document.getElementById("makalelerTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:200px;font-size:13px;">${i.baslik}</td><td style="font-size:12px;">${i.yazar||'—'}</td><td style="font-size:11px;">${i.tur||'—'}</td><td>${renderTagChips(i.etiketler)}</td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;">${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}<button class="det-btn" onclick="editKayit('makaleler','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('makaleler','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
+function _ulusRender(d){document.getElementById("uluslararasiTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:200px;font-size:13px;">${i.baslik_tr||i.baslik}</td><td style="font-size:12px;">${i.kaynak||'—'}</td><td><span class="dil-rozet">${i.dil||'?'}</span></td><td>${renderTagChips(i.etiketler)}</td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;">${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}<button class="det-btn" onclick="editKayit('uluslararasi','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('uluslararasi','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
 
-function kayitSil(col,id){
-  if(!confirm("Bu kaydı silmek istiyor musunuz?"))return;
-  _veri[col]=_veri[col].filter(x=>String(x.id)!==String(id));
-  SITE.set(col,SITE.getList(col).filter(x=>String(x.id)!==String(id)));
-  silEkle(col,id);tabloRender(col);updateStats();toast("✓ Silindi.");
-}
-
-function tabloRender(col){
-  const sil=silGetir(col),vk=(_veri[col]&&_veri[col].length)?_veri[col]:SITE.getList(col);
-  const data=(vk||[]).filter(x=>!sil.has(String(x.id)));
-  if(col==="ihlaller")    _ihlalRender(data);
-  else if(col==="haberler")    _haberRender(data);
-  else if(col==="raporlar")    _raporRender(data);
-  else if(col==="makaleler")   _makaleRender(data);
-  else if(col==="uluslararasi")_ulusRender(data);
-}
-
-function _ihlalRender(d){
-  document.getElementById("ihlalerTbody").innerHTML=d.length?d.map(i=>`<tr>
-    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-    <td style="max-width:200px;font-size:13px;">${i.baslik}</td>
-    <td style="font-size:12px;">${i.konum||'—'}</td>
-    <td style="font-size:11px;">${i.kategori||'—'}</td>
-    <td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
-    <td>${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td>
-    <td style="display:flex;gap:4px;flex-wrap:wrap;">
-      <button class="det-btn" onclick="editKayit('ihlaller','${i.id}')">Düzenle</button>
-      <button class="del-btn" onclick="kayitSil('ihlaller','${i.id}')">Sil</button>
-    </td></tr>`).join(''):'<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
-}
-
-function _haberRender(d){
-  document.getElementById("haberlerTbody").innerHTML=d.length?d.map(i=>`<tr>
-    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-    <td style="max-width:220px;font-size:13px;">${i.baslik}</td>
-    <td style="font-size:12px;">${i.kaynak||'—'}</td>
-    <td>${renderTagChips(i.etiketler||i.kategori)}</td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
-    <td style="display:flex;gap:4px;flex-wrap:wrap;">
-      ${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}
-      <button class="det-btn" onclick="editKayit('haberler','${i.id}')">Düzenle</button>
-      <button class="del-btn" onclick="kayitSil('haberler','${i.id}')">Sil</button>
-    </td></tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
-}
-
-function _raporRender(d){
-  document.getElementById("raporlarTbody").innerHTML=d.length?d.map(i=>`<tr>
-    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-    <td style="max-width:220px;font-size:13px;">${i.baslik}</td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${i.yil||'—'}</td>
-    <td style="font-size:11px;">${i.tur||'—'}</td>
-    <td>${renderTagChips(i.etiketler)}</td>
-    <td style="font-size:12px;">${i.yazar||'—'}</td>
-    <td style="display:flex;gap:4px;flex-wrap:wrap;">
-      ${i.dosya?`<a class="det-btn" href="${i.dosya}" target="_blank">↗</a>`:''}
-      <button class="det-btn" onclick="editKayit('raporlar','${i.id}')">Düzenle</button>
-      <button class="del-btn" onclick="kayitSil('raporlar','${i.id}')">Sil</button>
-    </td></tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
-}
-
-function _makaleRender(d){
-  document.getElementById("makalelerTbody").innerHTML=d.length?d.map(i=>`<tr>
-    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-    <td style="max-width:200px;font-size:13px;">${i.baslik}</td>
-    <td style="font-size:12px;">${i.yazar||'—'}</td>
-    <td style="font-size:11px;">${i.tur||'—'}</td>
-    <td>${renderTagChips(i.etiketler)}</td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
-    <td style="display:flex;gap:4px;flex-wrap:wrap;">
-      ${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}
-      <button class="det-btn" onclick="editKayit('makaleler','${i.id}')">Düzenle</button>
-      <button class="del-btn" onclick="kayitSil('makaleler','${i.id}')">Sil</button>
-    </td></tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
-}
-
-function _ulusRender(d){
-  document.getElementById("uluslararasiTbody").innerHTML=d.length?d.map(i=>`<tr>
-    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
-    <td style="max-width:200px;font-size:13px;">${i.baslik_tr||i.baslik}</td>
-    <td style="font-size:12px;">${i.kaynak||'—'}</td>
-    <td><span class="dil-rozet">${i.dil||'?'}</span></td>
-    <td>${renderTagChips(i.etiketler)}</td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
-    <td style="display:flex;gap:4px;flex-wrap:wrap;">
-      ${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}
-      <button class="det-btn" onclick="editKayit('uluslararasi','${i.id}')">Düzenle</button>
-      <button class="del-btn" onclick="kayitSil('uluslararasi','${i.id}')">Sil</button>
-    </td></tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
-}
-
+/* ═══ FIX 3: tumVeriYukle — sunucudan 5 koleksiyon yükle ═══ */
 function tumVeriYukle(){
-  const sI=silGetir("ihlaller"),sH=silGetir("haberler");
+  const sI=silGetir("ihlaller"),sH=silGetir("haberler"),sR=silGetir("raporlar"),sM=silGetir("makaleler"),sU=silGetir("uluslararasi");
   const lI=SITE.getList("ihlaller").filter(x=>!sI.has(String(x.id)));
   const lH=SITE.getList("haberler").filter(x=>!sH.has(String(x.id)));
-  _veri.raporlar=SITE.getList("raporlar").filter(x=>!silGetir("raporlar").has(String(x.id)));
-  _veri.makaleler=SITE.getList("makaleler").filter(x=>!silGetir("makaleler").has(String(x.id)));
-  _veri.uluslararasi=SITE.getList("uluslararasi").filter(x=>!silGetir("uluslararasi").has(String(x.id)));
+  const lR=SITE.getList("raporlar").filter(x=>!sR.has(String(x.id)));
+  const lM=SITE.getList("makaleler").filter(x=>!sM.has(String(x.id)));
+  const lU=SITE.getList("uluslararasi").filter(x=>!sU.has(String(x.id)));
+  /* data.json → ihlaller + sunucudan raporlar/makaleler/uluslararasi */
   fetch("data.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
-    const j=(d.ihlaller||[]).filter(x=>!sI.has(String(x.id))),ids=new Set(lI.map(x=>String(x.id)));
-    _veri.ihlaller=[...lI,...j.filter(x=>!ids.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
-  }).catch(()=>{_veri.ihlaller=lI;}).finally(()=>tabloRender("ihlaller"));
+    const ji=(d.ihlaller||[]).filter(x=>!sI.has(String(x.id))),iiDs=new Set(lI.map(x=>String(x.id)));
+    _veri.ihlaller=[...lI,...ji.filter(x=>!iiDs.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
+    const sr=(d.raporlar||[]).filter(x=>!sR.has(String(x.id)));
+    const srIds=new Set(lR.map(x=>String(x.id)));
+    _veri.raporlar=[...lR,...sr.filter(x=>!srIds.has(String(x.id)))].sort((a,b)=>(b.yil||0)>(a.yil||0)?-1:1);
+    const sm=(d.makaleler||[]).filter(x=>!sM.has(String(x.id)));
+    const smIds=new Set(lM.map(x=>String(x.id)));
+    _veri.makaleler=[...lM,...sm.filter(x=>!smIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
+    const su=(d.uluslararasi||[]).filter(x=>!sU.has(String(x.id)));
+    const suIds=new Set(lU.map(x=>String(x.id)));
+    _veri.uluslararasi=[...lU,...su.filter(x=>!suIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
+    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");
+  }).catch(()=>{
+    _veri.ihlaller=lI;_veri.raporlar=lR;_veri.makaleler=lM;_veri.uluslararasi=lU;
+    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");
+  });
   fetch("haberler.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
     const j=(d.haberler||(Array.isArray(d)?d:[])).filter(x=>!sH.has(String(x.id))),ids=new Set(lH.map(x=>String(x.id)));
     _veri.haberler=[...lH,...j.filter(x=>!ids.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
   }).catch(()=>{_veri.haberler=lH;}).finally(()=>tabloRender("haberler"));
-  tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");
 }
 
 /* ── KAYDET ── */
@@ -728,65 +572,44 @@ function addIhlal(){
   const b=document.getElementById("i-baslik").value.trim(),k=document.getElementById("i-konum").value.trim();
   if(!b){toast("⚠ Başlık zorunludur.");return;}if(!k){toast("⚠ Konum zorunludur.");return;}
   const lat=parseFloat(document.getElementById("i-lat").value),lng=parseFloat(document.getElementById("i-lng").value);
-  const y={id:SITE.nextId("ihlaller"),baslik:b,konum:k,kategori:document.getElementById("i-kat").value,
-    siddet:document.getElementById("i-siddet").value,lat:isNaN(lat)?null:lat,lng:isNaN(lng)?null:lng,
-    tarih:document.getElementById("i-tarih").value||today(),kaynak:document.getElementById("i-kaynak").value.trim(),
-    kaynak_url:document.getElementById("i-kaynak-url").value.trim(),aciklama:document.getElementById("i-aciklama").value.trim(),
-    foto_url:document.getElementById("i-foto-url")?.value.trim()||""};
+  const y={id:SITE.nextId("ihlaller"),baslik:b,konum:k,kategori:document.getElementById("i-kat").value,siddet:document.getElementById("i-siddet").value,lat:isNaN(lat)?null:lat,lng:isNaN(lng)?null:lng,tarih:document.getElementById("i-tarih").value||today(),kaynak:document.getElementById("i-kaynak").value.trim(),kaynak_url:document.getElementById("i-kaynak-url").value.trim(),aciklama:document.getElementById("i-aciklama").value.trim(),foto_url:document.getElementById("i-foto-url")?.value.trim()||""};
   SITE.upsert("ihlaller",y);
   ["i-baslik","i-konum","i-tarih","i-kaynak","i-kaynak-url","i-aciklama","i-lat","i-lng","i-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("i-tarih").value=today();
   const p=document.getElementById("i-foto-onizleme");if(p)p.style.display="none";
   _veri.ihlaller.unshift(y);tabloRender("ihlaller");updateStats();toast("✓ İhlal kaydedildi.");
 }
-
 function addHaber(){
   const b=document.getElementById("h-baslik").value.trim();if(!b){toast("⚠ Başlık zorunludur.");return;}
-  const y={id:SITE.nextId("haberler"),baslik:b,kaynak:document.getElementById("h-kaynak").value.trim(),
-    tarih:document.getElementById("h-tarih").value||today(),eylem:document.getElementById("h-eylem").value,
-    etiketler:getChecked("h"),ozet:document.getElementById("h-ozet").value.trim(),
-    url:document.getElementById("h-url").value.trim(),foto_url:document.getElementById("h-foto-url")?.value.trim()||""};
+  const y={id:SITE.nextId("haberler"),baslik:b,kaynak:document.getElementById("h-kaynak").value.trim(),tarih:document.getElementById("h-tarih").value||today(),eylem:document.getElementById("h-eylem").value,etiketler:getChecked("h"),ozet:document.getElementById("h-ozet").value.trim(),url:document.getElementById("h-url").value.trim(),foto_url:document.getElementById("h-foto-url")?.value.trim()||""};
   SITE.upsert("haberler",y);
   ["h-baslik","h-kaynak","h-ozet","h-url","h-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("h-tarih").value=today();document.getElementById("h-eylem").value="";
   resetChecked("h");const p=document.getElementById("h-foto-onizleme");if(p)p.style.display="none";
   _veri.haberler.unshift(y);tabloRender("haberler");updateStats();toast("✓ Haber kaydedildi.");
 }
-
 function addRapor(){
   const b=document.getElementById("r-baslik").value.trim();if(!b){toast("⚠ Başlık zorunludur.");return;}
-  const y={id:SITE.nextId("raporlar"),baslik:b,yil:parseInt(document.getElementById("r-yil").value)||new Date().getFullYear(),
-    yazar:document.getElementById("r-yazar").value.trim(),tur:document.getElementById("r-tur").value,
-    etiketler:getChecked("r"),ozet:document.getElementById("r-ozet").value.trim(),
-    dosya:document.getElementById("r-dosya").value.trim(),foto_url:document.getElementById("r-foto-url")?.value.trim()||""};
+  const y={id:SITE.nextId("raporlar"),baslik:b,yil:parseInt(document.getElementById("r-yil").value)||new Date().getFullYear(),yazar:document.getElementById("r-yazar").value.trim(),tur:document.getElementById("r-tur").value,etiketler:getChecked("r"),ozet:document.getElementById("r-ozet").value.trim(),dosya:document.getElementById("r-dosya").value.trim(),foto_url:document.getElementById("r-foto-url")?.value.trim()||""};
   SITE.upsert("raporlar",y);
   ["r-baslik","r-yil","r-yazar","r-ozet","r-dosya","r-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   resetChecked("r");const p=document.getElementById("r-foto-onizleme");if(p)p.style.display="none";
   const d=document.getElementById("r-pdf-durum");if(d)d.textContent="";
   _veri.raporlar.unshift(y);tabloRender("raporlar");updateStats();toast("✓ Rapor kaydedildi — sunucuya gönderiliyor…");veriYaz();
 }
-
 function addMakale(){
   const b=document.getElementById("m-baslik").value.trim();if(!b){toast("⚠ Başlık zorunludur.");return;}
-  const y={id:SITE.nextId("makaleler"),baslik:b,yazar:document.getElementById("m-yazar").value.trim(),
-    tarih:document.getElementById("m-tarih").value||today(),tur:document.getElementById("m-tur").value,
-    etiketler:getChecked("m"),ozet:document.getElementById("m-ozet").value.trim(),
-    url:document.getElementById("m-url").value.trim(),foto_url:document.getElementById("m-foto-url")?.value.trim()||""};
+  const y={id:SITE.nextId("makaleler"),baslik:b,yazar:document.getElementById("m-yazar").value.trim(),tarih:document.getElementById("m-tarih").value||today(),tur:document.getElementById("m-tur").value,etiketler:getChecked("m"),ozet:document.getElementById("m-ozet").value.trim(),url:document.getElementById("m-url").value.trim(),foto_url:document.getElementById("m-foto-url")?.value.trim()||""};
   SITE.upsert("makaleler",y);
   ["m-baslik","m-yazar","m-ozet","m-url","m-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("m-tarih").value=today();resetChecked("m");
   const p=document.getElementById("m-foto-onizleme");if(p)p.style.display="none";
   _veri.makaleler.unshift(y);tabloRender("makaleler");updateStats();toast("✓ Makale kaydedildi — sunucuya gönderiliyor…");veriYaz();
 }
-
 function addUluslararasi(){
   const b=document.getElementById("u-baslik").value.trim(),btr=document.getElementById("u-baslik-tr").value.trim();
   if(!b&&!btr){toast("⚠ En az bir başlık zorunludur.");return;}
-  const y={id:SITE.nextId("uluslararasi"),baslik:b||btr,baslik_tr:btr||b,
-    kaynak:document.getElementById("u-kaynak").value.trim(),dil:document.getElementById("u-dil").value,
-    tarih:document.getElementById("u-tarih").value||today(),tur:document.getElementById("u-tur").value,
-    etiketler:getChecked("u"),ozet:document.getElementById("u-ozet").value.trim(),
-    url:document.getElementById("u-url").value.trim(),foto_url:document.getElementById("u-foto-url")?.value.trim()||""};
+  const y={id:SITE.nextId("uluslararasi"),baslik:b||btr,baslik_tr:btr||b,kaynak:document.getElementById("u-kaynak").value.trim(),dil:document.getElementById("u-dil").value,tarih:document.getElementById("u-tarih").value||today(),tur:document.getElementById("u-tur").value,etiketler:getChecked("u"),ozet:document.getElementById("u-ozet").value.trim(),url:document.getElementById("u-url").value.trim(),foto_url:document.getElementById("u-foto-url")?.value.trim()||""};
   SITE.upsert("uluslararasi",y);
   ["u-baslik","u-baslik-tr","u-kaynak","u-ozet","u-url","u-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("u-tarih").value=today();resetChecked("u");
@@ -799,446 +622,116 @@ function editKayit(col,id){
   const src=(_veri[col]&&_veri[col].length)?_veri[col]:SITE.getList(col);
   const item=src.find(x=>String(x.id)===String(id));
   if(!item){toast("⚠ Kayıt bulunamadı.");return;}
-
-  // Temel metin alanları
-  const metin=[
-    col==="ihlaller"?[
-      {l:"Başlık *",id:"baslik"},{l:"Konum *",id:"konum"},
-      {l:"Tarih",id:"tarih",type:"date"},{l:"Enlem",id:"lat",type:"number",step:"0.00001"},
-      {l:"Boylam",id:"lng",type:"number",step:"0.00001"},
-      {l:"Kaynak",id:"kaynak"},{l:"Kaynak URL",id:"kaynak_url",type:"url"},
-      {l:"Açıklama",id:"aciklama",ta:true},{l:"Fotoğraf URL",id:"foto_url",type:"url"},
-    ]:col==="haberler"?[
-      {l:"Başlık *",id:"baslik"},{l:"Kaynak",id:"kaynak"},
-      {l:"Tarih",id:"tarih",type:"date"},{l:"Özet",id:"ozet",ta:true},
-      {l:"URL",id:"url",type:"url"},{l:"Fotoğraf URL",id:"foto_url",type:"url"},
-    ]:col==="raporlar"?[
-      {l:"Başlık *",id:"baslik"},{l:"Yıl",id:"yil",type:"number"},
-      {l:"Yazar",id:"yazar"},{l:"Özet",id:"ozet",ta:true},
-      {l:"Dosya URL",id:"dosya",type:"url"},{l:"Fotoğraf URL",id:"foto_url",type:"url"},
-    ]:col==="makaleler"?[
-      {l:"Başlık *",id:"baslik"},{l:"Yazar",id:"yazar"},
-      {l:"Tarih",id:"tarih",type:"date"},{l:"Özet/İçerik",id:"ozet",ta:true},
-      {l:"URL",id:"url",type:"url"},{l:"Fotoğraf URL",id:"foto_url",type:"url"},
-    ]:[
-      {l:"Orijinal Başlık *",id:"baslik"},{l:"Türkçe Başlık",id:"baslik_tr"},
-      {l:"Kaynak",id:"kaynak"},{l:"Tarih",id:"tarih",type:"date"},
-      {l:"Türkçe Not",id:"ozet",ta:true},{l:"URL",id:"url",type:"url"},
-      {l:"Fotoğraf URL",id:"foto_url",type:"url"},
-    ]
-  ][0];
-
-  // Select alanları (koleksiyona göre)
+  const metin=[col==="ihlaller"?[{l:"Başlık *",id:"baslik"},{l:"Konum *",id:"konum"},{l:"Tarih",id:"tarih",type:"date"},{l:"Enlem",id:"lat",type:"number",step:"0.00001"},{l:"Boylam",id:"lng",type:"number",step:"0.00001"},{l:"Kaynak",id:"kaynak"},{l:"Kaynak URL",id:"kaynak_url",type:"url"},{l:"Açıklama",id:"aciklama",ta:true},{l:"Fotoğraf URL",id:"foto_url",type:"url"}]:col==="haberler"?[{l:"Başlık *",id:"baslik"},{l:"Kaynak",id:"kaynak"},{l:"Tarih",id:"tarih",type:"date"},{l:"Özet",id:"ozet",ta:true},{l:"URL",id:"url",type:"url"},{l:"Fotoğraf URL",id:"foto_url",type:"url"}]:col==="raporlar"?[{l:"Başlık *",id:"baslik"},{l:"Yıl",id:"yil",type:"number"},{l:"Yazar",id:"yazar"},{l:"Özet",id:"ozet",ta:true},{l:"Dosya URL",id:"dosya",type:"url"},{l:"Fotoğraf URL",id:"foto_url",type:"url"}]:col==="makaleler"?[{l:"Başlık *",id:"baslik"},{l:"Yazar",id:"yazar"},{l:"Tarih",id:"tarih",type:"date"},{l:"Özet/İçerik",id:"ozet",ta:true},{l:"URL",id:"url",type:"url"},{l:"Fotoğraf URL",id:"foto_url",type:"url"}]:[{l:"Orijinal Başlık *",id:"baslik"},{l:"Türkçe Başlık",id:"baslik_tr"},{l:"Kaynak",id:"kaynak"},{l:"Tarih",id:"tarih",type:"date"},{l:"Türkçe Not",id:"ozet",ta:true},{l:"URL",id:"url",type:"url"},{l:"Fotoğraf URL",id:"foto_url",type:"url"}]][0];
   let selectHTML="";
-  if(col==="ihlaller"){
-    const katOpts=["Ekolojik İhlal","İklim Olayları","Acele Kamulaştırma","Kıyı İhlalleri","Maden Ocağı","Taş-Mermer Ocağı","Termik Reaktör","HES","GES","RES","Nükleer Enerji","Jeotermal","Milli Park","Özel Çevre Koruma Alanı","Orman Alanı","Sulak Alan","Kültür Varlığı","Nesli Tehlike Altında Türler","Yaban Hayatı","Bitki Örtüsü","Su Ekosistemleri","Çiftçi & Köylü Sorunları","Tarım Arazisi İhlali","Su Hakkı","Yerli Haklar","Balıkçı Toplulukları","Sanayi Bölgesi","Atık & Depolama","Kaçak Yapılaşma","Diğer"];
-    selectHTML+=`<div class="form-group"><label class="form-label">Kategori</label><select class="form-control" id="edit_kategori">${katOpts.map(o=>`<option ${o===item.kategori?'selected':''}>${o}</option>`).join('')}</select></div>`;
-    selectHTML+=`<div class="form-group"><label class="form-label">Şiddet</label><select class="form-control" id="edit_siddet"><option ${item.siddet==='kritik'?'selected':''}>kritik</option><option ${item.siddet==='orta'?'selected':''}>orta</option><option ${item.siddet==='takipte'?'selected':''}>takipte</option></select></div>`;
-  }
-  if(col==="haberler"){
-    const eylemOpts=["","Direniş & Eylem","Hukuk & Dava","Nöbet & Gözaltı","STK & Kampanya","Resmi Açıklama","Sosyal Medya","Bilimsel Araştırma","Politika Analizi","Genel Haber"];
-    selectHTML+=`<div class="form-group"><label class="form-label">Eylem Türü</label><select class="form-control" id="edit_eylem">${eylemOpts.map(o=>`<option ${o===(item.eylem||'')?'selected':''}>${o}</option>`).join('')}</select></div>`;
-  }
-  if(col==="raporlar"){
-    const turOpts=["Yıllık Rapor","Alan Araştırması","Veri & İstatistik","Hukuki Analiz","İzleme Raporu","Genel"];
-    selectHTML+=`<div class="form-group"><label class="form-label">Tür</label><select class="form-control" id="edit_tur">${turOpts.map(o=>`<option ${o===item.tur?'selected':''}>${o}</option>`).join('')}</select></div>`;
-  }
-  if(col==="makaleler"){
-    const turOpts=["Resmi Açıklama","Basın Bülteni","Kurum Bildirisi","Köşe Yazısı","Bireysel Yazı","Açık Mektup","Analiz","Araştırma","Akademik Makale","Vaka Çalışması","Politika Belgesi","Röportaj","Çeviri / Derleme","Diğer"];
-    selectHTML+=`<div class="form-group"><label class="form-label">Tür</label><select class="form-control" id="edit_tur">${turOpts.map(o=>`<option ${o===item.tur?'selected':''}>${o}</option>`).join('')}</select></div>`;
-  }
-  if(col==="uluslararasi"){
-    const dilOpts=["EN","DE","FR","ES","AR","EL","RU","Diğer"];
-    const turOpts=["Haber","Rapor","Araştırma","Analiz","Aktivizm","Politika","Diğer"];
-    selectHTML+=`<div class="form-group"><label class="form-label">Dil</label><select class="form-control" id="edit_dil">${dilOpts.map(o=>`<option ${o===item.dil?'selected':''}>${o}</option>`).join('')}</select></div>`;
-    selectHTML+=`<div class="form-group"><label class="form-label">Tür</label><select class="form-control" id="edit_tur">${turOpts.map(o=>`<option ${o===item.tur?'selected':''}>${o}</option>`).join('')}</select></div>`;
-  }
-
-  // Etiket checkbox (tüm içerik türleri için)
+  if(col==="ihlaller"){const katOpts=["Ekolojik İhlal","İklim Olayları","Acele Kamulaştırma","Kıyı İhlalleri","Maden Ocağı","Taş-Mermer Ocağı","Termik Reaktör","HES","GES","RES","Nükleer Enerji","Jeotermal","Milli Park","Özel Çevre Koruma Alanı","Orman Alanı","Sulak Alan","Kültür Varlığı","Nesli Tehlike Altında Türler","Yaban Hayatı","Bitki Örtüsü","Su Ekosistemleri","Çiftçi & Köylü Sorunları","Tarım Arazisi İhlali","Su Hakkı","Yerli Haklar","Balıkçı Toplulukları","Sanayi Bölgesi","Atık & Depolama","Kaçak Yapılaşma","Diğer"];selectHTML+=`<div class="form-group"><label class="form-label">Kategori</label><select class="form-control" id="edit_kategori">${katOpts.map(o=>`<option ${o===item.kategori?'selected':''}>${o}</option>`).join('')}</select></div>`;selectHTML+=`<div class="form-group"><label class="form-label">Şiddet</label><select class="form-control" id="edit_siddet"><option ${item.siddet==='kritik'?'selected':''}>kritik</option><option ${item.siddet==='orta'?'selected':''}>orta</option><option ${item.siddet==='takipte'?'selected':''}>takipte</option></select></div>`;}
+  if(col==="haberler"){const eylemOpts=["","Direniş & Eylem","Hukuk & Dava","Nöbet & Gözaltı","STK & Kampanya","Resmi Açıklama","Sosyal Medya","Bilimsel Araştırma","Politika Analizi","Genel Haber"];selectHTML+=`<div class="form-group"><label class="form-label">Eylem Türü</label><select class="form-control" id="edit_eylem">${eylemOpts.map(o=>`<option ${o===(item.eylem||'')?'selected':''}>${o}</option>`).join('')}</select></div>`;}
+  if(col==="raporlar"){const turOpts=["Yıllık Rapor","Alan Araştırması","Veri & İstatistik","Hukuki Analiz","İzleme Raporu","Genel"];selectHTML+=`<div class="form-group"><label class="form-label">Tür</label><select class="form-control" id="edit_tur">${turOpts.map(o=>`<option ${o===item.tur?'selected':''}>${o}</option>`).join('')}</select></div>`;}
+  if(col==="makaleler"){const turOpts=["Resmi Açıklama","Basın Bülteni","Kurum Bildirisi","Köşe Yazısı","Bireysel Yazı","Açık Mektup","Analiz","Araştırma","Akademik Makale","Vaka Çalışması","Politika Belgesi","Röportaj","Çeviri / Derleme","Diğer"];selectHTML+=`<div class="form-group"><label class="form-label">Tür</label><select class="form-control" id="edit_tur">${turOpts.map(o=>`<option ${o===item.tur?'selected':''}>${o}</option>`).join('')}</select></div>`;}
+  if(col==="uluslararasi"){const dilOpts=["EN","DE","FR","ES","AR","EL","RU","Diğer"],turOpts=["Haber","Rapor","Araştırma","Analiz","Aktivizm","Politika","Diğer"];selectHTML+=`<div class="form-group"><label class="form-label">Dil</label><select class="form-control" id="edit_dil">${dilOpts.map(o=>`<option ${o===item.dil?'selected':''}>${o}</option>`).join('')}</select></div>`;selectHTML+=`<div class="form-group"><label class="form-label">Tür</label><select class="form-control" id="edit_tur">${turOpts.map(o=>`<option ${o===item.tur?'selected':''}>${o}</option>`).join('')}</select></div>`;}
   const hasEtiket=["haberler","raporlar","makaleler","uluslararasi"].includes(col);
-  const etiketHTML=hasEtiket?`
-    <div class="form-group">
-      <label class="form-label">Etiketler</label>
-      <div class="tag-wrap" id="edit_tag_wrap"></div>
-    </div>`:'';
-
-  const form=metin.map(a=>{
-    const val=String(item[a.id]||"").replace(/"/g,'&quot;');
-    if(a.ta)return`<div class="form-group"><label class="form-label">${a.l}</label><textarea class="form-control" id="edit_${a.id}" rows="4">${item[a.id]||''}</textarea></div>`;
-    return`<div class="form-group"><label class="form-label">${a.l}</label><input class="form-control" id="edit_${a.id}" type="${a.type||'text'}" ${a.step?`step="${a.step}"`:''}  value="${val}"></div>`;
-  }).join('');
-
-  const m=document.createElement("div");
-  m.id="editModal";
-  m.style.cssText="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;";
-  m.innerHTML=`<div style="background:var(--deep);border:1px solid rgba(45,158,107,.3);border-radius:8px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;padding:32px;position:relative;">
-    <button onclick="document.getElementById('editModal').remove()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">✕</button>
-    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--cream);margin:0 0 24px;">Kaydı Düzenle <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">#${item.id}</span></h3>
-    ${selectHTML}${form}${etiketHTML}
-    <div style="display:flex;gap:10px;margin-top:24px;">
-      <button onclick="editKaydet('${col}','${item.id}')" style="flex:1;padding:12px;background:var(--accent);color:var(--dark);border:none;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;">✓ Kaydet</button>
-      <button onclick="document.getElementById('editModal').remove()" style="padding:12px 20px;background:transparent;color:var(--muted);border:1px solid rgba(45,158,107,.2);border-radius:4px;cursor:pointer;font-size:11px;">İptal</button>
-    </div></div>`;
-  m.addEventListener("click",e=>{if(e.target===m)m.remove();});
-  document.body.appendChild(m);
-
-  // Etiket checkbox'larını başlat
-  if(hasEtiket){
-    tagWrapRender("edit_tag_wrap","edit_tag",item.etiketler||[]);
-  }
+  const etiketHTML=hasEtiket?`<div class="form-group"><label class="form-label">Etiketler</label><div class="tag-wrap" id="edit_tag_wrap"></div></div>`:'';
+  const form=metin.map(a=>{const val=String(item[a.id]||"").replace(/"/g,'&quot;');if(a.ta)return`<div class="form-group"><label class="form-label">${a.l}</label><textarea class="form-control" id="edit_${a.id}" rows="4">${item[a.id]||''}</textarea></div>`;return`<div class="form-group"><label class="form-label">${a.l}</label><input class="form-control" id="edit_${a.id}" type="${a.type||'text'}" ${a.step?`step="${a.step}"`:''}  value="${val}"></div>`;}).join('');
+  const m=document.createElement("div");m.id="editModal";m.style.cssText="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;";
+  m.innerHTML=`<div style="background:var(--deep);border:1px solid rgba(45,158,107,.3);border-radius:8px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;padding:32px;position:relative;"><button onclick="document.getElementById('editModal').remove()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">✕</button><h3 style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--cream);margin:0 0 24px;">Kaydı Düzenle <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">#${item.id}</span></h3>${selectHTML}${form}${etiketHTML}<div style="display:flex;gap:10px;margin-top:24px;"><button onclick="editKaydet('${col}','${item.id}')" style="flex:1;padding:12px;background:var(--accent);color:var(--dark);border:none;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;">✓ Kaydet</button><button onclick="document.getElementById('editModal').remove()" style="padding:12px 20px;background:transparent;color:var(--muted);border:1px solid rgba(45,158,107,.2);border-radius:4px;cursor:pointer;font-size:11px;">İptal</button></div></div>`;
+  m.addEventListener("click",e=>{if(e.target===m)m.remove();});document.body.appendChild(m);
+  if(hasEtiket)tagWrapRender("edit_tag_wrap","edit_tag",item.etiketler||[]);
 }
-
 function editKaydet(col,id){
   const modal=document.getElementById("editModal");if(!modal)return;
-  const al=eid=>{const el=modal.querySelector(`#edit_${eid}`);return el?el.value.trim():"";};
   const src=(_veri[col]&&_veri[col].length)?_veri[col]:SITE.getList(col);
-  const mevcut=src.find(x=>String(x.id)===String(id))||{};
-  const g={...mevcut};
-
-  // Metin alanları
-  ["baslik","baslik_tr","konum","yazar","kaynak","kaynak_url","aciklama","ozet","url","dosya","foto_url"].forEach(k=>{
-    const el=modal.querySelector(`#edit_${k}`);if(el)g[k]=el.value.trim();
-  });
-  // Sayısal
+  const mevcut=src.find(x=>String(x.id)===String(id))||{};const g={...mevcut};
+  ["baslik","baslik_tr","konum","yazar","kaynak","kaynak_url","aciklama","ozet","url","dosya","foto_url"].forEach(k=>{const el=modal.querySelector(`#edit_${k}`);if(el)g[k]=el.value.trim();});
   ["yil"].forEach(k=>{const el=modal.querySelector(`#edit_${k}`);if(el&&el.value)g[k]=parseInt(el.value)||g[k];});
   ["lat","lng"].forEach(k=>{const el=modal.querySelector(`#edit_${k}`);if(el)g[k]=el.value?parseFloat(el.value)||null:null;});
-  // Tarih
   const td=modal.querySelector("#edit_tarih");if(td)g.tarih=td.value;
-  // Selectler
   ["kategori","siddet","tur","eylem","dil"].forEach(k=>{const el=modal.querySelector(`#edit_${k}`);if(el)g[k]=el.value;});
-  // Etiketler
   const etiketCbs=modal.querySelectorAll('input[data-tag="edit_tag"]:checked');
-  if(etiketCbs.length>0||["haberler","raporlar","makaleler","uluslararasi"].includes(col)){
-    g.etiketler=[...etiketCbs].map(cb=>cb.value);
-  }
-
+  if(etiketCbs.length>0||["haberler","raporlar","makaleler","uluslararasi"].includes(col))g.etiketler=[...etiketCbs].map(cb=>cb.value);
   if(!g.baslik){toast("⚠ Başlık zorunludur.");return;}
-  SITE.upsert(col,g);
-  const idx=_veri[col].findIndex(x=>String(x.id)===String(id));
-  if(idx>=0)_veri[col][idx]=g;
+  SITE.upsert(col,g);const idx=_veri[col].findIndex(x=>String(x.id)===String(id));if(idx>=0)_veri[col][idx]=g;
   modal.remove();tabloRender(col);toast("✓ Kayıt güncellendi.");
   if(["raporlar","makaleler","uluslararasi"].includes(col))veriYaz();
 }
 
 /* ── FOTOĞRAF & PDF ── */
-function onFotoSec(inputId,urlId,prevId){
-  const f=document.getElementById(inputId)?.files?.[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=e=>{const p=document.getElementById(prevId);if(p){p.style.display="block";p.querySelector("img").src=e.target.result;}};
-  r.readAsDataURL(f);
-  dosyaYukle(f,"img",url=>{const el=document.getElementById(urlId);if(el)el.value=url;});
-}
-function pdfYukle(input){
-  const f=input?.files?.[0];if(!f)return;
-  const d=document.getElementById("r-pdf-durum");if(d)d.textContent="⏳ Yükleniyor…";
-  dosyaYukle(f,"pdf",url=>{const el=document.getElementById("r-dosya");if(el)el.value=url;if(d)d.textContent="✓ "+f.name;},err=>{if(d)d.textContent="⚠ "+err;});
-}
-function dosyaYukle(file,klasor,onOk,onErr){
-  const fd=new FormData();fd.append("dosya",file);fd.append("klasor",klasor);fd.append("secret","admin");
-  fetch("upload.php",{method:"POST",body:fd}).then(r=>r.ok?r.json():Promise.reject(r.status))
-    .then(d=>{if(d.ok&&d.url)onOk(d.url);else(onErr||toast)("⚠ "+(d.hata||"bilinmeyen hata"));})
-    .catch(()=>{(onErr||toast)("⚠ upload.php yok. URL'yi manuel girin.");});
-}
+function onFotoSec(inputId,urlId,prevId){const f=document.getElementById(inputId)?.files?.[0];if(!f)return;const r=new FileReader();r.onload=e=>{const p=document.getElementById(prevId);if(p){p.style.display="block";p.querySelector("img").src=e.target.result;}};r.readAsDataURL(f);dosyaYukle(f,"img",url=>{const el=document.getElementById(urlId);if(el)el.value=url;});}
+function pdfYukle(input){const f=input?.files?.[0];if(!f)return;const d=document.getElementById("r-pdf-durum");if(d)d.textContent="⏳ Yükleniyor…";dosyaYukle(f,"pdf",url=>{const el=document.getElementById("r-dosya");if(el)el.value=url;if(d)d.textContent="✓ "+f.name;},err=>{if(d)d.textContent="⚠ "+err;});}
+function dosyaYukle(file,klasor,onOk,onErr){const fd=new FormData();fd.append("dosya",file);fd.append("klasor",klasor);fd.append("secret","admin");fetch("upload.php",{method:"POST",body:fd}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(d.ok&&d.url)onOk(d.url);else(onErr||toast)("⚠ "+(d.hata||"bilinmeyen hata"));}).catch(()=>{(onErr||toast)("⚠ upload.php yok. URL'yi manuel girin.");});}
 
 /* ── GITHUB ── */
 const GH_REPO_KEY="ekoloji_gh_repo",GH_TOKEN_KEY="ekoloji_gh_token",GH_WORKFLOW_KEY="ekoloji_gh_workflow";
 const GH_DEFAULTS={repo:"ipapila/ekoloji-izleme.com",workflow:"update_data.yml"};
 function ghAyarKaydet(){
   const repo=document.getElementById("ghRepo").value.trim(),ti=document.getElementById("ghToken").value.trim(),wf=document.getElementById("ghWorkflow").value.trim();
-  const mevcut=localStorage.getItem(GH_TOKEN_KEY)||"";
-  if(!repo){document.getElementById("ghAyarDurum").textContent="Repo zorunlu.";return;}
-  const gercek=ti&&!ti.startsWith("\u2022");
-  if(!gercek&&!mevcut){document.getElementById("ghAyarDurum").textContent="Token zorunlu.";return;}
-  localStorage.setItem(GH_REPO_KEY,repo);if(gercek)localStorage.setItem(GH_TOKEN_KEY,ti);
-  localStorage.setItem(GH_WORKFLOW_KEY,wf||GH_DEFAULTS.workflow);
-  const _fu=document.getElementById("flexUrl")?.value.trim();
-  const _fs=document.getElementById("flexSecret")?.value.trim();
-  if(_fu)localStorage.setItem("ekoloji_flex_url",_fu);
-  if(_fs&&!_fs.startsWith("\u2022"))localStorage.setItem("ekoloji_flex_secret",_fs);
-  document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Kaydedildi</span>';
-  setSyncDurum("synced");
+  const mevcut=localStorage.getItem(GH_TOKEN_KEY)||"";if(!repo){document.getElementById("ghAyarDurum").textContent="Repo zorunlu.";return;}
+  const gercek=ti&&!ti.startsWith("\u2022");if(!gercek&&!mevcut){document.getElementById("ghAyarDurum").textContent="Token zorunlu.";return;}
+  localStorage.setItem(GH_REPO_KEY,repo);if(gercek)localStorage.setItem(GH_TOKEN_KEY,ti);localStorage.setItem(GH_WORKFLOW_KEY,wf||GH_DEFAULTS.workflow);
+  const _fu=document.getElementById("flexUrl")?.value.trim(),_fs=document.getElementById("flexSecret")?.value.trim();
+  if(_fu)localStorage.setItem("ekoloji_flex_url",_fu);if(_fs&&!_fs.startsWith("\u2022"))localStorage.setItem("ekoloji_flex_secret",_fs);
+  document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Kaydedildi</span>';setSyncDurum("synced");
 }
-function ghAyarAl(){
-  const token=localStorage.getItem(GH_TOKEN_KEY)||"";
-  if(token&&[...token].some(c=>c.charCodeAt(0)>127)){localStorage.removeItem(GH_TOKEN_KEY);return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token:""};}
-  return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token};
-}
+function ghAyarAl(){const token=localStorage.getItem(GH_TOKEN_KEY)||"";if(token&&[...token].some(c=>c.charCodeAt(0)>127)){localStorage.removeItem(GH_TOKEN_KEY);return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token:""};} return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token};}
 function aciTaramaModal(){
-  _bulunanlar=[];document.getElementById("bulunanlar").innerHTML='';
-  document.getElementById("taramaLog").innerHTML='Hazır.';
-  document.getElementById("importBtn").disabled=true;document.getElementById("seciliSayi").textContent='0';
-  document.getElementById("taramaModal").classList.add("open");
-  const{repo,token}=ghAyarAl();
-  document.getElementById("ghRepo").value=repo;
+  _bulunanlar=[];document.getElementById("bulunanlar").innerHTML='';document.getElementById("taramaLog").innerHTML='Hazır.';document.getElementById("importBtn").disabled=true;document.getElementById("seciliSayi").textContent='0';document.getElementById("taramaModal").classList.add("open");
+  const{repo,token}=ghAyarAl();document.getElementById("ghRepo").value=repo;
   if(token){document.getElementById("ghToken").value="••••••••••••••••";document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';}
   document.getElementById("ghWorkflow").value=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
-  const _furl=localStorage.getItem("ekoloji_flex_url")||"";
-  if(document.getElementById("flexUrl"))document.getElementById("flexUrl").value=_furl;
+  const _furl=localStorage.getItem("ekoloji_flex_url")||"";if(document.getElementById("flexUrl"))document.getElementById("flexUrl").value=_furl;
   if(document.getElementById("flexSecret")&&localStorage.getItem("ekoloji_flex_secret"))document.getElementById("flexSecret").value="••••••••";
 }
 function kapat(){document.getElementById("taramaModal").classList.remove("open");}
-
 async function yapiTarama(mod){
   const logEl=document.getElementById("taramaLog");logEl.innerHTML='';
   function log(msg){logEl.innerHTML+=msg+'\n';logEl.scrollTop=logEl.scrollHeight;}
-  if(mod==='reload'){
-    log('<span class="spinner"></span>data.json yükleniyor…');
-    try{
-      const r=await fetch('./data.json?v='+Date.now());if(!r.ok)throw new Error('HTTP '+r.status);
-      const data=await r.json();
-      const iiDs=new Set(SITE.getList("ihlaller").map(i=>String(i.id)));
-      const hiDs=new Set(SITE.getList("haberler").map(i=>String(i.id)));
-      _bulunanlar=[...(data.ihlaller||[]).filter(i=>!iiDs.has(String(i.id))).map(i=>({...i,tip:'ihlal'})),
-                   ...(data.haberler||[]).filter(i=>!hiDs.has(String(i.id))).map(i=>({...i,tip:'haber'}))];
-      if(!_bulunanlar.length){log('<span class="ok">✓ Yeni kayıt yok.</span>');return;}
-      log(`<span class="ok">✓ ${_bulunanlar.length} yeni kayıt.</span>`);
-      renderBulunanlar();document.getElementById("importBtn").disabled=false;
-    }catch(e){log(`<span class="warn">✗ ${e.message}</span>`);}
-    return;
-  }
-  const ri=document.getElementById("ghRepo").value.trim(),ti=document.getElementById("ghToken").value.trim();
-  const{repo:sr,token:st}=ghAyarAl();
-  const repo=ri||sr,token=(ti&&!ti.startsWith("•"))?ti:st;
+  if(mod==='reload'){log('<span class="spinner"></span>data.json yükleniyor…');try{const r=await fetch('./data.json?v='+Date.now());if(!r.ok)throw new Error('HTTP '+r.status);const data=await r.json();const iiDs=new Set(SITE.getList("ihlaller").map(i=>String(i.id)));const hiDs=new Set(SITE.getList("haberler").map(i=>String(i.id)));_bulunanlar=[...(data.ihlaller||[]).filter(i=>!iiDs.has(String(i.id))).map(i=>({...i,tip:'ihlal'})),...(data.haberler||[]).filter(i=>!hiDs.has(String(i.id))).map(i=>({...i,tip:'haber'}))];if(!_bulunanlar.length){log('<span class="ok">✓ Yeni kayıt yok.</span>');return;}log(`<span class="ok">✓ ${_bulunanlar.length} yeni kayıt.</span>`);renderBulunanlar();document.getElementById("importBtn").disabled=false;}catch(e){log(`<span class="warn">✗ ${e.message}</span>`);}return;}
+  const ri=document.getElementById("ghRepo").value.trim(),ti=document.getElementById("ghToken").value.trim();const{repo:sr,token:st}=ghAyarAl();const repo=ri||sr,token=(ti&&!ti.startsWith("•"))?ti:st;
   if(!repo||!token){log('<span class="warn">✗ Repo ve token gerekli.</span>');return;}
-  localStorage.setItem(GH_REPO_KEY,repo);localStorage.setItem(GH_TOKEN_KEY,token);
-  const[owner,repoName]=repo.split("/");if(!owner||!repoName){log('<span class="warn">✗ Repo formatı hatalı.</span>');return;}
+  localStorage.setItem(GH_REPO_KEY,repo);localStorage.setItem(GH_TOKEN_KEY,token);const[owner,repoName]=repo.split("/");if(!owner||!repoName){log('<span class="warn">✗ Repo formatı hatalı.</span>');return;}
   log(`<span class="spinner"></span>GitHub Actions tetikleniyor: <strong>${owner}/${repoName}</strong>`);
-  try{
-    const rr=await fetch(`https://api.github.com/repos/${owner}/${repoName}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
-    if(!rr.ok)throw new Error(`HTTP ${rr.status}`);
-    const rd=await rr.json(),branch=rd.default_branch||"main";
-    log(`Repo bulundu. Branch: <strong>${branch}</strong> ✓`);
-    const wf=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
-    const dr=await fetch(`https://api.github.com/repos/${owner}/${repoName}/actions/workflows/${wf}/dispatches`,{
-      method:"POST",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},
-      body:JSON.stringify({ref:branch})});
-    if(dr.status===401)throw new Error("Token geçersiz.");
-    if(dr.status===403)throw new Error("Token'da 'workflow' yetkisi eksik.");
-    if(!dr.ok)throw new Error(`GitHub API: HTTP ${dr.status}`);
-    log('<span class="ok">✓ Workflow tetiklendi…</span>');
-    await new Promise(r=>setTimeout(r,4000));
-    const run=await sonRunBul(owner,repoName,token,log);
-    if(run)await runDurumIzle(owner,repoName,run.id,run.url,token,log);
-  }catch(e){log(`<span class="warn">✗ ${e.message}</span>`);}
+  try{const rr=await fetch(`https://api.github.com/repos/${owner}/${repoName}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});if(!rr.ok)throw new Error(`HTTP ${rr.status}`);const rd=await rr.json(),branch=rd.default_branch||"main";log(`Repo bulundu. Branch: <strong>${branch}</strong> ✓`);const wf=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;const dr=await fetch(`https://api.github.com/repos/${owner}/${repoName}/actions/workflows/${wf}/dispatches`,{method:"POST",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},body:JSON.stringify({ref:branch})});if(dr.status===401)throw new Error("Token geçersiz.");if(dr.status===403)throw new Error("Token'da 'workflow' yetkisi eksik.");if(!dr.ok)throw new Error(`GitHub API: HTTP ${dr.status}`);log('<span class="ok">✓ Workflow tetiklendi…</span>');await new Promise(r=>setTimeout(r,4000));const run=await sonRunBul(owner,repoName,token,log);if(run)await runDurumIzle(owner,repoName,run.id,run.url,token,log);}catch(e){log(`<span class="warn">✗ ${e.message}</span>`);}
 }
-
-async function sonRunBul(owner,repo,token,log){
-  const wf=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
-  try{
-    const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=3`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
-    const data=await r.json(),run=data.workflow_runs?.[0];
-    if(!run){log('<span class="warn">Run bulunamadı.</span>');return null;}
-    log(`Run #${run.run_number} → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);
-    return {id:run.id,url:run.html_url};
-  }catch(e){log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`);return null;}
-}
-
-async function runDurumIzle(owner,repo,runId,runUrl,token,log){
-  for(let i=0;i<50;i++){
-    await new Promise(r=>setTimeout(r,8000));
-    try{
-      const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
-      const run=await r.json();
-      if(run.status==="completed"){
-        if(run.conclusion==="success"){log('<span class="ok">✓ Tamamlandı!</span>');await otomatikYenile(log);}
-        else log(`<span class="warn">✗ Workflow ${run.conclusion}.</span>`);
-        return;
-      }
-      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*8}sn)`);
-    }catch(e){log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);}
-  }
-  const _rl=runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:"GitHub Actions sayfasını kontrol edin";
-  log(`<span class="warn">⚠ İzleme süresi doldu (~7dk) — ${_rl}</span>`);
-}
-
-async function otomatikYenile(log){
-  await new Promise(r=>setTimeout(r,3000));
-  log('<span class="spinner"></span>Yeni kayıtlar alınıyor…');
-  try{
-    const r=await fetch('./data.json?v='+Date.now());if(!r.ok)throw new Error('HTTP '+r.status);
-    const data=await r.json();
-    const iiDs=new Set(SITE.getList("ihlaller").map(i=>String(i.id)));
-    const hiDs=new Set(SITE.getList("haberler").map(i=>String(i.id)));
-    const yi=(data.ihlaller||[]).filter(i=>!iiDs.has(String(i.id)));
-    const yh=(data.haberler||[]).filter(i=>!hiDs.has(String(i.id)));
-    _bulunanlar=[...yi.map(i=>({...i,tip:'ihlal'})),...yh.map(i=>({...i,tip:'haber'}))];
-    if(!_bulunanlar.length){log('<span class="ok">✓ Yeni kayıt yok.</span>');return;}
-    log(`<span class="ok">✓ ${yi.length} ihlal + ${yh.length} haber.</span>`);
-    renderBulunanlar();document.getElementById("importBtn").disabled=false;
-  }catch(e){log('<span class="warn">⚠ '+e.message+'</span>');}
-}
-
+async function sonRunBul(owner,repo,token,log){const wf=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;try{const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=3`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});const data=await r.json(),run=data.workflow_runs?.[0];if(!run){log('<span class="warn">Run bulunamadı.</span>');return null;}log(`Run #${run.run_number} → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);return{id:run.id,url:run.html_url};}catch(e){log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`);return null;}}
+async function runDurumIzle(owner,repo,runId,runUrl,token,log){for(let i=0;i<50;i++){await new Promise(r=>setTimeout(r,8000));try{const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});const run=await r.json();if(run.status==="completed"){if(run.conclusion==="success"){log('<span class="ok">✓ Tamamlandı!</span>');await otomatikYenile(log);}else log(`<span class="warn">✗ Workflow ${run.conclusion}.</span>`);return;}log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*8}sn)`);}catch(e){log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);}}const _rl=runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:"GitHub Actions sayfasını kontrol edin";log(`<span class="warn">⚠ İzleme süresi doldu (~7dk) — ${_rl}</span>`);}
+async function otomatikYenile(log){await new Promise(r=>setTimeout(r,3000));log('<span class="spinner"></span>Yeni kayıtlar alınıyor…');try{const r=await fetch('./data.json?v='+Date.now());if(!r.ok)throw new Error('HTTP '+r.status);const data=await r.json();const iiDs=new Set(SITE.getList("ihlaller").map(i=>String(i.id)));const hiDs=new Set(SITE.getList("haberler").map(i=>String(i.id)));const yi=(data.ihlaller||[]).filter(i=>!iiDs.has(String(i.id)));const yh=(data.haberler||[]).filter(i=>!hiDs.has(String(i.id)));_bulunanlar=[...yi.map(i=>({...i,tip:'ihlal'})),...yh.map(i=>({...i,tip:'haber'}))];if(!_bulunanlar.length){log('<span class="ok">✓ Yeni kayıt yok.</span>');return;}log(`<span class="ok">✓ ${yi.length} ihlal + ${yh.length} haber.</span>`);renderBulunanlar();document.getElementById("importBtn").disabled=false;}catch(e){log('<span class="warn">⚠ '+e.message+'</span>');}}
 let _bulunanlar=[];
-function renderBulunanlar(){
-  document.getElementById("bulunanlar").innerHTML=_bulunanlar.map((item,idx)=>`
-    <div class="bulunan-item">
-      <input type="checkbox" id="b${idx}" checked onchange="sayiGuncelle()">
-      <div class="bulunan-icerik">
-        <div class="bulunan-baslik">${item.baslik}</div>
-        <div class="bulunan-meta">
-          <span>${item.tip==='ihlal'?'🔴 İhlal':'📰 Haber'}</span>
-          ${item.kategori?`<span>${item.kategori}</span>`:''}
-          ${item.konum?`<span>📍 ${item.konum}</span>`:''}
-          ${item.tarih?`<span>📅 ${item.tarih}</span>`:''}
-          ${item.kaynak?`<span>🔗 ${item.kaynak}</span>`:''}
-        </div>
-      </div>
-    </div>`).join('');
-  sayiGuncelle();
-}
+function renderBulunanlar(){document.getElementById("bulunanlar").innerHTML=_bulunanlar.map((item,idx)=>`<div class="bulunan-item"><input type="checkbox" id="b${idx}" checked onchange="sayiGuncelle()"><div class="bulunan-icerik"><div class="bulunan-baslik">${item.baslik}</div><div class="bulunan-meta"><span>${item.tip==='ihlal'?'🔴 İhlal':'📰 Haber'}</span>${item.kategori?`<span>${item.kategori}</span>`:''}${item.konum?`<span>📍 ${item.konum}</span>`:''}${item.tarih?`<span>📅 ${item.tarih}</span>`:''}${item.kaynak?`<span>🔗 ${item.kaynak}</span>`:''}</div></div></div>`).join('');sayiGuncelle();}
 function sayiGuncelle(){document.getElementById("seciliSayi").textContent=document.querySelectorAll('#bulunanlar input:checked').length;}
 function tumunuSec(){document.querySelectorAll('#bulunanlar input[type=checkbox]').forEach(cb=>cb.checked=true);sayiGuncelle();}
-function importSec(){
-  const ihlaller=[],haberler=[];
-  document.querySelectorAll('#bulunanlar input:checked').forEach(cb=>{
-    const idx=parseInt(cb.id.replace('b','')),item=_bulunanlar[idx];if(!item)return;
-    if(item.tip==='ihlal')ihlaller.push({id:SITE.nextId("ihlaller")+ihlaller.length,baslik:item.baslik,konum:item.konum||item.il||'',kategori:item.kategori||'Diğer',siddet:item.siddet||'takipte',tarih:item.tarih,kaynak:item.kaynak,kaynak_url:item.url,aciklama:item.ozet,lat:null,lng:null});
-    else haberler.push({id:SITE.nextId("haberler")+haberler.length,baslik:item.baslik,kaynak:item.kaynak,tarih:item.tarih,etiketler:[],ozet:item.ozet,url:item.url});
-  });
-  SITE.bulkImport("ihlaller",ihlaller);SITE.bulkImport("haberler",haberler);
-  tumVeriYukle();updateStats();kapat();toast(`✓ ${ihlaller.length} ihlal + ${haberler.length} haber aktarıldı.`);
-}
+function importSec(){const ihlaller=[],haberler=[];document.querySelectorAll('#bulunanlar input:checked').forEach(cb=>{const idx=parseInt(cb.id.replace('b','')),item=_bulunanlar[idx];if(!item)return;if(item.tip==='ihlal')ihlaller.push({id:SITE.nextId("ihlaller")+ihlaller.length,baslik:item.baslik,konum:item.konum||item.il||'',kategori:item.kategori||'Diğer',siddet:item.siddet||'takipte',tarih:item.tarih,kaynak:item.kaynak,kaynak_url:item.url,aciklama:item.ozet,lat:null,lng:null});else haberler.push({id:SITE.nextId("haberler")+haberler.length,baslik:item.baslik,kaynak:item.kaynak,tarih:item.tarih,etiketler:[],ozet:item.ozet,url:item.url});});SITE.bulkImport("ihlaller",ihlaller);SITE.bulkImport("haberler",haberler);tumVeriYukle();updateStats();kapat();toast(`✓ ${ihlaller.length} ihlal + ${haberler.length} haber aktarıldı.`);}
 
 /* ── JSON/GEOJSON IMPORT ── */
 let _importVeri=null;
 function aciImportModal(){_importVeri=null;document.getElementById("importLog").textContent="Dosya bekleniyor…";document.getElementById("importUygulaBtn").disabled=true;document.getElementById("importModal").style.display="flex";}
-function _importDosyaOku(file){
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const log=document.getElementById("importLog");
-    try{
-      const parsed=JSON.parse(e.target.result);let ihlaller=[],haberler=[];
-      if(Array.isArray(parsed)){const ilk=parsed[0]||{};if(ilk.baslik&&(ilk.url||ilk.kaynak))haberler=parsed;else ihlaller=parsed;}
-      else if(parsed.type==="FeatureCollection"&&parsed.features){ihlaller=parsed.features.map(f=>{const p=f.properties||{},k=f.geometry?.coordinates;return{...p,lat:k?k[1]:(p.lat||null),lng:k?k[0]:(p.lng||null)};});}
-      else{if(parsed.ihlaller)ihlaller=parsed.ihlaller;if(parsed.haberler)haberler=parsed.haberler;}
-      ihlaller=ihlaller.map((k,i)=>({id:k.id||("imp_i_"+Date.now()+"_"+i),baslik:k.baslik||k.ad||k.name||"",konum:k.konum||(k.il?k.il+(k.ilce?", "+k.ilce:""):""),kategori:k.kategori||k.tip||"Diğer",siddet:k.siddet||"takipte",tarih:k.tarih||today(),lat:k.lat||null,lng:k.lng||null,kaynak:k.kaynak||"",kaynak_url:k.kaynak_url||"",aciklama:k.aciklama||""})).filter(k=>k.baslik);
-      haberler=haberler.map((h,i)=>({id:h.id||("imp_h_"+Date.now()+"_"+i),baslik:h.baslik||h.title||"",kaynak:h.kaynak||"",etiketler:h.etiketler||[],tarih:h.tarih||today(),url:h.url||"",ozet:h.ozet||""})).filter(h=>h.baslik);
-      _importVeri={ihlaller,haberler};
-      log.textContent=`✓ ${ihlaller.length} ihlal + ${haberler.length} haber\n\n`+ihlaller.slice(0,3).map(k=>`🔴 ${k.baslik.slice(0,60)}`).join("\n")+"\n"+haberler.slice(0,3).map(h=>`📰 ${h.baslik.slice(0,60)}`).join("\n");
-      document.getElementById("importUygulaBtn").disabled=(ihlaller.length+haberler.length)===0;
-    }catch(err){document.getElementById("importLog").textContent="❌ Parse hatası: "+err.message;}
-  };
-  reader.readAsText(file);
-}
-function _importUygula(){
-  if(!_importVeri)return;
-  const{ihlaller,haberler}=_importVeri;
-  const iiDs=new Set(SITE.getList("ihlaller").map(x=>String(x.id)));
-  const hiDs=new Set(SITE.getList("haberler").map(x=>String(x.id)));
-  const yi=ihlaller.filter(k=>!iiDs.has(String(k.id)));
-  const yh=haberler.filter(h=>!hiDs.has(String(h.id)));
-  if(yi.length){const l=[...yi,...SITE.getList("ihlaller")];SITE.set("ihlaller",l);_veri.ihlaller=l;}
-  if(yh.length){const l=[...yh,...SITE.getList("haberler")];SITE.set("haberler",l);_veri.haberler=l;}
-  document.getElementById("importModal").style.display="none";tumVeriYukle();updateStats();
-  toast(`✓ ${yi.length} ihlal + ${yh.length} haber (${ihlaller.length+haberler.length-yi.length-yh.length} duplicate atlandı).`);
-}
+function _importDosyaOku(file){const reader=new FileReader();reader.onload=e=>{const log=document.getElementById("importLog");try{const parsed=JSON.parse(e.target.result);let ihlaller=[],haberler=[];if(Array.isArray(parsed)){const ilk=parsed[0]||{};if(ilk.baslik&&(ilk.url||ilk.kaynak))haberler=parsed;else ihlaller=parsed;}else if(parsed.type==="FeatureCollection"&&parsed.features){ihlaller=parsed.features.map(f=>{const p=f.properties||{},k=f.geometry?.coordinates;return{...p,lat:k?k[1]:(p.lat||null),lng:k?k[0]:(p.lng||null)};});}else{if(parsed.ihlaller)ihlaller=parsed.ihlaller;if(parsed.haberler)haberler=parsed.haberler;}ihlaller=ihlaller.map((k,i)=>({id:k.id||("imp_i_"+Date.now()+"_"+i),baslik:k.baslik||k.ad||k.name||"",konum:k.konum||(k.il?k.il+(k.ilce?", "+k.ilce:""):""),kategori:k.kategori||k.tip||"Diğer",siddet:k.siddet||"takipte",tarih:k.tarih||today(),lat:k.lat||null,lng:k.lng||null,kaynak:k.kaynak||"",kaynak_url:k.kaynak_url||"",aciklama:k.aciklama||""})).filter(k=>k.baslik);haberler=haberler.map((h,i)=>({id:h.id||("imp_h_"+Date.now()+"_"+i),baslik:h.baslik||h.title||"",kaynak:h.kaynak||"",etiketler:h.etiketler||[],tarih:h.tarih||today(),url:h.url||"",ozet:h.ozet||""})).filter(h=>h.baslik);_importVeri={ihlaller,haberler};log.textContent=`✓ ${ihlaller.length} ihlal + ${haberler.length} haber\n\n`+ihlaller.slice(0,3).map(k=>`🔴 ${k.baslik.slice(0,60)}`).join("\n")+"\n"+haberler.slice(0,3).map(h=>`📰 ${h.baslik.slice(0,60)}`).join("\n");document.getElementById("importUygulaBtn").disabled=(ihlaller.length+haberler.length)===0;}catch(err){document.getElementById("importLog").textContent="❌ Parse hatası: "+err.message;}};reader.readAsText(file);}
+function _importUygula(){if(!_importVeri)return;const{ihlaller,haberler}=_importVeri;const iiDs=new Set(SITE.getList("ihlaller").map(x=>String(x.id)));const hiDs=new Set(SITE.getList("haberler").map(x=>String(x.id)));const yi=ihlaller.filter(k=>!iiDs.has(String(k.id)));const yh=haberler.filter(h=>!hiDs.has(String(h.id)));if(yi.length){const l=[...yi,...SITE.getList("ihlaller")];SITE.set("ihlaller",l);_veri.ihlaller=l;}if(yh.length){const l=[...yh,...SITE.getList("haberler")];SITE.set("haberler",l);_veri.haberler=l;}document.getElementById("importModal").style.display="none";tumVeriYukle();updateStats();toast(`✓ ${yi.length} ihlal + ${yh.length} haber (${ihlaller.length+haberler.length-yi.length-yh.length} duplicate atlandı).`);}
 
 /* ── DUPLICATE ── */
 let _dupSilList={};
 function aciDupModal(){_dupSilList={};document.getElementById("dupSonuc").textContent='Tara butonuna tıklayın.';document.getElementById("dupListe").style.display="none";document.getElementById("dupListe").innerHTML="";document.getElementById("dupTemizleBtn").disabled=true;document.getElementById("dupModal").style.display="flex";}
 function _dupAnahtar(item,kriter){if(kriter==="id")return String(item.id||"");if(kriter==="baslik")return(item.baslik||"").trim().toLowerCase();return(item.baslik||"").trim().toLowerCase()+"|"+(item.konum||item.il||"").trim().toLowerCase();}
-function dupTara(){
-  const kriter=document.querySelector('input[name="dup-kriter"]:checked').value;
-  const kollar=["ihlaller","haberler","raporlar","makaleler","uluslararasi"].filter(k=>document.getElementById("dup-"+k)?.checked);
-  if(!kollar.length){document.getElementById("dupSonuc").textContent="⚠ En az bir koleksiyon seçin.";return;}
-  _dupSilList={};let toplamDup=0,html="";
-  kollar.forEach(kol=>{
-    const liste=(_veri[kol]&&_veri[kol].length)?_veri[kol]:SITE.getList(kol);
-    const goruldu=new Map(),dupIdler=[];
-    liste.forEach(item=>{const key=_dupAnahtar(item,kriter);if(!key)return;if(goruldu.has(key))dupIdler.push(String(item.id));else goruldu.set(key,1);});
-    if(dupIdler.length){
-      _dupSilList[kol]=dupIdler;toplamDup+=dupIdler.length;
-      html+=`<div style="margin-bottom:14px;"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(45,158,107,.1);">${kol} — ${dupIdler.length} duplicate</div>`;
-      dupIdler.slice(0,20).forEach(id=>{const item=liste.find(x=>String(x.id)===id);if(!item)return;html+=`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(45,158,107,.05);"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">${id}</span><div style="flex:1;font-size:13px;">${item.baslik||'—'}</div><span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(232,92,42,.15);color:var(--warn);">SİLİNECEK</span></div>`;});
-      if(dupIdler.length>20)html+=`<div style="font-size:9px;color:var(--muted);padding:8px 0;">…ve ${dupIdler.length-20} daha</div>`;
-      html+=`</div>`;
-    }
-  });
-  const se=document.getElementById("dupSonuc"),le=document.getElementById("dupListe");
-  if(toplamDup===0){se.innerHTML='<span style="color:var(--bright);">✅ Duplicate kayıt yok.</span>';le.style.display="none";document.getElementById("dupTemizleBtn").disabled=true;}
-  else{se.innerHTML=`<span style="color:var(--warn);">⚠ ${toplamDup} duplicate</span> — kriter: <b>${kriter}</b>`;le.innerHTML=html;le.style.display="block";document.getElementById("dupTemizleBtn").disabled=false;}
-}
-function dupTemizle(){
-  const kollar=Object.keys(_dupSilList);if(!kollar.length)return;
-  let toplamSilinen=0;
-  kollar.forEach(kol=>{
-    const silIdler=new Set(_dupSilList[kol].map(String));toplamSilinen+=silIdler.size;
-    if(_veri[kol])_veri[kol]=_veri[kol].filter(x=>!silIdler.has(String(x.id)));
-    SITE.set(kol,SITE.getList(kol).filter(x=>!silIdler.has(String(x.id))));
-    if(SIL_KEY[kol]){try{const m=new Set(JSON.parse(localStorage.getItem(SIL_KEY[kol])||"[]").map(String));silIdler.forEach(id=>m.add(id));localStorage.setItem(SIL_KEY[kol],JSON.stringify([...m]));}catch{}}
-    tabloRender(kol);
-  });
-  document.getElementById("dupModal").style.display="none";updateStats();toast(`✅ ${toplamSilinen} duplicate temizlendi.`);_dupSilList={};
-}
+function dupTara(){const kriter=document.querySelector('input[name="dup-kriter"]:checked').value;const kollar=["ihlaller","haberler","raporlar","makaleler","uluslararasi"].filter(k=>document.getElementById("dup-"+k)?.checked);if(!kollar.length){document.getElementById("dupSonuc").textContent="⚠ En az bir koleksiyon seçin.";return;}_dupSilList={};let toplamDup=0,html="";kollar.forEach(kol=>{const liste=(_veri[kol]&&_veri[kol].length)?_veri[kol]:SITE.getList(kol);const goruldu=new Map(),dupIdler=[];liste.forEach(item=>{const key=_dupAnahtar(item,kriter);if(!key)return;if(goruldu.has(key))dupIdler.push(String(item.id));else goruldu.set(key,1);});if(dupIdler.length){_dupSilList[kol]=dupIdler;toplamDup+=dupIdler.length;html+=`<div style="margin-bottom:14px;"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(45,158,107,.1);">${kol} — ${dupIdler.length} duplicate</div>`;dupIdler.slice(0,20).forEach(id=>{const item=liste.find(x=>String(x.id)===id);if(!item)return;html+=`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(45,158,107,.05);"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">${id}</span><div style="flex:1;font-size:13px;">${item.baslik||'—'}</div><span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(232,92,42,.15);color:var(--warn);">SİLİNECEK</span></div>`;});if(dupIdler.length>20)html+=`<div style="font-size:9px;color:var(--muted);padding:8px 0;">…ve ${dupIdler.length-20} daha</div>`;html+=`</div>`;}});const se=document.getElementById("dupSonuc"),le=document.getElementById("dupListe");if(toplamDup===0){se.innerHTML='<span style="color:var(--bright);">✅ Duplicate kayıt yok.</span>';le.style.display="none";document.getElementById("dupTemizleBtn").disabled=true;}else{se.innerHTML=`<span style="color:var(--warn);">⚠ ${toplamDup} duplicate</span> — kriter: <b>${kriter}</b>`;le.innerHTML=html;le.style.display="block";document.getElementById("dupTemizleBtn").disabled=false;}}
+function dupTemizle(){const kollar=Object.keys(_dupSilList);if(!kollar.length)return;let toplamSilinen=0;kollar.forEach(kol=>{const silIdler=new Set(_dupSilList[kol].map(String));toplamSilinen+=silIdler.size;if(_veri[kol])_veri[kol]=_veri[kol].filter(x=>!silIdler.has(String(x.id)));SITE.set(kol,SITE.getList(kol).filter(x=>!silIdler.has(String(x.id))));if(SIL_KEY[kol]){try{const m=new Set(JSON.parse(localStorage.getItem(SIL_KEY[kol])||"[]").map(String));silIdler.forEach(id=>m.add(id));localStorage.setItem(SIL_KEY[kol],JSON.stringify([...m]));}catch{}}tabloRender(kol);});document.getElementById("dupModal").style.display="none";updateStats();toast(`✅ ${toplamSilinen} duplicate temizlendi.`);_dupSilList={};}
 
 /* ── BOOT ── */
 function boot(){
-  const t=today();
-  ["i-tarih","h-tarih","m-tarih","u-tarih"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
-  // Etiket checkboxlarını render et
-  tagWrapRender("h-tags-wrap","h",[]);
-  tagWrapRender("r-tags-wrap","r",[]);
-  tagWrapRender("m-tags-wrap","m",[]);
-  tagWrapRender("u-tags-wrap","u",[]);
+  const t=today();["i-tarih","h-tarih","m-tarih","u-tarih"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
+  tagWrapRender("h-tags-wrap","h",[]);tagWrapRender("r-tags-wrap","r",[]);tagWrapRender("m-tags-wrap","m",[]);tagWrapRender("u-tags-wrap","u",[]);
   initTabs();updateStats();tumVeriYukle();
-  /* Token kontrolü */
-  const{token:_bt}=ghAyarAl();
-  setSyncDurum(_bt?"synced":"local");
-  if(!_bt)tokenBannerGoster();
+  const{token:_bt}=ghAyarAl();setSyncDurum(_bt?"synced":"local");if(!_bt)tokenBannerGoster();
 }
-
 document.addEventListener("DOMContentLoaded",()=>{
-  const importModal=document.getElementById("importModal");
-  const importDrop=document.getElementById("importDropZone");
-  const importFileInp=document.getElementById("importFileInput");
-  if(importDrop){
-    importDrop.addEventListener("click",()=>importFileInp.click());
-    importDrop.addEventListener("dragover",e=>{e.preventDefault();importDrop.style.borderColor="var(--accent)";});
-    importDrop.addEventListener("dragleave",()=>{importDrop.style.borderColor="";});
-    importDrop.addEventListener("drop",e=>{e.preventDefault();importDrop.style.borderColor="";if(e.dataTransfer.files[0])_importDosyaOku(e.dataTransfer.files[0]);});
-    importFileInp.addEventListener("change",e=>{if(e.target.files[0])_importDosyaOku(e.target.files[0]);});
-  }
-  document.getElementById("importKapat")?.addEventListener("click",()=>{importModal.style.display="none";});
-  document.getElementById("importIptalBtn")?.addEventListener("click",()=>{importModal.style.display="none";});
-  document.getElementById("importUygulaBtn")?.addEventListener("click",_importUygula);
-  if(importModal)importModal.addEventListener("click",e=>{if(e.target===importModal)importModal.style.display="none";});
-  /* Her açılışta şifre sor */
-  SITE.logout();
-  document.getElementById("loginScreen").style.display="block";
+  const importModal=document.getElementById("importModal"),importDrop=document.getElementById("importDropZone"),importFileInp=document.getElementById("importFileInput");
+  if(importDrop){importDrop.addEventListener("click",()=>importFileInp.click());importDrop.addEventListener("dragover",e=>{e.preventDefault();importDrop.style.borderColor="var(--accent)";});importDrop.addEventListener("dragleave",()=>{importDrop.style.borderColor="";});importDrop.addEventListener("drop",e=>{e.preventDefault();importDrop.style.borderColor="";if(e.dataTransfer.files[0])_importDosyaOku(e.dataTransfer.files[0]);});importFileInp.addEventListener("change",e=>{if(e.target.files[0])_importDosyaOku(e.target.files[0]);});}
+  document.getElementById("importKapat")?.addEventListener("click",()=>{importModal.style.display="none";});document.getElementById("importIptalBtn")?.addEventListener("click",()=>{importModal.style.display="none";});document.getElementById("importUygulaBtn")?.addEventListener("click",_importUygula);if(importModal)importModal.addEventListener("click",e=>{if(e.target===importModal)importModal.style.display="none";});
+  SITE.logout();document.getElementById("loginScreen").style.display="block";
 });
-/* ═══ SYNC BADGE ═══════════════════════════════════════════════ */
-function setSyncDurum(d,det){
-  let el=document.getElementById("syncBadge");
-  if(!el){el=document.createElement("span");el.id="syncBadge";
-    el.style.cssText="font-family:\'JetBrains Mono\',monospace;font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em;cursor:pointer;";
-    const g=document.querySelector(".btn-group");if(g)g.insertBefore(el,g.firstChild);}
-  const D={local:["☁ Yerel","rgba(240,165,0,.15)","rgba(240,165,0,.4)","var(--alert)"],
-    syncing:["⏳ Sync…","rgba(45,158,107,.1)","rgba(45,158,107,.2)","var(--muted)"],
-    synced:["✓ Synced","rgba(45,158,107,.15)","rgba(45,158,107,.35)","var(--bright)"],
-    error:["✗ Hata","rgba(232,92,42,.15)","rgba(232,92,42,.35)","var(--warn)"]};
-  const[lb,bg,bd,co]=D[d]||D.local;
-  el.textContent=lb+(det?` (${det})`:"");
-  el.style.background=bg;el.style.border=`1px solid ${bd}`;el.style.color=co;
-  el.title="Token ayarlamak için tıklayın";
-  el.onclick=()=>aciTaramaModal();
-}
-function tokenBannerGoster(){
-  if(document.getElementById("tokenBanner"))return;
-  const b=document.createElement("div");b.id="tokenBanner";
-  b.style.cssText="background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.3);border-radius:4px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--alert);";
-  b.innerHTML=`<span style="font-size:18px;">⚠</span>
-    <div><strong>GitHub token ayarlı değil</strong><br><span style="font-size:10px;opacity:.8;">Raporlar, makaleler ve uluslararası kayıtlar sadece bu tarayıcıda görünür.</span></div>
-    <button onclick="aciTaramaModal()" style="margin-left:auto;padding:6px 14px;background:rgba(240,165,0,.2);border:1px solid rgba(240,165,0,.4);border-radius:3px;color:var(--alert);font-family:\'JetBrains Mono\',monospace;font-size:10px;cursor:pointer;">Token Ayarla →</button>
-    <button onclick="this.parentNode.remove()" style="padding:4px 8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;">×</button>`;
-  const w=document.querySelector(".admin-wrap");if(w)w.insertBefore(b,w.firstChild);
-}
 
-/* ═══ VERİ.JSON OTO-SYNC ════════════════════════════════════════
-   raporlar / makaleler / uluslararasi → GitHub data.json
-   Mevcut data.json'u çekip sadece bu 3 koleksiyonu günceller,
-   geri kalanına (ihlaller, haberler) dokunmaz.
-   guncelle.py bu koleksiyonları .get() ile okuyup Flex'e iletir.
-══════════════════════════════════════════════════════════════ */
+/* ═══ SYNC BADGE ═══ */
+function setSyncDurum(d,det){let el=document.getElementById("syncBadge");if(!el){el=document.createElement("span");el.id="syncBadge";el.style.cssText="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em;cursor:pointer;";const g=document.querySelector(".btn-group");if(g)g.insertBefore(el,g.firstChild);}const D={local:["☁ Yerel","rgba(240,165,0,.15)","rgba(240,165,0,.4)","var(--alert)"],syncing:["⏳ Sync…","rgba(45,158,107,.1)","rgba(45,158,107,.2)","var(--muted)"],synced:["✓ Synced","rgba(45,158,107,.15)","rgba(45,158,107,.35)","var(--bright)"],error:["✗ Hata","rgba(232,92,42,.15)","rgba(232,92,42,.35)","var(--warn)"]};const[lb,bg,bd,co]=D[d]||D.local;el.textContent=lb+(det?` (${det})`:"");el.style.background=bg;el.style.border=`1px solid ${bd}`;el.style.color=co;el.title="Token ayarlamak için tıklayın";el.onclick=()=>aciTaramaModal();}
+function tokenBannerGoster(){if(document.getElementById("tokenBanner"))return;const b=document.createElement("div");b.id="tokenBanner";b.style.cssText="background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.3);border-radius:4px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--alert);";b.innerHTML=`<span style="font-size:18px;">⚠</span><div><strong>GitHub token ayarlı değil</strong><br><span style="font-size:10px;opacity:.8;">Raporlar, makaleler ve uluslararası kayıtlar sadece bu tarayıcıda görünür.</span></div><button onclick="aciTaramaModal()" style="margin-left:auto;padding:6px 14px;background:rgba(240,165,0,.2);border:1px solid rgba(240,165,0,.4);border-radius:3px;color:var(--alert);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;">Token Ayarla →</button><button onclick="this.parentNode.remove()" style="padding:4px 8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;">×</button>`;const w=document.querySelector(".admin-wrap");if(w)w.insertBefore(b,w.firstChild);}
+
+/* ═══ FIX 1+2: veriYaz — UTF-8 safe decode + direkt webhook push ═══ */
 async function veriYaz(){
   const{repo,token}=ghAyarAl();
   if(!repo||!token){setSyncDurum("local");return;}
@@ -1246,15 +739,14 @@ async function veriYaz(){
   if(!ow||!rn){setSyncDurum("error","Repo formatı");return;}
   setSyncDurum("syncing");
   try{
-    /* data.json SHA */
     const mr=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/data.json`,
       {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
     if(!mr.ok)throw new Error(`data.json okunamadı (HTTP ${mr.status})`);
     const md=await mr.json();
     const sha=md.sha;
-    /* Mevcut içerik */
-    const mevcut=JSON.parse(decodeURIComponent(escape(atob(md.content.replace(/\n/g,"")))));
-    /* Sadece 3 koleksiyonu güncelle */
+    /* FIX 1: UTF-8 safe decode — escape() yerine */
+    const _raw=atob(md.content.replace(/\n/g,""));
+    const mevcut=JSON.parse(decodeURIComponent(_raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
     mevcut.raporlar    = SITE.getList("raporlar");
     mevcut.makaleler   = SITE.getList("makaleler");
     mevcut.uluslararasi= SITE.getList("uluslararasi");
@@ -1263,14 +755,21 @@ async function veriYaz(){
       rapor_sayisi:mevcut.raporlar.length,
       makale_sayisi:mevcut.makaleler.length,
       ulus_sayisi:mevcut.uluslararasi.length};
-    /* Yaz */
     const content=btoa(unescape(encodeURIComponent(JSON.stringify(mevcut,null,2))));
     const pr=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/data.json`,
       {method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
        body:JSON.stringify({message:`admin: içerik güncellendi ${new Date().toISOString().slice(0,10)}`,content,sha})});
     if(pr.ok){
       setSyncDurum("synced");
-      /* Flex için update_data.yml tetikle (token workflow yetkisine sahipse) */
+      /* FIX 2: Direkt Flex/Plesk webhook push — GitHub Actions beklemiyor */
+      const _fu=localStorage.getItem("ekoloji_flex_url")||"",_fs=localStorage.getItem("ekoloji_flex_secret")||"";
+      if(_fu&&_fs){
+        const _wu=_fu.split("?")[0]+"?dosya=data.json";
+        fetch(_wu,{method:"POST",headers:{"X-Webhook-Secret":_fs,"Content-Type":"application/json"},body:JSON.stringify(mevcut,null,2)})
+          .then(r=>r.ok?toast("✓ Sunucuya gönderildi."):toast("⚠ Webhook: HTTP "+r.status))
+          .catch(()=>toast("⚠ Webhook ulaşılamadı",4000));
+      }
+      /* update_data.yml tetikle */
       fetch(`https://api.github.com/repos/${ow}/${rn}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}})
         .then(r=>r.json()).then(d=>{
           const br=d.default_branch||"main";
@@ -1289,8 +788,6 @@ async function veriYaz(){
     toast("⚠ "+e.message,5000);
   }
 }
-
-
 </script>
 </body>
 </html>
