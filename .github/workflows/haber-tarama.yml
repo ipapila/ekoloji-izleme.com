@@ -2,84 +2,58 @@ name: Haber Tarama
 
 on:
   schedule:
-    - cron: '0 3,6,9,12,15,18 * * *'
+    - cron: '0 */3 * * *'   # Her 3 saatte bir
   workflow_dispatch:
   workflow_call:
+
+permissions:
+  contents: write
 
 jobs:
   tara:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Repo'yu çek
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Python kur
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
       - name: Bağımlılıkları yükle
-        run: pip install requests beautifulsoup4 feedparser lxml
+        run: pip install requests beautifulsoup4 lxml feedparser
 
-      - name: Tarayıcıyı çalıştır
-        run: |
-          if [ ! -f tarayici.py ]; then
-            echo "❌ tarayici.py bulunamadı."
-            exit 1
-          fi
-          python tarayici.py \
-            --cikti haberler.json \
-            --harita-url "https://ipapila.github.io/Turkiye-katmanlar/data/ihlaller.json"
-          echo "--- haberler.json içeriği (ilk 20 satır) ---"
-          head -20 haberler.json 2>/dev/null || echo "haberler.json oluşmadı!"
+      - name: Haberleri tara (tarayici.py)
+        run: python scripts/tarayici.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: haberler.json'u commit et ve push yap
-        run: |
-          git config user.name  "ekoloji-tarayici[bot]"
-          git config user.email "bot@ekoloji-izleme.com"
-          git add -f haberler.json
-          if git diff --staged --quiet; then
-            echo "Değişiklik yok, commit atlanıyor."
-          else
-            git commit -m "🔄 Haber güncellemesi — $(date -u '+%Y-%m-%d %H:%M UTC')"
-            # Çakışma olursa rebase ile çöz, 3 kez dene
-            for i in 1 2 3; do
-              git pull --rebase origin main && git push && echo "✓ Push tamamlandı." && break
-              echo "⚠ Push başarısız ($i/3), yeniden deneniyor..."
-              sleep 5
-            done
-          fi
-
-      - name: haberler.json'u Plesk sunucuya gönder
-        run: |
-          HTTP_STATUS=$(curl -s -o /tmp/webhook_response.txt -w "%{http_code}" \
-            -X POST "${{ secrets.FLEX_WEBHOOK_URL }}?dosya=haberler.json" \
-            -H "X-Webhook-Secret: ${{ secrets.FLEX_WEBHOOK_SECRET }}" \
-            -H "Content-Type: application/json" \
-            --data-binary @haberler.json)
-          echo "HTTP Status: $HTTP_STATUS"
-          cat /tmp/webhook_response.txt
-          if [ "$HTTP_STATUS" != "200" ]; then
-            echo "⚠️  Webhook başarısız (HTTP $HTTP_STATUS) — workflow devam ediyor."
-          else
-            echo "✅ Plesk sunucu güncellendi: haberler.json"
-          fi
-
-      - name: Güncelleme özeti
+      - name: haberler.json doğrula
         run: |
           if [ -f haberler.json ]; then
-            echo "✓ haberler.json güncellendi"
             python3 -c "
-          import json
-          d = json.load(open('haberler.json'))
-          m = d.get('meta', {})
-          print(f\"  Toplam haber : {m.get('toplam', len(d.get('haberler',[])))}\")
-          print(f\"  Güncelleme   : {m.get('guncelleme','?')}\")
-          print(f\"  Harita kaydı : {m.get('harita_kayit_sayisi','?')}\")
-          "
+import json, sys
+try:
+    d = json.load(open('haberler.json', encoding='utf-8'))
+    print(f'✓ haberler.json geçerli — {len(d.get(\"haberler\",[]))} haber')
+except Exception as e:
+    print(f'⚠ haberler.json sorunlu: {e}')
+    sys.exit(1)
+"
           else
-            echo "⚠ haberler.json oluşturulamadı"
+            echo "⚠ haberler.json oluşturulmadı"
+          fi
+
+      - name: Değişiklikleri commit et
+        run: |
+          git config user.name  "ekoloji-bot"
+          git config user.email "bot@ekoloji-izleme.com"
+          git add haberler.json
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+          else
+            SAYIM=$(python3 -c "import json; d=json.load(open('haberler.json')); print(len(d.get('haberler',[])))" 2>/dev/null || echo "?")
+            git commit -m "haber güncelleme: ${SAYIM} kayıt"
+            git push
+            echo "✓ ${SAYIM} haber commit edildi."
           fi
