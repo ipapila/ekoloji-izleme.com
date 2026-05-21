@@ -96,7 +96,7 @@
       <h2>İçerik Yönetim Paneli <span class="admin-badge">● Admin</span></h2>
       <div class="btn-group">
         <button class="btn btn-primary" onclick="aciTaramaModal()">⚡ Şimdi Tara</button>
-        <button class="btn btn-outline" id="btnYayinla" onclick="githubYayinla()" title="localStorage'daki raporlar, makaleler ve uluslararası kayıtları GitHub'a ve sunucuya gönder" style="border-color:rgba(45,158,107,.5);color:var(--bright);">☁ Sunucuya Yayınla</button>
+        <button class="btn btn-outline" id="btnYayinla" onclick="githubYayinla()" style="border-color:rgba(45,158,107,.5);color:var(--bright);">☁ Sunucuya Yayınla</button>
         <button class="btn btn-outline" onclick="aciImportModal()">⬆ JSON/GeoJSON İçe Aktar</button>
         <button class="btn btn-outline" style="border-color:rgba(240,165,0,.4);color:var(--alert);" onclick="aciDupModal()">🧹 Duplicate Temizle</button>
         <button class="btn btn-outline" onclick="doLogout()">Çıkış Yap</button>
@@ -465,10 +465,10 @@
         <div class="form-row" style="margin-bottom:8px;">
           <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Workflow</label><input class="form-control" id="ghWorkflow" placeholder="tara.yml" style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 8px;">Flex Webhook (Sunucuya Yayınla için)</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:8px 0 6px;">Flex / Plesk Webhook (Yayınla için)</div>
         <div class="form-row" style="margin-bottom:8px;">
-          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Flex URL</label><input class="form-control" id="flexUrl" placeholder="https://…/webhook.php" style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
-          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Flex Secret</label><input class="form-control" type="password" id="flexSecret" placeholder="••••" style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Webhook URL</label><input class="form-control" id="flexUrl" placeholder="https://ekoloji-izleme.com/webhook.php" style="font-family:'JetBrains Mono',monospace;font-size:11px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Webhook Secret</label><input class="form-control" type="password" id="flexSecret" placeholder="••••" style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <button class="btn btn-outline" style="font-size:11px;padding:6px 14px;" onclick="ghAyarKaydet()">Kaydet</button>
@@ -949,8 +949,32 @@ function ghAyarKaydet(){
   const gercek=ti&&!ti.startsWith("\u2022");
   if(!gercek&&!mevcut){document.getElementById("ghAyarDurum").textContent="Token zorunlu.";return;}
   localStorage.setItem(GH_REPO_KEY,repo);if(gercek)localStorage.setItem(GH_TOKEN_KEY,ti);
-  if(wf)localStorage.setItem(GH_WORKFLOW_KEY,wf);
-  /* Flex ayarlarını da kaydet */
+  localStorage.setItem(GH_WORKFLOW_KEY,wf||GH_DEFAULTS.workflow);
+  document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Kaydedildi</span>';
+}
+function ghAyarAl(){
+  const token=localStorage.getItem(GH_TOKEN_KEY)||"";
+  if(token&&[...token].some(c=>c.charCodeAt(0)>127)){localStorage.removeItem(GH_TOKEN_KEY);return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token:""};}
+  return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token};
+}
+function aciTaramaModal(){
+  _bulunanlar=[];document.getElementById("bulunanlar").innerHTML='';
+  document.getElementById("taramaLog").innerHTML='Hazır.';
+  document.getElementById("importBtn").disabled=true;document.getElementById("seciliSayi").textContent='0';
+  document.getElementById("taramaModal").classList.add("open");
+  const{repo,token}=ghAyarAl();
+  document.getElementById("ghRepo").value=repo;
+  if(token){document.getElementById("ghToken").value="••••••••••••••••";document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';}
+  document.getElementById("ghWorkflow").value=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
+}
+function ghAyarKaydet(){
+  const repo=document.getElementById("ghRepo").value.trim(),ti=document.getElementById("ghToken").value.trim(),wf=document.getElementById("ghWorkflow").value.trim();
+  const mevcut=localStorage.getItem(GH_TOKEN_KEY)||"";
+  if(!repo){document.getElementById("ghAyarDurum").textContent="Repo zorunlu.";return;}
+  const gercek=ti&&!ti.startsWith("\u2022");
+  if(!gercek&&!mevcut){document.getElementById("ghAyarDurum").textContent="Token zorunlu.";return;}
+  localStorage.setItem(GH_REPO_KEY,repo);if(gercek)localStorage.setItem(GH_TOKEN_KEY,ti);
+  localStorage.setItem(GH_WORKFLOW_KEY,wf||GH_DEFAULTS.workflow);
   const fu=document.getElementById("flexUrl")?.value.trim();
   const fs=document.getElementById("flexSecret")?.value.trim();
   if(fu)localStorage.setItem("ekoloji_flex_url",fu);
@@ -962,124 +986,6 @@ function ghAyarAl(){
   if(token&&[...token].some(c=>c.charCodeAt(0)>127)){localStorage.removeItem(GH_TOKEN_KEY);return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token:""};}
   return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token};
 }
-/* ── SUNUCUYA YAYINLA ─────────────────────────────────────────────
-   localStorage'daki raporlar / makaleler / uluslararasi koleksiyonlarını
-   GitHub data.json'a yazar; Flex webhook (varsa) tetikler.
-   Yalnızca "içerik" koleksiyonları yayınlanır; haberler ve ihlaller
-   GitHub'daki halinden korunur (RSS + manuel eklentiler orada tutulur).
-──────────────────────────────────────────────────────────────────── */
-async function githubYayinla() {
-  const {repo, token} = ghAyarAl();
-  if (!repo || !token) {
-    toast("⚠ Önce GitHub repo ve token'ı ayarlayın (Tara modalındaki Ayarlar).");
-    return;
-  }
-  const btn = document.getElementById("btnYayinla");
-  const orgLabel = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = "⏳ Yükleniyor…";
-
-  const [owner, repoName] = repo.split("/");
-  if (!owner || !repoName) { toast("⚠ Repo formatı hatalı."); btn.disabled=false; btn.textContent=orgLabel; return; }
-
-  try {
-    /* 1 — Mevcut data.json'u çek (SHA gerekli) */
-    const metaR = await fetch(
-      `https://api.github.com/repos/${owner}/${repoName}/contents/data.json`,
-      { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" } }
-    );
-    if (!metaR.ok) throw new Error(`data.json okunamadı (HTTP ${metaR.status})`);
-    const metaD = await metaR.json();
-    const sha   = metaD.sha;
-    const remoteData = metaD.content
-      ? JSON.parse(decodeURIComponent(escape(atob(metaD.content.replace(/\n/g, "")))))
-      : {};
-
-    /* 2 — Yerel koleksiyonları al ve remote ile birleştir
-           Kural: localStorage → GitHub için otorite (admin burada düzenliyor)
-                  haberler / ihlaller → remote öncelikli (RSS / otomatik) */
-    const YEREL_KOLLAR = ["raporlar", "makaleler", "uluslararasi"];
-    const merged = { ...remoteData };
-
-    for (const col of YEREL_KOLLAR) {
-      const localItems  = SITE.getList(col);
-      const remoteItems = remoteData[col] || [];
-      const localIds    = new Set(localItems.map(x => String(x.id)));
-      /* Önce yerel, sonra remote'da olup yerel'de olmayan */
-      merged[col] = [
-        ...localItems,
-        ...remoteItems.filter(x => !localIds.has(String(x.id)))
-      ];
-    }
-
-    /* 3 — Meta güncelle */
-    merged._meta = {
-      ...(remoteData._meta || {}),
-      guncelleme:    new Date().toISOString(),
-      kaynak:        "admin_yayinla",
-      ihlal_sayisi:  (merged.ihlaller  || []).length,
-      haber_sayisi:  (merged.haberler  || []).length,
-      rapor_sayisi:  (merged.raporlar  || []).length,
-      makale_sayisi: (merged.makaleler || []).length,
-    };
-
-    /* 4 — GitHub'a yaz */
-    btn.textContent = "⏳ GitHub'a yazılıyor…";
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(merged, null, 2))));
-    const putR = await fetch(
-      `https://api.github.com/repos/${owner}/${repoName}/contents/data.json`,
-      {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Accept": "application/vnd.github+json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: `admin: raporlar/makaleler/uluslararasi güncellendi ${new Date().toISOString().slice(0,10)}`,
-          content,
-          sha
-        })
-      }
-    );
-    if (!putR.ok) {
-      const err = await putR.json().catch(() => ({}));
-      throw new Error(`GitHub yazma hatası (HTTP ${putR.status}): ${err.message || ""}`);
-    }
-
-    /* 5 — Flex webhook (varsa localStorage'da kayıtlı) */
-    const flexUrl    = localStorage.getItem("ekoloji_flex_url")    || "";
-    const flexSecret = localStorage.getItem("ekoloji_flex_secret") || "";
-    let flexMesaj = "";
-    if (flexUrl) {
-      btn.textContent = "⏳ Flex sunucu güncelleniyor…";
-      try {
-        const fR = await fetch(flexUrl, {
-          method: "POST",
-          headers: { "X-Webhook-Secret": flexSecret, "Content-Type": "application/json" },
-          body: JSON.stringify(merged)
-        });
-        flexMesaj = fR.ok ? " + Flex ✓" : ` (Flex HTTP ${fR.status})`;
-      } catch { flexMesaj = " (Flex ulaşılamadı)"; }
-    }
-
-    const toplam = YEREL_KOLLAR.map(c => `${c}: ${merged[c]?.length||0}`).join(", ");
-    toast(`✓ GitHub'a yayınlandı${flexMesaj} — ${toplam}`);
-
-  } catch (e) {
-    toast(`⚠ ${e.message}`);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = orgLabel;
-  }
-}
-
-/* Flex webhook ayarlarını kaydet/oku (isteğe bağlı) */
-function flexAyarKaydet(url, secret) {
-  if (url)    localStorage.setItem("ekoloji_flex_url",    url);
-  if (secret) localStorage.setItem("ekoloji_flex_secret", secret);
-}
-
 function aciTaramaModal(){
   _bulunanlar=[];document.getElementById("bulunanlar").innerHTML='';
   document.getElementById("taramaLog").innerHTML='Hazır.';
@@ -1089,12 +995,125 @@ function aciTaramaModal(){
   document.getElementById("ghRepo").value=repo;
   if(token){document.getElementById("ghToken").value="••••••••••••••••";document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';}
   document.getElementById("ghWorkflow").value=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
-  const fu=localStorage.getItem("ekoloji_flex_url")||"";
-  const fs=localStorage.getItem("ekoloji_flex_secret")||"";
-  if(document.getElementById("flexUrl"))  document.getElementById("flexUrl").value=fu;
-  if(document.getElementById("flexSecret")&&fs) document.getElementById("flexSecret").value="••••••••";
+  const fu=localStorage.getItem("ekoloji_flex_url")||"";const fs=localStorage.getItem("ekoloji_flex_secret")||"";
+  if(document.getElementById("flexUrl"))document.getElementById("flexUrl").value=fu;
+  if(document.getElementById("flexSecret")&&fs)document.getElementById("flexSecret").value="••••••••";
 }
 function kapat(){document.getElementById("taramaModal").classList.remove("open");}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SUNUCUYA YAYINLA
+   Strateji:
+   1) localStorage raporlar/makaleler/uluslararasi → GitHub data.json (PUT)
+   2) update_data.yml workflow'unu tetikle — bu sunucu tarafında çalışır
+      ve Flex webhook'u doğrudan çağırır (CORS engeli yoktur)
+   Flex webhook'u tarayıcıdan doğrudan çağırmak CORS hatasına yol açar;
+   bu nedenle GitHub Actions aracılık eder.
+═══════════════════════════════════════════════════════════════════ */
+async function githubYayinla(){
+  if(!SITE.isAdmin()){toast("⚠ Bu işlem için admin girişi gerekli.");return;}
+  const{repo,token}=ghAyarAl();
+  if(!repo||!token){toast("⚠ Önce GitHub repo ve token'ı ayarlayın (⚡ Şimdi Tara → Ayarlar).");return;}
+  const[owner,repoName]=repo.split("/");
+  if(!owner||!repoName){toast("⚠ Repo formatı hatalı (örn: ipapila/ekoloji-izleme.com)");return;}
+
+  const btn=document.getElementById("btnYayinla");
+  const orgLabel=btn.textContent;
+  btn.disabled=true;
+
+  /* Log alanı — tarama modalındaki gibi satır satır ilerleme */
+  const logDiv=document.getElementById("yayinlaLog")||
+    (() => {
+      const d=document.createElement("div");
+      d.id="yayinlaLog";
+      d.style.cssText="position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--deep);border:1px solid rgba(45,158,107,.3);border-radius:6px;padding:14px 18px;min-width:320px;max-width:420px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;box-shadow:0 8px 32px rgba(0,0,0,.4);";
+      document.body.appendChild(d);
+      return d;
+    })();
+  const log=(msg,color)=>{
+    logDiv.innerHTML+=`<div style="color:${color||'var(--muted)'};">${msg}</div>`;
+    logDiv.scrollTop=logDiv.scrollHeight;
+  };
+  logDiv.innerHTML='<div style="color:var(--bright);font-weight:600;margin-bottom:6px;">☁ Sunucuya Yayınla</div>';
+  const kapat=()=>setTimeout(()=>logDiv.remove(),4000);
+
+  try{
+    /* ── 1. GitHub'dan mevcut data.json'u çek ── */
+    btn.textContent="⏳ GitHub okunuyor…";
+    log("GitHub data.json çekiliyor…");
+    const metaR=await fetch(
+      `https://api.github.com/repos/${owner}/${repoName}/contents/data.json`,
+      {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}}
+    );
+    if(!metaR.ok)throw new Error(`data.json okunamadı (HTTP ${metaR.status})`);
+    const metaD=await metaR.json();
+    const sha=metaD.sha;
+    const remoteData=metaD.content
+      ? JSON.parse(decodeURIComponent(escape(atob(metaD.content.replace(/\n/g,"")))))
+      : {};
+    log(`✓ Mevcut: ${(remoteData.raporlar||[]).length} rapor, ${(remoteData.makaleler||[]).length} makale, ${(remoteData.uluslararasi||[]).length} uluslararası`);
+
+    /* ── 2. Yerel koleksiyonları birleştir ── */
+    const KOLLAR=["raporlar","makaleler","uluslararasi"];
+    const merged={...remoteData};
+    for(const col of KOLLAR){
+      const local=SITE.getList(col);
+      const remote=remoteData[col]||[];
+      const localIds=new Set(local.map(x=>String(x.id)));
+      merged[col]=[...local,...remote.filter(x=>!localIds.has(String(x.id)))];
+      if(local.length)log(`  ${col}: ${local.length} yerel → ${merged[col].length} toplam`);
+    }
+    merged._meta={...(remoteData._meta||{}),
+      guncelleme:new Date().toISOString(),kaynak:"admin_yayinla",
+      ihlal_sayisi:(merged.ihlaller||[]).length,haber_sayisi:(merged.haberler||[]).length,
+      rapor_sayisi:(merged.raporlar||[]).length,makale_sayisi:(merged.makaleler||[]).length,
+      ulus_sayisi:(merged.uluslararasi||[]).length};
+
+    /* ── 3. GitHub'a yaz ── */
+    btn.textContent="⏳ GitHub'a yazılıyor…";
+    log("GitHub'a yazılıyor…");
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(merged,null,2))));
+    const putR=await fetch(
+      `https://api.github.com/repos/${owner}/${repoName}/contents/data.json`,
+      {method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
+       body:JSON.stringify({message:`admin: raporlar/makaleler/uluslararasi ${new Date().toISOString().slice(0,10)}`,content,sha})}
+    );
+    if(!putR.ok){const e=await putR.json().catch(()=>({}));throw new Error(`GitHub yazma hatası (HTTP ${putR.status}): ${e.message||""}`);}
+    log("✓ GitHub'a yazıldı","var(--bright)");
+
+    /* ── 4. update_data.yml tetikle → Flex push sunucu tarafında yapılır ──
+       Tarayıcıdan Flex webhook çağırmak CORS'a takılır.
+       update_data.yml: guncelle.py çalıştırır → data.json'u Flex'e gönderir. ── */
+    btn.textContent="⏳ Workflow tetikleniyor…";
+    log("update_data.yml tetikleniyor (Flex push için)…");
+    const branchR=await fetch(`https://api.github.com/repos/${owner}/${repoName}`,
+      {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
+    const branch=(await branchR.json()).default_branch||"main";
+    const wfDosya=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;
+    /* update_data.yml'i bul — yoksa tara.yml'i dene */
+    const wfHedefler=["update_data.yml","update-data.yml",wfDosya];
+    let tetiklendi=false;
+    for(const wf of [...new Set(wfHedefler)]){
+      const dr=await fetch(`https://api.github.com/repos/${owner}/${repoName}/actions/workflows/${wf}/dispatches`,
+        {method:"POST",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
+         body:JSON.stringify({ref:branch})});
+      if(dr.status===204||dr.ok){log(`✓ ${wf} tetiklendi`,"var(--bright)");tetiklendi=true;break;}
+    }
+    if(!tetiklendi){
+      log("⚠ Workflow tetiklenemedi — Flex güncellemesi için Tara modalından manuel tetikleyin","var(--alert)");
+    } else {
+      log("Flex push için workflow çalışıyor… (~3-5 dk)","var(--muted)");
+      log('<a href="https://github.com/'+repo+'/actions" target="_blank" style="color:var(--bright);">GitHub Actions\'da takip et ↗</a>');
+    }
+    toast("✓ Yayınlandı — Flex güncellemesi birkaç dakika içinde tamamlanır");
+  }catch(e){
+    log(`✗ ${e.message}`,"var(--warn)");
+    toast("⚠ "+e.message);
+  }finally{
+    btn.disabled=false;btn.textContent=orgLabel;
+    kapat();
+  }
+}
 
 async function yapiTarama(mod){
   const logEl=document.getElementById("taramaLog");logEl.innerHTML='';
@@ -1135,8 +1154,8 @@ async function yapiTarama(mod){
     if(!dr.ok)throw new Error(`GitHub API: HTTP ${dr.status}`);
     log('<span class="ok">✓ Workflow tetiklendi…</span>');
     await new Promise(r=>setTimeout(r,4000));
-    const runId=await sonRunBul(owner,repoName,token,log);
-    if(runId)await runDurumIzle(owner,repoName,runId,token,log);
+    const run=await sonRunBul(owner,repoName,token,log);
+    if(run)await runDurumIzle(owner,repoName,run.id,run.url,token,log);
   }catch(e){log(`<span class="warn">✗ ${e.message}</span>`);}
 }
 
@@ -1147,13 +1166,13 @@ async function sonRunBul(owner,repo,token,log){
     const data=await r.json(),run=data.workflow_runs?.[0];
     if(!run){log('<span class="warn">Run bulunamadı.</span>');return null;}
     log(`Run #${run.run_number} → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);
-    return run.id;
+    return {id:run.id, url:run.html_url};
   }catch(e){log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`);return null;}
 }
 
-async function runDurumIzle(owner,repo,runId,token,log){
-  for(let i=0;i<30;i++){
-    await new Promise(r=>setTimeout(r,6000));
+async function runDurumIzle(owner,repo,runId,runUrl,token,log){
+  for(let i=0;i<50;i++){
+    await new Promise(r=>setTimeout(r,8000));
     try{
       const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});
       const run=await r.json();
@@ -1162,10 +1181,10 @@ async function runDurumIzle(owner,repo,runId,token,log){
         else log(`<span class="warn">✗ Workflow ${run.conclusion}.</span>`);
         return;
       }
-      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*6}sn)`);
+      log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*8}sn)`);
     }catch(e){log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);}
   }
-  log('<span class="warn">Zaman aşımı.</span>');
+  log(`<span class="warn">⚠ İzleme süresi doldu (~7 dk). Workflow hâlâ çalışıyor olabilir — ${runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:'GitHub Actions sayfasını kontrol edin'}.</span>`);
 }
 
 async function otomatikYenile(log){
