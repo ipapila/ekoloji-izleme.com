@@ -368,11 +368,18 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
         try:
             eski = json.loads(p.read_text(encoding="utf-8"))
             gorulen_idler = {h.get("id", "") for h in eski.get("haberler", [])}
+            # Google News RSS'te aynı makale her seferinde farklı opak URL döner
+            # (CBMi… base64 kodu değişir) → başlık normalleştirme ile ikinci filtre
+            gorulen_basliklar = {
+                re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+                for h in eski.get("haberler", [])
+                if h.get("baslik")
+            }
             log.info(f"Mevcut dosyada {len(gorulen_idler)} haber.")
         except Exception:
-            eski, gorulen_idler = {"haberler": []}, set()
+            eski, gorulen_idler, gorulen_basliklar = {"haberler": []}, set(), set()
     else:
-        eski, gorulen_idler = {"haberler": []}, set()
+        eski, gorulen_idler, gorulen_basliklar = {"haberler": []}, set(), set()
 
     log.info("\n── Harita Verisi ──")
     harita_kayitlari = harita_verisi_cek(harita_urls or HARITA_URLS)
@@ -385,9 +392,12 @@ def tara(cikti_dosyasi="haberler.json", harita_urls=None,
 
     tum_yeni = []
     for h in rss_haberler + web_haberler:
-        if h["id"] not in gorulen_idler:
+        baslik_norm = re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+        if h["id"] not in gorulen_idler and baslik_norm not in gorulen_basliklar:
             tum_yeni.append(h)
             gorulen_idler.add(h["id"])
+            if baslik_norm:
+                gorulen_basliklar.add(baslik_norm)
 
     # _puan alanını çıktıdan kaldır (dahili kullanım)
     for h in tum_yeni:
