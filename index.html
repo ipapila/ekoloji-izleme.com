@@ -277,6 +277,77 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   </div>
 </section>
 
+<!-- ══════════ GÜNLÜK RAPOR ══════════ -->
+<section id="gunluk-rapor-section" style="background:var(--deep);padding:100px 80px;border-top:1px solid rgba(45,158,107,.18);">
+  <div class="section-tag">Günlük Değerlendirme</div>
+  <h2 class="section-title" style="font-size:clamp(28px,5vw,52px);margin-bottom:12px;">BUGÜNÜN<br>RAPORU</h2>
+  <p class="section-subtitle" style="margin-bottom:48px;">Son 24 saatin verileri — bütünleşik bir perspektiften.</p>
+
+  <div id="raporKart" style="max-width:780px;background:rgba(45,158,107,.04);border:1px solid rgba(45,158,107,.2);border-radius:8px;padding:40px 44px;">
+
+    <div id="raporYukleniyor" style="display:flex;align-items:center;gap:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;">
+      <svg style="animation:spin-slow 1.5s linear infinite;flex-shrink:0;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      RAPOR YÜKLENİYOR…
+    </div>
+
+    <div id="raporIcerik" style="display:none;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:28px;flex-wrap:wrap;">
+        <h3 id="raporBaslik" style="font-family:'Crimson Pro',serif;font-size:clamp(20px,3vw,28px);font-weight:400;color:var(--cream);line-height:1.35;margin:0;flex:1;min-width:200px;"></h3>
+        <div id="raporIstatistik" style="display:flex;gap:20px;flex-shrink:0;"></div>
+      </div>
+      <p id="raporGiris" style="font-size:15px;color:var(--muted);line-height:1.8;margin:0 0 20px;"></p>
+      <p id="raporYorum" style="font-size:15px;color:var(--muted);line-height:1.8;margin:0 0 20px;"></p>
+      <p id="raporBakia" style="font-size:15px;color:var(--muted);line-height:1.8;margin:0 0 28px;"></p>
+      <div id="raporKategoriler" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid rgba(45,158,107,.12);flex-wrap:wrap;gap:12px;">
+        <span id="raporTarih" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;"></span>
+        <a href="raporlar.html" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--accent);text-decoration:none;text-transform:uppercase;">Tüm Raporlar →</a>
+      </div>
+    </div>
+
+    <div id="raporHata" style="display:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;">
+      Rapor henüz oluşturulmadı. Yarın tekrar dene.
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  function stat(sayi, etiket) {
+    return '<div style="text-align:center;"><div style="font-family:\'JetBrains Mono\',monospace;font-size:22px;font-weight:700;color:var(--bright);">' + sayi + '</div><div style="font-family:\'JetBrains Mono\',monospace;font-size:8px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:2px;">' + etiket + '</div></div>';
+  }
+  function chip(k) {
+    return '<span style="display:inline-block;padding:4px 10px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:20px;font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;">' + k + '</span>';
+  }
+  fetch("rapor.json?v=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(rapor => {
+      document.getElementById("raporYukleniyor").style.display = "none";
+      if (rapor.hata) { document.getElementById("raporHata").style.display = "block"; return; }
+      const oz = rapor.veri_ozet || {};
+      document.getElementById("raporBaslik").textContent = rapor.baslik || "";
+      document.getElementById("raporGiris").textContent  = rapor.giris  || "";
+      document.getElementById("raporYorum").textContent  = rapor.yorum  || "";
+      document.getElementById("raporBakia").textContent  = rapor.bakia  || "";
+      const ist = document.getElementById("raporIstatistik");
+      if (oz.haber_sayisi !== undefined) ist.innerHTML = stat(oz.haber_sayisi, "Haber") + (oz.ihlal_sayisi !== undefined ? stat(oz.ihlal_sayisi, "İhlal") : "");
+      const katEl = document.getElementById("raporKategoriler");
+      (oz.one_cikan_kategoriler || []).forEach(k => { katEl.innerHTML += chip(k); });
+      if (rapor.uretildi) {
+        const t = new Date(rapor.uretildi);
+        document.getElementById("raporTarih").textContent =
+          t.toLocaleDateString("tr-TR", {day:"numeric",month:"long",year:"numeric"}) + " · " +
+          t.toLocaleTimeString("tr-TR", {hour:"2-digit",minute:"2-digit"});
+      }
+      document.getElementById("raporIcerik").style.display = "block";
+    })
+    .catch(() => {
+      document.getElementById("raporYukleniyor").style.display = "none";
+      document.getElementById("raporHata").style.display = "block";
+    });
+})();
+</script>
+
 <!-- ══════════ VIOLATIONS ══════════ -->
 <section class="violations-section">
   <div class="section-tag">Anlık Sistem</div>
@@ -621,6 +692,10 @@ function haberDetay(h) {
 function haberlerRender(haberler) {
   const liste = document.getElementById("haberlerListe");
   if (!haberler || !haberler.length) return;
+  // Kullanıcının sildiği kayıtları gösterme
+  const silinen = new Set(JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]").map(String));
+  const haber_id = h => String(h._id || h.id || "");
+  haberler = haberler.filter(h => !silinen.has(haber_id(h)));
   liste.innerHTML = haberler.slice(0, 8).map(h => `
     <div class="haber-item" onclick='haberDetay(${JSON.stringify(h).replace(/'/g,"&#39;")})' style="cursor:pointer;">
       <div>
