@@ -124,6 +124,50 @@ WEB_KAYNAKLARI = [
      "secici": ".post-title a, h2 a, h3 a",     "ozet_secici": ".post-excerpt, p", "genel": True},
 ]
 
+# ─── KATEGORİ → SAYFA YÖNLENDİRME HARİTASI ────────────────────────────────
+# Tarayıcıdan gelen her habere, kaynak kategorisine göre:
+#   - eylem : direnis-agi.html'in hangi bölümüne gideceği
+#   - etiketler : ekosistem.html ve haberler.html filtrelemesi için
+KATEGORI_HARITALAMA = {
+    # Çevre ihlalleri
+    "Çevre İhlali":         {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
+    "Çevre / Gündem":       {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
+    "Gündem / Çevre":       {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
+    "Gündem / Ekoloji":     {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
+    "Ekoloji":              {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
+
+    # Maden & enerji
+    "Orman / Maden":        {"eylem": None,               "etiketler": ["Orman Alanı", "Maden Ocağı"]},
+    "Maden Riski / Atık":   {"eylem": None,               "etiketler": ["Maden Ocağı", "Atık & Kirlilik"]},
+    "Tarım Alanları / Maden":{"eylem": None,              "etiketler": ["Tarım & Köy", "Maden Ocağı"]},
+    "Resmi İhale / Maden":  {"eylem": None,               "etiketler": ["Maden Ocağı"]},
+    "Resmi / Maden":        {"eylem": None,               "etiketler": ["Maden Ocağı"]},
+    "İhale / Enerji":       {"eylem": None,               "etiketler": ["GES", "RES", "HES"]},
+    "Resmi / Enerji":       {"eylem": None,               "etiketler": ["GES", "RES", "HES"]},
+    "HES / RES / Baraj":    {"eylem": None,               "etiketler": ["HES", "RES", "Su Ekosistemleri"]},
+    "JES / Çevre İhlali":   {"eylem": None,               "etiketler": ["Jeotermal", "Ekolojik İhlal"]},
+
+    # Hukuki & resmi
+    "ÇED Kararları":        {"eylem": "Hukuk & Dava",     "etiketler": ["ÇED Kararları"]},
+    "Kamulaştırma":         {"eylem": "Hukuk & Dava",     "etiketler": ["Acele Kamulaştırma"]},
+    "Resmi":                {"eylem": "Resmi Açıklama",   "etiketler": ["Resmi Açıklama"]},
+    "İhale":                {"eylem": None,               "etiketler": []},
+
+    # İklim
+    "İklim":                {"eylem": None,               "etiketler": ["İklim Olayları"]},
+
+    # STK & kampanya → direnis-agi.html STK bölümü
+    "STK":                  {"eylem": "STK & Kampanya",   "etiketler": ["STK & Kampanya"]},
+    "STK / Yerel Basın":    {"eylem": "STK & Kampanya",   "etiketler": ["STK & Kampanya"]},
+    "STK / Orman":          {"eylem": "STK & Kampanya",   "etiketler": ["STK & Kampanya", "Orman Alanı"]},
+
+    # Diğer
+    "Mühendislik / Çevre":  {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
+    "Çevre Medyası":        {"eylem": None,               "etiketler": []},
+    "Haber":                {"eylem": None,               "etiketler": []},
+}
+
+
 # ─── FİLTRE SİSTEMİ ────────────────────────────────────────────────
 
 YUKSEK_SINYAL = [
@@ -262,6 +306,7 @@ def rss_tara(kaynaklar: list) -> list:
                     reddedilen += 1
                     continue
 
+                _hrm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
                 haberler.append({
                     "id":          haber_id(link, baslik),
                     "baslik":      baslik,
@@ -271,6 +316,8 @@ def rss_tara(kaynaklar: list) -> list:
                     "kaynak":      kaynak["kaynak"],
                     "kategori":    kaynak["kategori"],
                     "kaynak_turu": "rss",
+                    "eylem":       _hrm.get("eylem"),
+                    "etiketler":   _hrm.get("etiketler", []),
                     "_puan":       puan,
                 })
                 kabul += 1
@@ -318,6 +365,7 @@ def web_tara(kaynaklar: list) -> list:
                     reddedilen += 1
                     continue
 
+                _hwm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
                 haberler.append({
                     "id":          haber_id(link, baslik),
                     "baslik":      baslik,
@@ -327,6 +375,8 @@ def web_tara(kaynaklar: list) -> list:
                     "kaynak":      kaynak["kaynak"],
                     "kategori":    kaynak["kategori"],
                     "kaynak_turu": "web",
+                    "eylem":       _hwm.get("eylem"),
+                    "etiketler":   _hwm.get("etiketler", []),
                     "_puan":       puan,
                 })
                 kabul += 1
