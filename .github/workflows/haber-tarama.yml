@@ -1,50 +1,50 @@
 name: Haber Tarama
+
 on:
   schedule:
-    - cron: '0 */3 * * *'   # Her 3 saatte bir
+    - cron: '0 */3 * * *'
   workflow_dispatch:
   workflow_call:
+
 permissions:
   contents: write
+
 jobs:
   tara:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Bağımlılıkları yükle
+
+      - name: Bagımlılıkları yükle
         run: pip install requests beautifulsoup4 lxml feedparser
-      - name: Haberleri tara (tarayici.py)
+
+      - name: Haberleri tara
         run: python scripts/tarayici.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: haberler.json doğrula
+
+      - name: haberler.json dogrula
         run: |
-          if [ -f haberler.json ]; then
-            python3 << 'EOF'
-import json, sys
-try:
-    d = json.load(open('haberler.json', encoding='utf-8'))
-    print(f'✓ haberler.json geçerli — {len(d.get("haberler",[]))} haber')
-except Exception as e:
-    print(f'⚠ haberler.json sorunlu: {e}')
-    sys.exit(1)
-EOF
-          else
-            echo "⚠ haberler.json oluşturulmadı"
+          if [ ! -f haberler.json ]; then
+            echo "haberler.json olusturulmadi, atlanıyor"
+            exit 0
           fi
-      - name: Değişiklikleri commit et
+          python3 -c "import json,sys; d=json.load(open('haberler.json',encoding='utf-8')); print('OK:', len(d.get('haberler',[])), 'haber')" || exit 1
+
+      - name: Degisiklikleri commit et
         run: |
           git config user.name  "ekoloji-bot"
           git config user.email "bot@ekoloji-izleme.com"
           git add haberler.json
           if git diff --cached --quiet; then
-            echo "Değişiklik yok."
+            echo "Degisiklik yok."
           else
             SAYIM=$(python3 -c "import json; d=json.load(open('haberler.json')); print(len(d.get('haberler',[])))" 2>/dev/null || echo "?")
-            git commit -m "haber güncelleme: ${SAYIM} kayıt"
+            git commit -m "haber guncelleme: ${SAYIM} kayit"
             git push
-            echo "✓ ${SAYIM} haber commit edildi."
           fi
