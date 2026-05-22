@@ -16,11 +16,13 @@ REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
 REPO_NAME  = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")
 FILE_PATH  = "data.json"
 
-# Harita kaynaklı ihlalleri temizlemek için kaynak listesi
-# Bu kaynaklar eski harita importlarından geldi, guncelle.py artık bunları eklemez.
-# HARITA_TEMIZLE = True yapılırsa bir kez çalıştırıp False'a geri çevirin.
-HARITA_TEMIZLE = False
-HARITA_KAYNAKLARI = {"OGM", "DKMP", "BSGM", "harita_import", "harita_verisi"}
+# Harita kaynaklı ihlalleri kalıcı olarak dışla.
+# Bu kaynaklar artık hiçbir zaman data.json'a yazılmaz.
+HARITA_KAYNAKLARI = {
+    "harita",          # tarayici.py'nin eski harita_verisi_cek() çıktısı
+    "OGM", "DKMP", "BSGM",
+    "harita_import", "harita_verisi",
+}
 
 
 # ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
@@ -380,16 +382,15 @@ def main():
         if col not in data:
             data[col] = []
 
-    # ── Eski harita kayıtlarını temizle (bir kez çalıştır, sonra False'a çevir) ──
-    if HARITA_TEMIZLE:
-        onceki = len(data.get("ihlaller", []))
-        data["ihlaller"] = [
-            i for i in data.get("ihlaller", [])
-            if i.get("kaynak", "") not in HARITA_KAYNAKLARI
-        ]
-        silinen = onceki - len(data["ihlaller"])
-        if silinen:
-            print(f"🧹 {silinen} harita kaydı temizlendi (kaynak: {HARITA_KAYNAKLARI})")
+    # ── Harita kaynaklı kayıtları her çalışmada otomatik temizle ──
+    onceki = len(data.get("ihlaller", []))
+    data["ihlaller"] = [
+        i for i in data.get("ihlaller", [])
+        if i.get("kaynak", "") not in HARITA_KAYNAKLARI
+    ]
+    silinen = onceki - len(data["ihlaller"])
+    if silinen:
+        print(f"🧹 {silinen} harita kaydı otomatik temizlendi")
 
     mevcut_haberler  = data.get("haberler", [])
     mevcut_urls      = {h.get("url", "") for h in mevcut_haberler}
