@@ -1,54 +1,275 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag("js", new Date());
-  gtag("config", "G-LTTD3L198S");
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-LTTD3L198S");</script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ekosistem — ekoloji-izleme.com</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
+<style>
+.page-header{background:var(--forest);padding:100px 80px 60px;border-bottom:1px solid rgba(45,158,107,.15);}
+.page-header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
+.page-header h1 span{color:var(--bright);}
+.content{background:var(--dark);padding:50px 80px;min-height:60vh;}
+
+/* Grup başlıkları */
+.grup-baslik{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(45,158,107,.55);margin:48px 0 16px;padding-bottom:10px;border-bottom:1px solid rgba(45,158,107,.1);}
+.grup-baslik:first-of-type{margin-top:0;}
+
+/* Bölüm kartları (tüm bölümler görünümü) */
+.bolum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:8px;}
+.bolum-kart{background:var(--forest);border:1px solid rgba(45,158,107,.12);border-radius:6px;padding:24px 26px;cursor:pointer;transition:all .25s;text-decoration:none;display:block;position:relative;overflow:hidden;}
+.bolum-kart::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:bottom;transition:transform .25s;}
+.bolum-kart:hover{border-color:rgba(45,158,107,.3);background:var(--deep);transform:translateY(-2px);}
+.bolum-kart:hover::after{transform:scaleY(1);}
+.bolum-kart h3{font-family:'Crimson Pro',serif;font-size:19px;font-weight:400;color:var(--cream);margin-bottom:8px;line-height:1.3;}
+.bolum-kart .count{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;}
+.bolum-kart .arrow{position:absolute;bottom:18px;right:20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(45,158,107,.35);transition:color .2s;}
+.bolum-kart:hover .arrow{color:var(--accent);}
+
+/* Tek bölüm görünümü */
+.bolum-header{display:flex;align-items:center;gap:14px;margin-bottom:32px;}
+.bolum-header a{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-decoration:none;letter-spacing:.08em;border:1px solid rgba(45,158,107,.2);padding:5px 12px;border-radius:2px;transition:all .2s;}
+.bolum-header a:hover{color:var(--bright);border-color:rgba(45,158,107,.4);}
+.bolum-header h2{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--cream);}
+
+/* Kayıt listesi */
+.kayit-list{display:flex;flex-direction:column;gap:2px;}
+.kayit-row{background:var(--forest);border-left:3px solid rgba(45,158,107,.4);padding:20px 26px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;transition:all .2s;cursor:pointer;}
+.kayit-row:hover{background:var(--deep);border-left-color:var(--accent);padding-left:32px;}
+.kayit-row h4{font-size:15px;font-weight:400;color:var(--cream);margin-bottom:5px;}
+.kayit-row .meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.04em;}
+.kayit-row .ozet{font-size:13.5px;color:rgba(122,158,138,.75);margin-top:6px;font-weight:300;line-height:1.6;}
+.kayit-row .tarih{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(122,158,138,.45);text-align:right;white-space:nowrap;}
+.admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;cursor:pointer;}
+.admin-sil-btn:hover{background:rgba(232,92,42,.25);}
+.empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:40px 0;letter-spacing:.05em;opacity:.6;}
+.admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;margin-bottom:24px;}
+.admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
+.modal-bg.open{display:flex;}
+.modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;}
+.modal-header{padding:24px 30px 16px;display:flex;justify-content:space-between;align-items:start;position:sticky;top:0;background:var(--deep);border-bottom:1px solid rgba(45,158,107,.1);}
+.modal-body{padding:24px 30px 36px;}
+.modal-title{font-family:'Crimson Pro',serif;font-size:28px;font-weight:400;color:var(--cream);line-height:1.3;margin-bottom:14px;}
+.modal-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid rgba(45,158,107,.1);}
+.modal-icerik{font-size:15px;font-weight:300;color:var(--cream);line-height:1.85;}
+.modal-actions{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;}
+.modal-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;border-radius:4px;}
+.modal-btn.primary{background:var(--accent);color:var(--dark);}
+.modal-btn.outline{background:transparent;color:var(--cream);border:1px solid rgba(240,245,242,.2);}
+.modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
+
+/* Filter bar (tek bölüm) */
+.search-box{padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:260px;margin-bottom:20px;}
+.count-bar{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:16px;}
+.count-bar b{color:var(--bright);}
+
+@media(max-width:900px){.page-header{padding:80px 28px 40px;}.content{padding:30px 28px;}.bolum-grid{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
 <script src="site-data.js"></script>
 <div id="nav-root"></div>
 <script src="nav.js"></script>
+
 <div class="page-header">
-  <div class="section-tag">İnsan Dışı Canlılar & Dezavantajlı Gruplar</div>
-  <h1 class="page-title">EKOSİSTEM</h1>
-  <p class="page-subtitle">Yaban hayatı, bitki örtüsü, su ekosistemleri ve dezavantajlı toplulukların izlenmesi.</p>
+  <div class="section-tag">Canlı & Topluluk İzleme</div>
+  <h1>EKOSİSTEM <span>&</span><br>TOPLULUKLAR</h1>
+  <p class="page-subtitle" style="font-size:15px;color:var(--muted);margin-top:16px;font-weight:300;max-width:560px;">İnsan dışı canlılar, topluluklar ve çevre adaleti ekseninde belgeli izleme.</p>
 </div>
-<div class="content-area">
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;">
-    <a href="ihlaller.html?kat=Orman" style="display:block;padding:32px 28px;background:var(--forest);border:1px solid rgba(45,158,107,.15);border-radius:6px;text-decoration:none;transition:all .3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-      <span style="font-size:32px;display:block;margin-bottom:14px;">🦅</span>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--cream);margin-bottom:8px;">Nesli Tehlike Altında Türler</div>
-      <p style="font-size:13.5px;color:var(--muted);line-height:1.6;">Habitat kayıpları ve tehdit altındaki türlerin belgelenmesi.</p>
-    </a>
-    <a href="ihlaller.html?kat=Orman" style="display:block;padding:32px 28px;background:var(--forest);border:1px solid rgba(45,158,107,.15);border-radius:6px;text-decoration:none;transition:all .3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-      <span style="font-size:32px;display:block;margin-bottom:14px;">🌳</span>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--cream);margin-bottom:8px;">Orman & Bitki Örtüsü</div>
-      <p style="font-size:13.5px;color:var(--muted);line-height:1.6;">Uydu verileriyle orman tahribatı ve habitat değişimleri.</p>
-    </a>
-    <a href="ihlaller.html?kat=Su Kirliliği" style="display:block;padding:32px 28px;background:var(--forest);border:1px solid rgba(45,158,107,.15);border-radius:6px;text-decoration:none;transition:all .3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-      <span style="font-size:32px;display:block;margin-bottom:14px;">🐟</span>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--cream);margin-bottom:8px;">Su Ekosistemleri</div>
-      <p style="font-size:13.5px;color:var(--muted);line-height:1.6;">Nehir, göl ve deniz ekosistemlerinde kirlilik izleme.</p>
-    </a>
-    <a href="ihlaller.html?kat=Tarım Arazisi" style="display:block;padding:32px 28px;background:var(--forest);border:1px solid rgba(45,158,107,.15);border-radius:6px;text-decoration:none;transition:all .3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-      <span style="font-size:32px;display:block;margin-bottom:14px;">👩‍🌾</span>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--cream);margin-bottom:8px;">Çiftçi & Köylü Hakları</div>
-      <p style="font-size:13.5px;color:var(--muted);line-height:1.6;">Toprak hakkı ihlalleri ve kamulaştırma mağdurları.</p>
-    </a>
+
+<div class="content" id="mainContent">
+  <div class="empty">Yükleniyor…</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="detailModal" onclick="if(event.target===this)kapatModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span id="mBolum" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;"></span>
+      <button class="modal-close" onclick="kapatModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="mBaslik"></h2>
+      <div class="modal-meta" id="mMeta"></div>
+      <div class="modal-icerik" id="mIcerik"></div>
+      <div class="modal-actions" id="mActions"></div>
+    </div>
   </div>
 </div>
-<footer>
-  <div class="footer-bottom" style="padding:28px 0;"><p>© 2025 ekoloji-izleme.com</p><a href="index.html" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-decoration:none;">← Ana Sayfa</a></div>
-</footer>
+
+<script>
+/* ═══ VERİ YAPISI ═══════════════════════════════════════════════ */
+
+const BOLUMLER = {
+  "turler":         {ad:"Nesli Tehlike Altında Türler", grup:"İnsan Dışı Canlılar", icon:"🦅"},
+  "yaban":          {ad:"Yaban Hayatı İzleme",          grup:"İnsan Dışı Canlılar", icon:"🐺"},
+  "bitki":          {ad:"Bitki Örtüsü & Habitatlar",    grup:"İnsan Dışı Canlılar", icon:"🌿"},
+  "su-canlilari":   {ad:"Su Canlıları",                 grup:"İnsan Dışı Canlılar", icon:"🐟"},
+  "hayvan-haklari": {ad:"Hayvan Hakları & Refahı",      grup:"İnsan Dışı Canlılar", icon:"🐾"},
+  "kadinlar":       {ad:"Kadınlar & Ekoloji",            grup:"İnsan Toplulukları",  icon:"♀"},
+  "lgbti":          {ad:"LGBTİ+ & Çevre",               grup:"İnsan Toplulukları",  icon:"🏳️"},
+  "engelliler":     {ad:"Engelliler & Erişim",           grup:"İnsan Toplulukları",  icon:"♿"},
+  "ciftci":         {ad:"Çiftçi & Köylü Sorunları",     grup:"İnsan Toplulukları",  icon:"🌾"},
+  "balikci":        {ad:"Balıkçı Toplulukları",          grup:"İnsan Toplulukları",  icon:"🎣"},
+  "yerli":          {ad:"Yerli & Yerel Haklar",          grup:"İnsan Toplulukları",  icon:"🏔️"},
+  "genclik":        {ad:"Çocuklar & Gençlik",            grup:"İnsan Toplulukları",  icon:"🌱"},
+  "esitsizlik":     {ad:"Ekolojik Eşitsizlik",           grup:"Çevre Adaleti",       icon:"⚖️"},
+  "kentsel":        {ad:"Kentsel Çevre",                 grup:"Çevre Adaleti",       icon:"🏙️"},
+  "goc":            {ad:"İklim Göçü & Yerinden Edilme",  grup:"Çevre Adaleti",       icon:"🚶"},
+  "savas":          {ad:"Savaş & Ekoloji",               grup:"Çevre Adaleti",       icon:"💥"},
+  "savas-teknoloji":{ad:"Savaş Teknolojisi & Çevre",    grup:"Çevre Adaleti",       icon:"🛰️"},
+};
+
+const GRUPLAR = ["İnsan Dışı Canlılar", "İnsan Toplulukları", "Çevre Adaleti"];
+
+let tumEkosistem = [];
+let aktifSec = new URLSearchParams(location.search).get("sec") || "";
+let gorunenKayitlar = [];
+
+/* ═══ MODAL ═══════════════════════════════════════════════════ */
+function acModal(idx) {
+  const k = gorunenKayitlar[idx]; if (!k) return;
+  const bolumAd = BOLUMLER[k.bolum]?.ad || k.bolum || "";
+  document.getElementById("mBolum").textContent = bolumAd;
+  document.getElementById("mBaslik").textContent = k.baslik || "";
+  const tarihStr = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
+  document.getElementById("mMeta").innerHTML =
+    (k.kaynak ? `<span>📌 ${k.kaynak}</span>` : "") +
+    (tarihStr  ? `<span>📅 ${tarihStr}</span>` : "") +
+    (k.konum   ? `<span>📍 ${k.konum}</span>` : "");
+  let fotoHtml = k.foto_url ? `<img src="${k.foto_url}" onerror="this.style.display='none'"
+    style="width:100%;max-height:260px;object-fit:cover;border-radius:5px;margin-bottom:14px;border:1px solid rgba(45,158,107,.15);">` : "";
+  const metin = k.icerik || k.ozet || "";
+  document.getElementById("mIcerik").innerHTML = fotoHtml +
+    (metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,"<br>")}</p>`).join("") : '<p style="opacity:.5">İçerik yok.</p>');
+  const act = document.getElementById("mActions"); act.innerHTML = "";
+  if (k.url) act.innerHTML += `<a href="${k.url}" target="_blank" rel="noopener" class="modal-btn primary">Kaynağa Git →</a>`;
+  if (k.dosya) act.innerHTML += `<a href="${k.dosya}" target="_blank" rel="noopener" class="modal-btn outline">📄 Dosyayı Aç</a>`;
+  document.getElementById("detailModal").classList.add("open");
+}
+function kapatModal() { document.getElementById("detailModal").classList.remove("open"); }
+
+/* ═══ SİLME ═══════════════════════════════════════════════════ */
+function getSilinen() {
+  try { return new Set(JSON.parse(localStorage.getItem("ekoloji_ekosistem_silinen")||"[]").map(String)); }
+  catch { return new Set(); }
+}
+function kayitSilEkosistem(id) {
+  if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
+  const sid = String(id);
+  if (typeof SITE !== "undefined") SITE.set("ekosistem", (SITE.get("ekosistem")||[]).filter(x=>String(x.id)!==sid));
+  const s = getSilinen(); s.add(sid);
+  localStorage.setItem("ekoloji_ekosistem_silinen", JSON.stringify([...s]));
+  tumEkosistem = tumEkosistem.filter(x => String(x.id) !== sid);
+  renderSayfa();
+}
+
+/* ═══ RENDER: tek bölüm ════════════════════════════════════════ */
+function renderBolum(sec) {
+  const bolum = BOLUMLER[sec];
+  const kayitlar = tumEkosistem.filter(k => k.bolum === sec);
+  const admin = typeof SITE !== "undefined" && SITE.isAdmin();
+  const el = document.getElementById("mainContent");
+  el.innerHTML = `
+    <div class="bolum-header">
+      <a href="ekosistem.html">← Tüm Bölümler</a>
+      <h2>${bolum ? bolum.icon + " " + bolum.ad : sec}</h2>
+    </div>
+    ${admin ? `<a class="admin-ekle-btn" href="admin.html#ekosistem">+ Kayıt Ekle →</a>` : ""}
+    <input class="search-box" id="secSearchBox" placeholder="Ara…" oninput="secFiltrele('${sec}')">
+    <div class="count-bar" id="secCount"></div>
+    <div class="kayit-list" id="secList"></div>`;
+  gorunenKayitlar = kayitlar;
+  renderKayitlar(kayitlar, admin);
+  document.getElementById("secCount").innerHTML = `<b>${kayitlar.length}</b> kayıt`;
+  document.getElementById("secSearchBox").addEventListener("input", () => secFiltrele(sec));
+}
+
+function secFiltrele(sec) {
+  const q = document.getElementById("secSearchBox")?.value.toLowerCase() || "";
+  const kayitlar = tumEkosistem.filter(k =>
+    k.bolum === sec &&
+    (!q || (k.baslik + (k.ozet||"") + (k.kaynak||"")).toLowerCase().includes(q))
+  );
+  gorunenKayitlar = kayitlar;
+  renderKayitlar(kayitlar, typeof SITE !== "undefined" && SITE.isAdmin());
+  document.getElementById("secCount").innerHTML = `<b>${kayitlar.length}</b> kayıt`;
+}
+
+function renderKayitlar(liste, admin) {
+  const el = document.getElementById("secList");
+  if (!liste.length) { el.innerHTML = '<div class="empty">Bu bölümde henüz kayıt yok.</div>'; return; }
+  el.innerHTML = liste.map((k,i) => `
+    <div class="kayit-row" onclick="acModal(${i})">
+      <div>
+        <h4>${k.baslik}</h4>
+        <div class="meta">${k.kaynak||""}${k.konum?" · "+k.konum:""}</div>
+        ${k.ozet ? `<div class="ozet">${k.ozet.slice(0,180)}${k.ozet.length>180?"…":""}</div>` : ""}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <span class="tarih">${k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}) : ""}</span>
+        ${admin ? `<button class="admin-sil-btn" onclick="event.stopPropagation();kayitSilEkosistem('${k.id}')">SİL</button>` : ""}
+      </div>
+    </div>`).join("");
+}
+
+/* ═══ RENDER: tüm bölümler ════════════════════════════════════ */
+function renderTum() {
+  const admin = typeof SITE !== "undefined" && SITE.isAdmin();
+  const el = document.getElementById("mainContent");
+  let html = admin ? `<a class="admin-ekle-btn" href="admin.html#ekosistem">+ Ekosistem Kaydı Ekle →</a>` : "";
+
+  GRUPLAR.forEach(grup => {
+    const bolumlar = Object.entries(BOLUMLER).filter(([,b]) => b.grup === grup);
+    html += `<div class="grup-baslik">${grup}</div><div class="bolum-grid">`;
+    bolumlar.forEach(([sec, bolum]) => {
+      const count = tumEkosistem.filter(k => k.bolum === sec).length;
+      html += `<a class="bolum-kart" href="ekosistem.html?sec=${sec}">
+        <h3>${bolum.icon} ${bolum.ad}</h3>
+        <div class="count">${count > 0 ? count + " kayıt" : "Henüz kayıt yok"}</div>
+        <span class="arrow">→</span>
+      </a>`;
+    });
+    html += `</div>`;
+  });
+  el.innerHTML = html;
+}
+
+/* ═══ ANA RENDER ═══════════════════════════════════════════════ */
+function renderSayfa() {
+  if (aktifSec && BOLUMLER[aktifSec]) renderBolum(aktifSec);
+  else renderTum();
+}
+
+/* ═══ VERİ YÜKLEME ════════════════════════════════════════════ */
+const silinen = getSilinen();
+const lsData = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
+  .filter(k => !silinen.has(String(k.id)));
+
+fetch("data.json?v=" + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(data => {
+    const sunucu = (data.ekosistem || []).filter(k => !silinen.has(String(k.id)));
+    const lsIds  = new Set(lsData.map(k => String(k.id)));
+    tumEkosistem = [...lsData, ...sunucu.filter(k => !lsIds.has(String(k.id)))]
+      .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
+    renderSayfa();
+  })
+  .catch(() => {
+    tumEkosistem = lsData;
+    renderSayfa();
+  });
+
+/* URL ?sec= parametresi değişirse */
+window.addEventListener("popstate", () => {
+  aktifSec = new URLSearchParams(location.search).get("sec") || "";
+  renderSayfa();
+});
+</script>
 </body>
 </html>
