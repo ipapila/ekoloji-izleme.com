@@ -527,7 +527,7 @@ const SIL_KEY={ihlaller:"ekoloji_ihlal_silinen",haberler:"ekoloji_haber_silinen"
 function silGetir(col){try{return new Set(JSON.parse(localStorage.getItem(SIL_KEY[col])||"[]").map(String));}catch{return new Set();}}
 function silEkle(col,id){const s=silGetir(col);s.add(String(id));localStorage.setItem(SIL_KEY[col],JSON.stringify([...s]));}
 const _veri={ihlaller:[],haberler:[],raporlar:[],makaleler:[],uluslararasi:[]};
-function kayitSil(col,id){if(!confirm("Bu kaydı silmek istiyor musunuz?"))return;_veri[col]=_veri[col].filter(x=>String(x.id)!==String(id));SITE.set(col,SITE.getList(col).filter(x=>String(x.id)!==String(id)));silEkle(col,id);tabloRender(col);updateStats();toast("✓ Silindi.");}
+function kayitSil(col,id){if(!confirm("Bu kaydı silmek istiyor musunuz?"))return;_veri[col]=_veri[col].filter(x=>String(x.id)!==String(id));SITE.set(col,SITE.getList(col).filter(x=>String(x.id)!==String(id)));silEkle(col,id);tabloRender(col);updateStats();toast("✓ Silindi.");veriYaz();}
 function tabloRender(col){const sil=silGetir(col),vk=(_veri[col]&&_veri[col].length)?_veri[col]:SITE.getList(col);const data=(vk||[]).filter(x=>!sil.has(String(x.id)));if(col==="ihlaller")_ihlalRender(data);else if(col==="haberler")_haberRender(data);else if(col==="raporlar")_raporRender(data);else if(col==="makaleler")_makaleRender(data);else if(col==="uluslararasi")_ulusRender(data);}
 function _ihlalRender(d){document.getElementById("ihlalerTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:200px;font-size:13px;">${i.baslik}</td><td style="font-size:12px;">${i.konum||'—'}</td><td style="font-size:11px;">${i.kategori||'—'}</td><td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td>${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;"><button class="det-btn" onclick="editKayit('ihlaller','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('ihlaller','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
 function _haberRender(d){document.getElementById("haberlerTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:220px;font-size:13px;">${i.baslik}</td><td style="font-size:12px;">${i.kaynak||'—'}</td><td>${renderTagChips(i.etiketler||i.kategori)}</td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;">${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}<button class="det-btn" onclick="editKayit('haberler','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('haberler','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
@@ -747,11 +747,19 @@ async function veriYaz(){
     /* FIX 1: UTF-8 safe decode — escape() yerine */
     const _raw=atob(md.content.replace(/\n/g,""));
     const mevcut=JSON.parse(decodeURIComponent(_raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    /* ── İhlaller: silinen kayıtları sunucudan da kaldır ── */
+    const _silI = silGetir("ihlaller");
+    const _localI = SITE.getList("ihlaller").filter(x => !_silI.has(String(x.id)));
+    const _localIds = new Set(_localI.map(x => String(x.id)));
+    const _serverI = (mevcut.ihlaller || []).filter(x => !_silI.has(String(x.id)));
+    mevcut.ihlaller = [..._localI, ..._serverI.filter(x => !_localIds.has(String(x.id)))];
+
     mevcut.raporlar    = SITE.getList("raporlar");
     mevcut.makaleler   = SITE.getList("makaleler");
     mevcut.uluslararasi= SITE.getList("uluslararasi");
     mevcut._meta = {...(mevcut._meta||{}),
       guncelleme:new Date().toISOString(),
+      ihlal_sayisi:mevcut.ihlaller.length,
       rapor_sayisi:mevcut.raporlar.length,
       makale_sayisi:mevcut.makaleler.length,
       ulus_sayisi:mevcut.uluslararasi.length};
