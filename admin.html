@@ -698,7 +698,7 @@ function addIhlal(){
   ["i-baslik","i-konum","i-tarih","i-kaynak","i-kaynak-url","i-aciklama","i-lat","i-lng","i-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("i-tarih").value=today();
   const p=document.getElementById("i-foto-onizleme");if(p)p.style.display="none";
-  _veri.ihlaller.unshift(y);tabloRender("ihlaller");updateStats();toast("✓ İhlal kaydedildi.");
+  _veri.ihlaller.unshift(y);tabloRender("ihlaller");updateStats();toast("✓ İhlal kaydedildi — sunucuya gönderiliyor…");veriYaz();
 }
 function addHaber(){
   const b=document.getElementById("h-baslik").value.trim();if(!b){toast("⚠ Başlık zorunludur.");return;}
@@ -772,7 +772,7 @@ function editKaydet(col,id){
   if(!g.baslik){toast("⚠ Başlık zorunludur.");return;}
   SITE.upsert(col,g);const idx=_veri[col].findIndex(x=>String(x.id)===String(id));if(idx>=0)_veri[col][idx]=g;
   modal.remove();tabloRender(col);toast("✓ Kayıt güncellendi.");
-  if(["raporlar","makaleler","uluslararasi"].includes(col))veriYaz();
+  if(["ihlaller","raporlar","makaleler","uluslararasi","ekosistem"].includes(col))veriYaz();
 }
 
 /* ── FOTOĞRAF & PDF ── */
