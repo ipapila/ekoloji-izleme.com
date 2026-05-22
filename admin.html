@@ -787,7 +787,19 @@ function tumVeriYukle(){
   const lM=SITE.getList("makaleler").filter(x=>!sM.has(String(x.id)));
   const lU=SITE.getList("uluslararasi").filter(x=>!sU.has(String(x.id)));
   /* data.json → ihlaller + sunucudan raporlar/makaleler/uluslararasi + ekosistem */
-  fetch("data.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
+  fetch("data.json?v="+Date.now())
+    .then(r=>{
+      if(!r.ok)throw new Error("HTTP "+r.status);
+      return r.text();
+    })
+    .then(txt=>{
+      if(!txt||!txt.trim())throw new Error("data.json boş");
+      let d;
+      try{ d=JSON.parse(txt); }
+      catch(e){ throw new Error("data.json geçersiz JSON: "+e.message); }
+      return d;
+    })
+    .then(d=>{
     const ji=(d.ihlaller||[]).filter(x=>!sI.has(String(x.id))),iiDs=new Set(lI.map(x=>String(x.id)));
     _veri.ihlaller=[...lI,...ji.filter(x=>!iiDs.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
     const sr=(d.raporlar||[]).filter(x=>!sR.has(String(x.id)));
@@ -1003,8 +1015,23 @@ async function veriYaz(){
     const md=await mr.json();
     const sha=md.sha;
     /* FIX 1: UTF-8 safe decode — escape() yerine */
-    const _raw=atob(md.content.replace(/\n/g,""));
-    const mevcut=JSON.parse(decodeURIComponent(_raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    /* UTF-8 safe decode — iki yöntem denenir */
+    let mevcut;
+    try {
+      const _bytes = Uint8Array.from(atob(md.content.replace(/\n/g,"")), c=>c.charCodeAt(0));
+      const _txt   = new TextDecoder("utf-8").decode(_bytes);
+      mevcut = JSON.parse(_txt);
+    } catch(decErr) {
+      /* Fallback: eski yöntem */
+      try {
+        const _raw = atob(md.content.replace(/\n/g,""));
+        mevcut = JSON.parse(decodeURIComponent(_raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+      } catch(e2) {
+        console.warn("data.json decode hatası, boş yapıyla başlanıyor:", e2);
+        mevcut = {};
+      }
+    }
+    if(typeof mevcut !== "object" || mevcut === null) mevcut = {};
     /* ── Direniş sync ── */
     const _silDr = silGetir("direnis");
     const _localDr = SITE.getList("direnis").filter(x => !_silDr.has(String(x.id)));
