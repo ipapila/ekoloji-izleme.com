@@ -568,8 +568,32 @@
 const ETIKET_GRUPLARI = [
   {lbl:"Harita Kategorileri",items:["Ekolojik İhlal","İklim Olayları","Acele Kamulaştırma","Kültür Varlığı","Milli Park","Özel Çevre Koruma Alanı","Maden Ocağı","Taş-Mermer Ocağı","Termik Reaktör","HES","GES","RES","Nükleer Enerji","Jeotermal","Orman Alanı","Sulak Alan","Kıyı İhlalleri"]},
   {lbl:"Ek Konular",items:["Yaban Hayatı","Biyoçeşitlilik","Tarım & Köy","Su Hakkı","Atık & Kirlilik","Kaçak Yapılaşma","ÇED Kararları","Hava Kirliliği","Deniz Kirliliği","Toprak Kirliliği"]},
-  {lbl:"Eylem & İçerik",items:["Direniş & Eylem","Hukuk & Dava","Nöbet & Gözaltı","STK & Kampanya","Resmi Açıklama","Sosyal Medya","Bilimsel Araştırma","Politika Analizi"]}
+  {lbl:"Eylem & İçerik",items:["Direniş & Eylem","Hukuk & Dava","Nöbet & Gözaltı","STK & Kampanya","Resmi Açıklama","Sosyal Medya","Bilimsel Araştırma","Politika Analizi"]},
+  {lbl:"Ekosistem — İnsan Dışı Canlılar",items:["Nesli Tehlike Altında Türler","Yaban Hayatı İzleme","Bitki Örtüsü & Habitatlar","Su Canlıları","Hayvan Hakları & Refahı"]},
+  {lbl:"Ekosistem — İnsan Toplulukları",items:["Kadınlar & Ekoloji","LGBTİ+ & Çevre","Engelliler & Erişim","Çiftçi & Köylü Sorunları","Balıkçı Toplulukları","Yerli & Yerel Haklar","Çocuklar & Gençlik"]},
+  {lbl:"Ekosistem — Çevre Adaleti",items:["Ekolojik Eşitsizlik","Kentsel Çevre","İklim Göçü & Yerinden Edilme","Savaş & Ekoloji","Savaş Teknolojisi & Çevre"]}
 ];
+
+/* Etiket → Ekosistem bölüm kodu eşlemesi (ekosistem.html routing için) */
+const ETIKET_BOLUM_MAP = {
+  "Nesli Tehlike Altında Türler":"turler",
+  "Yaban Hayatı İzleme":"yaban","Yaban Hayatı":"yaban",
+  "Bitki Örtüsü & Habitatlar":"bitki","Bitki Örtüsü":"bitki",
+  "Su Canlıları":"su-canlilari",
+  "Hayvan Hakları & Refahı":"hayvan-haklari",
+  "Kadınlar & Ekoloji":"kadinlar",
+  "LGBTİ+ & Çevre":"lgbti",
+  "Engelliler & Erişim":"engelliler",
+  "Çiftçi & Köylü Sorunları":"ciftci","Çiftçi & Köylü Hakları":"ciftci",
+  "Balıkçı Toplulukları":"balikci",
+  "Yerli & Yerel Haklar":"yerli","Yerli Haklar":"yerli",
+  "Çocuklar & Gençlik":"genclik",
+  "Ekolojik Eşitsizlik":"esitsizlik",
+  "Kentsel Çevre":"kentsel",
+  "İklim Göçü & Yerinden Edilme":"goc",
+  "Savaş & Ekoloji":"savas",
+  "Savaş Teknolojisi & Çevre":"savas-teknoloji"
+};
 function tagWrapRender(containerId,prefix,secili){const el=document.getElementById(containerId);if(!el)return;const seciliArr=Array.isArray(secili)?secili:(secili?[secili]:[]);el.innerHTML=ETIKET_GRUPLARI.map(g=>`<div class="tag-section"><span class="tag-section-lbl">${g.lbl}</span><div class="tag-grid">${g.items.map(item=>`<label><input type="checkbox" data-tag="${prefix}" value="${item}" ${seciliArr.includes(item)?'checked':''}>${item}</label>`).join('')}</div></div>`).join('');}
 function getChecked(prefix){return[...document.querySelectorAll(`input[data-tag="${prefix}"]:checked`)].map(el=>el.value);}
 function resetChecked(prefix){document.querySelectorAll(`input[data-tag="${prefix}"]`).forEach(cb=>cb.checked=false);}
