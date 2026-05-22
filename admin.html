@@ -81,6 +81,10 @@
       <label class="form-label">Şifre</label>
       <input class="form-control" type="password" id="passInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:16px;">
+      <input type="checkbox" id="hatirla" style="accent-color:var(--bright);width:14px;height:14px;cursor:pointer;">
+      <label for="hatirla" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);cursor:pointer;letter-spacing:.06em;">Beni hatırla (bu tarayıcıda kalıcı)</label>
+    </div>
     <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">Giriş Yap →</button>
     <div class="error-msg" id="loginErr" style="display:none;">Yanlış şifre.</div>
   </div>
@@ -607,9 +611,17 @@ function renderTagChips(etiketler){if(!etiketler)return'<span style="color:var(-
   if(!SITE.bulkImport)SITE.bulkImport=function(col,items){const l=this.getList(col),ids=new Set(l.map(x=>String(x.id)));const y=items.filter(x=>!ids.has(String(x.id)));this.set(col,[...y,...l]);return y.length;};
   if(!SITE.nextId)SITE.nextId=function(col){const l=this.getList(col);return l.length?Math.max(...l.map(x=>parseInt(x.id)||0))+1:1;};
   SITE.SESSION_KEY="ekoloji_admin_session";
-  SITE.isAdmin=function(){return sessionStorage.getItem(this.SESSION_KEY)==="1";};
-  SITE.login=function(pass){const H="ZWtvbG9qaTIwMjU=";if(btoa(pass)===H){sessionStorage.setItem(this.SESSION_KEY,"1");return true;}return false;};
-  SITE.logout=function(){sessionStorage.removeItem(this.SESSION_KEY);};
+  SITE.isAdmin=function(){return sessionStorage.getItem(this.SESSION_KEY)==="1"||localStorage.getItem(this.SESSION_KEY)==="1";};
+  SITE.login=function(pass){
+    const H="ZWtvbG9qaTIwMjU=";
+    if(btoa(pass)===H){
+      const hatirla=document.getElementById("hatirla")?.checked;
+      if(hatirla)localStorage.setItem(this.SESSION_KEY,"1");
+      else sessionStorage.setItem(this.SESSION_KEY,"1");
+      return true;
+    }return false;
+  };
+  SITE.logout=function(){sessionStorage.removeItem(this.SESSION_KEY);localStorage.removeItem(this.SESSION_KEY);};
 })();
 
 const SESSION_KEY="ekoloji_admin_session";
@@ -869,7 +881,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   const importModal=document.getElementById("importModal"),importDrop=document.getElementById("importDropZone"),importFileInp=document.getElementById("importFileInput");
   if(importDrop){importDrop.addEventListener("click",()=>importFileInp.click());importDrop.addEventListener("dragover",e=>{e.preventDefault();importDrop.style.borderColor="var(--accent)";});importDrop.addEventListener("dragleave",()=>{importDrop.style.borderColor="";});importDrop.addEventListener("drop",e=>{e.preventDefault();importDrop.style.borderColor="";if(e.dataTransfer.files[0])_importDosyaOku(e.dataTransfer.files[0]);});importFileInp.addEventListener("change",e=>{if(e.target.files[0])_importDosyaOku(e.target.files[0]);});}
   document.getElementById("importKapat")?.addEventListener("click",()=>{importModal.style.display="none";});document.getElementById("importIptalBtn")?.addEventListener("click",()=>{importModal.style.display="none";});document.getElementById("importUygulaBtn")?.addEventListener("click",_importUygula);if(importModal)importModal.addEventListener("click",e=>{if(e.target===importModal)importModal.style.display="none";});
-  SITE.logout();document.getElementById("loginScreen").style.display="block";
+  /* Kalıcı oturum kontrolü — localStorage'da token varsa direkt admin paneli aç */
+  if(SITE.isAdmin()){gosterAdminPanel();}else{document.getElementById("loginScreen").style.display="block";}
 });
 
 /* ═══ SYNC BADGE ═══ */
