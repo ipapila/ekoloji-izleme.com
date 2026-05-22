@@ -232,6 +232,61 @@ def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False) -> in
     return puan
 
 
+# ─── KAYIT ZENGİNLEŞTİRME ─────────────────────────────────────────
+
+# Başlık ve özet içeriğine göre eylem tipini otomatik tespit et
+DIRENIS_ANAHTAR = [
+    "direniş", "direnis", "eylem", "protesto", "miting", "yürüyüş", "yuruyus",
+    "boykot", "abluka", "işgal", "oturma eylemi", "nöbete", "nobete",
+]
+NOBET_ANAHTAR = [
+    "nöbet", "nobet", "gözaltı", "gozalti", "tutuklama", "tutuklandi",
+    "gözaltına", "polis", "biber gazı", "tahliye", "serbest bırakıldı",
+]
+HUKUK_ANAHTAR = [
+    "dava", "mahkeme", "iptal", "yargı", "yargi", "karar", "itiraz",
+    "hukuk", "avukat", "savcı", "savci", "yürütmeyi durdur",
+]
+
+# Başlık/özetten ekosistem bölüm etiketlerini otomatik tespit et
+EKOSISTEM_ANAHTAR = {
+    "Nesli Tehlike Altında Türler": ["nesli tükeniyor", "nesli tehlike", "türler azaldı", "yaban hayatı azalıyor"],
+    "Yaban Hayatı İzleme":          ["yaban hayatı", "vahşi hayat", "ayı", "kurt", "vaşak", "geyik", "karaçalı"],
+    "Bitki Örtüsü & Habitatlar":    ["orman yangını", "orman tahribi", "ağaç kesiyor", "habitat yok", "bitki örtüsü"],
+    "Su Canlıları":                  ["balık ölümü", "su canlısı", "deniz canlısı", "midye", "balık", "su kirlilik"],
+    "Çiftçi & Köylü Sorunları":     ["çiftçi", "köylü", "tarım", "köy", "bağ", "bahçe"],
+    "Balıkçı Toplulukları":          ["balıkçı", "balıkçılık", "tekne", "ağ"],
+    "Kadınlar & Ekoloji":            ["kadın", "kadin"],
+    "Savaş & Ekoloji":               ["savaş", "savas", "bomba", "silah", "ordu", "askeri"],
+    "Savaş Teknolojisi & Çevre":     ["drone", "insansız hava", "iha", "radar", "füze"],
+}
+
+def zenginlestir(kayit: dict) -> dict:
+    """Kayıt eylem ve etiketlerini başlık/özetten zenginleştir."""
+    metin = (kayit.get("baslik", "") + " " + kayit.get("ozet", "")).lower()
+    eylem  = kayit.get("eylem")
+    etiket = list(kayit.get("etiketler") or [])
+
+    # Eylem tipini tespit et (mevcut yoksa)
+    if not eylem:
+        if any(k in metin for k in NOBET_ANAHTAR):
+            eylem = "Nöbet & Gözaltı"
+        elif any(k in metin for k in DIRENIS_ANAHTAR):
+            eylem = "Direniş & Eylem"
+        elif any(k in metin for k in HUKUK_ANAHTAR):
+            eylem = eylem or "Hukuk & Dava"
+
+    # Ekosistem etiketlerini ekle
+    for bolum_ad, anahtarlar in EKOSISTEM_ANAHTAR.items():
+        if any(k in metin for k in anahtarlar):
+            if bolum_ad not in etiket:
+                etiket.append(bolum_ad)
+
+    kayit["eylem"]    = eylem
+    kayit["etiketler"] = etiket
+    return kayit
+
+
 # ─── YARDIMCI FONKSİYONLAR ─────────────────────────────────────────
 
 logging.basicConfig(
@@ -320,6 +375,7 @@ def rss_tara(kaynaklar: list) -> list:
                     "etiketler":   _hrm.get("etiketler", []),
                     "_puan":       puan,
                 })
+                haberler[-1] = zenginlestir(haberler[-1])
                 kabul += 1
 
             log.info(f"  → {kabul} kabul / {reddedilen} reddedildi")
@@ -379,6 +435,7 @@ def web_tara(kaynaklar: list) -> list:
                     "etiketler":   _hwm.get("etiketler", []),
                     "_puan":       puan,
                 })
+                haberler[-1] = zenginlestir(haberler[-1])
                 kabul += 1
 
             log.info(f"  → {kabul} kabul / {reddedilen} reddedildi")
