@@ -303,8 +303,27 @@ HEADERS = {
 }
 
 
+def url_normalize(url: str) -> str:
+    """URL'yi deduplikasyon için normalleştir: UTM parametreleri ve fragment sil."""
+    try:
+        from urllib.parse import urlparse, urlencode, parse_qsl, urlunparse
+        p = urlparse(url)
+        # UTM ve tracking parametrelerini sil
+        ATLA = {"utm_source","utm_medium","utm_campaign","utm_term","utm_content",
+                "fbclid","gclid","mc_cid","mc_eid","ref","source","via","trk"}
+        temiz = [(k, v) for k, v in parse_qsl(p.query) if k.lower() not in ATLA]
+        return urlunparse(p._replace(query=urlencode(temiz), fragment="")).rstrip("/")
+    except Exception:
+        return url.split("?")[0].rstrip("/")
+
+
+def baslik_normalize(baslik: str) -> str:
+    """Başlığı karşılaştırma için normalleştir."""
+    return re.sub(r"\s+", " ", baslik).strip().lower()
+
+
 def haber_id(url: str, baslik: str) -> str:
-    return hashlib.md5(f"{url}|{baslik}".encode("utf-8")).hexdigest()[:12]
+    return hashlib.md5(f"{url_normalize(url)}|{baslik_normalize(baslik)}".encode("utf-8")).hexdigest()[:12]
 
 
 def tarih_normalize(tarih_str) -> Optional[str]:
@@ -456,6 +475,9 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500):
     gorulen_idler: set = set()
     gorulen_basliklar: set = set()
     eski_haberler: list = []
+    gorulen_urller: set = set()   # URL bazlı kontrol (UTM temizlenmiş)
+
+    gorulen_urller: set = set()   # URL bazlı kontrol (UTM temizlenmiş)
 
     if p.exists():
         try:
@@ -463,10 +485,15 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500):
             eski_haberler = eski.get("haberler", [])
             gorulen_idler = {h.get("id", "") for h in eski_haberler}
             gorulen_basliklar = {
-                re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
+                baslik_normalize(h.get("baslik", ""))
                 for h in eski_haberler if h.get("baslik")
             }
-            log.info(f"Mevcut dosyada {len(gorulen_idler)} haber.")
+            gorulen_urller = {
+                url_normalize(h.get("url", ""))
+                for h in eski_haberler if h.get("url")
+            }
+            log.info(f"Mevcut dosyada {len(gorulen_idler)} haber "
+                     f"({len(gorulen_urller)} benzersiz URL).")
         except json.JSONDecodeError as e:
             log.warning(f"Mevcut haberler.json bozuk (char {e.pos}), sıfırdan başlanıyor.")
         except Exception as e:
@@ -480,12 +507,22 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500):
 
     tum_yeni = []
     for h in rss_haberler + web_haberler:
-        baslik_norm = re.sub(r"\s+", " ", h.get("baslik", "")).strip().lower()
-        if h["id"] not in gorulen_idler and baslik_norm not in gorulen_basliklar:
-            tum_yeni.append(h)
-            gorulen_idler.add(h["id"])
-            if baslik_norm:
-                gorulen_basliklar.add(baslik_norm)
+        h_id      = h["id"]
+        h_url     = url_normalize(h.get("url", ""))
+        h_baslik  = baslik_normalize(h.get("baslik", ""))
+
+        # Üç katmanlı tekrar kontrolü: hash id, URL ve başlık
+        if (h_id in gorulen_idler
+                or h_url in gorulen_urller
+                or h_baslik in gorulen_basliklar):
+            continue
+
+        tum_yeni.append(h)
+        gorulen_idler.add(h_id)
+        if h_url:
+            gorulen_urller.add(h_url)
+        if h_baslik:
+            gorulen_basliklar.add(h_baslik)
 
     for h in tum_yeni:
         h.pop("_puan", None)
