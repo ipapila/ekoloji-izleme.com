@@ -23,64 +23,7 @@ HARITA_TEMIZLE = False
 HARITA_KAYNAKLARI = {"OGM", "DKMP", "BSGM", "harita_import", "harita_verisi"}
 
 
-# ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
-KAYNAK_RSS = [
-    {
-        "ad": "İklim Haber", "etiket": "İklim", "genel": False,
-        "url": "https://iklimhaber.org/feed/",
-        "web": "https://iklimhaber.org",
-    },
-    {
-        "ad": "Google News", "etiket": "Çevre İhlali", "genel": False,
-        "url": "https://news.google.com/rss/search?q=çevre+ihlali+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-        "web": "https://news.google.com",
-    },
-    {
-        "ad": "Google News", "etiket": "Orman / Maden", "genel": False,
-        "url": "https://news.google.com/rss/search?q=orman+tahribi+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-        "web": "https://news.google.com",
-    },
-    {
-        "ad": "Google News", "etiket": "HES / RES / Baraj", "genel": False,
-        "url": "https://news.google.com/rss/search?q=HES+RES+baraj+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-        "web": "https://news.google.com",
-    },
-    {
-        "ad": "Google News", "etiket": "Kamulaştırma", "genel": False,
-        "url": "https://news.google.com/rss/search?q=acele+kamulaştırma+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-        "web": "https://news.google.com",
-    },
-    {
-        "ad": "Google News", "etiket": "ÇED Kararları", "genel": False,
-        "url": "https://news.google.com/rss/search?q=ÇED+maden+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-        "web": "https://news.google.com",
-    },
-    {
-        "ad": "Google News", "etiket": "Orman / Maden", "genel": False,
-        "url": "https://news.google.com/rss/search?q=ağaç+katliamı+orman+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-        "web": "https://news.google.com",
-    },
-    {
-        "ad": "Google News", "etiket": "Çevre İhlali", "genel": False,
-        "url": "https://news.google.com/rss/search?q=sulak+alan+milli+park+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-        "web": "https://news.google.com",
-    },
-    {
-        "ad": "Sözcü Çevre", "etiket": "Haber", "genel": True,
-        "url": "https://www.sozcu.com.tr/rss/cevre.xml",
-        "web": "https://www.sozcu.com.tr/cevre/",
-    },
-    {
-        "ad": "Gazete Duvar", "etiket": "Haber", "genel": True,
-        "url": "https://www.gazeteduvar.com.tr/feed",
-        "web": "https://www.gazeteduvar.com.tr",
-    },
-    {
-        "ad": "Bianet Genel", "etiket": "Haber", "genel": True,
-        "url": "https://bianet.org/biamag/feed/rss",
-        "web": "https://bianet.org",
-    },
-]
+
 
 KAYNAK_WEB = [
     {
