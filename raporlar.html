@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag("js", new Date());
-  gtag("config", "G-LTTD3L198S");
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-LTTD3L198S");</script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Raporlar — ekoloji-izleme.com</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -37,6 +31,8 @@
 .empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;letter-spacing:.05em;}
 .admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:.06em;}
 .admin-sil-btn:hover{background:rgba(232,92,42,.25);}
+.admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
 .modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
 .modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;}
 .modal-header{padding:28px 36px 16px;display:flex;justify-content:space-between;align-items:start;position:sticky;top:0;background:var(--deep);border-bottom:1px solid rgba(45,158,107,.1);}
@@ -50,57 +46,11 @@
 .modal-btn-primary:hover{background:var(--bright);}
 .modal-btn-outline{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:transparent;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;text-decoration:none;border-radius:4px;border:1px solid rgba(240,245,242,.2);}
 .modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;}
-
-/* ── Admin: Rapor Ekleme Formu ── */
-.admin-form-wrap{background:var(--forest);border:1px solid rgba(45,158,107,.2);border-radius:8px;padding:32px;margin-bottom:32px;display:none;}
-.admin-form-wrap.acik{display:block;}
-.admin-form-wrap h3{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin-bottom:20px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.form-grid .full{grid-column:1/-1;}
-.form-input,.form-select,.form-textarea{width:100%;box-sizing:border-box;font-family:'JetBrains Mono',monospace;font-size:11px;padding:9px 13px;background:rgba(45,158,107,.06);border:1px solid rgba(45,158,107,.18);border-radius:3px;color:var(--cream);outline:none;transition:border-color .2s;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);}
-.form-textarea{resize:vertical;min-height:80px;}
-.form-select option{background:#1a2e22;}
-.form-actions{display:flex;gap:10px;margin-top:16px;align-items:center;}
-.btn-kaydet{padding:10px 22px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;transition:background .2s;}
-.btn-kaydet:hover{background:var(--bright);}
-.btn-kaydet:disabled{opacity:.5;cursor:not-allowed;}
-.btn-iptal{padding:10px 18px;background:transparent;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;border:1px solid rgba(45,158,107,.2);border-radius:3px;cursor:pointer;}
-.sync-status{font-family:'JetBrains Mono',monospace;font-size:10px;margin-left:8px;}
-.sync-status.ok{color:#4db888;}
-.sync-status.err{color:#e85c2a;}
-.sync-status.loading{color:var(--muted);}
-
-/* ── Admin: Token Ayarı ── */
-.token-bar{background:rgba(232,92,42,.06);border:1px solid rgba(232,92,42,.2);border-radius:4px;padding:10px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#e85c2a;}
-.token-bar input{flex:1;font-family:'JetBrains Mono',monospace;font-size:10px;padding:5px 10px;background:rgba(232,92,42,.08);border:1px solid rgba(232,92,42,.25);border-radius:2px;color:var(--cream);outline:none;}
-.token-bar button{padding:5px 12px;background:rgba(232,92,42,.15);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;}
-
-/* Admin ekle butonu */
-.admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;}
-.admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
-
-@media(max-width:900px){
-  .page-header{padding:80px 28px 40px;}
-  .page-header-inner{grid-template-columns:1fr;}
-  .content{padding:30px 28px;}
-  .rapor-grid{grid-template-columns:1fr;}
-  .form-grid{grid-template-columns:1fr;}
-}
+@media(max-width:900px){.page-header{padding:80px 28px 40px;}.page-header-inner{grid-template-columns:1fr;}.content{padding:30px 28px;}.rapor-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <script src="site-data.js"></script>
-<script src="github-sync.js"></script>
-<script>
-  // ── BURAYA KENDİ BİLGİLERİNİ GİR ──
-  GithubSync.init({
-    owner:  'GITHUB_KULLANICI_ADINIZ',  // örn: 'ekoloji-izleme'
-    repo:   'REPO_ADINIZ',              // örn: 'site'
-    branch: 'main',
-    path:   'data.json'
-  });
-</script>
 <div id="nav-root"></div>
 <script src="nav.js"></script>
 
@@ -119,55 +69,14 @@
 </div>
 
 <div class="content">
-
-  <!-- Admin Bölümü (sadece admin girişindeyken görünür) -->
+  <!-- Admin linki (sadece admin girişindeyken görünür) -->
   <div id="adminBolum" style="display:none;margin-bottom:24px;">
-
-    <!-- Token Uyarısı (token yoksa göster) -->
-    <div class="token-bar" id="tokenBar" style="display:none;">
-      ⚠ GitHub token eksik — kaydetme çalışmaz.
-      <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-      <button onclick="tokenKaydet()">Kaydet</button>
-    </div>
-
-    <div style="display:flex;gap:10px;margin-bottom:16px;">
-      <button class="admin-ekle-btn" onclick="toggleForm()">+ Yeni Rapor Ekle</button>
-    </div>
-
-    <!-- Rapor Ekleme Formu -->
-    <div class="admin-form-wrap" id="raporForm">
-      <h3>Yeni Rapor</h3>
-      <div class="form-grid">
-        <input class="form-input full" id="f_baslik" placeholder="Başlık *">
-        <select class="form-select" id="f_tur">
-          <option value="Veri">Veri</option>
-          <option value="Alan Raporu">Alan Raporu</option>
-          <option value="Hukuki">Hukuki</option>
-          <option value="Analiz">Analiz</option>
-          <option value="Rapor">Rapor</option>
-        </select>
-        <input class="form-input" id="f_yazar" placeholder="Yazar">
-        <input class="form-input" id="f_tarih" type="date">
-        <input class="form-input" id="f_bolge" placeholder="Bölge / Konum">
-        <input class="form-input" id="f_url" placeholder="Kaynak URL (https://…)">
-        <input class="form-input" id="f_dosya" placeholder="Dosya URL (PDF vb.)">
-        <input class="form-input" id="f_foto_url" placeholder="Fotoğraf URL (opsiyonel)">
-        <textarea class="form-textarea full" id="f_ozet" placeholder="Özet / Açıklama *"></textarea>
-        <textarea class="form-textarea full" id="f_icerik" placeholder="Tam içerik (opsiyonel, HTML destekler)"></textarea>
-        <input class="form-input full" id="f_etiketler" placeholder="Etiketler (virgülle ayır: iklim, orman, su)">
-      </div>
-      <div class="form-actions">
-        <button class="btn-kaydet" id="kaydetBtn" onclick="raporKaydet()">GitHub'a Kaydet</button>
-        <button class="btn-iptal" onclick="toggleForm()">İptal</button>
-        <span class="sync-status" id="syncStatus"></span>
-      </div>
-    </div>
+    <a class="admin-ekle-btn" href="admin.html">+ Rapor Ekle / Yönet →</a>
   </div>
 
   <div class="rapor-grid" id="raporGrid"><div class="empty">Raporlar yükleniyor…</div></div>
 </div>
 
-<!-- Detail Modal -->
 <div id="detailModal" class="modal-bg" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-box">
     <div class="modal-header"><span class="modal-tur" id="mTur"></span><button class="modal-close" onclick="document.getElementById('detailModal').style.display='none'">✕</button></div>
@@ -176,112 +85,38 @@
 </div>
 
 <script>
-/* ─── Durum ─── */
 let tumRaporlar = [];
 let aktifTur = '';
 let gorunenRaporlar = [];
 
-/* ─── Admin kontrolü ─── */
 function isAdmin() { return typeof SITE !== 'undefined' && SITE.isAdmin(); }
 
-function adminInit() {
-  if (!isAdmin()) return;
-  document.getElementById('adminBolum').style.display = 'block';
-  if (!GithubSync.getToken()) document.getElementById('tokenBar').style.display = 'flex';
-}
-
-function tokenKaydet() {
-  const t = document.getElementById('tokenInput').value.trim();
-  if (!t) return;
-  GithubSync.saveToken(t);
-  document.getElementById('tokenBar').style.display = 'none';
-  setStatus('Token kaydedildi ✓', 'ok');
-}
-
-/* ─── Form ─── */
-function toggleForm() {
-  const f = document.getElementById('raporForm');
-  f.classList.toggle('acik');
-}
-
-function formDegerle() {
-  const etiketRaw = document.getElementById('f_etiketler').value;
-  const etiketler = etiketRaw ? etiketRaw.split(',').map(e => e.trim()).filter(Boolean) : [];
-  return {
-    baslik:   document.getElementById('f_baslik').value.trim(),
-    tur:      document.getElementById('f_tur').value,
-    yazar:    document.getElementById('f_yazar').value.trim(),
-    tarih:    document.getElementById('f_tarih').value,
-    bolge:    document.getElementById('f_bolge').value.trim(),
-    url:      document.getElementById('f_url').value.trim(),
-    dosya:    document.getElementById('f_dosya').value.trim(),
-    foto_url: document.getElementById('f_foto_url').value.trim(),
-    ozet:     document.getElementById('f_ozet').value.trim(),
-    icerik:   document.getElementById('f_icerik').value.trim(),
-    etiketler
-  };
-}
-
-function formTemizle() {
-  ['f_baslik','f_yazar','f_tarih','f_bolge','f_url','f_dosya','f_foto_url','f_ozet','f_icerik','f_etiketler']
-    .forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f_tur').value = 'Veri';
-}
-
-function setStatus(msg, tip) {
-  const el = document.getElementById('syncStatus');
-  el.textContent = msg;
-  el.className = 'sync-status ' + (tip || '');
-}
-
-async function raporKaydet() {
-  const kayit = formDegerle();
-  if (!kayit.baslik) { setStatus('Başlık zorunlu!', 'err'); return; }
-  if (!kayit.ozet)   { setStatus('Özet zorunlu!', 'err'); return; }
-
-  const btn = document.getElementById('kaydetBtn');
-  btn.disabled = true;
-  setStatus('GitHub\'a yazılıyor…', 'loading');
-
-  try {
-    const yeni = await GithubSync.ekle('raporlar', kayit);
-    tumRaporlar.unshift(yeni);
-    filtrele();
-    formTemizle();
-    document.getElementById('raporForm').classList.remove('acik');
-    setStatus('✓ Kaydedildi! Tüm ziyaretçiler görebilir.', 'ok');
-    setTimeout(() => setStatus('', ''), 5000);
-  } catch (e) {
-    setStatus('Hata: ' + e.message, 'err');
-    console.error(e);
-  } finally {
-    btn.disabled = false;
-  }
+/* ─── Silinen kayıtları localStorage'dan oku ─── */
+function getSilinen() {
+  try { return new Set(JSON.parse(localStorage.getItem('ekoloji_rapor_silinen') || '[]').map(String)); }
+  catch { return new Set(); }
 }
 
 /* ─── Silme ─── */
-async function raporSil(id) {
-  if (!confirm('Bu raporu silmek istiyor musunuz? (GitHub\'dan kalıcı silinir)')) return;
-  setStatus('Siliniyor…', 'loading');
-  try {
-    await GithubSync.sil('raporlar', id);
-    tumRaporlar = tumRaporlar.filter(r => String(r.id) !== String(id));
-    filtrele();
-    setStatus('Silindi.', 'ok');
-    setTimeout(() => setStatus('', ''), 3000);
-  } catch (e) {
-    setStatus('Hata: ' + e.message, 'err');
-  }
+function raporSil(id) {
+  if (!confirm('Bu raporu silmek istiyor musunuz?')) return;
+  const sid = String(id);
+  /* localStorage'dan kaldır */
+  if (typeof SITE !== 'undefined') SITE.set('raporlar', (SITE.get('raporlar') || []).filter(r => String(r.id) !== sid));
+  /* Silinen listesine ekle */
+  const s = getSilinen(); s.add(sid);
+  localStorage.setItem('ekoloji_rapor_silinen', JSON.stringify([...s]));
+  /* Ekrandan kaldır */
+  tumRaporlar = tumRaporlar.filter(r => String(r.id) !== sid);
+  filtrele();
 }
 
 /* ─── Modal ─── */
 function acModal(idx) {
-  const r = gorunenRaporlar[idx];
-  if (!r) return;
-  const tarihStr = r.tarih ? new Date(r.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : '';
-  const domain = r.url ? (() => { try { return new URL(r.url).hostname.replace('www.',''); } catch(e){ return r.url; } })() : '';
-  const etiketler = Array.isArray(r.etiketler) ? r.etiketler :
-    (r.etiketler ? (() => { try { return JSON.parse(r.etiketler); } catch(e){ return []; } })() : []);
+  const r = gorunenRaporlar[idx]; if (!r) return;
+  const tarihStr = r.tarih ? new Date(r.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const domain = r.url ? (()=>{try{return new URL(r.url).hostname.replace('www.','');}catch{return r.url;}})() : '';
+  const etiketler = Array.isArray(r.etiketler) ? r.etiketler : (r.etiketler ? (()=>{try{return JSON.parse(r.etiketler);}catch{return [];}})() : []);
   const hasPdf = r.dosya && /\.pdf(\?|$)/i.test(r.dosya);
   const hasDoc = r.dosya && /\.(doc|docx)(\?|$)/i.test(r.dosya);
   const dosyaAd = hasPdf ? '📄 PDF İndir' : hasDoc ? '📝 Belgeyi Aç' : r.dosya ? '📎 Dosyayı Aç' : '';
@@ -289,25 +124,23 @@ function acModal(idx) {
   document.getElementById('mTur').textContent = r.tur || r.kategori || 'Rapor';
   document.getElementById('mTitle').textContent = r.baslik || r.title || '';
   document.getElementById('mMeta').innerHTML =
-    (r.yazar?`<span>✍ ${r.yazar}</span>`:'')+
-    (tarihStr?`<span>📅 ${tarihStr}</span>`:'')+
-    (r.yil?`<span>📆 ${r.yil}</span>`:'')+
-    (r.bolge||r.konum?`<span>📍 ${r.bolge||r.konum}</span>`:'')+
-    (domain?`<span>🔗 ${domain}</span>`:'');
+    (r.yazar ? `<span>✍ ${r.yazar}</span>` : '') +
+    (tarihStr ? `<span>📅 ${tarihStr}</span>` : '') +
+    (r.yil ? `<span>📆 ${r.yil}</span>` : '') +
+    (r.bolge||r.konum ? `<span>📍 ${r.bolge||r.konum}</span>` : '') +
+    (domain ? `<span>🔗 ${domain}</span>` : '');
 
   let fotoHtml = '';
   if (r.foto_url) fotoHtml = `<img src="${r.foto_url}" alt="${r.baslik||''}" onerror="this.style.display='none'"
     style="width:100%;max-height:280px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">`;
 
   const chipsHtml = etiketler.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 14px;">
-    ${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;
-    border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join("")}
+    ${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join('')}
   </div>` : '';
 
   const metin = r.icerik || r.ozet || r.aciklama || r.description || '';
   document.getElementById('mIcerik').innerHTML = fotoHtml + chipsHtml +
-    (metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('') :
-    '<p style="opacity:.5">İçerik mevcut değil.</p>');
+    (metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('') : '<p style="opacity:.5">İçerik mevcut değil.</p>');
 
   const actions = document.getElementById('mActions');
   actions.innerHTML = '';
@@ -326,14 +159,14 @@ function render(liste) {
   if (!liste.length) { grid.innerHTML = '<div class="empty">Rapor bulunamadı.</div>'; return; }
   const admin = isAdmin();
   grid.innerHTML = liste.map((r,i) => {
-    const tarih = r.tarih ? new Date(r.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}) : '';
+    const tarih = r.tarih ? new Date(r.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '';
     const ozet = r.ozet || r.aciklama || r.description || '';
     return `<div class="rapor-kart" onclick="acModal(${i})">
       ${admin ? `<button class="admin-sil-btn" style="position:absolute;top:12px;right:12px;"
         onclick="event.stopPropagation();raporSil('${r.id}')">SİL</button>` : ''}
       <span class="rapor-tur">${r.tur||r.kategori||'Rapor'}</span>
       <h3>${r.baslik||r.title||''}</h3>
-      ${ozet?`<p class="rapor-ozet">${ozet}</p>`:''}
+      ${ozet ? `<p class="rapor-ozet">${ozet}</p>` : ''}
       <div class="rapor-footer">
         <span class="rapor-tarih">${tarih}${r.yazar?' · '+r.yazar:''}</span>
         <span class="rapor-oku">Detay →</span>
@@ -358,31 +191,36 @@ function filtreBtnClick(btn, tur) {
   filtrele();
 }
 
-/* ─── Veri Yükleme ─── */
-// GitHub'dan oku (tüm kullanıcılar için)
-GithubSync.read()
+/* ─── VERİ YÜKLEME ───────────────────────────────────────────────
+   Raporlar admin.html → veriYaz() → GitHub data.json → webhook →
+   sunucudaki data.json içine yazılır. Buradan okuyoruz.
+   localStorage sadece ek/geçici önbellek olarak kullanılır.
+─────────────────────────────────────────────────────────────────── */
+const silinen = getSilinen();
+const lsData = (typeof SITE !== 'undefined' ? (SITE.get('raporlar') || []) : [])
+  .filter(r => !silinen.has(String(r.id)));
+
+fetch('data.json?v=' + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
   .then(data => {
-    tumRaporlar = (data.raporlar || []);
-    filtrele();
-    adminInit();
+    const sunucuData = (data.raporlar || []).filter(r => !silinen.has(String(r.id)));
+    /* localStorage öncelikli (en güncel), sunucu eksikleri tamamlar */
+    const lsIds = new Set(lsData.map(r => String(r.id)));
+    tumRaporlar = [...lsData, ...sunucuData.filter(r => !lsIds.has(String(r.id)))];
+    tumRaporlar.sort((a, b) => (b.yil || 0) - (a.yil || 0));
+    if (!tumRaporlar.length)
+      document.getElementById('raporGrid').innerHTML = '<div class="empty">Henüz rapor eklenmedi.</div>';
+    else filtrele();
+    /* Admin panelini göster */
+    if (isAdmin()) document.getElementById('adminBolum').style.display = 'block';
   })
-  .catch(() => {
-    // Fallback: eski raporlar.json veya site-data.js
-    const local = (typeof SITE !== 'undefined' && SITE.get('raporlar')) || [];
-    fetch('raporlar.json')
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(d => {
-        const json = d.raporlar || d || [];
-        tumRaporlar = [...local, ...json.filter(r => !local.find(l => String(l.id)===String(r.id)))];
-        filtrele();
-      })
-      .catch(() => {
-        tumRaporlar = local;
-        if (!tumRaporlar.length)
-          document.getElementById('raporGrid').innerHTML = '<div class="empty">Henüz rapor eklenmedi.</div>';
-        else filtrele();
-      });
-    adminInit();
+  .catch(err => {
+    console.warn('data.json okunamadı:', err);
+    tumRaporlar = lsData;
+    if (!tumRaporlar.length)
+      document.getElementById('raporGrid').innerHTML = '<div class="empty">Henüz rapor eklenmedi.</div>';
+    else filtrele();
+    if (isAdmin()) document.getElementById('adminBolum').style.display = 'block';
   });
 </script>
 </body>
