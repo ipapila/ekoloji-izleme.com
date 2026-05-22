@@ -24,11 +24,36 @@ from bs4 import BeautifulSoup
 # ─── YAPILANDIRMA ──────────────────────────────────────────────────
 
 RSS_KAYNAKLARI = [
+    # ── Çevre odaklı medya ─────────────────────────────────────────
     {"url": "https://bianet.org/topic/cevre/feed/rss",          "kaynak": "Bianet",       "kategori": "Çevre İhlali", "genel": False},
     {"url": "https://iklimhaber.org/feed/",                      "kaynak": "İklim Haber",  "kategori": "İklim",        "genel": False},
     {"url": "https://yesilgazete.org/feed/",                     "kaynak": "Yeşil Gazete", "kategori": "Çevre Medyası","genel": False},
+    {"url": "https://www.evrensel.net/rss/ekoloji.xml",          "kaynak": "Evrensel",     "kategori": "Ekoloji",      "genel": False},
+    {"url": "https://www.birgun.net/xml/rss.xml",                "kaynak": "Birgün",       "kategori": "Haber",        "genel": True},
+
+    # ── STK & Kampanya ─────────────────────────────────────────────
     {"url": "https://www.tema.org.tr/duyurular?format=feed",     "kaynak": "TEMA",         "kategori": "STK",          "genel": False},
     {"url": "https://www.greenpeace.org/turkey/feed/",           "kaynak": "Greenpeace TR","kategori": "STK",          "genel": False},
+
+    # ── Resmi Gazete & İhale izleme ────────────────────────────────
+    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22kamula%C5%9Ft%C4%B1rma%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Resmi Gazete", "kategori": "Kamulaştırma", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22maden%22+OR+%22ihale%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Resmi Gazete", "kategori": "Resmi İhale / Maden", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=site:ilan.gov.tr+%22maden%22+OR+%22enerji%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "İlan Portalı", "kategori": "İhale / Enerji", "genel": False},
+
+    # ── Site-özel Google News filtreleri ───────────────────────────
+    {"url": "https://news.google.com/rss/search?q=site:gazetepencere.com+(%22%C3%A7evre%22+OR+%22ekoloji%22+OR+%22maden%22+OR+%22%C3%87ED%22+OR+%22iklim%22)&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Gazete Pencere", "kategori": "Çevre / Gündem", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=site:t24.com.tr+(%22%C3%A7evre%22+OR+%22ekoloji%22+OR+%22maden%22+OR+%22kamula%C5%9Ft%C4%B1rma%22+OR+%22%C3%87ED%22)&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "T24", "kategori": "Gündem / Çevre", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=site:diken.com.tr+(%22%C3%A7evre%22+OR+%22ekoloji%22+OR+%22maden%22+OR+%22%C3%87ED%22+OR+%22do%C4%9Fa%22)&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Diken", "kategori": "Gündem / Çevre", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=site:artigercek.com+(%22%C3%A7evre%22+OR+%22ekoloji%22+OR+%22maden%22+OR+%22kamula%C5%9Ft%C4%B1rma%22)&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Artı Gerçek", "kategori": "Gündem / Ekoloji", "genel": False},
+
+    # ── Konu & bölge odaklı sorgular ───────────────────────────────
     {"url": "https://news.google.com/rss/search?q=çevre+ihlali+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Çevre İhlali", "genel": False},
     {"url": "https://news.google.com/rss/search?q=orman+tahribi+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
@@ -37,23 +62,66 @@ RSS_KAYNAKLARI = [
      "kaynak": "Google News", "kategori": "HES / RES / Baraj", "genel": False},
     {"url": "https://news.google.com/rss/search?q=acele+kamulaştırma+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Kamulaştırma", "genel": False},
-    {"url": "https://news.google.com/rss/search?q=ÇED+maden+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
+    {"url": "https://news.google.com/rss/search?q=ÇED+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "ÇED Kararları", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=siyanür+atık+barajı+maden&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Maden Riski / Atık", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=jeotermal+JES+tarım+aydin+manisa&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "JES / Çevre İhlali", "genel": False},
+    {"url": "https://news.google.com/rss/search?q=zeytinlik+maden+projesi+kamulaştırma&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Tarım Alanları / Maden", "genel": False},
+
+    # ── Genel haber kaynakları (yüksek filtre eşiği) ───────────────
     {"url": "https://www.sozcu.com.tr/rss/cevre.xml",            "kaynak": "Sözcü",        "kategori": "Haber",        "genel": True},
     {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",       "kaynak": "Cumhuriyet",   "kategori": "Haber",        "genel": True},
 ]
 
 WEB_KAYNAKLARI = [
-    {"url": "https://yesilgazete.org",           "kaynak": "Yeşil Gazete", "kategori": "Çevre Medyası",
+    # ── Çevre medyası ──────────────────────────────────────────────
+    {"url": "https://yesilgazete.org",           "kaynak": "Yeşil Gazete",    "kategori": "Çevre Medyası",
      "secici": "article h2 a, .entry-title a",   "ozet_secici": "article .entry-content p", "genel": False},
-    {"url": "https://iklimhaber.org",            "kaynak": "İklim Haber",  "kategori": "İklim",
-     "secici": "article h2 a, .entry-title a",   "ozet_secici": "article p",                "genel": False},
+    {"url": "https://iklimhaber.org",            "kaynak": "İklim Haber",     "kategori": "İklim",
+     "secici": "article h2 a, .entry-title a",   "ozet_secici": "article p",  "genel": False},
+    {"url": "https://www.gazeteduvar.com.tr/ekoloji", "kaynak": "Gazete Duvar", "kategori": "Ekoloji",
+     "secici": ".row a, h2 a, .news-box a",      "ozet_secici": ".lead, p",   "genel": False},
+    {"url": "https://medyascope.tv/category/cevre-ekoloji/", "kaynak": "Medyascope", "kategori": "Ekoloji",
+     "secici": ".entry-title a, h3 a",           "ozet_secici": ".entry-summary p", "genel": False},
+    {"url": "https://magmadergisi.com",          "kaynak": "Magma Dergisi",   "kategori": "Çevre Medyası",
+     "secici": ".card-title a, h3 a",            "ozet_secici": ".card-text, .excerpt", "genel": False},
+
+    # ── STK & Sivil toplum ─────────────────────────────────────────
     {"url": "https://www.greenpeace.org/turkey/blog/", "kaynak": "Greenpeace TR", "kategori": "STK",
-     "secici": ".post-title a, h2 a",            "ozet_secici": ".post-excerpt p",           "genel": False},
-    {"url": "https://tr.euronews.com/tag/cevre", "kaynak": "Euronews TR",  "kategori": "Haber",
-     "secici": ".article__title a, h3.article__title a", "ozet_secici": ".article__summary", "genel": True},
+     "secici": ".post-title a, h2 a",            "ozet_secici": ".post-excerpt p", "genel": False},
+    {"url": "https://ekolojibirligi.org",        "kaynak": "Ekoloji Birliği", "kategori": "STK / Yerel Basın",
+     "secici": ".post-title a, h2.entry-title a","ozet_secici": ".entry-summary p, .post-content p", "genel": False},
+    {"url": "https://kuzeyormanlari.org",        "kaynak": "Kuzey Ormanları", "kategori": "STK / Orman",
+     "secici": "h2.entry-title a, article a",   "ozet_secici": ".entry-content p", "genel": False},
+    {"url": "https://politeknik.org.tr",         "kaynak": "Politeknik",      "kategori": "Mühendislik / Çevre",
+     "secici": ".post-title a, h3.post-title a", "ozet_secici": ".post-excerpt", "genel": False},
+
+    # ── Resmi kurumlar ─────────────────────────────────────────────
     {"url": "https://www.csb.gov.tr/duyurular",  "kaynak": "Çevre Bakanlığı", "kategori": "Resmi",
-     "secici": ".duyuru-item a, h3 a",           "ozet_secici": ".duyuru-ozet",              "genel": False},
+     "secici": ".duyuru-item a, h3 a",           "ozet_secici": ".duyuru-ozet", "genel": False},
+    {"url": "https://www.resmigazete.gov.tr",    "kaynak": "Resmi Gazete",    "kategori": "Resmi",
+     "secici": ".gazete-baslik a, #content a",   "ozet_secici": ".ozet-metin, p", "genel": False},
+    {"url": "https://www.mapeg.gov.tr/Duyurular","kaynak": "MAPEG (Maden)",   "kategori": "Resmi / Maden",
+     "secici": ".news-list a, h4 a",             "ozet_secici": ".news-detail, p", "genel": False},
+    {"url": "https://www.epdk.gov.tr/Detay/Duyurular", "kaynak": "EPDK (Enerji)", "kategori": "Resmi / Enerji",
+     "secici": ".announcement-list a, .title a", "ozet_secici": ".description-text, p", "genel": False},
+    {"url": "https://www.ilan.gov.tr",           "kaynak": "İlan Portalı",    "kategori": "İhale",
+     "secici": ".ng-item-title a, .ad-card-title","ozet_secici": ".ad-card-description, p", "genel": False},
+
+    # ── Genel haber portalleri (yüksek filtre eşiği) ───────────────
+    {"url": "https://tr.euronews.com/tag/cevre", "kaynak": "Euronews TR",     "kategori": "Haber",
+     "secici": ".article__title a, h3.article__title a", "ozet_secici": ".article__summary", "genel": True},
+    {"url": "https://www.gazetepencere.com",     "kaynak": "Gazete Pencere",  "kategori": "Haber",
+     "secici": ".news-title a, h3 a, .card-title a", "ozet_secici": ".news-excerpt, p", "genel": True},
+    {"url": "https://t24.com.tr",                "kaynak": "T24",             "kategori": "Haber",
+     "secici": "h3 a, ._2b_Xq a, ._3W9uR a",   "ozet_secici": "p, ._1pZp3", "genel": True},
+    {"url": "https://www.diken.com.tr",          "kaynak": "Diken",           "kategori": "Haber",
+     "secici": ".entry-title a, h2 a",           "ozet_secici": ".entry-content p, p", "genel": True},
+    {"url": "https://artigercek.com",            "kaynak": "Artı Gerçek",     "kategori": "Haber",
+     "secici": ".post-title a, h2 a, h3 a",     "ozet_secici": ".post-excerpt, p", "genel": True},
 ]
 
 # ─── FİLTRE SİSTEMİ ────────────────────────────────────────────────
