@@ -113,6 +113,7 @@
       <button class="tab" data-tab="makaleler">Makaleler</button>
       <button class="tab" data-tab="uluslararasi">Uluslararası Medya</button>
       <button class="tab" data-tab="ekosistem">Ekosistem</button>
+      <button class="tab" data-tab="direnis">Direniş Ağı</button>
     </div>
 
     <!-- İHLALLER -->
@@ -465,6 +466,56 @@
         </table>
       </div>
     </div>
+    <!-- DİRENİŞ AĞI -->
+    <div class="tab-panel" id="tab-direnis">
+      <div class="form-card">
+        <h3>Direniş Ağı Kaydı Ekle</h3>
+        <p class="form-desc">Gruplar · Eylemler · Hukuki Süreçler · Nöbetler · STK & Kampanyalar</p>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Ad / Başlık *</label><input class="form-control" id="dr-baslik" placeholder="Grup adı veya eylem başlığı"></div>
+          <div class="form-group"><label class="form-label">Tür *</label>
+            <select class="form-control" id="dr-tip">
+              <option value="grup">🌐 Grup / Platform / Örgüt</option>
+              <option value="eylem">⚡ Direniş & Eylem</option>
+              <option value="hukuk">⚖️ Hukuki Süreç / Dava</option>
+              <option value="nobet">🕯 Nöbet & Gözaltı</option>
+              <option value="stk">🏳 STK & Kampanya</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Bölge / Konum</label><input class="form-control" id="dr-bolge" placeholder="İl, ilçe veya ülke"></div>
+          <div class="form-group"><label class="form-label">Tarih</label><input class="form-control" type="date" id="dr-tarih"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Kaynak / Kurum</label><input class="form-control" id="dr-kaynak" placeholder="Kurum adı, medya…"></div>
+          <div class="form-group"><label class="form-label">Web Sitesi</label><input class="form-control" id="dr-web" placeholder="https://..."></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Haber / Kaynak URL</label><input class="form-control" id="dr-url" placeholder="https://..."></div>
+          <div class="form-group"><label class="form-label">E-posta</label><input class="form-control" id="dr-email" placeholder="iletisim@..."></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Instagram</label><input class="form-control" id="dr-instagram" placeholder="https://instagram.com/..."></div>
+          <div class="form-group"><label class="form-label">Twitter / X</label><input class="form-control" id="dr-twitter" placeholder="https://twitter.com/..."></div>
+        </div>
+        <div class="form-group"><label class="form-label">Açıklama / Özet</label><textarea class="form-control" id="dr-aciklama" rows="4" placeholder="Grubun amacı, eylemin içeriği veya davanın konusu"></textarea></div>
+        <div class="form-group"><label class="form-label">Fotoğraf</label>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">📷 Görsel Seç<input type="file" id="dr-foto" accept="image/*" style="display:none;" onchange="onFotoSec('dr-foto','dr-foto-url','dr-foto-onizleme')"></label>
+            <input class="form-control" id="dr-foto-url" placeholder="veya URL" style="flex:1;min-width:180px;">
+          </div>
+          <div id="dr-foto-onizleme" style="margin-top:8px;display:none;"><img style="max-height:80px;border-radius:3px;" alt=""></div>
+        </div>
+        <button class="btn btn-primary" onclick="addDirenis()">+ Kayıt Ekle</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th>#</th><th>Ad / Başlık</th><th>Tür</th><th>Bölge</th><th>Tarih</th><th></th></tr></thead>
+          <tbody id="direnisTbody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -631,14 +682,15 @@ function doLogin(){const p=document.getElementById("passInput").value,e=document
 function doLogout(){SITE.logout();location.reload();}
 function gosterAdminPanel(){document.getElementById("loginScreen").style.display="none";document.getElementById("adminPanel").style.display="block";boot();}
 function initTabs(){document.querySelectorAll(".tab").forEach(tab=>{tab.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));tab.classList.add("active");document.getElementById("tab-"+tab.dataset.tab).classList.add("active");});});}
-function updateStats(){const cols=["ihlaller","haberler","raporlar","makaleler","uluslararasi","ekosistem"],lbls=["İhlal","Haber","Rapor","Makale","Uluslararası","Ekosistem"];document.getElementById("statsRow").innerHTML=cols.map((c,i)=>`<div class="stat-box"><div class="n">${SITE.getList(c).length}</div><div class="l">${lbls[i]}</div></div>`).join('');}
-const SIL_KEY={ihlaller:"ekoloji_ihlal_silinen",haberler:"ekoloji_haber_silinen",raporlar:"ekoloji_rapor_silinen",makaleler:"ekoloji_makale_silinen",uluslararasi:"ekoloji_ulus_silinen",ekosistem:"ekoloji_ekosistem_silinen"};
+function updateStats(){const cols=["ihlaller","haberler","raporlar","makaleler","uluslararasi","ekosistem","direnis"],lbls=["İhlal","Haber","Rapor","Makale","Uluslararası","Ekosistem","Direniş"];document.getElementById("statsRow").innerHTML=cols.map((c,i)=>`<div class="stat-box"><div class="n">${SITE.getList(c).length}</div><div class="l">${lbls[i]}</div></div>`).join('');}
+const SIL_KEY={ihlaller:"ekoloji_ihlal_silinen",haberler:"ekoloji_haber_silinen",raporlar:"ekoloji_rapor_silinen",makaleler:"ekoloji_makale_silinen",uluslararasi:"ekoloji_ulus_silinen",ekosistem:"ekoloji_ekosistem_silinen",direnis:"ekoloji_direnis_silinen"};
 function silGetir(col){try{return new Set(JSON.parse(localStorage.getItem(SIL_KEY[col])||"[]").map(String));}catch{return new Set();}}
 function silEkle(col,id){const s=silGetir(col);s.add(String(id));localStorage.setItem(SIL_KEY[col],JSON.stringify([...s]));}
-const _veri={ihlaller:[],haberler:[],raporlar:[],makaleler:[],uluslararasi:[],ekosistem:[]};
+const _veri={ihlaller:[],haberler:[],raporlar:[],makaleler:[],uluslararasi:[],ekosistem:[],direnis:[]};
 function kayitSil(col,id){if(!confirm("Bu kaydı silmek istiyor musunuz?"))return;_veri[col]=_veri[col].filter(x=>String(x.id)!==String(id));SITE.set(col,SITE.getList(col).filter(x=>String(x.id)!==String(id)));silEkle(col,id);tabloRender(col);updateStats();toast("✓ Silindi.");veriYaz();}
 function tabloRender(col){const sil=silGetir(col),vk=(_veri[col]&&_veri[col].length)?_veri[col]:SITE.getList(col);const data=(vk||[]).filter(x=>!sil.has(String(x.id)));if(col==="ihlaller")_ihlalRender(data);else if(col==="haberler")_haberRender(data);else if(col==="raporlar")_raporRender(data);else if(col==="makaleler")_makaleRender(data);else if(col==="uluslararasi")_ulusRender(data);
-  else if(col==="ekosistem")_ekosistemRender(data);}
+  else if(col==="ekosistem")_ekosistemRender(data);
+  else if(col==="direnis")_direnisRender(data);}
 function _ihlalRender(d){document.getElementById("ihlalerTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:200px;font-size:13px;">${i.baslik}</td><td style="font-size:12px;">${i.konum||'—'}</td><td style="font-size:11px;">${i.kategori||'—'}</td><td><span class="badge ${i.siddet||''}">${i.siddet||'—'}</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td>${i.lat&&i.lng?'<span style="color:var(--bright)">✓</span>':'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;"><button class="det-btn" onclick="editKayit('ihlaller','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('ihlaller','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
 function _haberRender(d){document.getElementById("haberlerTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:220px;font-size:13px;">${i.baslik}</td><td style="font-size:12px;">${i.kaynak||'—'}</td><td>${renderTagChips(i.etiketler||i.kategori)}</td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;">${i.url?`<a class="det-btn" href="${i.url}" target="_blank">↗</a>`:''}<button class="det-btn" onclick="editKayit('haberler','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('haberler','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
 function _raporRender(d){document.getElementById("raporlarTbody").innerHTML=d.length?d.map(i=>`<tr><td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td><td style="max-width:220px;font-size:13px;">${i.baslik}</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${i.yil||'—'}</td><td style="font-size:11px;">${i.tur||'—'}</td><td>${renderTagChips(i.etiketler)}</td><td style="font-size:12px;">${i.yazar||'—'}</td><td style="display:flex;gap:4px;flex-wrap:wrap;">${i.dosya?`<a class="det-btn" href="${i.dosya}" target="_blank">↗</a>`:''}<button class="det-btn" onclick="editKayit('raporlar','${i.id}')">Düzenle</button><button class="del-btn" onclick="kayitSil('raporlar','${i.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';}
@@ -687,6 +739,43 @@ function addEkosistem(){
   _veri.ekosistem.unshift(y);tabloRender("ekosistem");updateStats();
   toast("✓ Ekosistem kaydı eklendi — sunucuya gönderiliyor…");veriYaz();
 }
+
+/* ─── DİRENİŞ AĞI RENDER ─── */
+const DIRENIS_TIP_ADI = {
+  "grup":"Grup / Platform","eylem":"Direniş & Eylem",
+  "hukuk":"Hukuki Süreç","nobet":"Nöbet & Gözaltı","stk":"STK & Kampanya"
+};
+function _direnisRender(d){
+  document.getElementById("direnisTbody").innerHTML=d.length?d.map(i=>`<tr>
+    <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${i.id}</td>
+    <td style="max-width:200px;font-size:13px;">${i.baslik||i.ad||'—'}</td>
+    <td style="font-size:11px;">${DIRENIS_TIP_ADI[i.tip]||i.tip||'—'}</td>
+    <td style="font-size:12px;">${i.bolge||i.konum||'—'}</td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${i.tarih||'—'}</td>
+    <td style="display:flex;gap:4px;flex-wrap:wrap;">
+      ${i.web?`<a class="det-btn" href="${i.web}" target="_blank">↗</a>`:''}
+      ${i.url?`<a class="det-btn" href="${i.url}" target="_blank">📰</a>`:''}
+      <button class="det-btn" onclick="editKayit('direnis','${i.id}')">Düzenle</button>
+      <button class="del-btn" onclick="kayitSil('direnis','${i.id}')">Sil</button>
+    </td></tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:28px;">Kayıt yok</td></tr>';
+}
+
+function addDirenis(){
+  const b=document.getElementById("dr-baslik").value.trim();if(!b){toast("⚠ Ad/Başlık zorunludur.");return;}
+  const y={id:SITE.nextId("direnis"),baslik:b,tip:document.getElementById("dr-tip").value,
+    bolge:document.getElementById("dr-bolge").value.trim(),tarih:document.getElementById("dr-tarih").value||today(),
+    kaynak:document.getElementById("dr-kaynak").value.trim(),web:document.getElementById("dr-web").value.trim(),
+    url:document.getElementById("dr-url").value.trim(),email:document.getElementById("dr-email").value.trim(),
+    instagram:document.getElementById("dr-instagram").value.trim(),twitter:document.getElementById("dr-twitter").value.trim(),
+    aciklama:document.getElementById("dr-aciklama").value.trim(),
+    foto_url:document.getElementById("dr-foto-url")?.value.trim()||""};
+  SITE.upsert("direnis",y);
+  ["dr-baslik","dr-bolge","dr-kaynak","dr-web","dr-url","dr-email","dr-instagram","dr-twitter","dr-aciklama","dr-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  document.getElementById("dr-tarih").value=today();
+  const p=document.getElementById("dr-foto-onizleme");if(p)p.style.display="none";
+  _veri.direnis.unshift(y);tabloRender("direnis");updateStats();
+  toast("✓ Direniş kaydı eklendi — sunucuya gönderiliyor…");veriYaz();
+}
 function tumVeriYukle(){
   const sI=silGetir("ihlaller"),sH=silGetir("haberler"),sR=silGetir("raporlar"),sM=silGetir("makaleler"),sU=silGetir("uluslararasi");
   const lI=SITE.getList("ihlaller").filter(x=>!sI.has(String(x.id)));
@@ -712,11 +801,17 @@ function tumVeriYukle(){
     const sek=(d.ekosistem||[]).filter(x=>!sEk.has(String(x.id)));
     const sekIds=new Set(lEk.map(x=>String(x.id)));
     _veri.ekosistem=[...lEk,...sek.filter(x=>!sekIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
-    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");tabloRender("ekosistem");
+    const sDr=silGetir("direnis");
+    const lDr=SITE.getList("direnis").filter(x=>!sDr.has(String(x.id)));
+    const sdr=(d.direnis||[]).filter(x=>!sDr.has(String(x.id)));
+    const sdrIds=new Set(lDr.map(x=>String(x.id)));
+    _veri.direnis=[...lDr,...sdr.filter(x=>!sdrIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
+    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");tabloRender("ekosistem");tabloRender("direnis");
   }).catch(()=>{
     _veri.ihlaller=lI;_veri.raporlar=lR;_veri.makaleler=lM;_veri.uluslararasi=lU;
     _veri.ekosistem=SITE.getList("ekosistem").filter(x=>!silGetir("ekosistem").has(String(x.id)));
-    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");tabloRender("ekosistem");
+    _veri.direnis=SITE.getList("direnis").filter(x=>!silGetir("direnis").has(String(x.id)));
+    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");tabloRender("ekosistem");tabloRender("direnis");
   });
   fetch("haberler.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
     const j=(d.haberler||(Array.isArray(d)?d:[])).filter(x=>!sH.has(String(x.id))),ids=new Set(lH.map(x=>String(x.id)));
@@ -872,7 +967,7 @@ function dupTemizle(){const kollar=Object.keys(_dupSilList);if(!kollar.length)re
 
 /* ── BOOT ── */
 function boot(){
-  const t=today();["i-tarih","h-tarih","m-tarih","u-tarih","ek-tarih"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
+  const t=today();["i-tarih","h-tarih","m-tarih","u-tarih","ek-tarih","dr-tarih"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
   tagWrapRender("h-tags-wrap","h",[]);tagWrapRender("r-tags-wrap","r",[]);tagWrapRender("m-tags-wrap","m",[]);tagWrapRender("u-tags-wrap","u",[]);
   initTabs();updateStats();tumVeriYukle();
   const{token:_bt}=ghAyarAl();setSyncDurum(_bt?"synced":"local");if(!_bt)tokenBannerGoster();
@@ -905,6 +1000,13 @@ async function veriYaz(){
     /* FIX 1: UTF-8 safe decode — escape() yerine */
     const _raw=atob(md.content.replace(/\n/g,""));
     const mevcut=JSON.parse(decodeURIComponent(_raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    /* ── Direniş sync ── */
+    const _silDr = silGetir("direnis");
+    const _localDr = SITE.getList("direnis").filter(x => !_silDr.has(String(x.id)));
+    const _localDrIds = new Set(_localDr.map(x => String(x.id)));
+    const _serverDr = (mevcut.direnis || []).filter(x => !_silDr.has(String(x.id)));
+    mevcut.direnis = [..._localDr, ..._serverDr.filter(x => !_localDrIds.has(String(x.id)))];
+
     /* ── Ekosistem sync ── */
     const _silEk = silGetir("ekosistem");
     const _localEk = SITE.getList("ekosistem").filter(x => !_silEk.has(String(x.id)));
