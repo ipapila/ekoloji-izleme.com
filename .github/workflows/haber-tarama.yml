@@ -46,5 +46,9 @@ jobs:
           else
             SAYIM=$(python3 -c "import json; d=json.load(open('haberler.json')); print(len(d.get('haberler',[])))" 2>/dev/null || echo "?")
             git commit -m "haber guncelleme: ${SAYIM} kayit"
-            git push
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push basarisiz, retry $i/3..."
+              sleep $((RANDOM % 10 + 5))
+            done
           fi
