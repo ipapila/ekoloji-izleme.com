@@ -202,9 +202,14 @@ def update_remote_data(new_data, sha):
         print("❌ GITHUB_TOKEN yok!")
         return
     url     = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
-    content = base64.b64encode(
-        json.dumps(new_data, ensure_ascii=False, indent=2).encode("utf-8")
-    ).decode()
+    # JSON geçerliliğini doğrula (çift encode güvenliği)
+    json_str = json.dumps(new_data, ensure_ascii=False, indent=2)
+    try:
+        json.loads(json_str)  # parse ederek doğrula
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON geçersiz — yazma iptal: {e}")
+        return
+    content = base64.b64encode(json_str.encode("utf-8")).decode()
     payload = {
         "message": f"otomatik güncelleme {datetime.date.today()}",
         "content": content,
@@ -378,7 +383,7 @@ def main():
         sha  = None
 
     # Eksik koleksiyon anahtarlarını ekle (eski data.json için)
-    for col in ("raporlar", "makaleler", "uluslararasi"):
+    for col in ("raporlar", "makaleler", "uluslararasi", "ekosistem", "direnis"):
         if col not in data:
             data[col] = []
 
