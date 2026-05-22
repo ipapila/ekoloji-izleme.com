@@ -697,6 +697,7 @@ function haberlerRender(haberler) {
   const silinen = new Set(JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]").map(String));
   const haber_id = h => String(h._id || h.id || "");
   haberler = haberler.filter(h => !silinen.has(haber_id(h)));
+  haberler = haberler.slice().sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));
   liste.innerHTML = haberler.slice(0, 8).map(h => `
     <div class="haber-item" onclick='haberDetay(${JSON.stringify(h).replace(/'/g,"&#39;")})' style="cursor:pointer;">
       <div>
