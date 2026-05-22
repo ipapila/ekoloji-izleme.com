@@ -183,7 +183,8 @@
           </div>
           <div id="i-foto-onizleme" style="margin-top:8px;display:none;"><img style="max-height:80px;border-radius:3px;" alt=""></div>
         </div>
-        <button class="btn btn-primary" onclick="addIhlal()">+ İhlal Kaydet</button>
+        <button class="btn btn-primary" <div id="i-tags-wrap" style="margin-bottom:12px;"></div>
+        onclick="addIhlal()">+ İhlal Kaydet</button>
       </div>
       <div class="admin-table-wrap">
         <table class="admin-table">
@@ -402,6 +403,8 @@
         </table>
       </div>
     </div>
+  </div>
+
     <!-- EKOSİSTEM -->
     <div class="tab-panel" id="tab-ekosistem">
       <div class="form-card">
@@ -455,6 +458,7 @@
           </div>
           <div id="ek-foto-onizleme" style="margin-top:8px;display:none;"><img style="max-height:80px;border-radius:3px;" alt=""></div>
         </div>
+        <div id="ek-tags-wrap" style="margin-bottom:12px;"></div>
         <button class="btn btn-primary" onclick="addEkosistem()">+ Kayıt Ekle</button>
       </div>
       <div class="admin-table-wrap">
@@ -505,6 +509,7 @@
           </div>
           <div id="dr-foto-onizleme" style="margin-top:8px;display:none;"><img style="max-height:80px;border-radius:3px;" alt=""></div>
         </div>
+        <div id="dr-tags-wrap" style="margin-bottom:12px;"></div>
         <button class="btn btn-primary" onclick="addDirenis()">+ Kayıt Ekle</button>
       </div>
       <div class="admin-table-wrap">
@@ -725,7 +730,7 @@ function _ekosistemRender(d){
 
 function addEkosistem(){
   const b=document.getElementById("ek-baslik").value.trim();if(!b){toast("⚠ Başlık zorunludur.");return;}
-  const y={id:SITE.nextId("ekosistem"),baslik:b,bolum:document.getElementById("ek-bolum").value,
+  const y={id:SITE.nextId("ekosistem"),baslik:b,bolum:document.getElementById("ek-bolum").value,etiketler:getChecked("ek"),
     tarih:document.getElementById("ek-tarih").value||today(),kaynak:document.getElementById("ek-kaynak").value.trim(),
     konum:document.getElementById("ek-konum").value.trim(),url:document.getElementById("ek-url").value.trim(),
     ozet:document.getElementById("ek-ozet").value.trim(),icerik:document.getElementById("ek-icerik").value.trim(),
@@ -735,7 +740,7 @@ function addEkosistem(){
   document.getElementById("ek-tarih").value=today();
   const p=document.getElementById("ek-foto-onizleme");if(p)p.style.display="none";
   _veri.ekosistem.unshift(y);tabloRender("ekosistem");updateStats();
-  toast("✓ Ekosistem kaydı eklendi — sunucuya gönderiliyor…");veriYaz();
+  resetChecked("ek");toast("✓ Ekosistem kaydı eklendi — sunucuya gönderiliyor…");veriYaz();
 }
 
 /* ─── DİRENİŞ AĞI RENDER ─── */
@@ -760,7 +765,7 @@ function _direnisRender(d){
 
 function addDirenis(){
   const b=document.getElementById("dr-baslik").value.trim();if(!b){toast("⚠ Ad/Başlık zorunludur.");return;}
-  const y={id:SITE.nextId("direnis"),baslik:b,tip:document.getElementById("dr-tip").value,
+  const y={id:SITE.nextId("direnis"),baslik:b,tip:document.getElementById("dr-tip").value,etiketler:getChecked("dr"),
     bolge:document.getElementById("dr-bolge").value.trim(),tarih:document.getElementById("dr-tarih").value||today(),
     kaynak:document.getElementById("dr-kaynak").value.trim(),web:document.getElementById("dr-web").value.trim(),
     url:document.getElementById("dr-url").value.trim(),email:document.getElementById("dr-email").value.trim(),
@@ -772,7 +777,7 @@ function addDirenis(){
   document.getElementById("dr-tarih").value=today();
   const p=document.getElementById("dr-foto-onizleme");if(p)p.style.display="none";
   _veri.direnis.unshift(y);tabloRender("direnis");updateStats();
-  toast("✓ Direniş kaydı eklendi — sunucuya gönderiliyor…");veriYaz();
+  resetChecked("dr");toast("✓ Direniş kaydı eklendi — sunucuya gönderiliyor…");veriYaz();
 }
 function tumVeriYukle(){
   const sI=silGetir("ihlaller"),sH=silGetir("haberler"),sR=silGetir("raporlar"),sM=silGetir("makaleler"),sU=silGetir("uluslararasi");
@@ -822,12 +827,12 @@ function addIhlal(){
   const b=document.getElementById("i-baslik").value.trim(),k=document.getElementById("i-konum").value.trim();
   if(!b){toast("⚠ Başlık zorunludur.");return;}if(!k){toast("⚠ Konum zorunludur.");return;}
   const lat=parseFloat(document.getElementById("i-lat").value),lng=parseFloat(document.getElementById("i-lng").value);
-  const y={id:SITE.nextId("ihlaller"),baslik:b,konum:k,kategori:document.getElementById("i-kat").value,siddet:document.getElementById("i-siddet").value,lat:isNaN(lat)?null:lat,lng:isNaN(lng)?null:lng,tarih:document.getElementById("i-tarih").value||today(),kaynak:document.getElementById("i-kaynak").value.trim(),kaynak_url:document.getElementById("i-kaynak-url").value.trim(),aciklama:document.getElementById("i-aciklama").value.trim(),foto_url:document.getElementById("i-foto-url")?.value.trim()||""};
+  const y={id:SITE.nextId("ihlaller"),baslik:b,etiketler:getChecked("i"),konum:k,kategori:document.getElementById("i-kat").value,siddet:document.getElementById("i-siddet").value,lat:isNaN(lat)?null:lat,lng:isNaN(lng)?null:lng,tarih:document.getElementById("i-tarih").value||today(),kaynak:document.getElementById("i-kaynak").value.trim(),kaynak_url:document.getElementById("i-kaynak-url").value.trim(),aciklama:document.getElementById("i-aciklama").value.trim(),foto_url:document.getElementById("i-foto-url")?.value.trim()||""};
   SITE.upsert("ihlaller",y);
   ["i-baslik","i-konum","i-tarih","i-kaynak","i-kaynak-url","i-aciklama","i-lat","i-lng","i-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   document.getElementById("i-tarih").value=today();
   const p=document.getElementById("i-foto-onizleme");if(p)p.style.display="none";
-  _veri.ihlaller.unshift(y);tabloRender("ihlaller");updateStats();toast("✓ İhlal kaydedildi — sunucuya gönderiliyor…");veriYaz();
+  _veri.ihlaller.unshift(y);tabloRender("ihlaller");updateStats();resetChecked("i");toast("✓ İhlal kaydedildi — sunucuya gönderiliyor…");veriYaz();
 }
 function addHaber(){
   const b=document.getElementById("h-baslik").value.trim();if(!b){toast("⚠ Başlık zorunludur.");return;}
@@ -966,7 +971,7 @@ function dupTemizle(){const kollar=Object.keys(_dupSilList);if(!kollar.length)re
 /* ── BOOT ── */
 function boot(){
   const t=today();["i-tarih","h-tarih","m-tarih","u-tarih","ek-tarih","dr-tarih"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
-  tagWrapRender("h-tags-wrap","h",[]);tagWrapRender("r-tags-wrap","r",[]);tagWrapRender("m-tags-wrap","m",[]);tagWrapRender("u-tags-wrap","u",[]);
+  tagWrapRender("i-tags-wrap","i",[]);tagWrapRender("h-tags-wrap","h",[]);tagWrapRender("r-tags-wrap","r",[]);tagWrapRender("m-tags-wrap","m",[]);tagWrapRender("u-tags-wrap","u",[]);tagWrapRender("ek-tags-wrap","ek",[]);tagWrapRender("dr-tags-wrap","dr",[]);
   initTabs();updateStats();tumVeriYukle();
   const{token:_bt}=ghAyarAl();setSyncDurum(_bt?"synced":"local");if(!_bt)tokenBannerGoster();
 }
