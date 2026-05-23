@@ -274,7 +274,7 @@ def tarih_normalize(ts):
     return ts[:10] if len(ts) >= 10 else datetime.date.today().isoformat()
 
 def sonraki_id(liste):
-    return max((x.get("id",0) for x in liste), default=0) + 1 if liste else 1
+  return max((x.get("id") or 0 for x in liste), default=0) + 1 if liste else 1
 
 # ══════════════════════════════════════════════════════════════════
 #  RSS ÇEKİCİ (tüm koleksiyonlar)
