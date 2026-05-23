@@ -166,10 +166,41 @@ jobs:
 3	Commit/push adımı ekle	Workflow YAML
 Secret eklendikten sonra Actions → Run workflow ile manuel tetikle, log temiz çıkmalı.
 
+sekrete ne yazmalıyım
+
+06:23
+
+Çözümledi API anahtarı gizli değeri yazma sorusunu
+Çözümledi API anahtarı gizli değeri yazma sorusunu
+Anthropic API anahtarını yazman gerekiyor.
+
+Nasıl bulursun?
+console.anthropic.com adresine git
+Sol menüden API Keys → Create Key
+Oluşturulan sk-ant-api03-... ile başlayan anahtarı kopyala
+Secret'a nasıl eklersin?
+Name: ANTHROPIC_API_KEY
+Secret: sk-ant-api03-xxxxxxxxxxxx... ← kopyaladığın anahtar
+⚠️ Anahtarı bir kez gösterirler, kaydet. Hesabında kredi yoksa console.anthropic.com/settings/billing adresinden küçük bir miktar yüklemen gerekir.
+
+anthropip api zaten var onu kullanabilir miyiz
+
+06:24
+
+Değerlendirdi mevcut API anahtarının yeniden kullanılabilirliğini
+Değerlendirdi mevcut API anahtarının yeniden kullanılabilirliğini
+Evet, aynı anahtarı kullanabilirsin. Zaten yerel ortamında .env dosyasında ya da sistemde tanımlı olmalı.
+
+Anahtarı bul
+Terminalden şunu çalıştır:
+
+bash
+echo $ANTHROPIC_API_KEY
+sk-ant-... ile başlayan değer çıkarsa onu kopyala, GitHub secret'ına yapıştır. Bu kadar — yeni anahtar oluşturmana gerek yok.
 
 
 
-
+evet
 
 
 
