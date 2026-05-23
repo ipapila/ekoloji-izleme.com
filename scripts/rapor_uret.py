@@ -30,7 +30,8 @@ DATA_URL     = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main
 SON_SAAT     = 24
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-MODEL             = "claude-opus-4-5"
+MODEL = "claude-sonnet-4-5-20251001"
+
 MAX_TOKENS        = 1800
 
 
