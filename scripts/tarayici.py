@@ -3,6 +3,8 @@
 """
 ekoloji-izleme.com — Haber Tarayıcı v3
 DÜZELTME: harita_verisi_cek() tamamen silindi, feedparser eklendi, atomic write
+DÜZELTME v3.1: SSL hataları (MAPEG/İlan), 403 için gelişmiş header, fallback selector,
+               kuzeyormanlari.org kaldırıldı, gorulen_urller çift tanım giderildi
 """
 
 import argparse
@@ -12,6 +14,7 @@ import logging
 import re
 import sys
 import time
+import urllib3
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -78,65 +81,61 @@ RSS_KAYNAKLARI = [
 
 WEB_KAYNAKLARI = [
     # ── Çevre medyası ──────────────────────────────────────────────
-    {"url": "https://yesilgazete.org",           "kaynak": "Yeşil Gazete",    "kategori": "Çevre Medyası",
-     "secici": "article h2 a, .entry-title a",   "ozet_secici": "article .entry-content p", "genel": False},
+    # NOT: Yeşil Gazete ve Gazete Duvar 403 veriyor; RSS üzerinden çekiliyor
     {"url": "https://iklimhaber.org",            "kaynak": "İklim Haber",     "kategori": "İklim",
-     "secici": "article h2 a, .entry-title a",   "ozet_secici": "article p",  "genel": False},
-    {"url": "https://www.gazeteduvar.com.tr/ekoloji", "kaynak": "Gazete Duvar", "kategori": "Ekoloji",
-     "secici": ".row a, h2 a, .news-box a",      "ozet_secici": ".lead, p",   "genel": False},
+     "secici": "article h2 a, .entry-title a, h2 a",   "ozet_secici": "article p",  "genel": False},
     {"url": "https://medyascope.tv/category/cevre-ekoloji/", "kaynak": "Medyascope", "kategori": "Ekoloji",
-     "secici": ".entry-title a, h3 a",           "ozet_secici": ".entry-summary p", "genel": False},
+     "secici": ".entry-title a, h3 a, article a",       "ozet_secici": ".entry-summary p", "genel": False},
     {"url": "https://magmadergisi.com",          "kaynak": "Magma Dergisi",   "kategori": "Çevre Medyası",
-     "secici": ".card-title a, h3 a",            "ozet_secici": ".card-text, .excerpt", "genel": False},
+     "secici": ".card-title a, h3 a, h2 a, article a",  "ozet_secici": ".card-text, .excerpt, p", "genel": False},
 
     # ── STK & Sivil toplum ─────────────────────────────────────────
     {"url": "https://www.greenpeace.org/turkey/blog/", "kaynak": "Greenpeace TR", "kategori": "STK",
-     "secici": ".post-title a, h2 a",            "ozet_secici": ".post-excerpt p", "genel": False},
-    {"url": "https://ekolojibirligi.org",        "kaynak": "Ekoloji Birliği", "kategori": "STK / Yerel Basın",
-     "secici": ".post-title a, h2.entry-title a","ozet_secici": ".entry-summary p, .post-content p", "genel": False},
-    {"url": "https://kuzeyormanlari.org",        "kaynak": "Kuzey Ormanları", "kategori": "STK / Orman",
-     "secici": "h2.entry-title a, article a",   "ozet_secici": ".entry-content p", "genel": False},
+     "secici": ".post-title a, h2 a, h3 a, .article__title a, [class*='title'] a",
+     "ozet_secici": ".post-excerpt p, [class*='excerpt'], p", "genel": False},
+    # ekolojibirligi.org → timeout (bağlantı yok), kaldırıldı
+    # kuzeyormanlari.org → DNS çözümlenemiyor (site kapalı), kaldırıldı
     {"url": "https://politeknik.org.tr",         "kaynak": "Politeknik",      "kategori": "Mühendislik / Çevre",
-     "secici": ".post-title a, h3.post-title a", "ozet_secici": ".post-excerpt", "genel": False},
+     "secici": ".post-title a, h3 a, h2 a, article a",  "ozet_secici": ".post-excerpt, p", "genel": False},
 
     # ── Resmi kurumlar ─────────────────────────────────────────────
     {"url": "https://www.csb.gov.tr/duyurular",  "kaynak": "Çevre Bakanlığı", "kategori": "Resmi",
-     "secici": ".duyuru-item a, h3 a",           "ozet_secici": ".duyuru-ozet", "genel": False},
-    {"url": "https://www.resmigazete.gov.tr",    "kaynak": "Resmi Gazete",    "kategori": "Resmi",
-     "secici": ".gazete-baslik a, #content a",   "ozet_secici": ".ozet-metin, p", "genel": False},
+     "secici": ".duyuru-item a, h3 a, h4 a, .list-item a, li a",
+     "ozet_secici": ".duyuru-ozet, p", "genel": False},
+    # resmigazete.gov.tr → timeout (web), zaten RSS üzerinden çekiliyor
     {"url": "https://www.mapeg.gov.tr/Duyurular","kaynak": "MAPEG (Maden)",   "kategori": "Resmi / Maden",
-     "secici": ".news-list a, h4 a",             "ozet_secici": ".news-detail, p", "genel": False},
+     "secici": ".news-list a, h4 a, li a, td a", "ozet_secici": ".news-detail, p",
+     "genel": False, "ssl_dogrulama": False},  # Geçersiz SSL sertifikası
     {"url": "https://www.epdk.gov.tr/Detay/Duyurular", "kaynak": "EPDK (Enerji)", "kategori": "Resmi / Enerji",
-     "secici": ".announcement-list a, .title a", "ozet_secici": ".description-text, p", "genel": False},
+     "secici": ".announcement-list a, .title a, h3 a, h4 a, li a",
+     "ozet_secici": ".description-text, p", "genel": False},
     {"url": "https://www.ilan.gov.tr",           "kaynak": "İlan Portalı",    "kategori": "İhale",
-     "secici": ".ng-item-title a, .ad-card-title","ozet_secici": ".ad-card-description, p", "genel": False},
+     "secici": ".ng-item-title a, .ad-card-title a, h3 a, h4 a",
+     "ozet_secici": ".ad-card-description, p", "genel": False, "ssl_dogrulama": False},
 
     # ── Genel haber portalleri (yüksek filtre eşiği) ───────────────
-    {"url": "https://tr.euronews.com/tag/cevre", "kaynak": "Euronews TR",     "kategori": "Haber",
-     "secici": ".article__title a, h3.article__title a", "ozet_secici": ".article__summary", "genel": True},
+    # euronews.com → 406 Not Acceptable, kaldırıldı
     {"url": "https://www.gazetepencere.com",     "kaynak": "Gazete Pencere",  "kategori": "Haber",
-     "secici": ".news-title a, h3 a, .card-title a", "ozet_secici": ".news-excerpt, p", "genel": True},
+     "secici": ".news-title a, h3 a, h2 a, .card-title a, article a",
+     "ozet_secici": ".news-excerpt, p", "genel": True},
     {"url": "https://t24.com.tr",                "kaynak": "T24",             "kategori": "Haber",
-     "secici": "h3 a, ._2b_Xq a, ._3W9uR a",   "ozet_secici": "p, ._1pZp3", "genel": True},
+     "secici": "h3 a, h2 a, article a, .news-item a, [class*='title'] a",
+     "ozet_secici": "p, [class*='excerpt']", "genel": True},
     {"url": "https://www.diken.com.tr",          "kaynak": "Diken",           "kategori": "Haber",
-     "secici": ".entry-title a, h2 a",           "ozet_secici": ".entry-content p, p", "genel": True},
+     "secici": ".entry-title a, h2 a, h3 a, article a",
+     "ozet_secici": ".entry-content p, p", "genel": True},
     {"url": "https://artigercek.com",            "kaynak": "Artı Gerçek",     "kategori": "Haber",
-     "secici": ".post-title a, h2 a, h3 a",     "ozet_secici": ".post-excerpt, p", "genel": True},
+     "secici": ".post-title a, h2 a, h3 a, article a",
+     "ozet_secici": ".post-excerpt, p", "genel": True},
 ]
 
 # ─── KATEGORİ → SAYFA YÖNLENDİRME HARİTASI ────────────────────────────────
-# Tarayıcıdan gelen her habere, kaynak kategorisine göre:
-#   - eylem : direnis-agi.html'in hangi bölümüne gideceği
-#   - etiketler : ekosistem.html ve haberler.html filtrelemesi için
 KATEGORI_HARITALAMA = {
-    # Çevre ihlalleri
     "Çevre İhlali":         {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Çevre / Gündem":       {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Gündem / Çevre":       {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Gündem / Ekoloji":     {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Ekoloji":              {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
-
-    # Maden & enerji
     "Orman / Maden":        {"eylem": None,               "etiketler": ["Orman Alanı", "Maden Ocağı"]},
     "Maden Riski / Atık":   {"eylem": None,               "etiketler": ["Maden Ocağı", "Atık & Kirlilik"]},
     "Tarım Alanları / Maden":{"eylem": None,              "etiketler": ["Tarım & Köy", "Maden Ocağı"]},
@@ -146,22 +145,14 @@ KATEGORI_HARITALAMA = {
     "Resmi / Enerji":       {"eylem": None,               "etiketler": ["GES", "RES", "HES"]},
     "HES / RES / Baraj":    {"eylem": None,               "etiketler": ["HES", "RES", "Su Ekosistemleri"]},
     "JES / Çevre İhlali":   {"eylem": None,               "etiketler": ["Jeotermal", "Ekolojik İhlal"]},
-
-    # Hukuki & resmi
     "ÇED Kararları":        {"eylem": "Hukuk & Dava",     "etiketler": ["ÇED Kararları"]},
     "Kamulaştırma":         {"eylem": "Hukuk & Dava",     "etiketler": ["Acele Kamulaştırma"]},
     "Resmi":                {"eylem": "Resmi Açıklama",   "etiketler": ["Resmi Açıklama"]},
     "İhale":                {"eylem": None,               "etiketler": []},
-
-    # İklim
     "İklim":                {"eylem": None,               "etiketler": ["İklim Olayları"]},
-
-    # STK & kampanya → direnis-agi.html STK bölümü
     "STK":                  {"eylem": "STK & Kampanya",   "etiketler": ["STK & Kampanya"]},
     "STK / Yerel Basın":    {"eylem": "STK & Kampanya",   "etiketler": ["STK & Kampanya"]},
     "STK / Orman":          {"eylem": "STK & Kampanya",   "etiketler": ["STK & Kampanya", "Orman Alanı"]},
-
-    # Diğer
     "Mühendislik / Çevre":  {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Çevre Medyası":        {"eylem": None,               "etiketler": []},
     "Haber":                {"eylem": None,               "etiketler": []},
@@ -234,7 +225,6 @@ def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False) -> in
 
 # ─── KAYIT ZENGİNLEŞTİRME ─────────────────────────────────────────
 
-# Başlık ve özet içeriğine göre eylem tipini otomatik tespit et
 DIRENIS_ANAHTAR = [
     "direniş", "direnis", "eylem", "protesto", "miting", "yürüyüş", "yuruyus",
     "boykot", "abluka", "işgal", "oturma eylemi", "nöbete", "nobete",
@@ -248,7 +238,6 @@ HUKUK_ANAHTAR = [
     "hukuk", "avukat", "savcı", "savci", "yürütmeyi durdur",
 ]
 
-# Başlık/özetten ekosistem bölüm etiketlerini otomatik tespit et
 EKOSISTEM_ANAHTAR = {
     "Nesli Tehlike Altında Türler": ["nesli tükeniyor", "nesli tehlike", "türler azaldı", "yaban hayatı azalıyor"],
     "Yaban Hayatı İzleme":          ["yaban hayatı", "vahşi hayat", "ayı", "kurt", "vaşak", "geyik", "karaçalı"],
@@ -262,12 +251,10 @@ EKOSISTEM_ANAHTAR = {
 }
 
 def zenginlestir(kayit: dict) -> dict:
-    """Kayıt eylem ve etiketlerini başlık/özetten zenginleştir."""
     metin = (kayit.get("baslik", "") + " " + kayit.get("ozet", "")).lower()
     eylem  = kayit.get("eylem")
     etiket = list(kayit.get("etiketler") or [])
 
-    # Eylem tipini tespit et (mevcut yoksa)
     if not eylem:
         if any(k in metin for k in NOBET_ANAHTAR):
             eylem = "Nöbet & Gözaltı"
@@ -276,7 +263,6 @@ def zenginlestir(kayit: dict) -> dict:
         elif any(k in metin for k in HUKUK_ANAHTAR):
             eylem = eylem or "Hukuk & Dava"
 
-    # Ekosistem etiketlerini ekle
     for bolum_ad, anahtarlar in EKOSISTEM_ANAHTAR.items():
         if any(k in metin for k in anahtarlar):
             if bolum_ad not in etiket:
@@ -296,19 +282,28 @@ logging.basicConfig(
 )
 log = logging.getLogger("tarayici")
 
+# Daha gerçekçi tarayıcı başlıkları — 403 engellerini azaltır
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; EkolojiIzleme/2.0; +https://ekoloji-izleme.com)",
-    "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "DNT": "1",
+    "Upgrade-Insecure-Requests": "1",
 }
+
+# SSL sertifikası geçersiz olan devlet siteleri
+SSL_NO_VERIFY_HOSTS = {"mapeg.gov.tr", "ilan.gov.tr"}
+
+# Genel fallback selector — birincil selector sonuç vermezse denenir
+FALLBACK_SELECTOR = "article h2 a, article h3 a, .post-title a, .entry-title a, h2.title a, h3.title a, [class*='title'] a, [class*='baslik'] a"
 
 
 def url_normalize(url: str) -> str:
-    """URL'yi deduplikasyon için normalleştir: UTM parametreleri ve fragment sil."""
     try:
         from urllib.parse import urlparse, urlencode, parse_qsl, urlunparse
         p = urlparse(url)
-        # UTM ve tracking parametrelerini sil
         ATLA = {"utm_source","utm_medium","utm_campaign","utm_term","utm_content",
                 "fbclid","gclid","mc_cid","mc_eid","ref","source","via","trk"}
         temiz = [(k, v) for k, v in parse_qsl(p.query) if k.lower() not in ATLA]
@@ -318,7 +313,6 @@ def url_normalize(url: str) -> str:
 
 
 def baslik_normalize(baslik: str) -> str:
-    """Başlığı karşılaştırma için normalleştir."""
     return re.sub(r"\s+", " ", baslik).strip().lower()
 
 
@@ -338,12 +332,28 @@ def tarih_normalize(tarih_str) -> Optional[str]:
         return str(tarih_str)
 
 
-def fetch(url: str, timeout: int = 15) -> Optional[requests.Response]:
+def fetch(url: str, timeout: int = 15, ssl_dogrulama: bool = True) -> Optional[requests.Response]:
+    """HTTP GET; SSL_NO_VERIFY_HOSTS için sertifika doğrulaması atlanır."""
+    verify = ssl_dogrulama and not any(h in url for h in SSL_NO_VERIFY_HOSTS)
+    if not verify:
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     try:
-        r = requests.get(url, headers=HEADERS, timeout=timeout)
+        r = requests.get(url, headers=HEADERS, timeout=timeout, verify=verify)
         r.raise_for_status()
         r.encoding = r.apparent_encoding or "utf-8"
         return r
+    except requests.exceptions.SSLError as e:
+        # SSL hatası → verify=False ile bir kez daha dene
+        log.warning(f"SSL hatası [{url[:60]}], doğrulamasız yeniden deneniyor…")
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=timeout, verify=False)
+            r.raise_for_status()
+            r.encoding = r.apparent_encoding or "utf-8"
+            return r
+        except Exception as e2:
+            log.warning(f"Fetch başarısız [{url[:60]}]: {e2}")
+            return None
     except Exception as e:
         log.warning(f"Fetch başarısız [{url[:60]}]: {e}")
         return None
@@ -409,15 +419,24 @@ def rss_tara(kaynaklar: list) -> list:
 def web_tara(kaynaklar: list) -> list:
     haberler = []
     for kaynak in kaynaklar:
-        genel = kaynak.get("genel", False)
+        genel        = kaynak.get("genel", False)
+        ssl_dogrulama = kaynak.get("ssl_dogrulama", True)
         log.info(f"Web: {kaynak['kaynak']} [genel={genel}]")
-        r = fetch(kaynak["url"])
+        r = fetch(kaynak["url"], ssl_dogrulama=ssl_dogrulama)
         if not r:
             continue
         try:
             soup = BeautifulSoup(r.text, "lxml")
             kabul = reddedilen = 0
-            for a in soup.select(kaynak["secici"])[:20]:
+
+            # Önce birincil selector, sonuç yoksa fallback dene
+            linkler = soup.select(kaynak["secici"])[:20]
+            if not linkler:
+                linkler = soup.select(FALLBACK_SELECTOR)[:20]
+                if linkler:
+                    log.info(f"  ℹ fallback selector kullanıldı")
+
+            for a in linkler:
                 baslik = a.get_text(" ", strip=True)
                 if not baslik or len(baslik) < 10:
                     continue
@@ -475,9 +494,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500):
     gorulen_idler: set = set()
     gorulen_basliklar: set = set()
     eski_haberler: list = []
-    gorulen_urller: set = set()   # URL bazlı kontrol (UTM temizlenmiş)
-
-    gorulen_urller: set = set()   # URL bazlı kontrol (UTM temizlenmiş)
+    gorulen_urller: set = set()  # URL bazlı kontrol (UTM temizlenmiş)
 
     if p.exists():
         try:
@@ -511,7 +528,6 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500):
         h_url     = url_normalize(h.get("url", ""))
         h_baslik  = baslik_normalize(h.get("baslik", ""))
 
-        # Üç katmanlı tekrar kontrolü: hash id, URL ve başlık
         if (h_id in gorulen_idler
                 or h_url in gorulen_urller
                 or h_baslik in gorulen_basliklar):
@@ -540,10 +556,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500):
         "haberler": birlesik,
     }
 
-    # ── Atomic write: önce .tmp yaz, sonra taşı (yarım yazma önlemi) ──
     json_str = json.dumps(cikti, ensure_ascii=False, indent=2)
-
-    # JSON geçerliliğini kontrol et (yazılmadan önce)
     try:
         json.loads(json_str)
     except json.JSONDecodeError as e:
@@ -552,7 +565,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500):
 
     tmp = p.with_suffix(".tmp")
     tmp.write_text(json_str, encoding="utf-8")
-    tmp.replace(p)  # atomic rename
+    tmp.replace(p)
 
     log.info(f"\n✓ {cikti_dosyasi} → {len(birlesik)} haber ({len(tum_yeni)} yeni)")
     return cikti
