@@ -12,8 +12,6 @@ rapor.json olarak GitHub'a yazar.
     python scripts/rapor_uret.py
 """
 
-import env_yukle  # .env yükler
-
 import json
 import os
 import base64
