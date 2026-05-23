@@ -22,7 +22,7 @@ jobs:
           GITHUB_REPO_NAME:  ${{ github.event.repository.name }}
         run: python scripts/rapor_uret.py  github actionda günlük rapor üretildi demesine rağmen sayfaya gelen bir şey yok bir hata mı var
 
-Show more
+run: python scripts/rapor_uret.py
 06:17
 
 Araştırdı workflow başarısı rağmen çıktı eksikliğinin nedenini
