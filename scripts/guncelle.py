@@ -4,11 +4,14 @@
 ekoloji-izleme.com — Otomatik Güncelleme v5
 DÜZELTME: get_remote_data() artık GitHub API kullanır (CDN cache sorununu çözer)
 DÜZELTME: harita kaynaklı eski ihlalleri temizleme seçeneği
+DÜZELTME v5.1: SSL hataları için verify=False, web scraping fallback selector,
+               daha gerçekçi browser header'ları, RSS timeout azaltıldı
 """
 
 import env_yukle  # .env dosyasını os.environ'a yükler
 
 import json, requests, os, base64, datetime, re
+import urllib3
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 
@@ -16,14 +19,17 @@ REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
 REPO_NAME  = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")
 FILE_PATH  = "data.json"
 
-# Harita kaynaklı ihlalleri kalıcı olarak dışla.
-# Bu kaynaklar artık hiçbir zaman data.json'a yazılmaz.
 HARITA_KAYNAKLARI = {
-    "harita",          # tarayici.py'nin eski harita_verisi_cek() çıktısı
+    "harita",
     "OGM", "DKMP", "BSGM",
     "harita_import", "harita_verisi",
 }
 
+# SSL sertifikası geçersiz olan devlet siteleri
+SSL_NO_VERIFY_HOSTS = {"mapeg.gov.tr", "ilan.gov.tr"}
+
+# Fallback CSS selector — birincil bulunamazsa denenir
+FALLBACK_SELECTOR = "article h2 a, article h3 a, .post-title a, .entry-title a, h2.title a, h3.title a, [class*='title'] a"
 
 # ─── KAYNAK LİSTESİ ────────────────────────────────────────────────
 KAYNAK_RSS = [
@@ -89,15 +95,15 @@ KAYNAK_WEB = [
         "ad": "Greenpeace TR", "etiket": "STK", "genel": False,
         "url": "https://www.greenpeace.org/turkey/blog/",
         "web": "https://www.greenpeace.org/turkey/",
-        "secici": ".post-title a, h2 a, .article-title a",
-        "ozet_secici": ".post-excerpt p, .article-excerpt",
+        "secici": ".post-title a, h2 a, h3 a, .article__title a, [class*='title'] a",
+        "ozet_secici": ".post-excerpt p, [class*='excerpt'], p",
     },
     {
         "ad": "Çevre Bakanlığı", "etiket": "Resmi", "genel": False,
         "url": "https://www.csb.gov.tr/duyurular",
         "web": "https://www.csb.gov.tr",
-        "secici": ".duyuru-item a, .news-item a, h3 a",
-        "ozet_secici": ".duyuru-ozet, .news-excerpt",
+        "secici": ".duyuru-item a, .news-item a, h3 a, h4 a, .list-item a, li a",
+        "ozet_secici": ".duyuru-ozet, .news-excerpt, p",
     },
 ]
 
@@ -170,13 +176,6 @@ def ekoloji_mi(baslik, ozet="", genel=True):
 # ─── GITHUB YARDIMCILARI ────────────────────────────────────────────
 
 def get_remote_data():
-    """
-    ÖNEMLİ: raw CDN yerine GitHub API kullanıyoruz.
-    raw.githubusercontent.com 5-10 dakika cache yapar;
-    veriYaz() yeni veri yazdıktan hemen sonra guncelle.py çalışırsa
-    CDN eski veriyi döner ve üstüne yazar → rapor/makale/uluslararası kaybolur.
-    API her zaman güncel veriyi döner.
-    """
     token = os.environ.get("GITHUB_TOKEN")
     url   = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
     headers = {
@@ -202,10 +201,9 @@ def update_remote_data(new_data, sha):
         print("❌ GITHUB_TOKEN yok!")
         return
     url     = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
-    # JSON geçerliliğini doğrula (çift encode güvenliği)
     json_str = json.dumps(new_data, ensure_ascii=False, indent=2)
     try:
-        json.loads(json_str)  # parse ederek doğrula
+        json.loads(json_str)
     except json.JSONDecodeError as e:
         print(f"❌ JSON geçersiz — yazma iptal: {e}")
         return
@@ -260,9 +258,16 @@ def rss_cek(kaynak):
     r = None
     for ua in user_agents:
         try:
-            r = requests.get(kaynak["url"], timeout=20,
-                             headers={"User-Agent": ua,
-                                      "Accept": "application/rss+xml,application/xml,text/xml,*/*"})
+            r = requests.get(
+                kaynak["url"],
+                timeout=12,  # 20→12: başarısız kaynaklar için bekleme süresini azalt
+                headers={
+                    "User-Agent": ua,
+                    "Accept": "application/rss+xml,application/xml,text/xml,*/*",
+                    "Accept-Language": "tr-TR,tr;q=0.9",
+                    "Accept-Encoding": "gzip, deflate, br",
+                }
+            )
             if r.status_code == 200:
                 break
             r = None
@@ -322,18 +327,37 @@ def web_cek(kaynak):
     haberler = []
     genel = kaynak.get("genel", False)
     esik  = 4 if genel else 1
+
+    # SSL sertifikası geçersiz devlet siteleri için doğrulamayı atla
+    url_str = kaynak["url"]
+    verify  = not any(h in url_str for h in SSL_NO_VERIFY_HOSTS)
+    if not verify:
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
     try:
-        r = requests.get(kaynak["url"], timeout=20,
-                         headers={
-                             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-                             "Accept": "text/html,application/xhtml+xml,*/*",
-                             "Accept-Language": "tr-TR,tr;q=0.9",
-                         })
+        r = requests.get(
+            url_str,
+            timeout=15,
+            verify=verify,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,*/*",
+                "Accept-Language": "tr-TR,tr;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive",
+                "DNT": "1",
+            }
+        )
         r.raise_for_status()
         soup  = BeautifulSoup(r.text, "html.parser")
         kabul = red = 0
 
-        for a in soup.select(kaynak["secici"])[:20]:
+        # Önce birincil selector, bulunamazsa fallback dene
+        linkler = soup.select(kaynak["secici"])[:20]
+        if not linkler:
+            linkler = soup.select(FALLBACK_SELECTOR)[:20]
+
+        for a in linkler:
             baslik = a.get_text(" ", strip=True)
             if not baslik or len(baslik) < 10:
                 continue
@@ -366,6 +390,34 @@ def web_cek(kaynak):
             kabul += 1
 
         print(f"  🌐 {kaynak['ad']}: {kabul} kabul / {red} red (eşik={esik})")
+    except requests.exceptions.SSLError:
+        # İkinci deneme: verify=False
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        try:
+            r = requests.get(url_str, timeout=15, verify=False,
+                             headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
+            r.raise_for_status()
+            soup = BeautifulSoup(r.text, "html.parser")
+            linkler = soup.select(kaynak["secici"])[:20] or soup.select(FALLBACK_SELECTOR)[:20]
+            kabul = red = 0
+            for a in linkler:
+                baslik = a.get_text(" ", strip=True)
+                if not baslik or len(baslik) < 10: continue
+                href = a.get("href", "")
+                if not href: continue
+                link = href if href.startswith("http") else kaynak["url"].rstrip("/") + "/" + href.lstrip("/")
+                if ekoloji_puani(baslik, "", genel) < esik:
+                    red += 1
+                    continue
+                haberler.append({
+                    "baslik": baslik, "kaynak": kaynak["ad"],
+                    "kaynak_web": kaynak["web"], "tarih": datetime.date.today().isoformat(),
+                    "etiket": kaynak["etiket"], "ozet": "", "url": link,
+                })
+                kabul += 1
+            print(f"  🌐 {kaynak['ad']}: {kabul} kabul / {red} red (eşik={esik}, SSL atlandı)")
+        except Exception as e2:
+            print(f"  ⚠️  {kaynak['ad']}: {e2}")
     except Exception as e:
         print(f"  ⚠️  {kaynak['ad']}: {e}")
     return haberler
@@ -382,12 +434,10 @@ def main():
                 "makaleler": [], "uluslararasi": [], "_meta": {}}
         sha  = None
 
-    # Eksik koleksiyon anahtarlarını ekle (eski data.json için)
     for col in ("raporlar", "makaleler", "uluslararasi", "ekosistem", "direnis"):
         if col not in data:
             data[col] = []
 
-    # ── Harita kaynaklı kayıtları her çalışmada otomatik temizle ──
     onceki = len(data.get("ihlaller", []))
     data["ihlaller"] = [
         i for i in data.get("ihlaller", [])
@@ -406,7 +456,6 @@ def main():
 
     print(f"  Mevcut: {len(data.get('ihlaller',[]))} ihlal, {len(mevcut_haberler)} haber")
 
-    # ── Haberleri tara ──────────────────────────────────────────
     print(f"\n🔍 RSS taranıyor… ({len(KAYNAK_RSS)} kaynak)")
     yeni_haberler = []
     id_sayac = sonraki_id(mevcut_haberler)
