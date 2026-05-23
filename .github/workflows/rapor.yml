@@ -1,25 +1,38 @@
 name: Günlük Rapor
 on:
   schedule:
-    - cron: "0 6 * * *"   # Her gün 06:00 UTC (Türkiye 09:00)
-  workflow_dispatch:        # Manuel tetikleme
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
 jobs:
   rapor-uret:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Python kur
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Bağımlılıkları yükle
         run: pip install requests
+
       - name: Raporu üret
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO_OWNER: ${{ github.repository_owner }}
           GITHUB_REPO_NAME:  ${{ github.event.repository.name }}
-        run: python scripts/rapor_uret.py  github actionda günlük rapor üretildi demesine rağmen sayfaya gelen bir şey yok bir hata mı var
+        run: python scripts/rapor_uret.py
 
-run: python scripts/rapor_uret.py
+      - name: Commit ve push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Günlük rapor: $(date +'%Y-%m-%d')"
+          git push
