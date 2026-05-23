@@ -140,6 +140,8 @@ EKOSISTEM_RSS = [
     {"ad": "Google News",  "etiket": "Savaş & Ekoloji",        "genel": False, "hedef": "ekosistem", "bolum": "savas",          "dil": "tr",
      "url": "https://news.google.com/rss/search?q=savaş+çevre+ekoloji+kirlilik&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
 ]
+
+KAYNAK_WEB = [
     {"ad": "Greenpeace TR",   "etiket": "STK", "genel": False, "hedef": "haberler",
      "url": "https://www.greenpeace.org/turkey/blog/", "web": "https://www.greenpeace.org/turkey/",
      "secici": ".post-title a, h2 a, h3 a, [class*='title'] a",
@@ -495,6 +497,7 @@ def main():
         "rapor_sayisi":  len(data.get("raporlar",[])),
         "makale_sayisi": len(data.get("makaleler",[])),
         "ulus_sayisi":   len(data.get("uluslararasi",[])),
+        "ekosistem_sayisi": len(data.get("ekosistem",[])),
     }
 
     print("\n📤 GitHub'a yazılıyor (API)…")
