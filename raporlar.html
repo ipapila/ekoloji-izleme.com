@@ -119,6 +119,29 @@
   .kat-sayi{display:none;}
 }
 </style>
+<!-- flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+.flatpickr-calendar{background:var(--deep,#0d2318)!important;border:1px solid rgba(45,158,107,.3)!important;border-radius:6px!important;box-shadow:0 12px 40px rgba(0,0,0,.5)!important;font-family:'JetBrains Mono',monospace!important;}
+.flatpickr-months{background:var(--forest,#112c1c)!important;border-radius:6px 6px 0 0;}
+.flatpickr-month,.flatpickr-current-month,.flatpickr-monthDropdown-months,
+.numInputWrapper span,.flatpickr-current-month .numInputWrapper input{color:#f0f5f2!important;background:transparent!important;}
+.flatpickr-monthDropdown-months{border:none!important;}
+.flatpickr-monthDropdown-months option{background:var(--deep,#0d2318)!important;}
+.flatpickr-prev-month,.flatpickr-next-month{color:rgba(122,158,138,.7)!important;fill:rgba(122,158,138,.7)!important;}
+.flatpickr-prev-month:hover,.flatpickr-next-month:hover{color:#3ec882!important;fill:#3ec882!important;background:rgba(45,158,107,.1)!important;}
+.flatpickr-weekday{color:rgba(45,158,107,.6)!important;font-size:9px!important;letter-spacing:.08em;}
+.flatpickr-day{color:rgba(240,245,242,.75)!important;border-radius:3px!important;font-size:11px!important;}
+.flatpickr-day:hover,.flatpickr-day:focus{background:rgba(45,158,107,.18)!important;border-color:rgba(45,158,107,.35)!important;color:#f0f5f2!important;}
+.flatpickr-day.today{border-color:rgba(45,158,107,.5)!important;color:#3ec882!important;}
+.flatpickr-day.today:hover{background:rgba(45,158,107,.18)!important;}
+.flatpickr-day.selected,.flatpickr-day.selected:hover{background:var(--accent,#2d9e6b)!important;border-color:var(--accent,#2d9e6b)!important;color:var(--dark,#070f0a)!important;font-weight:600!important;}
+.flatpickr-day.flatpickr-disabled,.flatpickr-day.prevMonthDay,.flatpickr-day.nextMonthDay{color:rgba(122,158,138,.25)!important;}
+.numInputWrapper:hover,.numInputWrapper span:hover{background:rgba(45,158,107,.08)!important;}
+.numInputWrapper span{border-color:rgba(45,158,107,.2)!important;}
+input.flatpickr-input{cursor:pointer!important;}
+input.flatpickr-input:read-only{cursor:pointer!important;}
+</style>
 </head>
 <body>
 <script src="site-data.js"></script>
@@ -554,6 +577,12 @@ function acDuzenle(id, event) {
   document.getElementById("edit_url").value      = h.url||"";
   document.getElementById("edit_ozet").value     = h.ozet||"";
   document.getElementById("editModal").style.display="flex";
+  setTimeout(()=>{
+    document.querySelectorAll('#editModal input[type="date"]').forEach(el=>{
+      if(el._flatpickr) el._flatpickr.setDate(el.value,false);
+      else flatpickr(el,_fpCfg());
+    });
+  }, 60);
 }
 function duzenleKaydet() {
   if (!duzenleId) return;
@@ -677,6 +706,12 @@ function setHkat(el) {
 /* ═══════════════════════════════════════════════════════════════
    VERİ YÜKLE
 ═══════════════════════════════════════════════════════════════ */
+
+/* ── flatpickr ── */
+const _fpCfg = () => ({locale:"tr",dateFormat:"Y-m-d",allowInput:true,disableMobile:false,monthSelectorType:"static",prevArrow:"‹",nextArrow:"›"});
+function _fpInitAll(){
+  document.querySelectorAll('input[type="date"]').forEach(el=>{if(!el._flatpickr)flatpickr(el,_fpCfg());});
+}
 function yukle() {
   const localRaporlar = typeof SITE !== "undefined" ? SITE.getList("raporlar") : [];
   const silinen = _adminMod.getSilinen();
@@ -849,6 +884,9 @@ if (typeof SITE !== "undefined" && SITE.isAdmin()) {
 }
 
 yukle();
+document.addEventListener("DOMContentLoaded",()=>setTimeout(_fpInitAll,200));
 </script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/tr.js"></script>
 </body>
 </html>
