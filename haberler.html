@@ -238,6 +238,14 @@
         <span class="kat-ad">STK & Kampanyalar</span>
         <span class="kat-sayi" id="ks_stk">…</span>
       </div>
+
+      <div class="kat-separator">Diğer</div>
+
+      <div class="kat-item" data-hkat="__kategorisiz" onclick="setHkat(this)" style="opacity:.7;">
+        <div class="kat-dot" style="background:#475569;"></div>
+        <span class="kat-ad">Kategorisiz</span>
+        <span class="kat-sayi" id="ks_kategorisiz">…</span>
+      </div>
     </aside>
 
     <!-- ═══ SAĞ: HABER LİSTESİ ═══ -->
@@ -343,6 +351,7 @@ const KAT_ID_MAP = {
   "Hukuki Süreçler":        "ks_hukuk",
   "Nöbetler ve Gözaltılar": "ks_nobet",
   "STK & Kampanyalar":      "ks_stk",
+  "__kategorisiz":          "ks_kategorisiz",
 };
 
 /* ═══════════════════════════════════════════════════════════════
@@ -379,8 +388,11 @@ let importData      = null;
 function haberKatTespit(h) {
   if (h.haber_kategorisi) return h.haber_kategorisi;
   const eylem  = (h.eylem || "").toLowerCase();
-  const metin  = ((h.baslik||"")+" "+(h.ozet||"")+" "+(h.kategori||"")+" "+
-                  (Array.isArray(h.etiketler)?h.etiketler.join(" "):h.etiket||"")).toLowerCase();
+  // Türkçe büyük harfler: İ→i, Ş→ş vb. (toLowerCase() "İ"→"i̇" üretir, arama çalışmaz)
+  const _trMap = {"İ":"i","Ş":"ş","Ğ":"ğ","Ü":"ü","Ö":"ö","Ç":"ç"};
+  const _trNorm = s => (s||"").replace(/[İŞĞÜÖÇ]/g, c => _trMap[c]||c).toLowerCase();
+  const metin  = _trNorm((h.baslik||"")+" "+(h.ozet||"")+" "+(h.kategori||"")+" "+
+                  (Array.isArray(h.etiketler)?h.etiketler.join(" "):h.etiket||""));
   const kat    = (h.kategori || h.etiket || "").toLowerCase();
 
   if ("nöbet" in metin || metin.includes("gözaltı") || eylem.includes("nöbet"))
@@ -584,7 +596,11 @@ function filtrele() {
   const q = document.getElementById("searchBox").value.toLowerCase();
   render(tumHaberler.filter(h => {
     if (aktifKoleksiyon && h._koleksiyon !== aktifKoleksiyon) return false;
-    if (aktifHaberKat  && h._haber_kat  !== aktifHaberKat)   return false;
+    if (aktifHaberKat === "__kategorisiz") {
+      if (h._haber_kat && h._haber_kat !== "") return false;
+    } else if (aktifHaberKat) {
+      if (h._haber_kat !== aktifHaberKat) return false;
+    }
     if (q && !(h.baslik+" "+(h.ozet||"")+" "+(h.kaynak||"")).toLowerCase().includes(q)) return false;
     return true;
   }));
@@ -601,6 +617,9 @@ function guncelleSidebarSayac() {
     if (k) sayac[k] = (sayac[k]||0) + 1;
     toplam++;
   });
+  const kategorisizSayi = tumHaberler.filter(h => !h._haber_kat || h._haber_kat === "").length;
+  sayac["__kategorisiz"] = kategorisizSayi;
+
   document.getElementById("ks_toplam").textContent = toplam;
   Object.entries(KAT_ID_MAP).forEach(([kat, elId]) => {
     const el = document.getElementById(elId);
