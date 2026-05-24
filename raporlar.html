@@ -3,50 +3,121 @@
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-LTTD3L198S");</script>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Raporlar — ekoloji-izleme.com</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raporlar & Analiz — ekoloji-izleme.com</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
 .page-header{background:var(--forest);padding:100px 80px 60px;border-bottom:1px solid rgba(45,158,107,.15);}
 .page-header-inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
-.page-header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
+.page-header h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
 .page-header h1 span{color:var(--bright);}
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;}
-.filter-btn{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;padding:6px 12px;border-radius:2px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.filter-btn:hover,.filter-btn.aktif{background:rgba(45,158,107,.15);border-color:var(--accent);color:var(--bright);}
-.search-box{font-family:'JetBrains Mono',monospace;font-size:11px;padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:220px;}
-.content{background:var(--dark);padding:50px 80px;min-height:60vh;}
-.rapor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
-.rapor-kart{background:var(--forest);border-radius:6px;border:1px solid rgba(45,158,107,.12);padding:28px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
-.rapor-kart::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
-.rapor-kart:hover{border-color:rgba(45,158,107,.3);background:var(--deep);transform:translateY(-3px);}
-.rapor-kart:hover::after{transform:scaleX(1);}
-.rapor-tur{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;padding:3px 8px;border-radius:2px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.2);display:inline-block;margin-bottom:14px;text-transform:uppercase;}
-.rapor-kart h3{font-family:'Crimson Pro',serif;font-size:20px;font-weight:400;color:var(--cream);line-height:1.4;margin-bottom:10px;}
-.rapor-ozet{font-size:13.5px;font-weight:300;color:var(--muted);line-height:1.65;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-.rapor-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(45,158,107,.1);padding-top:14px;margin-top:4px;}
-.rapor-tarih{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);}
-.rapor-oku{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;color:var(--accent);text-transform:uppercase;}
-.empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;letter-spacing:.05em;}
-.admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:.06em;}
+.search-wrap{display:flex;gap:8px;align-items:center;}
+.search-box{font-family:"JetBrains Mono",monospace;font-size:11px;padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:220px;}
+.search-box:focus{border-color:var(--accent);}
+
+/* ── Tür chip'leri (Rapor alt türleri) ── */
+.tur-chip{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.07em;padding:5px 11px;border-radius:2px;border:1px solid rgba(34,197,94,.2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.tur-chip:hover,.tur-chip.aktif{background:rgba(34,197,94,.1);border-color:#22c55e;color:#22c55e;}
+
+/* ── Özet çubuğu ── */
+.ozet-bar{background:var(--dark);padding:10px 80px;border-bottom:1px solid rgba(45,158,107,.07);display:flex;gap:24px;align-items:center;flex-wrap:wrap;}
+.ozet-stat{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;}
+.ozet-stat b{color:#22c55e;font-weight:600;}
+
+/* ── Scan / admin bar ── */
+.scan-bar{background:var(--dark);padding:14px 80px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(45,158,107,.1);flex-wrap:wrap;}
+.scan-status{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);flex:1;}
+.btn-tara,.btn-import,.btn-dup{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all .2s;}
+.btn-tara{background:#22c55e;color:var(--dark);border:none;}
+.btn-tara:hover{background:#4ade80;}
+.btn-tara:disabled{opacity:.5;cursor:not-allowed;}
+.btn-import{background:transparent;color:#22c55e;border:1px solid rgba(34,197,94,.35);}
+.btn-import:hover{background:rgba(34,197,94,.1);}
+.btn-dup{background:transparent;color:var(--muted);border:1px solid rgba(45,158,107,.2);}
+.btn-dup:hover{color:var(--warn);border-color:rgba(232,92,42,.4);}
+
+/* ── İçerik layout ── */
+.content{background:var(--dark);padding:40px 80px 60px;min-height:60vh;}
+.content-layout{display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:start;}
+
+/* ── Kategori Sidebar ── */
+.kat-sidebar{position:sticky;top:80px;}
+.kat-sidebar-title{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 0 10px;border-bottom:1px solid rgba(45,158,107,.1);margin-bottom:8px;}
+.kat-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid transparent;margin-bottom:2px;}
+.kat-item:hover{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.12);}
+.kat-item.aktif-kat{background:rgba(34,197,94,.09);border-color:rgba(34,197,94,.25);}
+.kat-item.aktif-kat .kat-ad{color:#4ade80;}
+.kat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.kat-ad{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);flex:1;line-height:1.3;}
+.kat-sayi{font-family:"JetBrains Mono",monospace;font-size:8px;color:var(--muted);opacity:.5;flex-shrink:0;}
+.kat-item.aktif-kat .kat-sayi{opacity:.9;}
+.kat-tumü{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid rgba(34,197,94,.15);background:rgba(34,197,94,.05);margin-bottom:10px;}
+.kat-tumü:hover{background:rgba(34,197,94,.1);}
+.kat-tumü.aktif-kat{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.3);}
+.kat-tumü span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:#4ade80;flex:1;}
+.kat-tumü b{font-family:"JetBrains Mono",monospace;font-size:8px;color:#22c55e;}
+.kat-separator{font-family:"JetBrains Mono",monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.45;padding:10px 12px 5px;margin-top:4px;}
+
+/* ── Rapor kart ── */
+.rapor-grid{display:flex;flex-direction:column;gap:2px;}
+.rapor-kart{background:var(--forest);padding:22px 28px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;cursor:pointer;border-left:3px solid transparent;transition:all .2s;}
+.rapor-kart:hover{background:var(--deep);padding-left:34px;border-left-color:#22c55e;}
+.rapor-kart h3{font-size:16px;font-weight:400;color:var(--cream);line-height:1.5;margin-bottom:7px;}
+.rapor-kart-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.rapor-kart-meta span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);}
+.rapor-kart-meta a{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:#22c55e;text-decoration:none;}
+.rapor-kart-meta a:hover{color:#4ade80;}
+.badge{font-family:"JetBrains Mono",monospace;font-size:8.5px;padding:3px 8px;border-radius:2px;white-space:nowrap;height:fit-content;}
+.badge-rapor{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);}
+.badge-kat{background:rgba(45,158,107,.07);color:var(--accent);border:1px solid rgba(45,158,107,.15);font-size:7.5px;}
+.admin-btn-group{display:flex;gap:5px;flex-shrink:0;}
+.admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:"JetBrains Mono",monospace;font-size:8.5px;cursor:pointer;}
 .admin-sil-btn:hover{background:rgba(232,92,42,.25);}
-.admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
-.admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
-.modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
-.modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;}
-.modal-header{padding:28px 36px 16px;display:flex;justify-content:space-between;align-items:start;position:sticky;top:0;background:var(--deep);border-bottom:1px solid rgba(45,158,107,.1);}
-.modal-body{padding:28px 36px 40px;}
-.modal-tur{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:2px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.2);text-transform:uppercase;}
-.modal-title{font-family:'Crimson Pro',serif;font-size:32px;font-weight:400;color:var(--cream);line-height:1.25;margin:16px 0 12px;}
-.modal-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid rgba(45,158,107,.1);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
-.modal-icerik{font-size:16px;font-weight:300;color:var(--cream);line-height:1.85;}
-.modal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:24px;border-top:1px solid rgba(45,158,107,.1);}
-.modal-btn-primary{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;}
-.modal-btn-primary:hover{background:var(--bright);}
-.modal-btn-outline{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:transparent;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;text-decoration:none;border-radius:4px;border:1px solid rgba(240,245,242,.2);}
-.modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;}
-@media(max-width:900px){.page-header{padding:80px 28px 40px;}.page-header-inner{grid-template-columns:1fr;}.content{padding:30px 28px;}.rapor-grid{grid-template-columns:1fr;}}
+.admin-duzenle-btn{padding:3px 10px;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.3);border-radius:2px;font-family:"JetBrains Mono",monospace;font-size:8.5px;cursor:pointer;}
+.admin-duzenle-btn:hover{background:rgba(34,197,94,.2);}
+.empty{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;}
+
+/* ── Modaller ── */
+.modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-box{background:var(--deep);border:1px solid rgba(34,197,94,.2);border-radius:8px;max-width:700px;width:100%;max-height:88vh;overflow-y:auto;}
+.modal-header{padding:24px 32px 12px;display:flex;justify-content:space-between;align-items:start;gap:12px;position:sticky;top:0;background:var(--deep);z-index:1;border-bottom:1px solid rgba(34,197,94,.1);}
+.modal-body{padding:20px 32px 32px;}
+.modal-title{font-family:"Crimson Pro",serif;font-size:26px;font-weight:400;color:var(--cream);line-height:1.35;margin:8px 0 12px;}
+.modal-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);}
+.modal-ozet{font-size:15px;font-weight:300;color:var(--cream);line-height:1.75;margin-bottom:24px;}
+.modal-kaynak-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:#22c55e;color:var(--dark);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;}
+.modal-kaynak-btn:hover{background:#4ade80;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;}
+.modal-close:hover{color:var(--cream);}
+.edit-field{margin-bottom:14px;}
+.edit-field label{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#22c55e;display:block;margin-bottom:5px;}
+.edit-field input,.edit-field textarea,.edit-field select{width:100%;box-sizing:border-box;background:var(--forest);border:1px solid rgba(34,197,94,.2);border-radius:3px;padding:9px 12px;color:var(--cream);font-family:"JetBrains Mono",monospace;font-size:11px;outline:none;}
+.edit-field input:focus,.edit-field textarea:focus{border-color:#22c55e;}
+.edit-field textarea{resize:vertical;line-height:1.6;}
+.edit-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+.btn-kaydet{padding:10px 22px;background:#22c55e;color:var(--dark);border:none;border-radius:3px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
+.btn-kaydet:hover{background:#4ade80;}
+.btn-iptal{padding:10px 18px;background:transparent;color:var(--muted);border:1px solid rgba(34,197,94,.2);border-radius:3px;font-family:"JetBrains Mono",monospace;font-size:10px;cursor:pointer;}
+.btn-iptal:hover{color:var(--cream);}
+.import-drop{border:2px dashed rgba(34,197,94,.3);border-radius:6px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;}
+.import-drop:hover,.import-drop.dragover{border-color:#22c55e;background:rgba(34,197,94,.05);}
+.import-drop p{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);margin:0;}
+.import-drop b{color:#4ade80;display:block;font-size:14px;margin-bottom:8px;}
+.import-log{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.3);padding:12px;border-radius:3px;min-height:40px;white-space:pre-wrap;}
+
+@media(max-width:900px){
+  .page-header{padding:80px 28px 40px;}.page-header-inner{grid-template-columns:1fr;}
+  .ozet-bar,.scan-bar{padding:14px 28px;}
+  .content{padding:24px 16px 40px;}
+  .content-layout{grid-template-columns:1fr;}
+  .kat-sidebar{position:static;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+  .kat-sidebar-title,.kat-separator{display:none;}
+  .kat-tumü{margin-bottom:0;}
+  .kat-item{padding:6px 10px;}
+  .kat-sayi{display:none;}
+}
 </style>
 </head>
 <body>
@@ -56,172 +127,617 @@
 
 <div class="page-header">
   <div class="page-header-inner">
-    <div><div class="section-tag">Araştırma & Analiz</div><h1>RAPORLAR <span>&</span><br>DOSYALAR</h1></div>
-    <div class="filter-bar">
-      <input class="search-box" id="searchBox" placeholder="Ara…" oninput="filtrele()">
-      <button class="filter-btn aktif" onclick="filtreBtnClick(this,'')">Tümü</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'Veri')">Veri</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'Alan Raporu')">Alan</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'Hukuki')">Hukuki</button>
-      <button class="filter-btn" onclick="filtreBtnClick(this,'Analiz')">Analiz</button>
+    <div>
+      <div class="section-tag">Araştırma & Analiz</div>
+      <h1>RAPORLAR &amp; <span>ANALİZ</span></h1>
+    </div>
+    <div class="search-wrap">
+      <input class="search-box" id="searchBox" placeholder="Rapor ara…" oninput="filtrele()">
+      <button class="tur-chip" data-tur="STK Raporu">STK</button>
+      <button class="tur-chip" data-tur="İklim Raporu">İklim</button>
+      <button class="tur-chip" data-tur="Akademik">Akademik</button>
+      <button class="tur-chip" data-tur="Politika">Politika</button>
     </div>
   </div>
 </div>
 
-<div class="content">
-  <!-- Admin linki (sadece admin girişindeyken görünür) -->
-  <div id="adminBolum" style="display:none;margin-bottom:24px;">
-    <a class="admin-ekle-btn" href="admin.html">+ Rapor Ekle / Yönet →</a>
-  </div>
-
-  <div class="rapor-grid" id="raporGrid"><div class="empty">Raporlar yükleniyor…</div></div>
+<div class="ozet-bar" id="ozetBar">
+  <span class="ozet-stat"><b id="osToplamSayi">…</b> rapor</span>
+  <span class="ozet-stat" id="osGuncelleme"></span>
 </div>
 
-<div id="detailModal" class="modal-bg" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+<div class="scan-bar">
+  <div class="scan-status" id="scanStatus">Yükleniyor…</div>
+  <div id="adminAlan" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"></div>
+</div>
+
+<div class="content">
+  <div class="content-layout">
+
+    <!-- ═══ SOL SIDEBAR: 9 KATEGORİ ═══ -->
+    <aside class="kat-sidebar" id="katSidebar">
+      <div class="kat-sidebar-title">Konu & Eylem Kategorileri</div>
+
+      <div class="kat-tumü aktif-kat" data-hkat="" onclick="setHkat(this)">
+        <span>Tüm Raporlar</span>
+        <b id="ks_toplam">…</b>
+      </div>
+
+      <div class="kat-separator">Konu</div>
+
+      <div class="kat-item" data-hkat="İklim ve Afet" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#60a5fa;box-shadow:0 0 4px #60a5fa50;"></div>
+        <span class="kat-ad">İklim ve Afet</span>
+        <span class="kat-sayi" id="ks_iklim">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Maden ve Enerji" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#f97316;box-shadow:0 0 4px #f9731640;"></div>
+        <span class="kat-ad">Maden ve Enerji</span>
+        <span class="kat-sayi" id="ks_maden">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Orman ve Doğa" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:var(--accent);box-shadow:0 0 4px rgba(45,158,107,.5);"></div>
+        <span class="kat-ad">Orman ve Doğa</span>
+        <span class="kat-sayi" id="ks_orman">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Su ve Kıyı" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#38bdf8;box-shadow:0 0 4px #38bdf850;"></div>
+        <span class="kat-ad">Su ve Kıyı</span>
+        <span class="kat-sayi" id="ks_su">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Yaban Hayatı" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#a3e635;box-shadow:0 0 4px #a3e63540;"></div>
+        <span class="kat-ad">Yaban Hayatı</span>
+        <span class="kat-sayi" id="ks_yaban">…</span>
+      </div>
+
+      <div class="kat-separator">Eylem & Toplum</div>
+
+      <div class="kat-item" data-hkat="Direniş ve Eylemler" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#fb923c;box-shadow:0 0 4px #fb923c40;"></div>
+        <span class="kat-ad">Direniş ve Eylemler</span>
+        <span class="kat-sayi" id="ks_direnis">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Hukuki Süreçler" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#94a3b8;box-shadow:0 0 4px #94a3b830;"></div>
+        <span class="kat-ad">Hukuki Süreçler</span>
+        <span class="kat-sayi" id="ks_hukuk">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Nöbetler ve Gözaltılar" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#f87171;box-shadow:0 0 4px #f8717140;"></div>
+        <span class="kat-ad">Nöbetler ve Gözaltılar</span>
+        <span class="kat-sayi" id="ks_nobet">…</span>
+      </div>
+      <div class="kat-item" data-hkat="STK & Kampanyalar" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#c084fc;box-shadow:0 0 4px #c084fc40;"></div>
+        <span class="kat-ad">STK & Kampanyalar</span>
+        <span class="kat-sayi" id="ks_stk">…</span>
+      </div>
+
+      <div class="kat-separator">Diğer</div>
+
+      <div class="kat-item" data-hkat="__kategorisiz" onclick="setHkat(this)" style="opacity:.7;">
+        <div class="kat-dot" style="background:#475569;"></div>
+        <span class="kat-ad">Kategorisiz</span>
+        <span class="kat-sayi" id="ks_kategorisiz">…</span>
+      </div>
+    </aside>
+
+    <!-- ═══ SAĞ: RAPOR LİSTESİ ═══ -->
+    <div>
+      <div class="rapor-grid" id="raporGrid">
+        <div class="empty">Raporlar yükleniyor…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Detay Modal ══ -->
+<div id="detailModal" class="modal-bg" style="display:none;">
   <div class="modal-box">
-    <div class="modal-header"><span class="modal-tur" id="mTur"></span><button class="modal-close" onclick="document.getElementById('detailModal').style.display='none'">✕</button></div>
-    <div class="modal-body"><h2 class="modal-title" id="mTitle"></h2><div class="modal-meta" id="mMeta"></div><div class="modal-icerik" id="mIcerik"></div><div class="modal-actions" id="mActions"></div></div>
+    <div class="modal-header">
+      <div id="mBadgeRow" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+      <button class="modal-close" id="detailClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="mTitle"></h2>
+      <div class="modal-meta" id="mMeta"></div>
+      <div id="mEtiketler" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;"></div>
+      <div class="modal-ozet" id="mOzet"></div>
+      <a id="mLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;margin-top:16px;"></a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Düzenle Modal ══ -->
+<div id="editModal" class="modal-bg" style="display:none;">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-header">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#22c55e;">Raporu Düzenle</span>
+      <button class="modal-close" id="editClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="edit-field"><label>Başlık</label><input id="edit_baslik" type="text"></div>
+      <div class="edit-field"><label>Kaynak / Kurum</label><input id="edit_kaynak" type="text"></div>
+      <div class="edit-field"><label>Kategori</label>
+        <select id="edit_kategori">
+          <option>STK Raporu</option><option>İklim Raporu</option><option>Akademik Analiz</option>
+          <option>Politika Analizi</option><option>Enerji Politikası</option>
+          <option>ÇED Analizi</option><option>Alan Araştırması</option>
+          <option>Veri & İstatistik</option><option>Hukuki Analiz</option><option>İzleme Raporu</option>
+        </select>
+      </div>
+      <div class="edit-field"><label>Tarih</label><input id="edit_tarih" type="date"></div>
+      <div class="edit-field"><label>URL</label><input id="edit_url" type="url"></div>
+      <div class="edit-field"><label>Özet</label><textarea id="edit_ozet" rows="5"></textarea></div>
+      <div class="edit-actions">
+        <button class="btn-iptal" id="editIptal">İptal</button>
+        <button class="btn-kaydet" id="editKaydet">✓ Kaydet</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Import Modal ══ -->
+<div id="importModal" class="modal-bg" style="display:none;">
+  <div class="modal-box" style="max-width:500px;">
+    <div class="modal-header">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#22c55e;">JSON İçe Aktar</span>
+      <button class="modal-close" id="importClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="import-drop" id="importDrop">
+        <b>📂 Dosya sürükle veya tıkla</b>
+        <p>haberler.json (raporlar koleksiyonu okunur)</p>
+        <input type="file" id="importFile" accept=".json,.geojson" style="display:none;">
+      </div>
+      <div class="import-log" id="importLog">Dosya bekleniyor…</div>
+      <div class="edit-actions">
+        <button class="btn-iptal" id="importIptal">Kapat</button>
+        <button class="btn-kaydet" id="importUygula" disabled>✓ İçe Aktar</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-let tumRaporlar = [];
-let aktifTur = '';
+/* ═══════════════════════════════════════════════════════════════
+   YAPILANDIRMA
+═══════════════════════════════════════════════════════════════ */
+const HABERLER_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
+
+const KAT_ID_MAP = {
+  "İklim ve Afet":          "ks_iklim",
+  "Maden ve Enerji":        "ks_maden",
+  "Orman ve Doğa":          "ks_orman",
+  "Su ve Kıyı":             "ks_su",
+  "Yaban Hayatı":           "ks_yaban",
+  "Direniş ve Eylemler":    "ks_direnis",
+  "Hukuki Süreçler":        "ks_hukuk",
+  "Nöbetler ve Gözaltılar": "ks_nobet",
+  "STK & Kampanyalar":      "ks_stk",
+  "__kategorisiz":          "ks_kategorisiz",
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   DURUM
+═══════════════════════════════════════════════════════════════ */
+const _adminMod = {
+  getSilinen() {
+    try { return new Set(JSON.parse(localStorage.getItem("ekoloji_rapor_silinen")||"[]").map(String)); }
+    catch { return new Set(); }
+  },
+  sil(id, onSuccess) {
+    if (!confirm("Bu raporu silmek istiyor musunuz?")) return;
+    const sid = String(id);
+    if (typeof SITE !== "undefined") SITE.set("raporlar", SITE.getList("raporlar").filter(x=>String(x.id)!==sid));
+    const s = this.getSilinen(); s.add(sid);
+    localStorage.setItem("ekoloji_rapor_silinen", JSON.stringify([...s]));
+    if (onSuccess) onSuccess(sid);
+  }
+};
+
+let tumRaporlar     = [];
 let gorunenRaporlar = [];
+let aktifHaberKat   = "";
+let aktifTurKat     = "";    // üst chip filtresi (kategori string'inden)
+let duzenleId       = null;
+let importData      = null;
 
-function isAdmin() { return typeof SITE !== 'undefined' && SITE.isAdmin(); }
+/* ═══════════════════════════════════════════════════════════════
+   9 KATEGORİ TESPİTİ
+═══════════════════════════════════════════════════════════════ */
+function haberKatTespit(h) {
+  if (h.haber_kategorisi) return h.haber_kategorisi;
+  const eylem = (h.eylem || "").toLowerCase();
+  const kat   = (h.kategori || h.etiket || "").toLowerCase();
+  const _trMap = {"İ":"i","Ş":"ş","Ğ":"ğ","Ü":"ü","Ö":"ö","Ç":"ç"};
+  const _trNorm = s => (s||"").replace(/[İŞĞÜÖÇ]/g, c => _trMap[c]||c).toLowerCase();
+  const metin = _trNorm((h.baslik||"")+" "+(h.ozet||"")+" "+(h.kategori||"")+" "+
+                (Array.isArray(h.etiketler)?h.etiketler.join(" "):h.etiket||""));
 
-/* ─── Silinen kayıtları localStorage'dan oku ─── */
-function getSilinen() {
-  try { return new Set(JSON.parse(localStorage.getItem('ekoloji_rapor_silinen') || '[]').map(String)); }
-  catch { return new Set(); }
+  if ("nöbet" in metin || metin.includes("gözaltı") || eylem.includes("nöbet"))
+    return "Nöbetler ve Gözaltılar";
+  if (eylem.includes("direniş & eylem") || metin.includes("direniş") ||
+      metin.includes("protesto") || metin.includes("miting") || metin.includes("yürüyüş"))
+    return "Direniş ve Eylemler";
+  if (eylem.includes("stk & kampanya") || kat.includes("stk") ||
+      metin.includes("greenpeace") || metin.includes("wwf") ||
+      metin.includes("doğa derneği") || metin.includes("tema vakfı") || metin.includes("kampanya"))
+    return "STK & Kampanyalar";
+  if (eylem.includes("hukuk & dava") || metin.includes("dava açı") ||
+      metin.includes("mahkeme") || metin.includes("yürütmeyi durdur") ||
+      metin.includes("iptal kararı") || metin.includes("çed kararı") || metin.includes("itiraz"))
+    return "Hukuki Süreçler";
+  if (metin.includes("iklim") || metin.includes("yangın") || metin.includes(" sel ") ||
+      metin.includes("taşkın") || metin.includes("heyelan") || metin.includes("kuraklık"))
+    return "İklim ve Afet";
+  if (metin.includes("yaban hayat") || metin.includes("nesli tehlike") ||
+      metin.includes("biyoçeşitlilik") || metin.includes("hayvan hakları"))
+    return "Yaban Hayatı";
+  if (metin.includes("sulak alan") || metin.includes("kıyı") ||
+      metin.includes("deniz kirliliği") || metin.includes("su kirliliği") ||
+      metin.includes("dere yatağı") || metin.includes("balık ölümü"))
+    return "Su ve Kıyı";
+  if (metin.includes("maden") || metin.includes(" hes") || metin.includes(" res") ||
+      metin.includes(" ges") || metin.includes("termik") || metin.includes("nükleer") ||
+      metin.includes("jeotermal") || metin.includes("baraj") || metin.includes("akkuyu") ||
+      metin.includes("enerji"))
+    return "Maden ve Enerji";
+  if (metin.includes("orman") || metin.includes("ağaç") || metin.includes("habitat") ||
+      metin.includes("bitki örtüsü") || metin.includes("milli park"))
+    return "Orman ve Doğa";
+  return "";
 }
 
-/* ─── Silme ─── */
-function raporSil(id) {
-  if (!confirm('Bu raporu silmek istiyor musunuz?')) return;
-  const sid = String(id);
-  /* localStorage'dan kaldır */
-  if (typeof SITE !== 'undefined') SITE.set('raporlar', (SITE.get('raporlar') || []).filter(r => String(r.id) !== sid));
-  /* Silinen listesine ekle */
-  const s = getSilinen(); s.add(sid);
-  localStorage.setItem('ekoloji_rapor_silinen', JSON.stringify([...s]));
-  /* Ekrandan kaldır */
-  tumRaporlar = tumRaporlar.filter(r => String(r.id) !== sid);
-  filtrele();
-}
-
-/* ─── Modal ─── */
+/* ═══════════════════════════════════════════════════════════════
+   DETAY MODAL
+═══════════════════════════════════════════════════════════════ */
 function acModal(idx) {
-  const r = gorunenRaporlar[idx]; if (!r) return;
-  const tarihStr = r.tarih ? new Date(r.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}) : '';
-  const domain = r.url ? (()=>{try{return new URL(r.url).hostname.replace('www.','');}catch{return r.url;}})() : '';
-  const etiketler = Array.isArray(r.etiketler) ? r.etiketler : (r.etiketler ? (()=>{try{return JSON.parse(r.etiketler);}catch{return [];}})() : []);
-  const hasPdf = r.dosya && /\.pdf(\?|$)/i.test(r.dosya);
-  const hasDoc = r.dosya && /\.(doc|docx)(\?|$)/i.test(r.dosya);
-  const dosyaAd = hasPdf ? '📄 PDF İndir' : hasDoc ? '📝 Belgeyi Aç' : r.dosya ? '📎 Dosyayı Aç' : '';
+  const h = gorunenRaporlar[idx];
+  if (!h) return;
+  const tarih  = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
+  const domain = h.url ? (()=>{ try{return new URL(h.url).hostname.replace("www.","");}catch(e){return "";} })() : "";
 
-  document.getElementById('mTur').textContent = r.tur || r.kategori || 'Rapor';
-  document.getElementById('mTitle').textContent = r.baslik || r.title || '';
-  document.getElementById('mMeta').innerHTML =
-    (r.yazar ? `<span>✍ ${r.yazar}</span>` : '') +
-    (tarihStr ? `<span>📅 ${tarihStr}</span>` : '') +
-    (r.yil ? `<span>📆 ${r.yil}</span>` : '') +
-    (r.bolge||r.konum ? `<span>📍 ${r.bolge||r.konum}</span>` : '') +
-    (domain ? `<span>🔗 ${domain}</span>` : '');
+  const badgeRow = document.getElementById("mBadgeRow");
+  badgeRow.innerHTML = "";
+  const rb = document.createElement("span"); rb.className="badge badge-rapor"; rb.textContent="Rapor & Analiz"; badgeRow.appendChild(rb);
+  if (h.dil === "en") { const eb=document.createElement("span"); eb.className="badge"; eb.style.cssText="background:rgba(99,102,241,.1);color:#818cf8;border:1px solid rgba(99,102,241,.2);font-size:8px;"; eb.textContent="EN"; badgeRow.appendChild(eb); }
+  const hkat = h._haber_kat||"";
+  if (hkat) { const kb=document.createElement("span"); kb.className="badge badge-kat"; kb.textContent=hkat; badgeRow.appendChild(kb); }
+  if (h.kategori) { const s=document.createElement("span"); s.className="badge badge-rapor"; s.style.background="rgba(34,197,94,.06)"; s.textContent=h.kategori.slice(0,22); badgeRow.appendChild(s); }
 
-  let fotoHtml = '';
-  if (r.foto_url) fotoHtml = `<img src="${r.foto_url}" alt="${r.baslik||''}" onerror="this.style.display='none'"
-    style="width:100%;max-height:280px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">`;
+  document.getElementById("mTitle").textContent = h.baslik;
+  document.getElementById("mMeta").innerHTML =
+    (h.kaynak?`<span>🏛 ${h.kaynak}</span>`:"")+(tarih?`<span>📅 ${tarih}</span>`:"")+(domain?`<span>🔗 ${domain}</span>`:"");
 
-  const chipsHtml = etiketler.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 14px;">
-    ${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join('')}
-  </div>` : '';
+  const et = document.getElementById("mEtiketler");
+  const etiketler = Array.isArray(h.etiketler)?h.etiketler:[];
+  if (etiketler.length) {
+    et.style.display="flex";
+    et.innerHTML=etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#4ade80;">${e}</span>`).join("");
+  } else { et.style.display="none"; }
 
-  const metin = r.icerik || r.ozet || r.aciklama || r.description || '';
-  document.getElementById('mIcerik').innerHTML = fotoHtml + chipsHtml +
-    (metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('') : '<p style="opacity:.5">İçerik mevcut değil.</p>');
-
-  const actions = document.getElementById('mActions');
-  actions.innerHTML = '';
-  if (hasPdf) actions.innerHTML += `<a href="${r.dosya}" target="_blank" rel="noopener" class="modal-btn-primary">${dosyaAd}</a>`;
-  else if (r.dosya) actions.innerHTML += `<a href="${r.dosya}" target="_blank" rel="noopener" class="modal-btn-outline">${dosyaAd}</a>`;
-  if (r.url || r.kaynak_url) actions.innerHTML += `<a href="${r.url||r.kaynak_url}" target="_blank" rel="noopener" class="modal-btn-outline">Kaynağa Git →</a>`;
-  if (hasPdf) actions.innerHTML += `<a href="${r.dosya}" download class="modal-btn-outline">⬇ İndir</a>`;
-
-  document.getElementById('detailModal').style.display = 'flex';
+  document.getElementById("mOzet").textContent = h.ozet || "Özet yok. Kaynağa gidin.";
+  const link = document.getElementById("mLink");
+  if (h.url) {
+    link.href=h.url;
+    link.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Rapora Git — ${domain}`;
+    link.style.display="inline-flex";
+  } else link.style.display="none";
+  document.getElementById("detailModal").style.display="flex";
 }
 
-/* ─── Render & Filtre ─── */
+/* ═══════════════════════════════════════════════════════════════
+   DÜZENLE MODAL
+═══════════════════════════════════════════════════════════════ */
+function acDuzenle(id, event) {
+  event.stopPropagation();
+  const h = tumRaporlar.find(x=>String(x.id)===String(id));
+  if (!h) return;
+  duzenleId = id;
+  document.getElementById("edit_baslik").value   = h.baslik||"";
+  document.getElementById("edit_kaynak").value   = h.kaynak||"";
+  document.getElementById("edit_kategori").value = h.kategori||h.etiket||"STK Raporu";
+  document.getElementById("edit_tarih").value    = h.tarih?h.tarih.slice(0,10):"";
+  document.getElementById("edit_url").value      = h.url||"";
+  document.getElementById("edit_ozet").value     = h.ozet||"";
+  document.getElementById("editModal").style.display="flex";
+}
+function duzenleKaydet() {
+  if (!duzenleId) return;
+  const idx = tumRaporlar.findIndex(x=>String(x.id)===String(duzenleId));
+  if (idx===-1) return;
+  tumRaporlar[idx] = { ...tumRaporlar[idx],
+    baslik:  document.getElementById("edit_baslik").value.trim(),
+    kaynak:  document.getElementById("edit_kaynak").value.trim(),
+    kategori:document.getElementById("edit_kategori").value,
+    etiket:  document.getElementById("edit_kategori").value,
+    tarih:   document.getElementById("edit_tarih").value,
+    url:     document.getElementById("edit_url").value.trim(),
+    ozet:    document.getElementById("edit_ozet").value.trim(),
+  };
+  tumRaporlar[idx]._haber_kat = haberKatTespit(tumRaporlar[idx]);
+  if (typeof SITE !== "undefined") SITE.set("raporlar", tumRaporlar);
+  document.getElementById("editModal").style.display="none";
+  filtrele(); guncelleSidebarSayac();
+  gosterBildirim("✓ Rapor güncellendi.");
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════════════════════ */
 function render(liste) {
   gorunenRaporlar = liste;
-  const grid = document.getElementById('raporGrid');
-  if (!liste.length) { grid.innerHTML = '<div class="empty">Rapor bulunamadı.</div>'; return; }
-  const admin = isAdmin();
-  grid.innerHTML = liste.map((r,i) => {
-    const tarih = r.tarih ? new Date(r.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '';
-    const ozet = r.ozet || r.aciklama || r.description || '';
+  const grid = document.getElementById("raporGrid");
+  if (!liste.length) { grid.innerHTML='<div class="empty">Bu kategoride rapor bulunamadı.</div>'; return; }
+  const adminMod = typeof SITE!=="undefined" && SITE.isAdmin();
+  grid.innerHTML = liste.map((h,i) => {
+    const tarih  = h.tarih?new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}):"";
+    const domain = h.url?(()=>{try{return new URL(h.url).hostname.replace("www.","");}catch(e){return "";}})():"";
+    const hkat   = h._haber_kat||"";
+    const hkatBadge = hkat?`<span class="badge badge-kat">${hkat}</span>`:"";
+    const katBadge  = h.kategori?`<span class="badge badge-rapor" style="font-size:7.5px;background:rgba(34,197,94,.06);">${h.kategori.slice(0,20)}</span>`:"";
+    const adminBtnler = adminMod?`
+      <div class="admin-btn-group" onclick="event.stopPropagation()">
+        <button class="admin-duzenle-btn" onclick="acDuzenle('${h.id}',event)">DÜZENLE</button>
+        <button class="admin-sil-btn" onclick="raporSil('${h.id}')">SİL</button>
+      </div>`:"";
     return `<div class="rapor-kart" onclick="acModal(${i})">
-      ${admin ? `<button class="admin-sil-btn" style="position:absolute;top:12px;right:12px;"
-        onclick="event.stopPropagation();raporSil('${r.id}')">SİL</button>` : ''}
-      <span class="rapor-tur">${r.tur||r.kategori||'Rapor'}</span>
-      <h3>${r.baslik||r.title||''}</h3>
-      ${ozet ? `<p class="rapor-ozet">${ozet}</p>` : ''}
-      <div class="rapor-footer">
-        <span class="rapor-tarih">${tarih}${r.yazar?' · '+r.yazar:''}</span>
-        <span class="rapor-oku">Detay →</span>
+      <div>
+        <h3>${h.baslik}</h3>
+        <div class="rapor-kart-meta">
+          <span>🏛 ${h.kaynak||""}</span>
+          ${tarih ?`<span>📅 ${tarih}</span>`:""}
+          ${domain?`<a href="${h.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${domain}</a>`:""}
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
+        <span class="badge badge-rapor">Rapor</span>
+        ${hkatBadge}
+        ${katBadge}
+        ${adminBtnler}
       </div>
     </div>`;
-  }).join('');
+  }).join("");
 }
 
+function raporSil(id) {
+  _adminMod.sil(id, sid => {
+    tumRaporlar = tumRaporlar.filter(h=>String(h.id)!==sid);
+    filtrele(); guncelleSidebarSayac();
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FİLTRE
+═══════════════════════════════════════════════════════════════ */
 function filtrele() {
-  const q = document.getElementById('searchBox').value.toLowerCase();
-  const filtered = tumRaporlar.filter(r => {
-    const tur = aktifTur ? (r.tur||r.kategori||'').includes(aktifTur) : true;
-    return tur && (!q || ((r.baslik||r.title||'')+' '+(r.ozet||r.aciklama||'')).toLowerCase().includes(q));
-  });
-  render(filtered);
+  const q = document.getElementById("searchBox").value.toLowerCase();
+  render(tumRaporlar.filter(h => {
+    // Tür chip filtresi (kategori string'i)
+    if (aktifTurKat && !(h.kategori||h.etiket||"").toLowerCase().includes(aktifTurKat.toLowerCase())) return false;
+    // 9 kategori sidebar filtresi
+    if (aktifHaberKat === "__kategorisiz") {
+      if (h._haber_kat && h._haber_kat !== "") return false;
+    } else if (aktifHaberKat) {
+      if (h._haber_kat !== aktifHaberKat) return false;
+    }
+    // Metin araması
+    if (q && !(h.baslik+" "+(h.ozet||"")+" "+(h.kaynak||"")).toLowerCase().includes(q)) return false;
+    return true;
+  }));
 }
 
-function filtreBtnClick(btn, tur) {
-  aktifTur = tur;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('aktif'));
-  btn.classList.add('aktif');
+/* ═══════════════════════════════════════════════════════════════
+   SIDEBAR SAYAÇ
+═══════════════════════════════════════════════════════════════ */
+function guncelleSidebarSayac() {
+  const sayac = {};
+  let toplam = 0;
+  tumRaporlar.forEach(h => {
+    const k = h._haber_kat || "";
+    if (k) sayac[k] = (sayac[k]||0) + 1;
+    toplam++;
+  });
+  sayac["__kategorisiz"] = tumRaporlar.filter(h=>!h._haber_kat||h._haber_kat==="").length;
+  document.getElementById("ks_toplam").textContent   = toplam;
+  document.getElementById("osToplamSayi").textContent = toplam;
+  Object.entries(KAT_ID_MAP).forEach(([kat, elId]) => {
+    const el = document.getElementById(elId);
+    if (el) el.textContent = sayac[kat] || "0";
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIDEBAR KATEGORİ SEÇ
+═══════════════════════════════════════════════════════════════ */
+function setHkat(el) {
+  aktifHaberKat = el.dataset.hkat || "";
+  document.querySelectorAll(".kat-item,.kat-tumü").forEach(e=>e.classList.remove("aktif-kat"));
+  el.classList.add("aktif-kat");
   filtrele();
+  const u = new URL(location.href);
+  if (aktifHaberKat) u.searchParams.set("hkat", aktifHaberKat);
+  else u.searchParams.delete("hkat");
+  history.replaceState({}, "", u.toString());
 }
 
-/* ─── VERİ YÜKLEME ───────────────────────────────────────────────
-   Raporlar admin.html → veriYaz() → GitHub data.json → webhook →
-   sunucudaki data.json içine yazılır. Buradan okuyoruz.
-   localStorage sadece ek/geçici önbellek olarak kullanılır.
-─────────────────────────────────────────────────────────────────── */
-const silinen = getSilinen();
-const lsData = (typeof SITE !== 'undefined' ? (SITE.get('raporlar') || []) : [])
-  .filter(r => !silinen.has(String(r.id)));
+/* ═══════════════════════════════════════════════════════════════
+   VERİ YÜKLE
+═══════════════════════════════════════════════════════════════ */
+function yukle() {
+  const localRaporlar = typeof SITE !== "undefined" ? SITE.getList("raporlar") : [];
+  const silinen = _adminMod.getSilinen();
 
-fetch('data.json?v=' + Date.now())
-  .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
-  .then(data => {
-    const sunucuData = (data.raporlar || []).filter(r => !silinen.has(String(r.id)));
-    /* localStorage öncelikli (en güncel), sunucu eksikleri tamamlar */
-    const lsIds = new Set(lsData.map(r => String(r.id)));
-    tumRaporlar = [...lsData, ...sunucuData.filter(r => !lsIds.has(String(r.id)))];
-    tumRaporlar.sort((a, b) => (b.yil || 0) - (a.yil || 0));
-    if (!tumRaporlar.length)
-      document.getElementById('raporGrid').innerHTML = '<div class="empty">Henüz rapor eklenmedi.</div>';
-    else filtrele();
-    /* Admin panelini göster */
-    if (isAdmin()) document.getElementById('adminBolum').style.display = 'block';
-  })
-  .catch(err => {
-    console.warn('data.json okunamadı:', err);
-    tumRaporlar = lsData;
-    if (!tumRaporlar.length)
-      document.getElementById('raporGrid').innerHTML = '<div class="empty">Henüz rapor eklenmedi.</div>';
-    else filtrele();
-    if (isAdmin()) document.getElementById('adminBolum').style.display = 'block';
+  fetch(HABERLER_URL + "?t=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(data => {
+      const meta = data.meta?.guncelleme || data._meta?.guncelleme;
+      if (meta) {
+        document.getElementById("osGuncelleme").innerHTML =
+          `Son güncelleme: <b>${new Date(meta).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</b>`;
+      }
+      isleRaporlar(data.raporlar || [], localRaporlar, silinen, meta);
+    })
+    .catch(() => {
+      isleRaporlar([], localRaporlar, silinen, null);
+      document.getElementById("scanStatus").textContent = "Uzak kaynak alınamadı — yerel veri gösteriliyor";
+    });
+}
+
+function isleRaporlar(uzakListe, yerelListe, silinen, meta) {
+  // Birleştir, sil işaretlilerini çıkar, deduplicate
+  const map = new Map();
+  [...uzakListe, ...yerelListe].forEach(h => {
+    if (silinen.has(String(h.id))) return;
+    const key = (h.url||h.baslik||String(h.id)).toLowerCase();
+    if (!map.has(key)) {
+      if (!h.kategori && h.etiket) h.kategori = h.etiket;
+      h._haber_kat = haberKatTespit(h);
+      map.set(key, h);
+    }
   });
+  tumRaporlar = Array.from(map.values()).sort((a,b) => new Date(b.tarih||0)-new Date(a.tarih||0));
+
+  // URL param oku
+  const params = new URLSearchParams(location.search);
+  const hkat = params.get("hkat");
+  if (hkat) {
+    aktifHaberKat = hkat;
+    document.querySelectorAll(".kat-item,.kat-tumü").forEach(el => {
+      el.classList.toggle("aktif-kat", (el.dataset.hkat||"")===hkat);
+    });
+  }
+
+  filtrele();
+  guncelleSidebarSayac();
+  document.getElementById("scanStatus").textContent =
+    `${tumRaporlar.length} rapor` + (meta ? " · " + new Date(meta).toLocaleString("tr-TR") : "");
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IMPORT
+═══════════════════════════════════════════════════════════════ */
+function dosyaOku(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      importData = null;
+      let liste = [];
+      if (Array.isArray(parsed)) liste = parsed;
+      else if (parsed.raporlar) liste = parsed.raporlar;
+      else if (parsed.haberler) liste = parsed.haberler;
+      if (!liste.length) { document.getElementById("importLog").textContent = "⚠ Kayıt bulunamadı."; return; }
+      importData = liste.map((h,i) => ({
+        id: h.id||("rimp_"+Date.now()+"_"+i),
+        baslik: h.baslik||h.name||h.title||"",
+        kaynak: h.kaynak||"",
+        kategori: h.kategori||h.etiket||"STK Raporu",
+        etiket: h.etiket||h.kategori||"STK Raporu",
+        tarih: h.tarih||new Date().toISOString().slice(0,10),
+        url: h.url||h.kaynak_link||"",
+        ozet: h.ozet||h.aciklama||"",
+        icerik_tipi: "rapor",
+        dil: h.dil||"tr",
+      })).filter(h => h.baslik);
+      document.getElementById("importLog").textContent =
+        `✓ ${importData.length} kayıt algılandı.\n`+importData.slice(0,3).map(h=>`• ${h.baslik.slice(0,60)}`).join("\n");
+      document.getElementById("importUygula").disabled = false;
+    } catch(err) { document.getElementById("importLog").textContent = "❌ Parse hatası: "+err.message; }
+  };
+  reader.readAsText(file);
+}
+function importUygula() {
+  if (!importData) return;
+  const mevcutUrller = new Set(tumRaporlar.map(h=>(h.url||"").toLowerCase()));
+  const yeniler = importData.filter(h => !(h.url||"").toLowerCase() in mevcutUrller || !mevcutUrller.has((h.url||"").toLowerCase()));
+  tumRaporlar = [...yeniler.map(h=>({...h, _haber_kat:haberKatTespit(h)})), ...tumRaporlar];
+  if (typeof SITE !== "undefined") SITE.set("raporlar", tumRaporlar);
+  document.getElementById("importModal").style.display="none";
+  filtrele(); guncelleSidebarSayac();
+  gosterBildirim(`✓ ${yeniler.length} rapor eklendi.`);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BİLDİRİM
+═══════════════════════════════════════════════════════════════ */
+function gosterBildirim(mesaj) {
+  const b = document.createElement("div");
+  b.textContent = mesaj;
+  b.style.cssText="position:fixed;bottom:24px;right:24px;z-index:99999;background:#22c55e;color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:11px;padding:12px 20px;border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.4);";
+  document.body.appendChild(b);
+  setTimeout(()=>{b.style.opacity="0";b.style.transition="opacity .4s";setTimeout(()=>b.remove(),400);},3000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DUPLICATE TEMİZLE
+═══════════════════════════════════════════════════════════════ */
+function dupTemizleVeKaydet() {
+  const gorulen = new Map(); const temiz = [];
+  for (const h of tumRaporlar) {
+    const k = (h.url||h.baslik||"").trim().toLowerCase();
+    if (!k||gorulen.has(k)) continue; gorulen.set(k,true); temiz.push(h);
+  }
+  const s = tumRaporlar.length - temiz.length;
+  tumRaporlar = temiz;
+  if (typeof SITE!=="undefined") SITE.set("raporlar", tumRaporlar);
+  filtrele(); guncelleSidebarSayac();
+  gosterBildirim(s>0?`✓ ${s} duplicate temizlendi.`:"Duplicate bulunamadı.");
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EVENT LISTENERS
+═══════════════════════════════════════════════════════════════ */
+document.getElementById("detailClose").addEventListener("click", ()=>document.getElementById("detailModal").style.display="none");
+document.getElementById("detailModal").addEventListener("click", function(e){if(e.target===this)this.style.display="none";});
+document.getElementById("editClose").addEventListener("click",  ()=>document.getElementById("editModal").style.display="none");
+document.getElementById("editIptal").addEventListener("click",  ()=>document.getElementById("editModal").style.display="none");
+document.getElementById("editKaydet").addEventListener("click", duzenleKaydet);
+document.getElementById("editModal").addEventListener("click",  function(e){if(e.target===this)this.style.display="none";});
+document.getElementById("importClose").addEventListener("click",  ()=>document.getElementById("importModal").style.display="none");
+document.getElementById("importIptal").addEventListener("click",  ()=>document.getElementById("importModal").style.display="none");
+document.getElementById("importUygula").addEventListener("click", importUygula);
+document.getElementById("importDrop").addEventListener("click",   ()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",  e=>{if(e.target.files[0])dosyaOku(e.target.files[0]);});
+document.getElementById("importDrop").addEventListener("dragover", e=>{e.preventDefault();e.currentTarget.classList.add("dragover");});
+document.getElementById("importDrop").addEventListener("dragleave",e=>{e.currentTarget.classList.remove("dragover");});
+document.getElementById("importDrop").addEventListener("drop",    e=>{e.preventDefault();e.currentTarget.classList.remove("dragover");if(e.dataTransfer.files[0])dosyaOku(e.dataTransfer.files[0]);});
+
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape")["detailModal","editModal","importModal"].forEach(id=>document.getElementById(id).style.display="none");
+});
+
+// Tür chip'leri
+document.querySelectorAll(".tur-chip[data-tur]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (aktifTurKat === btn.dataset.tur) {
+      aktifTurKat = "";
+      document.querySelectorAll(".tur-chip").forEach(b=>b.classList.remove("aktif"));
+    } else {
+      aktifTurKat = btn.dataset.tur;
+      document.querySelectorAll(".tur-chip").forEach(b=>b.classList.remove("aktif"));
+      btn.classList.add("aktif");
+    }
+    filtrele();
+  });
+});
+
+// Admin araçları
+if (typeof SITE !== "undefined" && SITE.isAdmin()) {
+  const alan = document.getElementById("adminAlan");
+  const btnY=document.createElement("button"); btnY.className="btn-tara"; btnY.innerHTML="↻ Yenile";
+  btnY.onclick=()=>{btnY.disabled=true;btnY.innerHTML="↻ Yükleniyor…";yukle();setTimeout(()=>{btnY.disabled=false;btnY.innerHTML="↻ Yenile";},2000);};
+  alan.appendChild(btnY);
+  const btnD=document.createElement("button"); btnD.className="btn-dup"; btnD.innerHTML="⊗ Duplicate Temizle";
+  btnD.onclick=dupTemizleVeKaydet; alan.appendChild(btnD);
+  const btnI=document.createElement("button"); btnI.className="btn-import"; btnI.innerHTML="⬆ İçe Aktar";
+  btnI.onclick=()=>{importData=null;document.getElementById("importLog").textContent="Dosya bekleniyor…";document.getElementById("importUygula").disabled=true;document.getElementById("importModal").style.display="flex";};
+  alan.appendChild(btnI);
+}
+
+yukle();
 </script>
 </body>
 </html>
