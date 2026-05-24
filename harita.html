@@ -15,28 +15,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-  /*
-   * ✅ DÜZELTİLDİ: Tam ekran + overflow:hidden → Normal sayfa yapısı
-   * Nav üstte sabit, harita içeriği gövde bölümünde render edilir.
-   * Ticker harita sayfasında gösterilmez (topbar zaten istatistik gösteriyor).
-   */
-
   body {
     margin: 0;
-    padding-top: 64px; /* sabit nav yüksekliği */
+    padding-top: 64px;
     background: var(--dark);
-    /* overflow:hidden kaldırıldı — sayfa normal akışta */
   }
 
-  /* Harita sarmalayıcı — normal blok eleman, flex ile iframe'i doldurur */
   .harita-wrap {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 64px); /* viewport - nav */
+    height: calc(100vh - 64px);
     min-height: 500px;
   }
 
-  /* Üst şerit — başlık + bilgi + butonlar */
   .harita-topbar {
     display: flex;
     align-items: center;
@@ -144,14 +135,13 @@
     border-color: var(--bright);
   }
 
-  /* Harita iframe — kalan tüm alanı doldur */
   #haritaFrame {
     flex: 1;
     width: 100%;
     border: none;
     display: block;
     background: var(--forest);
-    min-height: 0; /* flex shrink için gerekli */
+    min-height: 0;
   }
 
   @media (max-width: 700px) {
@@ -164,20 +154,13 @@
 <body>
 <script src="site-data.js"></script>
 
-<!--
-  ✅ DÜZELTİLDİ: Ticker suppressor
-  Harita sayfasında nav.js'in ticker'ını göstermiyoruz — topbar zaten istatistik içeriyor.
-  nav.js, #tickerInner varsa kendi ticker'ını gizler.
--->
 <div id="tickerInner" style="display:none;"></div>
 
 <div id="nav-root"></div>
 <script src="nav.js"></script>
 
-<!-- ══════════ HARİTA GÖVDE ══════════ -->
 <div class="harita-wrap">
 
-  <!-- Üst bilgi şeridi -->
   <div class="harita-topbar">
     <div class="harita-title">EKOLOJİ <span>HARİTASI</span></div>
 
@@ -192,7 +175,8 @@
       <div class="hstat"><b id="hStatHafta">—</b> Bu Hafta</div>
     </div>
 
-    <a href="https://ekoloji-izleme.com/harita/index.html"
+    <!-- ✅ DÜZELTİLDİ: GitHub Pages adresi -->
+    <a href="https://ipapila.github.io/Turkiye-katmanlar/"
        target="_blank" rel="noopener"
        class="btn-tam">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
@@ -215,10 +199,10 @@
     </a>
   </div>
 
-  <!-- Harita iframe -->
+  <!-- ✅ DÜZELTİLDİ: GitHub Pages adresi -->
   <iframe
     id="haritaFrame"
-    src="https://ekoloji-izleme.com/harita/index.html"
+    src="https://ipapila.github.io/Turkiye-katmanlar/"
     title="Ekoloji Haritası — Tam Görünüm"
     loading="lazy"
     sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -228,7 +212,6 @@
 </div>
 
 <script>
-// İstatistikleri localStorage'dan doldur
 const ihlaller = SITE.get("ihlaller") || [];
 document.getElementById("hStatIhlal").textContent  = ihlaller.length || "—";
 document.getElementById("hStatKritik").textContent =
