@@ -413,11 +413,15 @@ def haber_kategorisi_tespit(kayit: dict) -> str:
     """Haberi 9 görüntü kategorisinden birine atar."""
     eylem = (kayit.get("eylem") or "").lower()
     kat   = (kayit.get("kategori") or "").lower()
-    metin = " ".join([
+    _raw = " ".join([
         kayit.get("baslik", ""), kayit.get("ozet", ""),
         kayit.get("kategori", ""),
         " ".join(kayit.get("etiketler") or []),
-    ]).lower()
+    ])
+    # Türkçe büyük harfler: İ→i, Ş→ş vb.
+    # (Python str.lower() "İ" → "i̇" üretir — "iklim" araması başarısız olur)
+    _TR = str.maketrans("İŞĞÜÖÇ", "işğüöç")
+    metin = _raw.translate(_TR).lower()
 
     # ── Eylem / toplum önce ──────────────────────────────────────
     if "nöbet" in metin or "gözaltı" in metin or "nöbet & gözaltı" in eylem:
