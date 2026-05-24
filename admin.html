@@ -121,6 +121,7 @@
       <button class="tab" data-tab="uluslararasi">Uluslararası Medya</button>
       <button class="tab" data-tab="ekosistem">Ekosistem</button>
       <button class="tab" data-tab="direnis">Direniş Ağı</button>
+      <button class="tab" data-tab="medya">Medya & Dosya</button>
     </div>
 
     <!-- İHLALLER -->
@@ -408,8 +409,44 @@
     </div>
   </div>
 
-    <!-- EKOSİSTEM -->
-    <div class="tab-panel" id="tab-ekosistem">
+    <!-- MEDYA & DOSYA -->
+    <div class="tab-panel" id="tab-medya">
+      <div class="form-card">
+        <h3>Ortam Yükle <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);font-weight:300;">→ /ortam/</span></h3>
+        <p class="form-desc">Resim, fotoğraf, afiş — JPG / PNG / WebP / GIF · upload.php → sunucu /ortam/ klasörüne kaydeder</p>
+
+        <!-- Sürükle-bırak alan -->
+        <div id="ortamDrop" style="border:2px dashed rgba(45,158,107,.3);border-radius:6px;padding:44px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;position:relative;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--bright);margin-bottom:8px;">🖼 Görsel Sürükle veya Tıkla</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);">JPG · PNG · WebP · GIF · max 10 MB</div>
+          <input type="file" id="ortamFileInput" accept="image/*" multiple style="display:none;">
+        </div>
+
+        <!-- İlerleme ve sonuç -->
+        <div id="ortamLog" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.25);border-radius:4px;padding:12px 14px;min-height:40px;white-space:pre-wrap;margin-bottom:16px;display:none;"></div>
+
+        <!-- Yüklenen görseller galerisi -->
+        <div id="ortamGaleri" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;"></div>
+      </div>
+
+      <div class="form-card" style="margin-top:0;">
+        <h3>Dosya Yükle <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);font-weight:300;">→ /dosya/</span></h3>
+        <p class="form-desc">PDF, Word, Excel, ZIP ve diğer dosyalar · upload.php → sunucu /dosya/ klasörüne kaydeder</p>
+
+        <div id="dosyaDrop" style="border:2px dashed rgba(100,160,255,.3);border-radius:6px;padding:44px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#7eb8ff;margin-bottom:8px;">📄 Dosya Sürükle veya Tıkla</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);">PDF · DOC · DOCX · XLS · ZIP · max 50 MB</div>
+          <input type="file" id="dosyaFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.csv,.txt,.geojson,.json" multiple style="display:none;">
+        </div>
+
+        <div id="dosyaLog" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.25);border-radius:4px;padding:12px 14px;min-height:40px;white-space:pre-wrap;margin-bottom:16px;display:none;"></div>
+
+        <!-- Yüklenen dosyalar listesi -->
+        <div id="dosyaListe" style="display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+    </div>
+
+    <!-- EKOSİSTEM -->    <div class="tab-panel" id="tab-ekosistem">
       <div class="form-card">
         <h3>Ekosistem Kaydı Ekle</h3>
         <p class="form-desc" id="ekosistem-anchor">Türler · Yaban Hayatı · Topluluklar · Çevre Adaleti · Savaş & Ekoloji</p>
@@ -819,8 +856,73 @@ function editKaydet(col,id){
   if(["ihlaller","haberler","raporlar","makaleler","uluslararasi","ekosistem","direnis"].includes(col))veriYaz();
 }
 
-function onFotoSec(inputId,urlId,prevId){const f=document.getElementById(inputId)?.files?.[0];if(!f)return;const r=new FileReader();r.onload=e=>{const p=document.getElementById(prevId);if(p){p.style.display="block";p.querySelector("img").src=e.target.result;}};r.readAsDataURL(f);dosyaYukle(f,"img",url=>{const el=document.getElementById(urlId);if(el)el.value=url;});}
-function pdfYukle(input){const f=input?.files?.[0];if(!f)return;const d=document.getElementById("r-pdf-durum");if(d)d.textContent="⏳ Yükleniyor…";dosyaYukle(f,"pdf",url=>{const el=document.getElementById("r-dosya");if(el)el.value=url;if(d)d.textContent="✓ "+f.name;},err=>{if(d)d.textContent="⚠ "+err;});}
+/* ══════════════════════════════════════════════════════════════
+   MEDYA & DOSYA YÜKLEYİCİ
+══════════════════════════════════════════════════════════════ */
+function _medyaTabInit(){
+  /* ── Ortak yardımcı ── */
+  function _setupDropZone(dropId, inputId, klasor, onDone){
+    const drop=document.getElementById(dropId), inp=document.getElementById(inputId);
+    if(!drop||!inp) return;
+    drop.addEventListener("click",()=>inp.click());
+    drop.addEventListener("dragover",e=>{e.preventDefault();drop.style.borderColor="var(--accent)";drop.style.background="rgba(45,158,107,.04)";});
+    drop.addEventListener("dragleave",()=>{drop.style.borderColor="";drop.style.background="";});
+    drop.addEventListener("drop",e=>{e.preventDefault();drop.style.borderColor="";drop.style.background="";if(e.dataTransfer.files.length)_uploadFiles([...e.dataTransfer.files],klasor,onDone);});
+    inp.addEventListener("change",e=>{if(e.target.files.length)_uploadFiles([...e.target.files],klasor,onDone);inp.value="";});
+  }
+
+  /* ── Toplu yükleme ── */
+  function _uploadFiles(dosyalar, klasor, onDone){
+    const logId=klasor==="ortam"?"ortamLog":"dosyaLog";
+    const logEl=document.getElementById(logId); if(logEl)logEl.style.display="block";
+    function log(msg){if(logEl){logEl.textContent+=msg+"\n";logEl.scrollTop=logEl.scrollHeight;}}
+    dosyalar.forEach(f=>{
+      log(`⏳ ${f.name} yükleniyor…`);
+      dosyaYukle(f,klasor,url=>{
+        log(`✓ ${f.name} → ${url}`);
+        onDone(f,url);
+      },err=>{
+        log(`✗ ${f.name}: ${err}`);
+      });
+    });
+  }
+
+  /* ── Ortam (resim) yükleme ── */
+  _setupDropZone("ortamDrop","ortamFileInput","ortam",(f,url)=>{
+    const galeri=document.getElementById("ortamGaleri");
+    if(!galeri) return;
+    const card=document.createElement("div");
+    card.style.cssText="background:var(--deep);border:1px solid rgba(45,158,107,.15);border-radius:4px;overflow:hidden;position:relative;";
+    card.innerHTML=`
+      <img src="${url}" alt="${f.name}" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">
+      <div style="padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name}</div>
+      <div style="padding:0 8px 8px;display:flex;gap:6px;">
+        <button onclick="navigator.clipboard.writeText('${url}').then(()=>toast('✓ URL kopyalandı.'))" style="flex:1;padding:4px;background:rgba(45,158,107,.12);border:1px solid rgba(45,158,107,.25);border-radius:2px;color:var(--bright);font-family:'JetBrains Mono',monospace;font-size:8px;cursor:pointer;">Kopyala</button>
+        <a href="${url}" target="_blank" style="flex:1;padding:4px;background:transparent;border:1px solid rgba(45,158,107,.2);border-radius:2px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:8px;text-decoration:none;text-align:center;display:block;">↗ Aç</a>
+      </div>`;
+    galeri.insertBefore(card, galeri.firstChild);
+  });
+
+  /* ── Dosya yükleme ── */
+  _setupDropZone("dosyaDrop","dosyaFileInput","dosya",(f,url)=>{
+    const liste=document.getElementById("dosyaListe");
+    if(!liste) return;
+    const ext=(f.name.split(".").pop()||"").toUpperCase();
+    const extRenk={"PDF":"#f87171","DOC":"#7eb8ff","DOCX":"#7eb8ff","XLS":"#4ade80","XLSX":"#4ade80","ZIP":"#f59e0b","JSON":"#c084fc","GEOJSON":"#c084fc"}[ext]||"var(--muted)";
+    const satir=document.createElement("div");
+    satir.style.cssText="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--forest);border-radius:3px;border:1px solid rgba(45,158,107,.1);";
+    satir.innerHTML=`
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;background:rgba(0,0,0,.3);color:${extRenk};border:1px solid currentColor;flex-shrink:0;">${ext}</span>
+      <span style="flex:1;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cream);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f.name}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);flex-shrink:0;">${(f.size/1024).toFixed(0)} KB</span>
+      <button onclick="navigator.clipboard.writeText('${url}').then(()=>toast('✓ URL kopyalandı.'))" style="padding:4px 10px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:2px;color:var(--bright);font-family:'JetBrains Mono',monospace;font-size:8.5px;cursor:pointer;flex-shrink:0;">Kopyala</button>
+      <a href="${url}" target="_blank" rel="noopener" style="padding:4px 10px;background:transparent;border:1px solid rgba(45,158,107,.2);border-radius:2px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:8.5px;text-decoration:none;flex-shrink:0;">↗ Aç</a>`;
+    liste.insertBefore(satir, liste.firstChild);
+  });
+}
+
+function onFotoSec(inputId,urlId,prevId){const f=document.getElementById(inputId)?.files?.[0];if(!f)return;const r=new FileReader();r.onload=e=>{const p=document.getElementById(prevId);if(p){p.style.display="block";p.querySelector("img").src=e.target.result;}};r.readAsDataURL(f);dosyaYukle(f,"ortam",url=>{const el=document.getElementById(urlId);if(el)el.value=url;});}
+function pdfYukle(input){const f=input?.files?.[0];if(!f)return;const d=document.getElementById("r-pdf-durum");if(d)d.textContent="⏳ Yükleniyor…";dosyaYukle(f,"dosya",url=>{const el=document.getElementById("r-dosya");if(el)el.value=url;if(d)d.textContent="✓ "+f.name;},err=>{if(d)d.textContent="⚠ "+err;});}
 function dosyaYukle(file,klasor,onOk,onErr){const fd=new FormData();fd.append("dosya",file);fd.append("klasor",klasor);fd.append("secret","admin");fetch("upload.php",{method:"POST",body:fd}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(d.ok&&d.url)onOk(d.url);else(onErr||toast)("⚠ "+(d.hata||"bilinmeyen hata"));}).catch(()=>{(onErr||toast)("⚠ upload.php yok. URL'yi manuel girin.");});}
 
 const GH_REPO_KEY="ekoloji_gh_repo",GH_TOKEN_KEY="ekoloji_gh_token",GH_WORKFLOW_KEY="ekoloji_gh_workflow";
@@ -855,6 +957,7 @@ function boot(){
   tagWrapRender("i-tags-wrap","i",[]);tagWrapRender("h-tags-wrap","h",[]);tagWrapRender("r-tags-wrap","r",[]);tagWrapRender("m-tags-wrap","m",[]);tagWrapRender("u-tags-wrap","u",[]);tagWrapRender("ek-tags-wrap","ek",[]);tagWrapRender("dr-tags-wrap","dr",[]);
   initTabs();updateStats();tumVeriYukle();
   const{token:_bt}=ghAyarAl();setSyncDurum(_bt?"synced":"local");if(!_bt)tokenBannerGoster();
+  _medyaTabInit();
 }
 document.addEventListener("DOMContentLoaded",()=>{
   const importModal=document.getElementById("importModal"),importDrop=document.getElementById("importDropZone"),importFileInp=document.getElementById("importFileInput");
