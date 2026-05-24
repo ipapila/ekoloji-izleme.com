@@ -808,7 +808,36 @@ function editKayit(col,id){
 
   const hasEtiket=["ihlaller","haberler","raporlar","makaleler","uluslararasi","ekosistem","direnis"].includes(col);
   const etiketHTML=hasEtiket?`<div class="form-group"><label class="form-label">Etiketler</label><div class="tag-wrap" id="edit_tag_wrap"></div></div>`:'';
-  const form=alanlar.map(a=>{const val=String(item[a.id]||"").replace(/"/g,'&quot;');if(a.ta)return`<div class="form-group"><label class="form-label">${a.l}</label><textarea class="form-control" id="edit_${a.id}" rows="4">${item[a.id]||''}</textarea></div>`;return`<div class="form-group"><label class="form-label">${a.l}</label><input class="form-control" id="edit_${a.id}" type="${a.type||'text'}" ${a.step?`step="${a.step}"`:''}  value="${val}"></div>`;}).join('');
+  const _LS='display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:\'JetBrains Mono\',monospace;font-size:9.5px;color:var(--bright);white-space:nowrap;flex-shrink:0;';
+const form=alanlar.map(a=>{
+  const val=String(item[a.id]||"").replace(/"/g,'&quot;');
+  if(a.ta)return`<div class="form-group"><label class="form-label">${a.l}</label><textarea class="form-control" id="edit_${a.id}" rows="4">${item[a.id]||''}</textarea></div>`;
+  if(a.id==='foto_url'){
+    const mevFoto=item.foto_url||'';
+    return`<div class="form-group"><label class="form-label">${a.l}</label>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <input class="form-control" id="edit_foto_url" type="url" value="${val}" style="flex:1;min-width:160px;">
+        <label style="${_LS}">📷 Yükle
+          <input type="file" accept="image/*" style="display:none;" onchange="editFotoYukle(this,'edit_foto_url','edit_foto_prev')">
+        </label>
+      </div>
+      <div id="edit_foto_prev" style="margin-top:8px;${mevFoto?'':'display:none;'}">
+        <img src="${mevFoto}" alt="" style="max-height:80px;border-radius:3px;border:1px solid rgba(45,158,107,.15);" onerror="this.parentNode.style.display='none'">
+      </div></div>`;
+  }
+  if(a.id==='dosya'){
+    return`<div class="form-group"><label class="form-label">${a.l}</label>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <input class="form-control" id="edit_dosya" type="url" value="${val}" style="flex:1;min-width:160px;">
+        <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(100,160,255,.1);border:1px solid rgba(100,160,255,.3);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#7eb8ff;white-space:nowrap;flex-shrink:0;">📄 Yükle
+          <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.csv,.txt,.json,.geojson" style="display:none;" onchange="editDosyaYukle(this,'edit_dosya','edit_dosya_durum')">
+        </label>
+      </div>
+      <div id="edit_dosya_durum" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-top:5px;"></div>
+    </div>`;
+  }
+  return`<div class="form-group"><label class="form-label">${a.l}</label><input class="form-control" id="edit_${a.id}" type="${a.type||'text'}" ${a.step?`step="${a.step}"`:''} value="${val}"></div>`;
+}).join('');
 
   const m=document.createElement("div");m.id="editModal";m.style.cssText="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;";
   m.innerHTML=`<div style="background:var(--deep);border:1px solid rgba(45,158,107,.3);border-radius:8px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;overflow-x:hidden;padding:32px;position:relative;"><button onclick="document.getElementById('editModal').remove()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">✕</button><h3 style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--cream);margin:0 0 24px;">Kaydı Düzenle <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">#${item.id}</span></h3>${selectHTML}${form}${etiketHTML}<div style="display:flex;gap:10px;margin-top:24px;"><button onclick="editKaydet('${col}','${item.id}')" style="flex:1;padding:12px;background:var(--accent);color:var(--dark);border:none;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;">✓ Kaydet</button><button onclick="document.getElementById('editModal').remove()" style="padding:12px 20px;background:transparent;color:var(--muted);border:1px solid rgba(45,158,107,.2);border-radius:4px;cursor:pointer;font-size:11px;">İptal</button></div></div>`;
@@ -854,6 +883,30 @@ function editKaydet(col,id){
   SITE.upsert(col,g);const idx=_veri[col].findIndex(x=>String(x.id)===String(id));if(idx>=0)_veri[col][idx]=g;
   modal.remove();tabloRender(col);toast("✓ Kayıt güncellendi.");
   if(["ihlaller","haberler","raporlar","makaleler","uluslararasi","ekosistem","direnis"].includes(col))veriYaz();
+}
+
+/* ── Edit modal yükleme yardımcıları ── */
+function editFotoYukle(input,urlId,prevId){
+  const f=input.files?.[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const prev=document.getElementById(prevId);
+    if(prev){prev.style.display='block';const img=prev.querySelector('img');if(img)img.src=e.target.result;}
+  };
+  r.readAsDataURL(f);
+  dosyaYukle(f,'ortam',url=>{
+    const el=document.getElementById(urlId);if(el)el.value=url;
+    toast('✓ Görsel yüklendi.');
+  },err=>toast('⚠ '+err));
+}
+function editDosyaYukle(input,urlId,durumId){
+  const f=input.files?.[0];if(!f)return;
+  const d=document.getElementById(durumId);if(d)d.textContent='⏳ Yükleniyor…';
+  dosyaYukle(f,'dosya',url=>{
+    const el=document.getElementById(urlId);if(el)el.value=url;
+    if(d)d.textContent='✓ '+f.name;
+    toast('✓ Dosya yüklendi.');
+  },err=>{if(d)d.textContent='⚠ '+err;});
 }
 
 /* ══════════════════════════════════════════════════════════════
