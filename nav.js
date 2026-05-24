@@ -80,33 +80,42 @@
         <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
       </a>
       <div class="dropdown">
-        <div class="dropdown-label">Konu</div>
         <a href="haberler.html"><span class="dot"></span>Tüm Haberler</a>
-        <a href="haberler.html?kat=İklim Olayları"><span class="dot"></span>İklim & Afet</a>
-        <a href="haberler.html?kat=Maden Ocağı"><span class="dot"></span>Maden & Enerji</a>
-        <a href="haberler.html?kat=Orman Alanı"><span class="dot"></span>Orman & Doğa</a>
-        <a href="haberler.html?kat=Sulak Alan"><span class="dot"></span>Su & Kıyı</a>
-        <a href="haberler.html?kat=Yaban Hayatı"><span class="dot"></span>Yaban Hayatı</a>
+        <hr>
+        <div class="dropdown-label">Konu</div>
+        <a href="haberler.html?hkat=%C4%B0klim+ve+Afet"><span class="dot"></span>İklim & Afet</a>
+        <a href="haberler.html?hkat=Maden+ve+Enerji"><span class="dot"></span>Maden & Enerji</a>
+        <a href="haberler.html?hkat=Orman+ve+Do%C4%9Fa"><span class="dot"></span>Orman & Doğa</a>
+        <a href="haberler.html?hkat=Su+ve+K%C4%B1y%C4%B1"><span class="dot"></span>Su & Kıyı</a>
+        <a href="haberler.html?hkat=Yaban+Hayat%C4%B1"><span class="dot"></span>Yaban Hayatı</a>
         <hr>
         <div class="dropdown-label">Eylem & Toplum</div>
-        <a href="haberler.html?eylem=Direniş & Eylem"><span class="dot"></span>Direniş & Eylemler</a>
-        <a href="haberler.html?eylem=Hukuk & Dava"><span class="dot"></span>Hukuki Süreçler</a>
-        <a href="haberler.html?eylem=Nöbet & Gözaltı"><span class="dot"></span>Nöbetler & Gözaltılar</a>
-        <a href="haberler.html?eylem=STK & Kampanya"><span class="dot"></span>STK & Kampanyalar</a>
+        <a href="haberler.html?hkat=Direni%C5%9F+ve+Eylemler"><span class="dot"></span>Direniş & Eylemler</a>
+        <a href="haberler.html?hkat=Hukuki+S%C3%BCre%C3%A7ler"><span class="dot"></span>Hukuki Süreçler</a>
+        <a href="haberler.html?hkat=N%C3%B6betler+ve+G%C3%B6zalt%C4%B1lar"><span class="dot"></span>Nöbetler & Gözaltılar</a>
+        <a href="haberler.html?hkat=STK+%26+Kampanyalar"><span class="dot"></span>STK & Kampanyalar</a>
       </div>
     </li>
 
     <li class="nav-item">
-      <a href="raporlar.html" class="nav-link ${current === 'raporlar.html' ? 'active' : ''}">Raporlar
+      <a href="haberler.html?kol=raporlar" class="nav-link ${current === 'raporlar.html' ? 'active' : ''}">Raporlar
         <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
       </a>
       <div class="dropdown">
-        <a href="raporlar.html"><span class="dot"></span>Tüm Raporlar</a>
-        <a href="raporlar.html?tur=Yıllık Rapor"><span class="dot"></span>Yıllık Raporlar</a>
-        <a href="raporlar.html?tur=Alan Araştırması"><span class="dot"></span>Alan Araştırmaları</a>
-        <a href="raporlar.html?tur=Veri & İstatistik"><span class="dot"></span>Veri & İstatistik</a>
-        <a href="raporlar.html?tur=Hukuki Analiz"><span class="dot"></span>Hukuki Analizler</a>
-        <a href="raporlar.html?tur=İzleme Raporu"><span class="dot"></span>İzleme Raporları</a>
+        <a href="haberler.html?kol=raporlar"><span class="dot"></span>Tüm Raporlar</a>
+        <hr>
+        <div class="dropdown-label">Konu</div>
+        <a href="haberler.html?kol=raporlar&hkat=%C4%B0klim+ve+Afet"><span class="dot"></span>İklim & Afet</a>
+        <a href="haberler.html?kol=raporlar&hkat=Maden+ve+Enerji"><span class="dot"></span>Maden & Enerji</a>
+        <a href="haberler.html?kol=raporlar&hkat=Orman+ve+Do%C4%9Fa"><span class="dot"></span>Orman & Doğa</a>
+        <a href="haberler.html?kol=raporlar&hkat=Su+ve+K%C4%B1y%C4%B1"><span class="dot"></span>Su & Kıyı</a>
+        <a href="haberler.html?kol=raporlar&hkat=Yaban+Hayat%C4%B1"><span class="dot"></span>Yaban Hayatı</a>
+        <hr>
+        <div class="dropdown-label">Eylem & Toplum</div>
+        <a href="haberler.html?kol=raporlar&hkat=Direni%C5%9F+ve+Eylemler"><span class="dot"></span>Direniş & Eylemler</a>
+        <a href="haberler.html?kol=raporlar&hkat=Hukuki+S%C3%BCre%C3%A7ler"><span class="dot"></span>Hukuki Süreçler</a>
+        <a href="haberler.html?kol=raporlar&hkat=N%C3%B6betler+ve+G%C3%B6zalt%C4%B1lar"><span class="dot"></span>Nöbetler & Gözaltılar</a>
+        <a href="haberler.html?kol=raporlar&hkat=STK+%26+Kampanyalar"><span class="dot"></span>STK & Kampanyalar</a>
       </div>
     </li>
 
