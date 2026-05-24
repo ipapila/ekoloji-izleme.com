@@ -412,111 +412,91 @@ HABER_9_KAT = [
 def haber_kategorisi_tespit(kayit: dict) -> str:
     """Haberi 9 görüntü kategorisinden birine atar."""
     eylem = (kayit.get("eylem") or "").lower()
-    kat   = (kayit.get("kategori") or "").lower()
-    _raw = " ".join([
+    kat_raw = kayit.get("kategori") or kayit.get("etiket") or ""
+    _TR = str.maketrans("İŞĞÜÖÇ", "işğüöç")
+    kat   = kat_raw.translate(_TR).lower()
+    metin = " ".join([
         kayit.get("baslik", ""), kayit.get("ozet", ""),
         kayit.get("kategori", ""),
         " ".join(kayit.get("etiketler") or []),
-    ])
-    # Türkçe büyük harfler: İ→i, Ş→ş vb.
-    # (Python str.lower() "İ" → "i̇" üretir — "iklim" araması başarısız olur)
-    _TR = str.maketrans("İŞĞÜÖÇ", "işğüöç")
-    metin = _raw.translate(_TR).lower()
+    ]).translate(_TR).lower()
 
-    # ── Eylem / toplum önce ──────────────────────────────────────
-    if "nöbet" in metin or "gözaltı" in metin or "nöbet & gözaltı" in eylem:
+    # ── 1) Doğrudan kategori eşleştirme tablosu ──────────────────
+    _D = {
+        "iklim":                  "İklim ve Afet",
+        "iklim olayları":         "İklim ve Afet",
+        "iklim raporu":           "İklim ve Afet",
+        "türkiye / iklim":        "İklim ve Afet",
+        "hes / res / baraj":      "Maden ve Enerji",
+        "orman / maden":          "Maden ve Enerji",
+        "maden riski / atık":     "Maden ve Enerji",
+        "resmi ihale / maden":    "Maden ve Enerji",
+        "resmi / maden":          "Maden ve Enerji",
+        "ihale / enerji":         "Maden ve Enerji",
+        "resmi / enerji":         "Maden ve Enerji",
+        "jes / çevre ihlali":     "Maden ve Enerji",
+        "tarım alanları / maden": "Maden ve Enerji",
+        "enerji politikası":      "Maden ve Enerji",
+        "kamulaştırma":           "Hukuki Süreçler",
+        "çed kararları":          "Hukuki Süreçler",
+        "çed analizi":            "Hukuki Süreçler",
+        "hukuki yorum":           "Hukuki Süreçler",
+        "politika analizi":       "Hukuki Süreçler",
+        "stk":                    "STK & Kampanyalar",
+        "stk raporu":             "STK & Kampanyalar",
+        "iklim hareketi":         "STK & Kampanyalar",
+        "yaban hayatı":           "Yaban Hayatı",
+        "nesli tehlike türler":   "Yaban Hayatı",
+        "hayvan hakları":         "Yaban Hayatı",
+        "su canlıları":           "Su ve Kıyı",
+        "bitki & habitat":        "Orman ve Doğa",
+    }
+    if kat in _D:
+        return _D[kat]
+
+    # ── 2) Eylem alanı ────────────────────────────────────────────
+    if "nöbet" in metin or "gözaltı" in metin or "tutuklama" in metin:
         return "Nöbetler ve Gözaltılar"
     if "direniş & eylem" in eylem or any(k in metin for k in
-            ["direniş", "protesto", "miting", "yürüyüş", "boykot", "oturma eylemi"]):
+            ["direniş", "protesto", "miting", "yürüyüş", "boykot"]):
         return "Direniş ve Eylemler"
     if "stk & kampanya" in eylem or "stk" in kat or any(k in metin for k in
-            ["greenpeace", "wwf", "tema vakfı", "doğa derneği", "350.org", "kampanya başlat"]):
+            ["greenpeace", "wwf", "doğa derneği", "tema vakfı", "350.org"]):
         return "STK & Kampanyalar"
     if "hukuk & dava" in eylem or any(k in metin for k in
-            ["dava açı", "mahkeme", "yürütmeyi durdur", "iptal kararı", "çed kararı", "itiraz"]):
+            ["mahkeme", "yürütmeyi durdur", "iptal kararı", "çed kararı", "itiraz",
+             "acele kamulaştırma"]):
         return "Hukuki Süreçler"
 
-    # ── Konu bazlı ───────────────────────────────────────────────
+    # ── 3) Konu keyword analizi ────────────────────────────────────
+    if "orman yangın" in metin:
+        return "Orman ve Doğa"
     if any(k in metin for k in [
             "iklim", "yangın", "sel ", "taşkın", "heyelan",
-            "kuraklık", "aşırı sıcak", "afet "]):
+            "kuraklık", "aşırı sıcak", "sera gazı", "karbon"]):
         return "İklim ve Afet"
     if any(k in metin for k in [
             "yaban hayat", "nesli tehlike", "biyoçeşitlilik",
-            "hayvan hakları", "hayvan refahı"]):
+            "hayvan hakları", "hayvan refahı", "yunus", "kaplumbağa", "flamingo"]):
         return "Yaban Hayatı"
     if any(k in metin for k in [
-            "sulak alan", "kıyı ihlal", "deniz kirliliği",
-            "su kirliliği", "dere yatağı", "balık ölümü"]):
+            "sulak alan", "deniz kirliliği", "su kirliliği",
+            "dere yatağı", "balık ölümü", "kıyı dolgu", "deniz dolgusu"]):
         return "Su ve Kıyı"
     if any(k in metin for k in [
-            "maden", "hes ", "res ", "ges ", "termik santral", "nükleer",
-            "jeotermal", "baraj", "akkuyu", "sondaj", "enerji santr", "kamulaştırma"]):
+            "maden", "hes ", "res ", "ges ", "termik", "nükleer",
+            "jeotermal", "baraj", "akkuyu", "sondaj", "santral",
+            "kömür", "doğal gaz", "ihale", "kamulaştırma"]):
         return "Maden ve Enerji"
     if any(k in metin for k in [
-            "orman", "ağaç kes", "ağaç katliamı", "habitat",
-            "bitki örtüsü", "doğal sit", "milli park", "ormansızlaşma"]):
+            "orman", "ağaç", "habitat", "bitki örtüsü", "doğal sit",
+            "milli park", "tabiat park", "ormansızlaşma", "yeşil alan",
+            "zeytinlik", "tarım arazi"]):
         return "Orman ve Doğa"
-    if any(k in metin for k in ["kıyı", "deniz ", "göl ", "nehir", "dere "]):
+    if any(k in metin for k in ["kıyı", "deniz", "göl", "nehir", "dere", "akarsu"]):
         return "Su ve Kıyı"
+
     return ""
-
-
-# ══════════════════════════════════════════════════════════════════
-#  FİLTRE SİSTEMİ
-# ══════════════════════════════════════════════════════════════════
-
-YUKSEK_SINYAL = [
-    "çevre ihlali", "çevre katliamı", "ÇED", "çed kararı", "çed raporu",
-    "acele kamulaştırma", "taş ocağı", "taşocağı", "maden ocağı",
-    "HES projesi", "RES projesi", "GES projesi", "termik santral",
-    "nükleer santral", "ağaç katliamı", "ormansızlaşma", "orman tahribi",
-    "sulak alan", "milli park", "doğal sit", "koruma alanı",
-    "nesli tükenmekte", "nesli tehlike", "biyoçeşitlilik kaybı",
-    "su kirliliği", "deniz kirliliği", "hava kirliliği", "toprak kirliliği",
-    "atık depolama", "kaçak maden", "MAPEG", "EPDK kararı",
-    "ormana yapı", "dere yatağı", "kıyı tahribatı",
-    "rapor", "araştırma", "analiz", "inceleme", "değerlendirme",
-    "politika belgesi", "çalışma kağıdı", "yayın",
-    "mining", "deforestation", "coal plant", "nuclear", "climate",
-    "biodiversity", "pollution", "carbon", "emissions", "fossil fuel",
-]
-
-ORTA_SINYAL = [
-    "çevre", "ekoloji", "orman", "maden", "baraj", "HES", "RES", "GES",
-    "kamulaştırma", "doğa", "habitat", "kirlilik", "atık", "iklim",
-    "yangın", "sel", "taşkın", "heyelan", "kıyı", "deniz", "göl", "dere",
-    "su hakkı", "tarım", "jeotermal", "ihlal", "ruhsatsız", "ağaç",
-    "TEMA", "WWF", "Greenpeace", "yaban hayat", "doğal yaşam",
-    "environment", "ecology", "forest", "river", "energy", "renewable",
-    "Turkey", "Türkiye", "Akkuyu", "protest", "resistance",
-]
-
-GUCLU_NEGATIF = [
-    "faiz", "borsa", "döviz", "kur", "enflasyon",
-    "futbol", "maç sonucu", "şampiyon", "transfer", "gol",
-    "dizi", "film", "oyuncu", "magazin", "nişan", "düğün",
-    "moda", "kripto", "bitcoin",
-]
-
-GENEL_KAYNAK_NEGATIF = [
-    "ekonomi", "piyasa", "hisse", "yatırım", "ihracat",
-    "savunma", "asker", "muharebe", "operasyon",
-    "turizm", "tatil", "otel", "hastane", "ameliyat", "okul",
-]
-
-RAPOR_SINYAL = [
-    "rapor", "araştırma", "analiz", "inceleme", "değerlendirme",
-    "politika", "strateji", "yayın", "çalışma", "bulgular", "sonuçlar",
-    "report", "analysis", "research", "assessment", "policy", "findings",
-]
-
-KOSE_SINYAL = [
-    "köşe", "görüş", "yorum", "perspektif", "bakış açısı",
-    "değerlendiriyorum", "düşünüyorum", "kanımca", "bence",
-    "opinion", "commentary", "perspective", "column",
-]
-
 
 def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False,
                   hedef: str = "haberler") -> int:
