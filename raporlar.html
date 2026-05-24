@@ -244,7 +244,10 @@
       <div class="modal-meta" id="mMeta"></div>
       <div id="mEtiketler" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;"></div>
       <div class="modal-ozet" id="mOzet"></div>
-      <a id="mLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;margin-top:16px;"></a>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+        <a id="mLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;"></a>
+        <a id="mPdf"  href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#4ade80;"></a>
+      </div>
     </div>
   </div>
 </div>
@@ -470,7 +473,14 @@ function acModal(idx) {
   const h = gorunenRaporlar[idx];
   if (!h) return;
   const tarih  = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
-  const domain = h.url ? (()=>{ try{return new URL(h.url).hostname.replace("www.","");}catch(e){return "";} })() : "";
+
+  // Olası link alanları — öncelik sırasıyla
+  const webUrl  = h.url || h.kaynak_url || "";
+  const pdfUrl  = h.pdf_url || h.dosya || "";
+  const webDomain = webUrl  ? (()=>{ try{return new URL(webUrl).hostname.replace("www.","");}catch(e){return webUrl.slice(0,30);} })() : "";
+  const pdfDomain = pdfUrl  ? (()=>{ try{return new URL(pdfUrl).hostname.replace("www.","");}catch(e){return "";} })() : "";
+  const isPdf   = u => u && /\.(pdf)(\?|$)/i.test(u);
+  const isDoc   = u => u && /\.(doc|docx|xls|xlsx|ppt|pptx)(\?|$)/i.test(u);
 
   const badgeRow = document.getElementById("mBadgeRow");
   badgeRow.innerHTML = "";
@@ -482,7 +492,10 @@ function acModal(idx) {
 
   document.getElementById("mTitle").textContent = h.baslik;
   document.getElementById("mMeta").innerHTML =
-    (h.kaynak?`<span>🏛 ${h.kaynak}</span>`:"")+(tarih?`<span>📅 ${tarih}</span>`:"")+(domain?`<span>🔗 ${domain}</span>`:"");
+    (h.kaynak  ? `<span>🏛 ${h.kaynak}</span>` : "") +
+    (tarih     ? `<span>📅 ${tarih}</span>`     : "") +
+    (h.yil && !tarih ? `<span>📅 ${h.yil}</span>` : "") +
+    (webDomain ? `<span>🔗 ${webDomain}</span>` : "");
 
   const et = document.getElementById("mEtiketler");
   const etiketler = Array.isArray(h.etiketler)?h.etiketler:[];
@@ -492,12 +505,37 @@ function acModal(idx) {
   } else { et.style.display="none"; }
 
   document.getElementById("mOzet").textContent = h.ozet || "Özet yok. Kaynağa gidin.";
+
+  const SVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+  const DL  = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+
+  // ── "Rapora Git" web linki ──
   const link = document.getElementById("mLink");
-  if (h.url) {
-    link.href=h.url;
-    link.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Rapora Git — ${domain}`;
-    link.style.display="inline-flex";
-  } else link.style.display="none";
+  if (webUrl) {
+    link.href = webUrl;
+    link.innerHTML = `${SVG} Rapora Git — ${webDomain}`;
+    link.style.display = "inline-flex";
+  } else { link.style.display = "none"; }
+
+  // ── PDF / Dosya indirme linki ──
+  const mpdf = document.getElementById("mPdf");
+  if (pdfUrl) {
+    mpdf.href = pdfUrl;
+    if (isPdf(pdfUrl))      { mpdf.innerHTML = `${DL} PDF İndir`; }
+    else if (isDoc(pdfUrl)) { mpdf.innerHTML = `${DL} Dosyayı İndir`; }
+    else                    { mpdf.innerHTML = `${SVG} Dosyayı Aç`; }
+    mpdf.style.display = "inline-flex";
+  } else { mpdf.style.display = "none"; }
+
+  // Her ikisi de yoksa "Kaynak Yok" notu göster
+  if (!webUrl && !pdfUrl) {
+    link.style.display = "inline-flex";
+    link.href = "#";
+    link.style.pointerEvents = "none";
+    link.style.opacity = ".4";
+    link.innerHTML = "Kaynak URL girilmemiş";
+  }
+
   document.getElementById("detailModal").style.display="flex";
 }
 
