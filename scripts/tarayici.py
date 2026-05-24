@@ -7,8 +7,7 @@ v4 YENİLİKLERİ:
   - Her kaynak `hedef` alanıyla yönlendirilir
   - `icerik_tipi` ve `dil` alanları eklendi
   - SSL hataları otomatik aşılır (verify=False fallback)
-  - kuzeyormanlari.org / ekolojibirligi.org / euronews kaldırıldı
-  - Çift gorulen_urller tanımı giderildi
+  - `haber_kategorisi` alanı: 9 görüntü kategorisinden birini atar
 """
 
 import argparse
@@ -33,7 +32,6 @@ from bs4 import BeautifulSoup
 # ══════════════════════════════════════════════════════════════════
 
 RSS_KAYNAKLARI = [
-    # ── Çevre odaklı medya ───────────────────────────────────────
     {"url": "https://bianet.org/topic/cevre/feed/rss",
      "kaynak": "Bianet", "kategori": "Çevre İhlali", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://iklimhaber.org/feed/",
@@ -44,22 +42,16 @@ RSS_KAYNAKLARI = [
      "kaynak": "Evrensel", "kategori": "Ekoloji", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://www.birgun.net/xml/rss.xml",
      "kaynak": "Birgün", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
-
-    # ── STK haberleri ────────────────────────────────────────────
     {"url": "https://www.tema.org.tr/duyurular?format=feed",
      "kaynak": "TEMA", "kategori": "STK", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://www.greenpeace.org/turkey/feed/",
      "kaynak": "Greenpeace TR", "kategori": "STK", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── Resmi Gazete & İhale ─────────────────────────────────────
     {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22kamula%C5%9Ft%C4%B1rma%22&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Resmi Gazete", "kategori": "Kamulaştırma", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22maden%22+OR+%22ihale%22&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Resmi Gazete", "kategori": "Resmi İhale / Maden", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:ilan.gov.tr+%22maden%22+OR+%22enerji%22&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "İlan Portalı", "kategori": "İhale / Enerji", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── Site-özel Google News ────────────────────────────────────
     {"url": "https://news.google.com/rss/search?q=site:gazetepencere.com+(%22%C3%A7evre%22+OR+%22ekoloji%22+OR+%22maden%22)&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Gazete Pencere", "kategori": "Çevre / Gündem", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:t24.com.tr+(%22%C3%A7evre%22+OR+%22ekoloji%22+OR+%22maden%22+OR+%22%C3%87ED%22)&hl=tr&gl=TR&ceid=TR:tr",
@@ -68,8 +60,6 @@ RSS_KAYNAKLARI = [
      "kaynak": "Diken", "kategori": "Gündem / Çevre", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:artigercek.com+(%22%C3%A7evre%22+OR+%22ekoloji%22+OR+%22maden%22)&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Artı Gerçek", "kategori": "Gündem / Ekoloji", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── Konu odaklı sorgular ─────────────────────────────────────
     {"url": "https://news.google.com/rss/search?q=çevre+ihlali+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Çevre İhlali", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=orman+tahribi+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
@@ -86,8 +76,6 @@ RSS_KAYNAKLARI = [
      "kaynak": "Google News", "kategori": "JES / Çevre İhlali", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=zeytinlik+maden+projesi+kamulaştırma&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Tarım Alanları / Maden", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── Genel medya (yüksek filtre) ──────────────────────────────
     {"url": "https://www.sozcu.com.tr/rss/cevre.xml",
      "kaynak": "Sözcü", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
     {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",
@@ -99,7 +87,6 @@ RSS_KAYNAKLARI = [
 # ══════════════════════════════════════════════════════════════════
 
 RAPOR_RSS_KAYNAKLARI = [
-    # ── STK yayınları ────────────────────────────────────────────
     {"url": "https://news.google.com/rss/search?q=site:wwf.org.tr+rapor+OR+arastirma+OR+yayın&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "WWF Türkiye", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:tema.org.tr+rapor+OR+arastirma&hl=tr&gl=TR&ceid=TR:tr",
@@ -108,8 +95,6 @@ RAPOR_RSS_KAYNAKLARI = [
      "kaynak": "Doğa Derneği", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:greenpeace.org+turkey+rapor+OR+report&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Greenpeace TR", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
-
-    # ── Akademik & politika analizi ──────────────────────────────
     {"url": "https://news.google.com/rss/search?q=iklim+raporu+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "İklim Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=çevre+araştırma+analiz+Türkiye+üniversite&hl=tr&gl=TR&ceid=TR:tr",
@@ -120,8 +105,6 @@ RAPOR_RSS_KAYNAKLARI = [
      "kaynak": "Google News", "kategori": "ÇED Analizi", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=enerji+geçiş+politika+Türkiye+yenilenebilir&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Enerji Politikası", "genel": False, "hedef": "raporlar", "dil": "tr"},
-
-    # ── Enerji politika kuruluşları ──────────────────────────────
     {"url": "https://news.google.com/rss/search?q=site:shura-enerji.com&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "SHURA Enerji", "kategori": "Enerji Politikası", "genel": False, "hedef": "raporlar", "dil": "tr"},
 ]
@@ -144,7 +127,6 @@ RAPOR_WEB_KAYNAKLARI = [
 # ══════════════════════════════════════════════════════════════════
 
 MAKALE_RSS_KAYNAKLARI = [
-    # ── Köşe & yorum akışları ────────────────────────────────────
     {"url": "https://bianet.org/bianet/feed/rss",
      "kaynak": "Bianet", "kategori": "Köşe / Yorum", "genel": False, "hedef": "makaleler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:bianet.org+%22k%C3%B6%C5%9Fe%22+OR+%22g%C3%B6r%C3%BC%C5%9F%22+cevre&hl=tr&gl=TR&ceid=TR:tr",
@@ -153,8 +135,6 @@ MAKALE_RSS_KAYNAKLARI = [
      "kaynak": "Yeşil Gazete", "kategori": "Görüş / Yorum", "genel": False, "hedef": "makaleler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:iklimhaber.org+%22analiz%22+OR+%22yorum%22+OR+%22g%C3%B6r%C3%BC%C5%9F%22&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "İklim Haber", "kategori": "Analiz / Yorum", "genel": False, "hedef": "makaleler", "dil": "tr"},
-
-    # ── Geniş köşe yazısı arama ──────────────────────────────────
     {"url": "https://news.google.com/rss/search?q=çevre+ekoloji+köşe+yorum+görüş+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Köşe / Görüş", "genel": False, "hedef": "makaleler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=iklim+krizi+yorum+değerlendirme+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
@@ -176,7 +156,6 @@ MAKALE_WEB_KAYNAKLARI = [
 # ══════════════════════════════════════════════════════════════════
 
 ULUSLARARASI_RSS_KAYNAKLARI = [
-    # ── İklim & çevre odaklı yayınlar ───────────────────────────
     {"url": "https://www.carbonbrief.org/feed",
      "kaynak": "Carbon Brief", "kategori": "Uluslararası Analiz", "genel": False, "hedef": "uluslararasi", "dil": "en"},
     {"url": "https://www.climatechangenews.com/feed/",
@@ -185,12 +164,8 @@ ULUSLARARASI_RSS_KAYNAKLARI = [
      "kaynak": "Mongabay", "kategori": "Uluslararası Haber", "genel": False, "hedef": "uluslararasi", "dil": "en"},
     {"url": "https://www.theguardian.com/environment/rss",
      "kaynak": "The Guardian", "kategori": "Uluslararası Haber", "genel": True, "hedef": "uluslararasi", "dil": "en"},
-
-    # ── 350.org & iklim hareketi ─────────────────────────────────
     {"url": "https://350.org/feed/",
      "kaynak": "350.org", "kategori": "İklim Hareketi", "genel": False, "hedef": "uluslararasi", "dil": "en"},
-
-    # ── Türkiye'ye özel İngilizce haber ─────────────────────────
     {"url": "https://news.google.com/rss/search?q=Turkey+environment+mining+ecology&hl=en&gl=US&ceid=US:en",
      "kaynak": "Google News EN", "kategori": "Türkiye / Uluslararası", "genel": False, "hedef": "uluslararasi", "dil": "en"},
     {"url": "https://news.google.com/rss/search?q=Turkey+climate+deforestation+coal&hl=en&gl=US&ceid=US:en",
@@ -209,12 +184,9 @@ ULUSLARARASI_WEB_KAYNAKLARI = [
 
 # ══════════════════════════════════════════════════════════════════
 #  EKOSİSTEM & TOPLULUK KAYNAKLARI  →  hedef: "ekosistem"
-#  Her kaynak `bolum` alanıyla ekosistem.html bölüm koduna bağlanır
 # ══════════════════════════════════════════════════════════════════
 
 EKOSISTEM_RSS_KAYNAKLARI = [
-    # ── İnsan Dışı Canlılar ──────────────────────────────────────
-    # turler — Nesli Tehlike Altında Türler
     {"url": "https://news.google.com/rss/search?q=nesli+tehlike+tür+Türkiye+hayvan+bitki&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Nesli Tehlike Türler", "genel": False,
      "hedef": "ekosistem", "bolum": "turler", "dil": "tr"},
@@ -224,8 +196,6 @@ EKOSISTEM_RSS_KAYNAKLARI = [
     {"url": "https://news.google.com/rss/search?q=site:dogadernegi.org+tür+nesli&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Doğa Derneği", "kategori": "Nesli Tehlike Türler", "genel": False,
      "hedef": "ekosistem", "bolum": "turler", "dil": "tr"},
-
-    # yaban — Yaban Hayatı İzleme
     {"url": "https://news.google.com/rss/search?q=yaban+hayatı+izleme+Türkiye+gözlem&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Yaban Hayatı", "genel": False,
      "hedef": "ekosistem", "bolum": "yaban", "dil": "tr"},
@@ -235,103 +205,75 @@ EKOSISTEM_RSS_KAYNAKLARI = [
     {"url": "https://news.google.com/rss/search?q=site:dogadernegi.org&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Doğa Derneği", "kategori": "Yaban Hayatı", "genel": False,
      "hedef": "ekosistem", "bolum": "yaban", "dil": "tr"},
-
-    # bitki — Bitki Örtüsü & Habitatlar
     {"url": "https://news.google.com/rss/search?q=habitat+tahribi+bitki+örtüsü+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Bitki & Habitat", "genel": False,
      "hedef": "ekosistem", "bolum": "bitki", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=orman+yangını+ekosistem+Türkiye+bitki&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Bitki & Habitat", "genel": False,
      "hedef": "ekosistem", "bolum": "bitki", "dil": "tr"},
-
-    # su-canlilari — Su Canlıları
     {"url": "https://news.google.com/rss/search?q=balık+ölümü+su+kirliliği+deniz+göl+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Su Canlıları", "genel": False,
      "hedef": "ekosistem", "bolum": "su-canlilari", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=deniz+canlısı+yunus+kaplumbağa+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Su Canlıları", "genel": False,
      "hedef": "ekosistem", "bolum": "su-canlilari", "dil": "tr"},
-
-    # hayvan-haklari — Hayvan Hakları & Refahı
     {"url": "https://news.google.com/rss/search?q=hayvan+hakları+istismar+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Hayvan Hakları", "genel": False,
      "hedef": "ekosistem", "bolum": "hayvan-haklari", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=hayvan+hakları+yasa+sokak+hayvanı+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Hayvan Hakları", "genel": False,
      "hedef": "ekosistem", "bolum": "hayvan-haklari", "dil": "tr"},
-
-    # ── İnsan Toplulukları ────────────────────────────────────────
-    # kadinlar — Kadınlar & Ekoloji
     {"url": "https://news.google.com/rss/search?q=kadın+çevre+ekoloji+Türkiye+maden+HES&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Kadınlar & Ekoloji", "genel": False,
      "hedef": "ekosistem", "bolum": "kadinlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=feminist+ekoloji+kadın+toprak+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Kadınlar & Ekoloji", "genel": False,
      "hedef": "ekosistem", "bolum": "kadinlar", "dil": "tr"},
-
-    # ciftci — Çiftçi & Köylü Sorunları
     {"url": "https://news.google.com/rss/search?q=çiftçi+köylü+tarım+toprak+maden+kamulaştırma+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Çiftçi & Köylü", "genel": False,
      "hedef": "ekosistem", "bolum": "ciftci", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=zeytinlik+bağ+bahçe+kamulaştırma+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Çiftçi & Köylü", "genel": False,
      "hedef": "ekosistem", "bolum": "ciftci", "dil": "tr"},
-
-    # balikci — Balıkçı Toplulukları
     {"url": "https://news.google.com/rss/search?q=balıkçı+deniz+kirliliği+av+yasağı+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Balıkçı Toplulukları", "genel": False,
      "hedef": "ekosistem", "bolum": "balikci", "dil": "tr"},
-
-    # yerli — Yerli & Yerel Haklar
     {"url": "https://news.google.com/rss/search?q=yerel+halk+maden+HES+RES+direniş+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Yerli & Yerel Haklar", "genel": False,
      "hedef": "ekosistem", "bolum": "yerli", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=köy+halkı+toprak+hakları+direniş+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Yerli & Yerel Haklar", "genel": False,
      "hedef": "ekosistem", "bolum": "yerli", "dil": "tr"},
-
-    # genclik — Çocuklar & Gençlik
     {"url": "https://news.google.com/rss/search?q=iklim+gençlik+Türkiye+genç+aktivist&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Gençlik & Ekoloji", "genel": False,
      "hedef": "ekosistem", "bolum": "genclik", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=Fridays+for+Future+Turkey+climate+youth&hl=en&gl=US&ceid=US:en",
      "kaynak": "Google News EN", "kategori": "Gençlik & Ekoloji", "genel": False,
      "hedef": "ekosistem", "bolum": "genclik", "dil": "en"},
-
-    # ── Çevre Adaleti ─────────────────────────────────────────────
-    # esitsizlik — Ekolojik Eşitsizlik
     {"url": "https://news.google.com/rss/search?q=çevre+adaleti+ekolojik+eşitsizlik+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Ekolojik Eşitsizlik", "genel": False,
      "hedef": "ekosistem", "bolum": "esitsizlik", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=environmental+justice+Turkey+inequality&hl=en&gl=US&ceid=US:en",
      "kaynak": "Google News EN", "kategori": "Ekolojik Eşitsizlik", "genel": False,
      "hedef": "ekosistem", "bolum": "esitsizlik", "dil": "en"},
-
-    # kentsel — Kentsel Çevre
     {"url": "https://news.google.com/rss/search?q=yeşil+alan+park+kentsel+dönüşüm+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Kentsel Çevre", "genel": False,
      "hedef": "ekosistem", "bolum": "kentsel", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=hava+kirliliği+şehir+trafik+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Kentsel Çevre", "genel": False,
      "hedef": "ekosistem", "bolum": "kentsel", "dil": "tr"},
-
-    # goc — İklim Göçü & Yerinden Edilme
     {"url": "https://news.google.com/rss/search?q=iklim+göçü+yerinden+edilme+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "İklim Göçü", "genel": False,
      "hedef": "ekosistem", "bolum": "goc", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=climate+migration+displacement+Turkey&hl=en&gl=US&ceid=US:en",
      "kaynak": "Google News EN", "kategori": "İklim Göçü", "genel": False,
      "hedef": "ekosistem", "bolum": "goc", "dil": "en"},
-
-    # savas — Savaş & Ekoloji
     {"url": "https://news.google.com/rss/search?q=savaş+çevre+ekoloji+kirlilik+Ortadoğu&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Savaş & Ekoloji", "genel": False,
      "hedef": "ekosistem", "bolum": "savas", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=war+environment+ecology+Middle+East+pollution&hl=en&gl=US&ceid=US:en",
      "kaynak": "Google News EN", "kategori": "Savaş & Ekoloji", "genel": False,
      "hedef": "ekosistem", "bolum": "savas", "dil": "en"},
-
-    # savas-teknoloji — Savaş Teknolojisi & Çevre
     {"url": "https://news.google.com/rss/search?q=drone+insansız+hava+aracı+çevre+etki&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Savaş Teknolojisi", "genel": False,
      "hedef": "ekosistem", "bolum": "savas-teknoloji", "dil": "tr"},
@@ -351,7 +293,7 @@ EKOSISTEM_WEB_KAYNAKLARI = [
 ]
 
 # ══════════════════════════════════════════════════════════════════
-#  WEB SCRAPING — HABER (ayrı listede, hedef: "haberler")
+#  WEB SCRAPING — HABER
 # ══════════════════════════════════════════════════════════════════
 
 WEB_KAYNAKLARI = [
@@ -397,7 +339,6 @@ WEB_KAYNAKLARI = [
 # ══════════════════════════════════════════════════════════════════
 
 KATEGORI_HARITALAMA = {
-    # Haberler
     "Çevre İhlali":              {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Çevre / Gündem":            {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Gündem / Çevre":            {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
@@ -422,24 +363,18 @@ KATEGORI_HARITALAMA = {
     "Mühendislik / Çevre":       {"eylem": None,               "etiketler": ["Ekolojik İhlal"]},
     "Çevre Medyası":             {"eylem": None,               "etiketler": []},
     "Haber":                     {"eylem": None,               "etiketler": []},
-
-    # Raporlar
     "STK Raporu":                {"eylem": "STK & Kampanya",   "etiketler": ["STK & Kampanya", "Rapor"]},
     "İklim Raporu":              {"eylem": None,               "etiketler": ["İklim Olayları", "Rapor"]},
     "Akademik Analiz":           {"eylem": None,               "etiketler": ["Analiz", "Akademik"]},
     "Politika Analizi":          {"eylem": None,               "etiketler": ["Analiz", "Politika"]},
     "Enerji Politikası":         {"eylem": None,               "etiketler": ["Analiz", "Enerji"]},
     "Mühendislik / Analiz":      {"eylem": None,               "etiketler": ["Analiz"]},
-
-    # Makaleler
     "Köşe / Yorum":              {"eylem": None,               "etiketler": ["Köşe Yazısı"]},
     "Köşe / Görüş":              {"eylem": None,               "etiketler": ["Köşe Yazısı", "Görüş"]},
     "Görüş / Yorum":             {"eylem": None,               "etiketler": ["Görüş", "Yorum"]},
     "Analiz / Yorum":            {"eylem": None,               "etiketler": ["Analiz", "Yorum"]},
     "Yorum / Değerlendirme":     {"eylem": None,               "etiketler": ["Yorum", "Değerlendirme"]},
     "Hukuki Yorum":              {"eylem": "Hukuk & Dava",     "etiketler": ["Hukuki Yorum"]},
-
-    # Ekosistem bölümleri (bolum kodu → etiketler eşleşmesi)
     "Nesli Tehlike Türler":      {"eylem": None,               "etiketler": ["Nesli Tehlike Altında Türler"]},
     "Yaban Hayatı":              {"eylem": None,               "etiketler": ["Yaban Hayatı İzleme"]},
     "Bitki & Habitat":           {"eylem": None,               "etiketler": ["Bitki Örtüsü & Habitatlar"]},
@@ -455,8 +390,6 @@ KATEGORI_HARITALAMA = {
     "İklim Göçü":                {"eylem": None,               "etiketler": ["İklim Göçü & Yerinden Edilme"]},
     "Savaş & Ekoloji":           {"eylem": None,               "etiketler": ["Savaş & Ekoloji"]},
     "Savaş Teknolojisi":         {"eylem": None,               "etiketler": ["Savaş Teknolojisi & Çevre"]},
-
-    # Uluslararası
     "Uluslararası Analiz":       {"eylem": None,               "etiketler": ["Uluslararası", "Analiz"]},
     "Uluslararası Haber":        {"eylem": None,               "etiketler": ["Uluslararası"]},
     "Türkiye / Uluslararası":    {"eylem": None,               "etiketler": ["Uluslararası", "Türkiye"]},
@@ -464,6 +397,66 @@ KATEGORI_HARITALAMA = {
     "Türkiye / Nükleer":         {"eylem": None,               "etiketler": ["Uluslararası", "Nükleer Enerji"]},
     "İklim Hareketi":            {"eylem": "STK & Kampanya",   "etiketler": ["Uluslararası", "STK & Kampanya"]},
 }
+
+# ══════════════════════════════════════════════════════════════════
+#  9 GÖRÜNTÜ KATEGORİSİ TESPİTİ
+# ══════════════════════════════════════════════════════════════════
+
+HABER_9_KAT = [
+    "İklim ve Afet", "Maden ve Enerji", "Orman ve Doğa",
+    "Su ve Kıyı", "Yaban Hayatı", "Direniş ve Eylemler",
+    "Hukuki Süreçler", "Nöbetler ve Gözaltılar", "STK & Kampanyalar",
+]
+
+
+def haber_kategorisi_tespit(kayit: dict) -> str:
+    """Haberi 9 görüntü kategorisinden birine atar."""
+    eylem = (kayit.get("eylem") or "").lower()
+    kat   = (kayit.get("kategori") or "").lower()
+    metin = " ".join([
+        kayit.get("baslik", ""), kayit.get("ozet", ""),
+        kayit.get("kategori", ""),
+        " ".join(kayit.get("etiketler") or []),
+    ]).lower()
+
+    # ── Eylem / toplum önce ──────────────────────────────────────
+    if "nöbet" in metin or "gözaltı" in metin or "nöbet & gözaltı" in eylem:
+        return "Nöbetler ve Gözaltılar"
+    if "direniş & eylem" in eylem or any(k in metin for k in
+            ["direniş", "protesto", "miting", "yürüyüş", "boykot", "oturma eylemi"]):
+        return "Direniş ve Eylemler"
+    if "stk & kampanya" in eylem or "stk" in kat or any(k in metin for k in
+            ["greenpeace", "wwf", "tema vakfı", "doğa derneği", "350.org", "kampanya başlat"]):
+        return "STK & Kampanyalar"
+    if "hukuk & dava" in eylem or any(k in metin for k in
+            ["dava açı", "mahkeme", "yürütmeyi durdur", "iptal kararı", "çed kararı", "itiraz"]):
+        return "Hukuki Süreçler"
+
+    # ── Konu bazlı ───────────────────────────────────────────────
+    if any(k in metin for k in [
+            "iklim", "yangın", "sel ", "taşkın", "heyelan",
+            "kuraklık", "aşırı sıcak", "afet "]):
+        return "İklim ve Afet"
+    if any(k in metin for k in [
+            "yaban hayat", "nesli tehlike", "biyoçeşitlilik",
+            "hayvan hakları", "hayvan refahı"]):
+        return "Yaban Hayatı"
+    if any(k in metin for k in [
+            "sulak alan", "kıyı ihlal", "deniz kirliliği",
+            "su kirliliği", "dere yatağı", "balık ölümü"]):
+        return "Su ve Kıyı"
+    if any(k in metin for k in [
+            "maden", "hes ", "res ", "ges ", "termik santral", "nükleer",
+            "jeotermal", "baraj", "akkuyu", "sondaj", "enerji santr", "kamulaştırma"]):
+        return "Maden ve Enerji"
+    if any(k in metin for k in [
+            "orman", "ağaç kes", "ağaç katliamı", "habitat",
+            "bitki örtüsü", "doğal sit", "milli park", "ormansızlaşma"]):
+        return "Orman ve Doğa"
+    if any(k in metin for k in ["kıyı", "deniz ", "göl ", "nehir", "dere "]):
+        return "Su ve Kıyı"
+    return ""
+
 
 # ══════════════════════════════════════════════════════════════════
 #  FİLTRE SİSTEMİ
@@ -479,10 +472,8 @@ YUKSEK_SINYAL = [
     "su kirliliği", "deniz kirliliği", "hava kirliliği", "toprak kirliliği",
     "atık depolama", "kaçak maden", "MAPEG", "EPDK kararı",
     "ormana yapı", "dere yatağı", "kıyı tahribatı",
-    # Rapor/analiz sinyalleri
     "rapor", "araştırma", "analiz", "inceleme", "değerlendirme",
     "politika belgesi", "çalışma kağıdı", "yayın",
-    # İngilizce sinyaller (uluslararası)
     "mining", "deforestation", "coal plant", "nuclear", "climate",
     "biodiversity", "pollution", "carbon", "emissions", "fossil fuel",
 ]
@@ -493,7 +484,6 @@ ORTA_SINYAL = [
     "yangın", "sel", "taşkın", "heyelan", "kıyı", "deniz", "göl", "dere",
     "su hakkı", "tarım", "jeotermal", "ihlal", "ruhsatsız", "ağaç",
     "TEMA", "WWF", "Greenpeace", "yaban hayat", "doğal yaşam",
-    # İngilizce
     "environment", "ecology", "forest", "river", "energy", "renewable",
     "Turkey", "Türkiye", "Akkuyu", "protest", "resistance",
 ]
@@ -511,14 +501,12 @@ GENEL_KAYNAK_NEGATIF = [
     "turizm", "tatil", "otel", "hastane", "ameliyat", "okul",
 ]
 
-# Rapor/analiz içeriğini tespit eden anahtar kelimeler
 RAPOR_SINYAL = [
     "rapor", "araştırma", "analiz", "inceleme", "değerlendirme",
     "politika", "strateji", "yayın", "çalışma", "bulgular", "sonuçlar",
     "report", "analysis", "research", "assessment", "policy", "findings",
 ]
 
-# Köşe/yorum içeriğini tespit eden anahtar kelimeler
 KOSE_SINYAL = [
     "köşe", "görüş", "yorum", "perspektif", "bakış açısı",
     "değerlendiriyorum", "düşünüyorum", "kanımca", "bence",
@@ -544,7 +532,6 @@ def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False,
     for k in YUKSEK_SINYAL:
         if k.lower() in baslik_lower:
             puan += 2
-    # Rapor/makale/uluslararası için eşiği düşür — başlık yeterince açıklayıcı
     if hedef in ("raporlar", "makaleler", "uluslararasi") and puan == 0:
         if any(k.lower() in metin for k in RAPOR_SINYAL + KOSE_SINYAL):
             puan = 2
@@ -552,7 +539,6 @@ def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False,
 
 
 def icerik_tipi_tespit(baslik: str, ozet: str, hedef: str, kaynak: str) -> str:
-    """Kaynak ve içerikten icerik_tipi belirle."""
     if hedef == "uluslararasi":
         return "uluslararasi"
     metin = (baslik + " " + ozet).lower()
@@ -591,7 +577,6 @@ def zenginlestir(kayit: dict) -> dict:
     for bolum, anahtarlar in EKOSISTEM_ANAHTAR.items():
         if any(k in metin for k in anahtarlar) and bolum not in etiket:
             etiket.append(bolum)
-    # icerik_tipi etiket olarak da ekle (frontend filtresi için)
     icerik = kayit.get("icerik_tipi", "haber")
     etiket_icerik = {
         "rapor": "Rapor & Analiz",
@@ -601,8 +586,9 @@ def zenginlestir(kayit: dict) -> dict:
     }.get(icerik)
     if etiket_icerik and etiket_icerik not in etiket:
         etiket.append(etiket_icerik)
-    kayit["eylem"]    = eylem
-    kayit["etiketler"] = etiket
+    kayit["eylem"]            = eylem
+    kayit["etiketler"]        = etiket
+    kayit["haber_kategorisi"] = haber_kategorisi_tespit(kayit)
     return kayit
 
 # ══════════════════════════════════════════════════════════════════
@@ -683,11 +669,10 @@ def fetch(url: str, timeout: int = 15, ssl_dogrulama: bool = True) -> Optional[r
         return None
 
 # ══════════════════════════════════════════════════════════════════
-#  RSS TARAMA (tüm koleksiyonlar için ortak)
+#  RSS TARAMA
 # ══════════════════════════════════════════════════════════════════
 
 def rss_tara(kaynaklar: list) -> dict:
-    """Kaynakları tarar; {hedef: [kayitlar]} dict döner."""
     sonuc: dict = {}
     for kaynak in kaynaklar:
         genel  = kaynak.get("genel", False)
@@ -728,7 +713,6 @@ def rss_tara(kaynaklar: list) -> dict:
                     "etiketler":   list(_hm.get("etiketler", [])),
                     "_puan":       puan,
                 }
-                # ekosistem kaynakları bolum alanı taşır
                 if "bolum" in kaynak:
                     kayit["bolum"] = kaynak["bolum"]
                 kayit = zenginlestir(kayit)
@@ -741,11 +725,10 @@ def rss_tara(kaynaklar: list) -> dict:
     return sonuc
 
 # ══════════════════════════════════════════════════════════════════
-#  WEB SCRAPING (tüm koleksiyonlar için ortak)
+#  WEB SCRAPING
 # ══════════════════════════════════════════════════════════════════
 
 def web_tara(kaynaklar: list) -> dict:
-    """Web sayfalarını tarar; {hedef: [kayitlar]} dict döner."""
     sonuc: dict = {}
     for kaynak in kaynaklar:
         genel         = kaynak.get("genel", False)
@@ -800,7 +783,6 @@ def web_tara(kaynaklar: list) -> dict:
                     "etiketler":   list(_hm.get("etiketler", [])),
                     "_puan":       puan,
                 }
-                # ekosistem kaynakları bolum alanı taşır
                 if "bolum" in kaynak:
                     kayit["bolum"] = kaynak["bolum"]
                 kayit = zenginlestir(kayit)
@@ -822,8 +804,6 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
     log.info("═" * 55)
 
     p = Path(cikti_dosyasi)
-
-    # ── Mevcut veriyi yükle ───────────────────────────────────────
     eski: dict = {}
     if p.exists():
         try:
@@ -840,7 +820,6 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
         except Exception as e:
             log.warning(f"Mevcut dosya okunamadı: {e}, sıfırdan başlanıyor.")
 
-    # ── Global görülmüş kümeleri oluştur ─────────────────────────
     gorulen_idler:     set = set()
     gorulen_urller:    set = set()
     gorulen_basliklar: set = set()
@@ -850,55 +829,42 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
             if h.get("url"):    gorulen_urller.add(url_normalize(h["url"]))
             if h.get("baslik"): gorulen_basliklar.add(baslik_normalize(h["baslik"]))
 
-    # ── Tarama ───────────────────────────────────────────────────
     log.info("\n── RSS: Haberler ──")
     rss_haber = rss_tara(RSS_KAYNAKLARI)
-
     log.info("\n── RSS: Raporlar ──")
     rss_rapor = rss_tara(RAPOR_RSS_KAYNAKLARI)
-
     log.info("\n── RSS: Makaleler ──")
     rss_makale = rss_tara(MAKALE_RSS_KAYNAKLARI)
-
     log.info("\n── RSS: Uluslararası ──")
     rss_ulus = rss_tara(ULUSLARARASI_RSS_KAYNAKLARI)
-
     log.info("\n── Web: Haberler ──")
     web_haber = web_tara(WEB_KAYNAKLARI)
-
     log.info("\n── Web: Raporlar ──")
     web_rapor = web_tara(RAPOR_WEB_KAYNAKLARI)
-
     log.info("\n── Web: Makaleler ──")
     web_makale = web_tara(MAKALE_WEB_KAYNAKLARI)
-
     log.info("\n── Web: Uluslararası ──")
     web_ulus = web_tara(ULUSLARARASI_WEB_KAYNAKLARI)
-
     log.info("\n── RSS: Ekosistem & Topluluklar ──")
     rss_ekosistem = rss_tara(EKOSISTEM_RSS_KAYNAKLARI)
-
     log.info("\n── Web: Ekosistem & Topluluklar ──")
     web_ekosistem = web_tara(EKOSISTEM_WEB_KAYNAKLARI)
 
-    # ── Koleksiyonlara yeni kayıtları ekle ───────────────────────
     def filtrele_yeni(kaynaklar: list) -> list:
-        """Tekrar içermeyen yeni kayıtları döner."""
         yeni = []
         for h in kaynaklar:
-            h_id = h["id"]
+            h_id  = h["id"]
             h_url = url_normalize(h.get("url", ""))
             h_bas = baslik_normalize(h.get("baslik", ""))
             if h_id in gorulen_idler or h_url in gorulen_urller or h_bas in gorulen_basliklar:
                 continue
             yeni.append(h)
             gorulen_idler.add(h_id)
-            if h_url:  gorulen_urller.add(h_url)
-            if h_bas:  gorulen_basliklar.add(h_bas)
+            if h_url: gorulen_urller.add(h_url)
+            if h_bas: gorulen_basliklar.add(h_bas)
         return yeni
 
     def birlestir_kaynak(*dicts):
-        """Birden fazla {hedef: liste} dict'ini birleştirir."""
         sonuc = {}
         for d in dicts:
             for k, v in d.items():
@@ -919,10 +885,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
         birles = yeni + eski.get(kol, [])
         birles.sort(key=lambda x: x.get("tarih") or "1970-01-01", reverse=True)
         koleksiyonlar[kol] = birles[:limit]
-
-        yeni_say = len(yeni)
-        top_say  = len(koleksiyonlar[kol])
-        log.info(f"  {kol:15s}: +{yeni_say:3d} yeni → toplam {top_say}")
+        log.info(f"  {kol:15s}: +{len(yeni):3d} yeni → toplam {len(koleksiyonlar[kol])}")
 
     cikti = {
         "meta": {
