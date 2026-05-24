@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -15,464 +14,166 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
   <style>
-    /* ─── RENK & TEMEL DEĞİŞKENLER (shared.css varsa override gerekmiyor) ─── */
     :root {
-      --dark:   #070f0a;
-      --deep:   #0d2318;
-      --forest: #112c1c;
-      --teal:   #0f2318;
-      --accent: #2d9e6b;
-      --bright: #3ec882;
-      --leaf:   #5fd499;
-      --cream:  #f0f5f2;
-      --white:  #ffffff;
-      --muted:  #7a9e8a;
-      --warn:   #e85c2a;
-      --alert:  #f0a500;
+      --dark:#070f0a;--deep:#0d2318;--forest:#112c1c;--teal:#0f2318;
+      --accent:#2d9e6b;--bright:#3ec882;--leaf:#5fd499;
+      --cream:#f0f5f2;--white:#ffffff;--muted:#7a9e8a;--warn:#e85c2a;--alert:#f0a500;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--dark);
-      color: var(--cream);
-      font-family: 'Crimson Pro', serif;
-      font-weight: 300;
-      line-height: 1.6;
-    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--dark);color:var(--cream);font-family:'Crimson Pro',serif;font-weight:300;line-height:1.6;}
 
     /* ─── PAGE HEADER ─── */
-    .page-header {
-      padding: 120px 80px 70px;
-      background: linear-gradient(160deg, var(--dark) 0%, var(--forest) 60%, var(--dark) 100%);
-      border-bottom: 1px solid rgba(45,158,107,.15);
-      position: relative;
-      overflow: hidden;
+    .page-header{
+      padding:120px 80px 70px;
+      background:linear-gradient(160deg,var(--dark) 0%,var(--forest) 60%,var(--dark) 100%);
+      border-bottom:1px solid rgba(45,158,107,.15);
+      position:relative;overflow:hidden;
     }
-    .page-header::before {
-      content: 'MAKALELER';
-      position: absolute;
-      right: 60px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(80px, 12vw, 160px);
-      color: rgba(45,158,107,.04);
-      letter-spacing: .05em;
-      pointer-events: none;
-      white-space: nowrap;
+    .page-header::before{
+      content:'MAKALELER';position:absolute;right:60px;top:50%;transform:translateY(-50%);
+      font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,12vw,160px);
+      color:rgba(45,158,107,.04);letter-spacing:.05em;pointer-events:none;white-space:nowrap;
     }
-    .section-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+    .section-tag{
+      font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:20px;
     }
-    .section-tag::before { content: ''; width: 28px; height: 1px; background: var(--accent); }
-    .page-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(52px, 7vw, 88px);
-      line-height: .9;
-      color: var(--white);
-      letter-spacing: .02em;
-      margin-bottom: 20px;
+    .section-tag::before{content:'';width:28px;height:1px;background:var(--accent);}
+    .page-title{
+      font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,7vw,88px);
+      line-height:.9;color:var(--white);letter-spacing:.02em;margin-bottom:20px;
     }
-    .page-title span { color: var(--bright); }
-    .page-desc {
-      font-size: 17px;
-      font-weight: 300;
-      color: var(--muted);
-      max-width: 560px;
-      line-height: 1.75;
-    }
+    .page-title span{color:var(--bright);}
+    .page-desc{font-size:17px;font-weight:300;color:var(--muted);max-width:560px;line-height:1.75;}
 
     /* ─── FİLTRE BANDI ─── */
-    .filter-bar {
-      background: var(--forest);
-      border-bottom: 1px solid rgba(45,158,107,.12);
-      padding: 0 80px;
-      display: flex;
-      gap: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
+    .filter-bar{
+      background:var(--forest);border-bottom:1px solid rgba(45,158,107,.12);
+      padding:0 80px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;
     }
-    .filter-bar::-webkit-scrollbar { display: none; }
-    .filter-btn {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 18px 20px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all .2s;
-      white-space: nowrap;
+    .filter-bar::-webkit-scrollbar{display:none;}
+    .filter-btn{
+      font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--muted);padding:18px 20px;border:none;
+      background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
     }
-    .filter-btn:hover { color: var(--cream); }
-    .filter-btn.aktif { color: var(--bright); border-bottom-color: var(--accent); }
+    .filter-btn:hover{color:var(--cream);}
+    .filter-btn.aktif{color:var(--bright);border-bottom-color:var(--accent);}
 
-    /* ─── ÖZEL MAKALE (featured) ─── */
-    .featured-article {
-      background: var(--forest);
-      margin: 0;
-      padding: 60px 80px;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 60px;
-      align-items: center;
-      border-bottom: 1px solid rgba(45,158,107,.1);
-      text-decoration: none;
-      transition: background .2s;
-      cursor: pointer;
-    }
-    .featured-article:hover { background: #162b1f; }
-    .featured-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--bright);
-      background: rgba(45,158,107,.12);
-      border: 1px solid rgba(45,158,107,.25);
-      padding: 4px 10px;
-      border-radius: 2px;
-      display: inline-block;
-      margin-bottom: 16px;
-    }
-    .featured-title {
-      font-family: 'Crimson Pro', serif;
-      font-size: clamp(26px, 3vw, 38px);
-      font-weight: 400;
-      color: var(--cream);
-      line-height: 1.25;
-      margin-bottom: 16px;
-    }
-    .featured-excerpt {
-      font-size: 16px;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.75;
-      margin-bottom: 24px;
-    }
-    .article-meta {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .meta-item {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      letter-spacing: .07em;
-      color: rgba(122,158,138,.6);
-    }
-    .meta-item strong { color: var(--accent); }
-    .featured-visual {
-      background: var(--deep);
-      border: 1px solid rgba(45,158,107,.15);
-      border-radius: 4px;
-      aspect-ratio: 16/10;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 64px;
-      position: relative;
-      overflow: hidden;
-    }
-    .featured-visual::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 40%, rgba(7,15,10,.6) 100%);
+    /* ─── ANA LAYOUT ─── */
+    .main-layout{
+      display:grid;grid-template-columns:1fr 280px;gap:2px;
+      background:var(--dark);padding:60px 80px 100px;
     }
 
     /* ─── MAKALELEr GRID ─── */
-    .articles-section {
-      background: var(--dark);
-      padding: 60px 80px 100px;
+    .articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:40px;}
+    .article-card{
+      background:var(--forest);padding:32px 28px;text-decoration:none;display:block;
+      transition:all .25s;border-left:3px solid transparent;cursor:pointer;position:relative;
     }
-    .articles-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      margin-bottom: 40px;
+    .article-card:hover{background:var(--deep);border-left-color:var(--accent);padding-left:34px;}
+    .card-category{
+      font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;
+      text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-bottom:14px;
+      display:inline-block;border:1px solid;
     }
-    .article-card {
-      background: var(--forest);
-      padding: 32px 28px;
-      text-decoration: none;
-      display: block;
-      transition: all .25s;
-      border-left: 3px solid transparent;
-      cursor: pointer;
-      position: relative;
+    .cat-analiz  {color:var(--bright);background:rgba(45,158,107,.1); border-color:rgba(45,158,107,.25);}
+    .cat-hukuk   {color:var(--alert); background:rgba(240,165,0,.1);  border-color:rgba(240,165,0,.25);}
+    .cat-saha    {color:var(--warn);  background:rgba(232,92,42,.1);  border-color:rgba(232,92,42,.25);}
+    .cat-veri    {color:#7eb8ff;      background:rgba(100,160,255,.1);border-color:rgba(100,160,255,.25);}
+    .cat-politika{color:#d4a0ff;      background:rgba(160,80,255,.1); border-color:rgba(160,80,255,.25);}
+    .card-title{font-family:'Crimson Pro',serif;font-size:19px;font-weight:400;color:var(--cream);line-height:1.35;margin-bottom:10px;}
+    .card-excerpt{font-size:13.5px;font-weight:300;color:var(--muted);line-height:1.65;margin-bottom:18px;}
+    .card-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      padding-top:16px;border-top:1px solid rgba(45,158,107,.1);
     }
-    .article-card:hover {
-      background: var(--deep);
-      border-left-color: var(--accent);
-      padding-left: 34px;
+    .card-author{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;}
+    .card-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(122,158,138,.5);}
+    .read-time{
+      position:absolute;top:20px;right:20px;font-family:'JetBrains Mono',monospace;
+      font-size:8.5px;color:rgba(45,158,107,.35);letter-spacing:.07em;
     }
-    .card-category {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 2px;
-      margin-bottom: 14px;
-      display: inline-block;
-      border: 1px solid;
-    }
-    .cat-analiz    { color: var(--bright); background: rgba(45,158,107,.1);  border-color: rgba(45,158,107,.25); }
-    .cat-hukuk     { color: var(--alert);  background: rgba(240,165,0,.1);   border-color: rgba(240,165,0,.25); }
-    .cat-saha      { color: var(--warn);   background: rgba(232,92,42,.1);   border-color: rgba(232,92,42,.25); }
-    .cat-veri      { color: #7eb8ff;       background: rgba(100,160,255,.1); border-color: rgba(100,160,255,.25); }
-    .cat-politika  { color: #d4a0ff;       background: rgba(160,80,255,.1);  border-color: rgba(160,80,255,.25); }
+    .load-more{display:flex;justify-content:center;padding-top:20px;}
 
-    .card-title {
-      font-family: 'Crimson Pro', serif;
-      font-size: 19px;
-      font-weight: 400;
-      color: var(--cream);
-      line-height: 1.35;
-      margin-bottom: 10px;
+    /* ─── SIDEBAR ─── */
+    .sidebar{
+      background:var(--forest);padding:32px 28px;
+      display:flex;flex-direction:column;gap:32px;
+      border-left:1px solid rgba(45,158,107,.1);
     }
-    .card-excerpt {
-      font-size: 13.5px;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 18px;
+    .sidebar-block h3{
+      font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.15em;
+      text-transform:uppercase;color:var(--accent);margin-bottom:16px;
+      padding-bottom:10px;border-bottom:1px solid rgba(45,158,107,.12);
     }
-    .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 16px;
-      border-top: 1px solid rgba(45,158,107,.1);
+    .sidebar-link{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 0;
+      border-bottom:1px solid rgba(45,158,107,.07);cursor:pointer;transition:all .2s;
     }
-    .card-author {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: var(--muted);
-      letter-spacing: .06em;
+    .sidebar-link:hover .sl-title{color:var(--bright);}
+    .sl-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(45,158,107,.3);padding-top:3px;flex-shrink:0;}
+    .sl-title{font-size:13.5px;font-weight:400;color:var(--muted);line-height:1.45;transition:color .2s;}
+    .tag-cloud{display:flex;flex-wrap:wrap;gap:6px;}
+    .tag{
+      font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.07em;
+      padding:4px 9px;border-radius:2px;background:rgba(45,158,107,.08);color:var(--accent);
+      border:1px solid rgba(45,158,107,.18);cursor:pointer;transition:all .2s;text-transform:uppercase;
     }
-    .card-date {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: rgba(122,158,138,.5);
+    .tag:hover{background:rgba(45,158,107,.18);color:var(--bright);}
+    .submit-box{
+      background:var(--deep);border:1px solid rgba(45,158,107,.2);
+      border-radius:4px;padding:20px;text-align:center;
     }
-    .read-time {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
-      color: rgba(45,158,107,.35);
-      letter-spacing: .07em;
+    .submit-box p{font-size:13px;font-weight:300;color:var(--muted);line-height:1.65;margin-bottom:14px;}
+    .btn-small{
+      display:inline-flex;align-items:center;gap:8px;padding:10px 18px;
+      background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;
+      font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:none;
+      border-radius:3px;cursor:pointer;transition:all .2s;text-decoration:none;
     }
-
-    /* ─── YÜKLE DAHA FAZLA ─── */
-    .load-more {
-      display: flex;
-      justify-content: center;
-      padding-top: 20px;
-    }
-
-    /* ─── YAN PANEL (sidebar) ─── */
-    .main-layout {
-      display: grid;
-      grid-template-columns: 1fr 280px;
-      gap: 2px;
-      background: var(--dark);
-      padding: 60px 80px 100px;
-    }
-    .sidebar {
-      background: var(--forest);
-      padding: 32px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      border-left: 1px solid rgba(45,158,107,.1);
-    }
-    .sidebar-block h3 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(45,158,107,.12);
-    }
-    .sidebar-link {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(45,158,107,.07);
-      text-decoration: none;
-      cursor: pointer;
-      transition: all .2s;
-    }
-    .sidebar-link:hover .sl-title { color: var(--bright); }
-    .sl-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: rgba(45,158,107,.3);
-      padding-top: 3px;
-      flex-shrink: 0;
-    }
-    .sl-title {
-      font-size: 13.5px;
-      font-weight: 400;
-      color: var(--muted);
-      line-height: 1.45;
-      transition: color .2s;
-    }
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
-      letter-spacing: .07em;
-      padding: 4px 9px;
-      border-radius: 2px;
-      background: rgba(45,158,107,.08);
-      color: var(--accent);
-      border: 1px solid rgba(45,158,107,.18);
-      cursor: pointer;
-      transition: all .2s;
-      text-transform: uppercase;
-    }
-    .tag:hover { background: rgba(45,158,107,.18); color: var(--bright); }
-    .submit-box {
-      background: var(--deep);
-      border: 1px solid rgba(45,158,107,.2);
-      border-radius: 4px;
-      padding: 20px;
-      text-align: center;
-    }
-    .submit-box p {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 14px;
-    }
-    .btn-small {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
-      background: var(--accent);
-      color: var(--dark);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: all .2s;
-      text-decoration: none;
-    }
-    .btn-small:hover { background: var(--bright); }
+    .btn-small:hover{background:var(--bright);}
 
     /* ─── MODAL ─── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      background: rgba(0,0,0,.8);
-      backdrop-filter: blur(6px);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+    .modal-overlay{
+      display:none;position:fixed;inset:0;z-index:10000;
+      background:rgba(0,0,0,.8);backdrop-filter:blur(6px);
+      align-items:center;justify-content:center;padding:20px;
     }
-    .modal-box {
-      background: var(--deep);
-      border: 1px solid rgba(45,158,107,.25);
-      border-radius: 8px;
-      max-width: 720px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      animation: modalGir .25s ease;
+    .modal-box{
+      background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;
+      max-width:720px;width:100%;max-height:85vh;overflow-y:auto;
+      animation:modalGir .25s ease;
     }
-    @keyframes modalGir { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-    .modal-header {
-      padding: 28px 32px 20px;
-      border-bottom: 1px solid rgba(45,158,107,.12);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+    @keyframes modalGir{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .modal-header{
+      padding:28px 32px 20px;border-bottom:1px solid rgba(45,158,107,.12);
+      display:flex;justify-content:space-between;align-items:flex-start;
     }
-    .modal-body { padding: 28px 32px 36px; }
-    .modal-close {
-      background: none; border: none; color: var(--muted);
-      font-size: 22px; cursor: pointer; line-height: 1; padding: 4px;
+    .modal-body{padding:28px 32px 36px;}
+    .modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:4px;}
+    .modal-close:hover{color:var(--cream);}
+    .modal-cat{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .modal-title{font-family:'Crimson Pro',serif;font-size:clamp(22px,3vw,32px);font-weight:400;color:var(--cream);line-height:1.25;}
+    .modal-meta{
+      display:flex;gap:20px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;
+      font-size:9.5px;color:var(--muted);padding:16px 0;
+      border-bottom:1px solid rgba(45,158,107,.1);margin-bottom:24px;
     }
-    .modal-close:hover { color: var(--cream); }
-    .modal-cat {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 10px;
-    }
-    .modal-title {
-      font-family: 'Crimson Pro', serif;
-      font-size: clamp(22px, 3vw, 32px); font-weight: 400;
-      color: var(--cream); line-height: 1.25;
-    }
-    .modal-meta {
-      display: flex; gap: 20px; flex-wrap: wrap;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; color: var(--muted);
-      padding: 16px 0; border-bottom: 1px solid rgba(45,158,107,.1);
-      margin-bottom: 24px;
-    }
-    .modal-content { font-size: 16px; font-weight: 300; color: var(--cream); line-height: 1.85; }
-    .modal-content p { margin-bottom: 18px; }
-    .modal-content h3 {
-      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
-      color: var(--bright); letter-spacing: .05em;
-      margin: 28px 0 12px;
-    }
-    .modal-content blockquote {
-      border-left: 3px solid var(--accent);
-      padding: 12px 20px;
-      margin: 20px 0;
-      background: rgba(45,158,107,.07);
-      font-style: italic;
-      color: var(--muted);
-    }
-    .modal-actions {
-      display: flex; gap: 12px; flex-wrap: wrap;
-      margin-top: 28px; padding-top: 24px;
-      border-top: 1px solid rgba(45,158,107,.12);
-    }
+    .modal-content{font-size:16px;font-weight:300;color:var(--cream);line-height:1.85;}
+    .modal-content p{margin-bottom:18px;}
+    .modal-content h3{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--bright);letter-spacing:.05em;margin:28px 0 12px;}
+    .modal-content blockquote{border-left:3px solid var(--accent);padding:12px 20px;margin:20px 0;background:rgba(45,158,107,.07);font-style:italic;color:var(--muted);}
+    .modal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;padding-top:24px;border-top:1px solid rgba(45,158,107,.12);}
 
     /* ─── RESPONSIVE ─── */
-    @media(max-width:900px) {
-      .page-header { padding: 100px 28px 50px; }
-      .featured-article { grid-template-columns: 1fr; padding: 40px 28px; }
-      .featured-visual { display: none; }
-      .filter-bar { padding: 0 28px; }
-      .main-layout { grid-template-columns: 1fr; padding: 40px 28px 60px; }
-      .articles-grid { grid-template-columns: 1fr; }
-      .sidebar { border-left: none; border-top: 1px solid rgba(45,158,107,.1); }
+    @media(max-width:900px){
+      .page-header{padding:100px 28px 50px;}
+      .filter-bar{padding:0 28px;}
+      .main-layout{grid-template-columns:1fr;padding:40px 28px 60px;}
+      .articles-grid{grid-template-columns:1fr;}
+      .sidebar{border-left:none;border-top:1px solid rgba(45,158,107,.1);}
     }
   </style>
 </head>
@@ -481,46 +182,24 @@
 <div id="nav-root"></div>
 <script src="nav.js"></script>
 
-<!-- ══ PAGE HEADER ══ -->
 <div class="page-header" style="margin-top:64px;">
   <div class="section-tag">Bilgi Üretimi</div>
   <h1 class="page-title">MAKALELEr &amp;<br><span>ARAŞTIRMALAR</span></h1>
   <p class="page-desc">Akademisyenler, avukatlar, gazeteciler ve saha gözlemcilerinin kaleme aldığı derinlemesine çevre analiz dosyaları.</p>
 </div>
 
-<!-- ══ FİLTRE ══ -->
 <div class="filter-bar">
-  <button class="filter-btn aktif" onclick="filtrele('hepsi', this)">Tümü</button>
-  <button class="filter-btn" onclick="filtrele('analiz', this)">Analiz</button>
-  <button class="filter-btn" onclick="filtrele('hukuk', this)">Hukuki İnceleme</button>
-  <button class="filter-btn" onclick="filtrele('saha', this)">Saha Raporu</button>
-  <button class="filter-btn" onclick="filtrele('veri', this)">Veri / İstatistik</button>
-  <button class="filter-btn" onclick="filtrele('politika', this)">Politika</button>
+  <button class="filter-btn aktif" onclick="filtrele('hepsi',this)">Tümü</button>
+  <button class="filter-btn" onclick="filtrele('analiz',this)">Analiz</button>
+  <button class="filter-btn" onclick="filtrele('hukuk',this)">Hukuki İnceleme</button>
+  <button class="filter-btn" onclick="filtrele('saha',this)">Saha Raporu</button>
+  <button class="filter-btn" onclick="filtrele('veri',this)">Veri / İstatistik</button>
+  <button class="filter-btn" onclick="filtrele('politika',this)">Politika</button>
 </div>
 
-<!-- ══ ÖZEL MAKALE ══ -->
-<div class="featured-article" onclick="makaleAc('0')" id="featured">
-  <div>
-    <span class="featured-label">✦ Öne Çıkan Makale</span>
-    <h2 class="featured-title" id="feat-title">Madenciliğin Gölgesinde: Türkiye'de Altın Arama Lisanslarının Ekosistem Maliyeti</h2>
-    <p class="featured-excerpt" id="feat-excerpt">2010–2024 yılları arasında verilen 4.200'den fazla maden arama ruhsatının coğrafi ve ekolojik çakışma analizi; orman, su havzası ve tarım arazisi üzerindeki birikimli etkilerin haritalanması.</p>
-    <div class="article-meta">
-      <span class="meta-item">✍ <strong>Dr. Ayşe Konak</strong></span>
-      <span class="meta-item">📅 Mart 2025</span>
-      <span class="meta-item">⏱ 18 dk okuma</span>
-      <span class="meta-item">📎 Veri Seti: MAPEG 2024</span>
-    </div>
-  </div>
-  <div class="featured-visual">⛏</div>
-</div>
-
-<!-- ══ ANA LAYOUT ══ -->
 <div class="main-layout">
-  <!-- Makale listesi -->
   <div>
-    <div class="articles-grid" id="makalelerGrid">
-      <!-- JS ile doldurulur -->
-    </div>
+    <div class="articles-grid" id="makalelerGrid"></div>
     <div class="load-more">
       <button class="btn-small" id="dahaFazlaBtn" onclick="dahaFazlaYukle()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -529,10 +208,9 @@
     </div>
   </div>
 
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-block">
-      <h3>Popüler Makaleler</h3>
+      <h3>Son Makaleler</h3>
       <div id="populerListe"></div>
     </div>
     <div class="sidebar-block">
@@ -548,7 +226,7 @@
   </div>
 </div>
 
-<!-- ══ MAKALE MODAL ══ -->
+<!-- MODAL -->
 <div id="makaleModal" class="modal-overlay">
   <div class="modal-box">
     <div class="modal-header">
@@ -584,139 +262,113 @@ const MAKALELER = [
   {
     id: 0,
     baslik: "Madenciliğin Gölgesinde: Türkiye'de Altın Arama Lisanslarının Ekosistem Maliyeti",
-    kategori: "analiz",
-    kategoriLabel: "Analiz",
-    yazar: "Dr. Ayşe Konak",
-    tarih: "2025-03-10",
-    okumaSuresi: "18 dk",
+    kategori: "analiz", kategoriLabel: "Analiz",
+    yazar: "Dr. Ayşe Konak", tarih: "2025-03-10", okumaSuresi: "18 dk",
     ozet: "2010–2024 yılları arasında verilen 4.200'den fazla maden arama ruhsatının coğrafi ve ekolojik çakışma analizi.",
-    icerik: `
-      <p>Türkiye, 2010 yılından bu yana dünya genelinde maden ruhsatı dağıtımında en hızlı büyüyen ülkeler arasında yer almaktadır. MAPEG verilerine göre 2024 yılı itibarıyla aktif 4.287 arama ruhsatı, ülke topraklarının yaklaşık yüzde 28'ini kapsamaktadır.</p>
+    icerik: `<p>Türkiye, 2010 yılından bu yana dünya genelinde maden ruhsatı dağıtımında en hızlı büyüyen ülkeler arasında yer almaktadır. MAPEG verilerine göre 2024 yılı itibarıyla aktif 4.287 arama ruhsatı, ülke topraklarının yaklaşık yüzde 28'ini kapsamaktadır.</p>
       <h3>Orman Alanlarıyla Çakışma</h3>
       <p>Coğrafi analiz, bu ruhsatların yüzde 41'inin Orman Genel Müdürlüğü tarafından "koruma öncelikli" olarak sınıflandırılan alanlarda yoğunlaştığını ortaya koymaktadır. Özellikle Karadeniz ve Ege kıyı kuşaklarında bu oran yüzde 60'ı aşmaktadır.</p>
       <blockquote>"Bir ruhsatın verilmesi, bölgedeki diğer tüm arazi kullanım haklarını askıya almaktadır. Bu yasal boşluk, yerli halkların mülkiyet güvencesini fiilen ortadan kaldırmaktadır."</blockquote>
       <h3>Su Havzası Riski</h3>
       <p>Araştırmada incelenen ruhsatların yüzde 23'ünün birinci derece su koruma havzaları içinde kaldığı saptanmıştır. Asit maden drenajı (AMD) riski taşıyan bu alanlarda denetim mekanizmalarının yetersizliği kritik bir tehdit oluşturmaktadır.</p>
       <h3>Sonuç</h3>
-      <p>Yasal düzenlemelerin ekolojik gerçeklikle örtüşmediği bu tabloda, vatandaş gözlemciliği ve bağımsız belgeleme hayati önem taşımaktadır.</p>
-    `,
-    etiketler: ["maden", "MAPEG", "orman", "su havzası", "ruhsat"],
+      <p>Yasal düzenlemelerin ekolojik gerçeklikle örtüşmediği bu tabloda, vatandaş gözlemciliği ve bağımsız belgeleme hayati önem taşımaktadır.</p>`,
+    etiketler: ["maden","MAPEG","orman","su havzası","ruhsat"],
     url: "https://bianet.org/bianet/ekoloji/303012-madencilik-ekosistem"
   },
   {
     id: 1,
     baslik: "HES'lerin Sessiz Katliamı: Dere Ekosistemlerinde Biyolojik Çeşitlilik Kaybı",
-    kategori: "saha",
-    kategoriLabel: "Saha Raporu",
-    yazar: "Emre Türkmen, Biyolog",
-    tarih: "2025-02-18",
-    okumaSuresi: "12 dk",
+    kategori: "saha", kategoriLabel: "Saha Raporu",
+    yazar: "Emre Türkmen, Biyolog", tarih: "2025-02-18", okumaSuresi: "12 dk",
     ozet: "Karadeniz havzasındaki 14 HES üzerinde yürütülen saha çalışmasının bulguları.",
-    icerik: `
-      <p>2022–2024 yılları arasında Karadeniz havzasında faaliyet gösteren 14 hidroelektrik santrale ait akarsu kesimlerinde gerçekleştirilen biyolojik envanter çalışmasının bulguları, söz konusu projelerin akuatik biyoçeşitlilik üzerindeki yıkıcı etkilerini belgelemektedir.</p>
+    icerik: `<p>2022–2024 yılları arasında Karadeniz havzasında faaliyet gösteren 14 hidroelektrik santrale ait akarsu kesimlerinde gerçekleştirilen biyolojik envanter çalışmasının bulguları, söz konusu projelerin akuatik biyoçeşitlilik üzerindeki yıkıcı etkilerini belgelemektedir.</p>
       <h3>Balık Türü Kaybı</h3>
       <p>İncelenen istasyonlarda HES öncesi döneme kıyasla ortalama tür zenginliğinin yüzde 67 oranında gerilediği tespit edilmiştir. Endemik alabalık türleri açısından bu oran bazı istasyonlarda yüzde 90'a ulaşmaktadır.</p>
       <blockquote>"Çevresel akış değerleri kağıt üzerinde belirlenmiş; ancak fiili denetim yokluğunda bu değerler sadece birer rakamdan ibaret kalmaktadır."</blockquote>
       <h3>Sediman Yönetimi Sorunu</h3>
-      <p>HES barajlarında biriken sedimanın periyodik boşaltımı, mansap kesimlerinde ani yüksek konsantrasyonlu bulanıklık darbeleri oluşturmakta; bu durum yumurtlama alanlarını ve bentik organizmaları doğrudan etkilemektedir.</p>
-    `,
-    etiketler: ["HES", "balık türü", "Karadeniz", "biyoçeşitlilik", "akarsu"],
+      <p>HES barajlarında biriken sedimanın periyodik boşaltımı, mansap kesimlerinde ani yüksek konsantrasyonlu bulanıklık darbeleri oluşturmakta; bu durum yumurtlama alanlarını ve bentik organizmaları doğrudan etkilemektedir.</p>`,
+    etiketler: ["HES","balık türü","Karadeniz","biyoçeşitlilik","akarsu"],
     url: "https://yesilgazete.org/hes-biyoceşitlilik",
     dosya: "https://www.iucn.org/sites/default/files/2022-07/hes-report-sample.pdf"
   },
   {
     id: 2,
     baslik: "ÇED Mevzuatının Delinmesi: 'Alt Eşik' Stratejisi ve Hukuki Boşluklar",
-    kategori: "hukuk",
-    kategoriLabel: "Hukuki İnceleme",
-    yazar: "Av. Selin Çelik",
-    tarih: "2025-01-30",
-    okumaSuresi: "15 dk",
+    kategori: "hukuk", kategoriLabel: "Hukuki İnceleme",
+    yazar: "Av. Selin Çelik", tarih: "2025-01-30", okumaSuresi: "15 dk",
     ozet: "Projelerin ÇED eşiğinin altında kalacak biçimde yapay olarak bölünmesi uygulamasının hukuki analizi.",
-    icerik: `
-      <p>Çevre Etki Değerlendirmesi (ÇED) yönetmeliği kapsamında belirlenen eşik değerlerin altında kalmak amacıyla projelerin kasıtlı biçimde parçalandığı "alt eşik stratejisi", Türkiye'de giderek yaygınlaşan bir uygulama haline gelmiştir.</p>
+    icerik: `<p>Çevre Etki Değerlendirmesi (ÇED) yönetmeliği kapsamında belirlenen eşik değerlerin altında kalmak amacıyla projelerin kasıtlı biçimde parçalandığı "alt eşik stratejisi", Türkiye'de giderek yaygınlaşan bir uygulama haline gelmiştir.</p>
       <h3>Örüntü Analizi</h3>
       <p>2018–2024 yılları arasında incelenen 340 proje dosyasında, aynı yatırımcıya ait birden fazla projenin eş zamanlı veya ardışık olarak başvuruya sunulduğu ve her birinin ÇED eşiğinin hemen altında kaldığı görülmektedir.</p>
       <blockquote>"Kümülatif etki değerlendirmesinin yasal bir zorunluluk olmaktan çıkarılması, bu stratejiyi hukuken savunulabilir kılmaktadır."</blockquote>
       <h3>Yargı Kararları</h3>
-      <p>Danıştay, bazı davalarda kümülatif etki ilkesini esas alarak iptal kararları vermiş olsa da bu içtihadın sistematik biçimde uygulanmadığı görülmektedir.</p>
-    `,
-    etiketler: ["ÇED", "hukuk", "Danıştay", "kümülatif etki", "mevzuat"],
+      <p>Danıştay, bazı davalarda kümülatif etki ilkesini esas alarak iptal kararları vermiş olsa da bu içtihadın sistematik biçimde uygulanmadığı görülmektedir.</p>`,
+    etiketler: ["ÇED","hukuk","Danıştay","kümülatif etki","mevzuat"],
     url: "https://barobirlik.org.tr/Haberler/ced-mevzuat"
   },
   {
     id: 3,
     baslik: "Türkiye'de Orman Yangınları 2019–2024: Uydu Verileriyle Sistematik Analiz",
-    kategori: "veri",
-    kategoriLabel: "Veri / İstatistik",
-    yazar: "Zeynep Arslan, CBS Uzmanı",
-    tarih: "2024-12-05",
-    okumaSuresi: "10 dk",
+    kategori: "veri", kategoriLabel: "Veri / İstatistik",
+    yazar: "Zeynep Arslan, CBS Uzmanı", tarih: "2024-12-05", okumaSuresi: "10 dk",
     ozet: "NASA FIRMS ve Sentinel-2 uydu görüntülerinden derlenen 6 yıllık yangın verilerinin mekansal analizi.",
-    icerik: `
-      <p>NASA FIRMS (Aktif Yangın Bilgi Yönetim Sistemi) ve Avrupa Uzay Ajansı'nın Sentinel-2 uydu görüntüleri kullanılarak derlenen bu veri seti, Türkiye'deki orman yangınlarının 2019–2024 dönemindeki mekansal ve zamansal dağılımını ortaya koymaktadır.</p>
+    icerik: `<p>NASA FIRMS (Aktif Yangın Bilgi Yönetim Sistemi) ve Avrupa Uzay Ajansı'nın Sentinel-2 uydu görüntüleri kullanılarak derlenen bu veri seti, Türkiye'deki orman yangınlarının 2019–2024 dönemindeki mekansal ve zamansal dağılımını ortaya koymaktadır.</p>
       <h3>Temel Bulgular</h3>
       <p>Analiz edilen 6 yıllık dönemde toplam 847.000 hektar orman ve makilik alan yangından etkilenmiştir. Yıllık ortalama yanan alan, 2019–2021 ortalamasına kıyasla 2022–2024 döneminde yüzde 340 artış göstermiştir.</p>
       <blockquote>"İklim değişikliğine bağlı kuraklık ve sıcaklık artışı, yangın ekolojisini köklü biçimde dönüştürmektedir. Eskiden 'yangın mevsimi' olarak tanımlanan dönem artık yıl boyuna yayılmış durumdadır."</blockquote>
       <h3>Hotspot Analizi</h3>
-      <p>Muğla, Antalya ve İzmir illerinde kümelenen yangın sıklığı, geleneksel ormancılık yaklaşımlarının yeni iklim koşullarında yetersiz kaldığına işaret etmektedir.</p>
-    `,
-    etiketler: ["yangın", "NASA FIRMS", "uydu", "Muğla", "iklim"],
-    url: "https://firms.modaps.eosdis.nasa.gov/usfs/",
-    foto_url: ""
+      <p>Muğla, Antalya ve İzmir illerinde kümelenen yangın sıklığı, geleneksel ormancılık yaklaşımlarının yeni iklim koşullarında yetersiz kaldığına işaret etmektedir.</p>`,
+    etiketler: ["yangın","NASA FIRMS","uydu","Muğla","iklim"],
+    url: "https://firms.modaps.eosdis.nasa.gov/usfs/"
   },
   {
     id: 4,
     baslik: "Kentsel Dönüşüm ve Kentsel Yeşil Alan Kaybı: İstanbul Örneği",
-    kategori: "politika",
-    kategoriLabel: "Politika",
-    yazar: "Prof. Dr. Murat Gül",
-    tarih: "2024-11-20",
-    okumaSuresi: "14 dk",
+    kategori: "politika", kategoriLabel: "Politika",
+    yazar: "Prof. Dr. Murat Gül", tarih: "2024-11-20", okumaSuresi: "14 dk",
     ozet: "2012–2024 yılları arasında İstanbul'da kentsel yeşil alan kaybının belgelenmesi ve politika önerileri.",
-    icerik: `
-      <p>Türkiye'nin en yoğun nüfuslu kenti İstanbul, 2012 yılında yürürlüğe giren kentsel dönüşüm mevzuatının ardından hız kazanan yapılaşma süreciyle birlikte kritik yeşil alan kayıpları yaşamaktadır.</p>
+    icerik: `<p>Türkiye'nin en yoğun nüfuslu kenti İstanbul, 2012 yılında yürürlüğe giren kentsel dönüşüm mevzuatının ardından hız kazanan yapılaşma süreciyle birlikte kritik yeşil alan kayıpları yaşamaktadır.</p>
       <h3>Yeşil Alan Kaybı Boyutu</h3>
       <p>Uydu görüntü analizi ve kadastro verileri, 2012–2024 döneminde İstanbul'daki park, orman ve koruluk alanların toplam yüzölçümünün 14.700 hektar azaldığını ortaya koymaktadır.</p>
       <h3>Sağlık ve Ekoloji Boyutu</h3>
-      <p>Yeşil alan kayıplarının yoğunlaştığı ilçelerde kentsel ısı adası etkisinin belirgin biçimde arttığı görülmektedir. Ortalama yaz sıcaklıklarının 3–5 derece yükselmesi, uzun vadeli halk sağlığı riskleri doğurmaktadır.</p>
-    `,
-    etiketler: ["İstanbul", "kentsel dönüşüm", "yeşil alan", "ısı adası", "politika"],
+      <p>Yeşil alan kayıplarının yoğunlaştığı ilçelerde kentsel ısı adası etkisinin belirgin biçimde arttığı görülmektedir. Ortalama yaz sıcaklıklarının 3–5 derece yükselmesi, uzun vadeli halk sağlığı riskleri doğurmaktadır.</p>`,
+    etiketler: ["İstanbul","kentsel dönüşüm","yeşil alan","ısı adası","politika"],
     url: "https://ekolojipolitik.com/kentsel-donusum-yesil-alan"
   },
   {
     id: 5,
     baslik: "Tarım Arazisi Dönüşümü: Antalya Ovası'nda Sera Yapılaşması",
-    kategori: "saha",
-    kategoriLabel: "Saha Raporu",
-    yazar: "Neslihan Öztürk",
-    tarih: "2024-10-08",
-    okumaSuresi: "9 dk",
+    kategori: "saha", kategoriLabel: "Saha Raporu",
+    yazar: "Neslihan Öztürk", tarih: "2024-10-08", okumaSuresi: "9 dk",
     ozet: "Antalya'nın verimli tarım ovalarında plastik sera örtüsünün toprak ve su kaynaklarına etkileri.",
-    icerik: `
-      <p>Türkiye'nin örtü altı tarım üretiminin yüzde 45'ini karşılayan Antalya ovası, hızla genişleyen plastik sera alanlarının getirdiği ekolojik yükle boğuşmaktadır.</p>
+    icerik: `<p>Türkiye'nin örtü altı tarım üretiminin yüzde 45'ini karşılayan Antalya ovası, hızla genişleyen plastik sera alanlarının getirdiği ekolojik yükle boğuşmaktadır.</p>
       <h3>Toprak Tuzlanması</h3>
       <p>Yoğun sulama ve kimyasal girdi kullanımına dayalı sera tarımının yaygınlaştığı alanlarda toprak elektriksel iletkenlik değerleri, doğal eşiğin 4–8 katına ulaşmaktadır.</p>
       <h3>Plastik Atık Sorunu</h3>
-      <p>Her yıl değiştirilen örtü malzemesinden kaynaklanan plastik atık miktarının bölgede 120.000 tona ulaştığı tahmin edilmektedir. Atık yönetim kapasitesinin son derece yetersiz kaldığı bu tabloda, tarım arazilerinde birikim ve yakma yoluyla bertaraf yaygın bir uygulama haline gelmiştir.</p>
-    `,
-    etiketler: ["Antalya", "sera", "toprak", "plastik atık", "tarım"],
+      <p>Her yıl değiştirilen örtü malzemesinden kaynaklanan plastik atık miktarının bölgede 120.000 tona ulaştığı tahmin edilmektedir. Atık yönetim kapasitesinin son derece yetersiz kaldığı bu tabloda, tarım arazilerinde birikim ve yakma yoluyla bertaraf yaygın bir uygulama haline gelmiştir.</p>`,
+    etiketler: ["Antalya","sera","toprak","plastik atık","tarım"],
     url: "https://ekolojipolitik.com/antalya-sera-tarim"
   }
 ];
 
 let goruntulenecek = 6;
 let aktifKategori = 'hepsi';
+let filtreliMakaleler = [];
 
-/* SITE'dan gelen makaleleri hardcoded listeye ekle */
+/* Tüm kaynakları birleştir — yeniden eskiye sırala */
 function tumMakaleler() {
   const siteListe = (typeof SITE !== 'undefined' ? SITE.getList('makaleler') : []) || [];
-  const hardIds = new Set(MAKALELER.map(m => String(m.id)));
+  const hardIds   = new Set(MAKALELER.map(m => String(m.id)));
   const siteEkler = siteListe.filter(m => !hardIds.has(String(m.id)));
-  return [...siteEkler, ...MAKALELER];
+  const hepsi     = [...siteEkler, ...MAKALELER];
+  // Tarih sıralaması: yeniden eskiye
+  return hepsi.sort((a, b) => {
+    const ta = a.tarih ? new Date(a.tarih) : new Date(0);
+    const tb = b.tarih ? new Date(b.tarih) : new Date(0);
+    return tb - ta;
+  });
 }
-
-let filtreliMakaleler = [];
 
 function filtrele(kategori, btn) {
   aktifKategori = kategori;
@@ -725,31 +377,28 @@ function filtrele(kategori, btn) {
   const hepsi = tumMakaleler();
   filtreliMakaleler = kategori === 'hepsi'
     ? hepsi
-    : hepsi.filter(m => (m.kategori||'') === kategori);
+    : hepsi.filter(m => (m.kategori || '') === kategori);
   goruntulenecek = 6;
   renderGrid();
 }
 
 function catCls(kat) {
-  const map = { analiz:'cat-analiz', hukuk:'cat-hukuk', saha:'cat-saha', veri:'cat-veri', politika:'cat-politika' };
-  return map[kat] || 'cat-analiz';
+  return { analiz:'cat-analiz', hukuk:'cat-hukuk', saha:'cat-saha', veri:'cat-veri', politika:'cat-politika' }[kat] || 'cat-analiz';
 }
 
 function renderGrid() {
-  const grid = document.getElementById('makalelerGrid');
+  const grid  = document.getElementById('makalelerGrid');
   const liste = filtreliMakaleler.slice(0, goruntulenecek);
   grid.innerHTML = liste.map(m => {
     const tarih = m.tarih ? new Date(m.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '';
     const label = m.kategoriLabel || m.tur || m.kategori || '';
-    const okuma = m.okumaSuresi || '';
-    const ozet  = m.ozet || '';
     return `<div class="article-card" onclick="makaleAc('${m.id}')" data-kat="${m.kategori||''}">
-      ${okuma ? `<span class="read-time">${okuma}</span>` : ''}
+      ${m.okumaSuresi ? `<span class="read-time">${m.okumaSuresi}</span>` : ''}
       <span class="card-category ${catCls(m.kategori)}">${label}</span>
       <h3 class="card-title">${m.baslik}</h3>
-      ${ozet ? `<p class="card-excerpt">${ozet}</p>` : ''}
+      ${m.ozet ? `<p class="card-excerpt">${m.ozet}</p>` : ''}
       <div class="card-footer">
-        <span class="card-author">${m.yazar||''}</span>
+        <span class="card-author">${m.yazar || ''}</span>
         <span class="card-date">${tarih}</span>
       </div>
     </div>`;
@@ -765,70 +414,61 @@ function dahaFazlaYukle() {
 
 function makaleAc(id) {
   const sid = String(id);
-  const m = MAKALELER.find(x => String(x.id) === sid)
-         || (typeof SITE !== 'undefined' ? SITE.getList('makaleler').find(x => String(x.id) === sid) : null);
+  const m = tumMakaleler().find(x => String(x.id) === sid);
   if (!m) return;
-  const etiketler = Array.isArray(m.etiketler) ? m.etiketler : (m.etiketler ? (() => { try { return JSON.parse(m.etiketler); } catch(e){ return []; } })() : []);
-  const tarih = m.tarih ? new Date(m.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}) : '';
-  const domain = m.url ? (() => { try { return new URL(m.url).hostname.replace('www.',''); } catch(e){ return ''; } })() : '';
 
-  document.getElementById('mcat').textContent = m.kategoriLabel || m.tur || m.kategori || '';
-  document.getElementById('mtitle').textContent = m.baslik;
+  const etiketler = Array.isArray(m.etiketler)
+    ? m.etiketler
+    : (m.etiketler ? (() => { try { return JSON.parse(m.etiketler); } catch(e){ return []; } })() : []);
+  const tarih  = m.tarih  ? new Date(m.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const domain = m.url    ? (() => { try { return new URL(m.url).hostname.replace('www.',''); } catch(e){ return ''; } })() : '';
 
-  // Foto
+  document.getElementById('mcat').textContent   = m.kategoriLabel || m.tur || m.kategori || '';
+  document.getElementById('mtitle').textContent  = m.baslik;
+
   const fotoEl = document.getElementById('mfoto');
-  if (m.foto_url) {
-    fotoEl.src = m.foto_url; fotoEl.style.display = 'block';
-    fotoEl.onerror = () => { fotoEl.style.display = 'none'; };
-  } else { fotoEl.style.display = 'none'; }
+  if (m.foto_url) { fotoEl.src = m.foto_url; fotoEl.style.display = 'block'; fotoEl.onerror = () => fotoEl.style.display = 'none'; }
+  else { fotoEl.style.display = 'none'; }
 
-  // Meta
   document.getElementById('mmeta').innerHTML =
-    (m.yazar ? `<span>✍ ${m.yazar}</span>` : '') +
-    (tarih   ? `<span>📅 ${tarih}</span>` : '') +
+    (m.yazar       ? `<span>✍ ${m.yazar}</span>`       : '') +
+    (tarih         ? `<span>📅 ${tarih}</span>`         : '') +
     (m.okumaSuresi ? `<span>⏱ ${m.okumaSuresi}</span>` : '') +
-    (domain  ? `<span>🔗 ${domain}</span>` : '');
+    (domain        ? `<span>🔗 ${domain}</span>`        : '');
 
-  // Etiket chips
   const etEl = document.getElementById('metiketler');
   if (etiketler.length) {
     etEl.style.display = 'flex';
-    etEl.innerHTML = etiketler.map(e => `<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join('');
+    etEl.innerHTML = etiketler.map(e =>
+      `<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`
+    ).join('');
   } else { etEl.style.display = 'none'; etEl.innerHTML = ''; }
 
-  document.getElementById('mcontent').innerHTML = m.icerik || (m.ozet ? m.ozet.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('') : '<p style="opacity:.5">İçerik mevcut değil.</p>');
+  document.getElementById('mcontent').innerHTML = m.icerik
+    || (m.ozet ? m.ozet.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('') : '<p style="opacity:.5">İçerik mevcut değil.</p>');
 
-  // PDF / URL butonları
-  const mpdf = document.getElementById('mpdf');
-  const murl = document.getElementById('murl');
-  const dosyaUrl = m.pdf_url || m.dosya || '';
+  const mpdf      = document.getElementById('mpdf');
+  const murl      = document.getElementById('murl');
+  const dosyaUrl  = m.pdf_url || m.dosya || '';
   const kaynakUrl = m.url || '';
+  const isPdf     = u => u && /\.pdf(\?|$)/i.test(u);
+  const isDoc     = u => u && /\.(doc|docx)(\?|$)/i.test(u);
 
-  const isPdf = u => u && /\.pdf(\?|$)/i.test(u);
-  const isDoc = u => u && /\.(doc|docx)(\?|$)/i.test(u);
-
-  // Ayrı dosya alanı varsa (pdf_url / dosya)
   if (dosyaUrl) {
     mpdf.href = dosyaUrl;
     mpdf.textContent = isPdf(dosyaUrl) ? '📥 PDF İndir' : isDoc(dosyaUrl) ? '📝 DOC İndir' : '📎 Dosyayı Aç';
     mpdf.style.display = 'inline-flex';
   } else { mpdf.style.display = 'none'; }
 
-  // url alanı: pdf/doc ise indirme butonu, değilse "Makaleye Git"
   if (kaynakUrl) {
     murl.href = kaynakUrl;
-    if (isPdf(kaynakUrl)) {
-      murl.textContent = '📥 PDF İndir'; murl.setAttribute('download', '');
-    } else if (isDoc(kaynakUrl)) {
-      murl.textContent = '📝 DOC İndir'; murl.setAttribute('download', '');
-    } else {
-      murl.textContent = `Makaleye Git — ${domain || kaynakUrl}`; murl.removeAttribute('download');
-    }
+    if (isPdf(kaynakUrl))     { murl.textContent = '📥 PDF İndir'; murl.setAttribute('download',''); }
+    else if (isDoc(kaynakUrl)){ murl.textContent = '📝 DOC İndir'; murl.setAttribute('download',''); }
+    else { murl.textContent = `Makaleye Git — ${domain || kaynakUrl}`; murl.removeAttribute('download'); }
     murl.style.display = 'inline-flex';
   } else { murl.style.display = 'none'; }
 
-  const modal = document.getElementById('makaleModal');
-  modal.style.display = 'flex';
+  document.getElementById('makaleModal').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
 
@@ -837,34 +477,23 @@ function makaleKapat() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('makaleModal').addEventListener('click', function(e) {
-  if (e.target === this) makaleKapat();
-});
-document.addEventListener('keydown', e => { if(e.key==='Escape') makaleKapat(); });
+document.getElementById('makaleModal').addEventListener('click', function(e) { if (e.target === this) makaleKapat(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') makaleKapat(); });
 
-// Popüler liste (sidebar)
-document.getElementById('populerListe').innerHTML = MAKALELER.slice(0,5).map((m,i) => `
+/* Sidebar: son 5 makale (tarih sırası) */
+const sonMakaleler = tumMakaleler().slice(0, 5);
+document.getElementById('populerListe').innerHTML = sonMakaleler.map((m, i) => `
   <div class="sidebar-link" onclick="makaleAc('${m.id}')">
     <span class="sl-num">0${i+1}</span>
     <span class="sl-title">${m.baslik}</span>
-  </div>
-`).join('');
+  </div>`).join('');
 
-// Etiket bulutu
-const tumEtiketler = [...new Set(MAKALELER.flatMap(m=>m.etiketler))];
-document.getElementById('etiketler').innerHTML = tumEtiketler.map(t =>
-  `<span class="tag">${t}</span>`
-).join('');
+/* Etiket bulutu */
+const tumEtiketler = [...new Set(tumMakaleler().flatMap(m => Array.isArray(m.etiketler) ? m.etiketler : []))];
+document.getElementById('etiketler').innerHTML = tumEtiketler.map(t => `<span class="tag">${t}</span>`).join('');
 
-// İlk render — SITE makaleleri de dahil
+/* İlk render */
 filtrele('hepsi', document.querySelector('.filter-btn.aktif'));
-
-// Scroll reveal
-const revEls = document.querySelectorAll('.article-card');
-const obs = new IntersectionObserver(entries=>entries.forEach(e=>{
-  if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
-}),{threshold:.08});
-revEls.forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition=`opacity .5s ease ${i*.07}s,transform .5s ease ${i*.07}s`;obs.observe(el);});
 </script>
 </body>
 </html>
