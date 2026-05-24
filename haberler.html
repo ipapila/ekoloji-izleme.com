@@ -387,54 +387,118 @@ let importData      = null;
 ═══════════════════════════════════════════════════════════════ */
 function haberKatTespit(h) {
   if (h.haber_kategorisi) return h.haber_kategorisi;
-  const eylem  = (h.eylem || "").toLowerCase();
-  // Türkçe büyük harfler: İ→i, Ş→ş vb. (toLowerCase() "İ"→"i̇" üretir, arama çalışmaz)
-  const _trMap = {"İ":"i","Ş":"ş","Ğ":"ğ","Ü":"ü","Ö":"ö","Ç":"ç"};
-  const _trNorm = s => (s||"").replace(/[İŞĞÜÖÇ]/g, c => _trMap[c]||c).toLowerCase();
-  const metin  = _trNorm((h.baslik||"")+" "+(h.ozet||"")+" "+(h.kategori||"")+" "+
-                  (Array.isArray(h.etiketler)?h.etiketler.join(" "):h.etiket||""));
-  const kat    = (h.kategori || h.etiket || "").toLowerCase();
 
-  if ("nöbet" in metin || metin.includes("gözaltı") || eylem.includes("nöbet"))
+  // Türkçe büyük harf normalize (toLowerCase "İ"→"i̇" üretir, arama bozulur)
+  const _M = {"İ":"i","Ş":"ş","Ğ":"ğ","Ü":"ü","Ö":"ö","Ç":"ç"};
+  const _n = s => (s||"").replace(/[İŞĞÜÖÇ]/g, c => _M[c]||c).toLowerCase();
+
+  const eylem = _n(h.eylem);
+  const kat   = _n(h.kategori || h.etiket);  // _n zorunlu — kat da normalize edilmeli
+  const metin = _n([h.baslik, h.ozet, h.kategori, h.etiket,
+                    ...(Array.isArray(h.etiketler) ? h.etiketler : [h.etiketler])
+                   ].filter(Boolean).join(" "));
+
+  // ── 1) Doğrudan kategori alanı eşleştirme ──────────────────
+  // (scraper'dan gelen kategori değerleri — normalize edilmiş haliyle)
+  const _D = {
+    "iklim":                  "İklim ve Afet",
+    "iklim olayları":         "İklim ve Afet",
+    "iklim raporu":           "İklim ve Afet",
+    "türkiye / iklim":        "İklim ve Afet",
+    "hes / res / baraj":      "Maden ve Enerji",
+    "orman / maden":          "Maden ve Enerji",
+    "maden riski / atık":     "Maden ve Enerji",
+    "resmi ihale / maden":    "Maden ve Enerji",
+    "resmi / maden":          "Maden ve Enerji",
+    "ihale / enerji":         "Maden ve Enerji",
+    "resmi / enerji":         "Maden ve Enerji",
+    "jes / çevre ihlali":     "Maden ve Enerji",
+    "tarım alanları / maden": "Maden ve Enerji",
+    "enerji politikası":      "Maden ve Enerji",
+    "kamulaştırma":           "Hukuki Süreçler",
+    "çed kararları":          "Hukuki Süreçler",
+    "çed analizi":            "Hukuki Süreçler",
+    "hukuki yorum":           "Hukuki Süreçler",
+    "stk":                    "STK & Kampanyalar",
+    "stk raporu":             "STK & Kampanyalar",
+    "iklim hareketi":         "STK & Kampanyalar",
+    "yaban hayatı":           "Yaban Hayatı",
+    "nesli tehlike türler":   "Yaban Hayatı",
+    "hayvan hakları":         "Yaban Hayatı",
+    "su canlıları":           "Su ve Kıyı",
+    "bitki & habitat":        "Orman ve Doğa",
+    "akademik analiz":        "Hukuki Süreçler",
+    "politika analizi":       "Hukuki Süreçler",
+    "alan araştırması":       "Orman ve Doğa",
+  };
+  if (_D[kat]) return _D[kat];
+
+  // ── 2) Eylem alanı ─────────────────────────────────────────
+  if (metin.includes("nöbet") || metin.includes("gözaltı") || metin.includes("tutuklama"))
     return "Nöbetler ve Gözaltılar";
-  if (eylem.includes("direniş & eylem") || metin.includes("direniş") ||
-      metin.includes("protesto") || metin.includes("miting") || metin.includes("yürüyüş"))
+  if (eylem.includes("direniş") || eylem.includes("eylem") ||
+      metin.includes("direniş") || metin.includes("protesto") ||
+      metin.includes("miting")  || metin.includes("yürüyüş") || metin.includes("boykot"))
     return "Direniş ve Eylemler";
-  if (eylem.includes("stk & kampanya") || kat.includes("stk") ||
+  if (eylem.includes("stk") || kat.includes("stk") ||
       metin.includes("greenpeace") || metin.includes("wwf") ||
-      metin.includes("doğa derneği") || metin.includes("tema vakfı") || metin.includes("kampanya"))
+      metin.includes("doğa derneği") || metin.includes("tema vakfı") ||
+      metin.includes("350.org") || metin.includes("çevre örgütü"))
     return "STK & Kampanyalar";
-  if (eylem.includes("hukuk & dava") || metin.includes("dava açı") ||
+  if (eylem.includes("hukuk") || eylem.includes("dava") ||
       metin.includes("mahkeme") || metin.includes("yürütmeyi durdur") ||
-      metin.includes("iptal kararı") || metin.includes("çed kararı") || metin.includes("itiraz"))
+      metin.includes("iptal kararı") || metin.includes("çed kararı") ||
+      metin.includes("itiraz") || metin.includes("acele kamulaştırma"))
     return "Hukuki Süreçler";
 
-  if (metin.includes("iklim") || metin.includes("yangın") || metin.includes(" sel ") ||
-      metin.includes("taşkın") || metin.includes("heyelan") || metin.includes("kuraklık") ||
-      metin.includes("afet"))
+  // ── 3) Konu keyword analizi ─────────────────────────────────
+  if (metin.includes("orman yangın")) return "Orman ve Doğa";  // önce özel durum
+
+  if (metin.includes("iklim") || metin.includes("yangın") ||
+      metin.includes(" sel ")  || metin.includes("taşkın") ||
+      metin.includes("heyelan")|| metin.includes("kuraklık") ||
+      metin.includes("aşırı sıcak") || metin.includes("sera gazı") ||
+      metin.includes("karbon") || metin.includes("iklim değişikliği"))
     return "İklim ve Afet";
-  if (metin.includes("yaban hayat") || metin.includes("nesli tehlike") ||
-      metin.includes("biyoçeşitlilik") || metin.includes("hayvan hakları") ||
-      metin.includes("hayvan refahı"))
+
+  if (metin.includes("yaban hayat")  || metin.includes("nesli tehlike") ||
+      metin.includes("biyoçeşitlilik")|| metin.includes("hayvan hakları") ||
+      metin.includes("hayvan refahı") || metin.includes("yunus") ||
+      metin.includes("kaplumbağa")    || metin.includes("flamingo") ||
+      metin.includes("karabatak")     || metin.includes("kuş türü"))
     return "Yaban Hayatı";
-  if (metin.includes("sulak alan") || metin.includes("kıyı ihlal") ||
-      metin.includes("deniz kirliliği") || metin.includes("su kirliliği") ||
-      metin.includes("dere yatağı") || metin.includes("balık ölümü"))
-    return "Su ve Kıyı";
-  if (metin.includes("maden") || metin.includes(" hes") || metin.includes(" res") ||
-      metin.includes(" ges") || metin.includes("termik") || metin.includes("nükleer") ||
-      metin.includes("jeotermal") || metin.includes("baraj") || metin.includes("akkuyu") ||
-      metin.includes("sondaj") || metin.includes("enerji santr") || metin.includes("kamulaştırma"))
-    return "Maden ve Enerji";
-  if (metin.includes("orman") || metin.includes("ağaç kes") || metin.includes("ağaç katliamı") ||
-      metin.includes("habitat") || metin.includes("bitki örtüsü") || metin.includes("doğal sit") ||
-      metin.includes("milli park") || metin.includes("ormansızlaşma"))
-    return "Orman ve Doğa";
-  if (metin.includes("kıyı") || metin.includes("deniz ") || metin.includes("göl ") ||
-      metin.includes("nehir") || metin.includes("dere "))
+
+  if (metin.includes("sulak alan")    || metin.includes("deniz kirliliği") ||
+      metin.includes("su kirliliği")  || metin.includes("dere yatağı") ||
+      metin.includes("balık ölümü")   || metin.includes("kıyı dolgu") ||
+      metin.includes("kıyı tahribat") || metin.includes("deniz dolgusu"))
     return "Su ve Kıyı";
 
-  return "";  // sınıflandırılamadı
+  if (metin.includes("maden")   || metin.includes("hes") || metin.includes(" res") ||
+      metin.includes(" ges")    || metin.includes("termik") || metin.includes("nükleer") ||
+      metin.includes("jeotermal")|| metin.includes("baraj") || metin.includes("akkuyu") ||
+      metin.includes("sondaj")  || metin.includes("santral") || metin.includes("türbin") ||
+      metin.includes("kömür")   || metin.includes("doğal gaz") || metin.includes("petrol") ||
+      metin.includes("ihale")   || metin.includes("kamulaştırma"))
+    return "Maden ve Enerji";
+
+  if (metin.includes("orman")    || metin.includes("ağaç") || metin.includes("habitat") ||
+      metin.includes("bitki örtüsü")|| metin.includes("doğal sit") ||
+      metin.includes("milli park")  || metin.includes("tabiat park") ||
+      metin.includes("ormansızlaşma")|| metin.includes("yeşil alan") ||
+      metin.includes("zeytinlik")   || metin.includes("tarım arazi"))
+    return "Orman ve Doğa";
+
+  if (metin.includes("kıyı") || metin.includes("deniz") || metin.includes("göl") ||
+      metin.includes("nehir")|| metin.includes("dere")  || metin.includes("akarsu") ||
+      metin.includes("su havzası"))
+    return "Su ve Kıyı";
+
+  // ── 4) Genel çevre / ekoloji → başlıktan konu tespit edilemedi
+  if (kat.includes("çevre") || kat.includes("ekoloji") || kat.includes("haber"))
+    return "";   // "Tüm İçerik"te görünür, Kategorisiz'e de düşmez artık
+
+  return "";
 }
 
 /* ═══════════════════════════════════════════════════════════════
