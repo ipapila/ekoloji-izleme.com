@@ -43,10 +43,9 @@ jobs:
 
           HTTP_STATUS=$(curl -s -o /tmp/upload_response.json -w "%{http_code}" \
             -X POST \
-            -H "Authorization: Bearer ${UPLOAD_TOKEN}" \
             -H "Content-Type: application/json" \
             --data-binary @haberler.json \
-            "${UPLOAD_URL}?file=haberler.json")
+            "${UPLOAD_URL}?file=haberler.json&token=${UPLOAD_TOKEN}")
 
           echo "HTTP durum: ${HTTP_STATUS}"
           cat /tmp/upload_response.json
