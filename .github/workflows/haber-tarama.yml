@@ -53,4 +53,11 @@ jobs:
             -X POST \
             -H "Content-Type: application/json" \
             --data-binary @haberler.json \
-            "${UPLOAD_URL}?file=h
+            "${UPLOAD_URL}?file=haberler.json&token=${UPLOAD_TOKEN}")
+          echo "HTTP durum: ${HTTP_STATUS}"
+          cat /tmp/upload_response.json
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "❌ Yükleme başarısız (HTTP ${HTTP_STATUS})"
+            exit 1
+          fi
+          echo "✅ Yükleme tamamlandı."
