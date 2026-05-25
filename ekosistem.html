@@ -13,11 +13,9 @@
 .page-header h1 span{color:var(--bright);}
 .content{background:var(--dark);padding:50px 80px;min-height:60vh;}
 
-/* Grup başlıkları */
 .grup-baslik{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(45,158,107,.55);margin:48px 0 16px;padding-bottom:10px;border-bottom:1px solid rgba(45,158,107,.1);}
 .grup-baslik:first-of-type{margin-top:0;}
 
-/* Bölüm kartları (tüm bölümler görünümü) */
 .bolum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:8px;}
 .bolum-kart{background:var(--forest);border:1px solid rgba(45,158,107,.12);border-radius:6px;padding:24px 26px;cursor:pointer;transition:all .25s;text-decoration:none;display:block;position:relative;overflow:hidden;}
 .bolum-kart::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:bottom;transition:transform .25s;}
@@ -28,13 +26,11 @@
 .bolum-kart .arrow{position:absolute;bottom:18px;right:20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(45,158,107,.35);transition:color .2s;}
 .bolum-kart:hover .arrow{color:var(--accent);}
 
-/* Tek bölüm görünümü */
 .bolum-header{display:flex;align-items:center;gap:14px;margin-bottom:32px;}
 .bolum-header a{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-decoration:none;letter-spacing:.08em;border:1px solid rgba(45,158,107,.2);padding:5px 12px;border-radius:2px;transition:all .2s;}
 .bolum-header a:hover{color:var(--bright);border-color:rgba(45,158,107,.4);}
 .bolum-header h2{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--cream);}
 
-/* Kayıt listesi */
 .kayit-list{display:flex;flex-direction:column;gap:2px;}
 .kayit-row{background:var(--forest);border-left:3px solid rgba(45,158,107,.4);padding:20px 26px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;transition:all .2s;cursor:pointer;}
 .kayit-row:hover{background:var(--deep);border-left-color:var(--accent);padding-left:32px;}
@@ -48,7 +44,6 @@
 .admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;margin-bottom:24px;}
 .admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
 
-/* Modal */
 .modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
 .modal-bg.open{display:flex;}
 .modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;}
@@ -63,7 +58,6 @@
 .modal-btn.outline{background:transparent;color:var(--cream);border:1px solid rgba(240,245,242,.2);}
 .modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
 
-/* Filter bar (tek bölüm) */
 .search-box{padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:260px;margin-bottom:20px;}
 .count-bar{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:16px;}
 .count-bar b{color:var(--bright);}
@@ -103,8 +97,7 @@
 </div>
 
 <script>
-/* ═══ VERİ YAPISI ═══════════════════════════════════════════════ */
-
+/* ═══ BÖLÜM YAPISI ══════════════════════════════════════════════ */
 const BOLUMLER = {
   "turler":         {ad:"Nesli Tehlike Altında Türler", grup:"İnsan Dışı Canlılar", icon:"🦅"},
   "yaban":          {ad:"Yaban Hayatı İzleme",          grup:"İnsan Dışı Canlılar", icon:"🐺"},
@@ -124,39 +117,36 @@ const BOLUMLER = {
   "savas":          {ad:"Savaş & Ekoloji",               grup:"Çevre Adaleti",       icon:"💥"},
   "savas-teknoloji":{ad:"Savaş Teknolojisi & Çevre",    grup:"Çevre Adaleti",       icon:"🛰️"},
 };
-
 const GRUPLAR = ["İnsan Dışı Canlılar", "İnsan Toplulukları", "Çevre Adaleti"];
 
 let tumEkosistem = [];
 let aktifSec = new URLSearchParams(location.search).get("sec") || "";
 let gorunenKayitlar = [];
 
-/* ═══ MODAL ═══════════════════════════════════════════════════ */
+/* ═══ MODAL ══════════════════════════════════════════════════════ */
 function acModal(idx) {
   const k = gorunenKayitlar[idx]; if (!k) return;
-  const bolumAd = BOLUMLER[k.bolum]?.ad || k.bolum || "";
-  document.getElementById("mBolum").textContent = bolumAd;
+  document.getElementById("mBolum").textContent = BOLUMLER[k.bolum]?.ad || k.bolum || "";
   document.getElementById("mBaslik").textContent = k.baslik || "";
   const tarihStr = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
-  const kolAd = {"haberler":"Haberler","raporlar":"Raporlar","makaleler":"Makaleler","uluslararasi":"Uluslararası Medya"};
+  const kolAd = {haberler:"Haberler",raporlar:"Raporlar",makaleler:"Makaleler",uluslararasi:"Uluslararası Medya"};
   document.getElementById("mMeta").innerHTML =
     (k.kaynak ? `<span>📌 ${k.kaynak}</span>` : "") +
     (tarihStr  ? `<span>📅 ${tarihStr}</span>` : "") +
     (k.konum   ? `<span>📍 ${k.konum}</span>` : "") +
     (k._kaynak_kol ? `<span style="opacity:.6">📂 ${kolAd[k._kaynak_kol]||k._kaynak_kol}</span>` : "");
-  let fotoHtml = k.foto_url ? `<img src="${k.foto_url}" onerror="this.style.display='none'"
-    style="width:100%;max-height:260px;object-fit:cover;border-radius:5px;margin-bottom:14px;border:1px solid rgba(45,158,107,.15);">` : "";
   const metin = k.icerik || k.ozet || "";
+  const fotoHtml = k.foto_url ? `<img src="${k.foto_url}" onerror="this.style.display='none'" style="width:100%;max-height:260px;object-fit:cover;border-radius:5px;margin-bottom:14px;border:1px solid rgba(45,158,107,.15);">` : "";
   document.getElementById("mIcerik").innerHTML = fotoHtml +
     (metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,"<br>")}</p>`).join("") : '<p style="opacity:.5">İçerik yok.</p>');
   const act = document.getElementById("mActions"); act.innerHTML = "";
-  if (k.url) act.innerHTML += `<a href="${k.url}" target="_blank" rel="noopener" class="modal-btn primary">Kaynağa Git →</a>`;
+  if (k.url)   act.innerHTML += `<a href="${k.url}"   target="_blank" rel="noopener" class="modal-btn primary">Kaynağa Git →</a>`;
   if (k.dosya) act.innerHTML += `<a href="${k.dosya}" target="_blank" rel="noopener" class="modal-btn outline">📄 Dosyayı Aç</a>`;
   document.getElementById("detailModal").classList.add("open");
 }
 function kapatModal() { document.getElementById("detailModal").classList.remove("open"); }
 
-/* ═══ SİLME ═══════════════════════════════════════════════════ */
+/* ═══ SİLME ══════════════════════════════════════════════════════ */
 function getSilinen() {
   try { return new Set(JSON.parse(localStorage.getItem("ekoloji_ekosistem_silinen")||"[]").map(String)); }
   catch { return new Set(); }
@@ -171,34 +161,32 @@ function kayitSilEkosistem(id) {
   renderSayfa();
 }
 
-/* ═══ RENDER: tek bölüm ════════════════════════════════════════ */
+/* ═══ RENDER: tek bölüm ══════════════════════════════════════════ */
 function renderBolum(sec) {
   const bolum = BOLUMLER[sec];
   const kayitlar = tumEkosistem.filter(k => k.bolum === sec);
   const admin = typeof SITE !== "undefined" && SITE.isAdmin();
-  const el = document.getElementById("mainContent");
-  el.innerHTML = `
+  document.getElementById("mainContent").innerHTML = `
     <div class="bolum-header">
       <a href="ekosistem.html">← Tüm Bölümler</a>
       <h2>${bolum ? bolum.icon + " " + bolum.ad : sec}</h2>
     </div>
     ${admin ? `<a class="admin-ekle-btn" href="admin.html#ekosistem">+ Kayıt Ekle →</a>` : ""}
-    <input class="search-box" id="secSearchBox" placeholder="Ara…" oninput="secFiltrele('${sec}')">
+    <input class="search-box" id="secSearchBox" placeholder="Ara…">
     <div class="count-bar" id="secCount"></div>
     <div class="kayit-list" id="secList"></div>`;
   gorunenKayitlar = kayitlar;
   renderKayitlar(kayitlar, admin);
   const ozel = kayitlar.filter(k => !k._kaynak_kol).length;
-  const diger = kayitlar.filter(k => k._kaynak_kol).length;
-  const countTxt = ozel > 0 && diger > 0
+  const diger = kayitlar.filter(k =>  k._kaynak_kol).length;
+  document.getElementById("secCount").innerHTML = (ozel > 0 && diger > 0)
     ? `<b>${kayitlar.length}</b> kayıt <span style="opacity:.5">(${ozel} ekosistem + ${diger} diğer)</span>`
     : `<b>${kayitlar.length}</b> kayıt`;
-  document.getElementById("secCount").innerHTML = countTxt;
   document.getElementById("secSearchBox").addEventListener("input", () => secFiltrele(sec));
 }
 
 function secFiltrele(sec) {
-  const q = document.getElementById("secSearchBox")?.value.toLowerCase() || "";
+  const q = (document.getElementById("secSearchBox")?.value || "").toLowerCase();
   const kayitlar = tumEkosistem.filter(k =>
     k.bolum === sec &&
     (!q || (k.baslik + (k.ozet||"") + (k.kaynak||"")).toLowerCase().includes(q))
@@ -211,11 +199,12 @@ function secFiltrele(sec) {
 function renderKayitlar(liste, admin) {
   const el = document.getElementById("secList");
   if (!liste.length) { el.innerHTML = '<div class="empty">Bu bölümde henüz kayıt yok.</div>'; return; }
+  const kolAd = {haberler:"haber",raporlar:"rapor",makaleler:"makale",uluslararasi:"uluslararası"};
   el.innerHTML = liste.map((k,i) => `
     <div class="kayit-row" onclick="acModal(${i})">
       <div>
         <h4>${k.baslik}</h4>
-        <div class="meta">${k.kaynak||""}${k.konum?" · "+k.konum:""}${k._kaynak_kol?' <span style="opacity:.5;font-size:8.5px;">('+{"haberler":"haber","raporlar":"rapor","makaleler":"makale","uluslararasi":"uluslararası"}[k._kaynak_kol]+')</span>':""}</div>
+        <div class="meta">${k.kaynak||""}${k.konum?" · "+k.konum:""}${k._kaynak_kol?` <span style="opacity:.5;font-size:8.5px;">(${kolAd[k._kaynak_kol]||k._kaynak_kol})</span>`:""}</div>
         ${k.ozet ? `<div class="ozet">${k.ozet.slice(0,180)}${k.ozet.length>180?"…":""}</div>` : ""}
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
@@ -225,12 +214,10 @@ function renderKayitlar(liste, admin) {
     </div>`).join("");
 }
 
-/* ═══ RENDER: tüm bölümler ════════════════════════════════════ */
+/* ═══ RENDER: tüm bölümler ═══════════════════════════════════════ */
 function renderTum() {
   const admin = typeof SITE !== "undefined" && SITE.isAdmin();
-  const el = document.getElementById("mainContent");
   let html = admin ? `<a class="admin-ekle-btn" href="admin.html#ekosistem">+ Ekosistem Kaydı Ekle →</a>` : "";
-
   GRUPLAR.forEach(grup => {
     const bolumlar = Object.entries(BOLUMLER).filter(([,b]) => b.grup === grup);
     html += `<div class="grup-baslik">${grup}</div><div class="bolum-grid">`;
@@ -244,16 +231,16 @@ function renderTum() {
     });
     html += `</div>`;
   });
-  el.innerHTML = html;
+  document.getElementById("mainContent").innerHTML = html;
 }
 
-/* ═══ ANA RENDER ═══════════════════════════════════════════════ */
+/* ═══ ANA RENDER ═════════════════════════════════════════════════ */
 function renderSayfa() {
   if (aktifSec && BOLUMLER[aktifSec]) renderBolum(aktifSec);
   else renderTum();
 }
 
-/* ═══ ETİKET → BÖLÜM HARİTASI ════════════════════════════════ */
+/* ═══ ETİKET → BÖLÜM HARİTASI ═══════════════════════════════════ */
 const ETIKET_BOLUM_MAP = {
   "Nesli Tehlike Altında Türler":"turler",
   "Yaban Hayatı İzleme":"yaban","Yaban Hayatı":"yaban",
@@ -271,10 +258,9 @@ const ETIKET_BOLUM_MAP = {
   "Kentsel Çevre":"kentsel",
   "İklim Göçü & Yerinden Edilme":"goc",
   "Savaş & Ekoloji":"savas",
-  "Savaş Teknolojisi & Çevre":"savas-teknoloji"
+  "Savaş Teknolojisi & Çevre":"savas-teknoloji",
 };
 
-/* Herhangi bir kaydın etiketlerinden bölüm kodu bul */
 function bolumKodBul(kayit) {
   if (kayit.bolum) return kayit.bolum;
   const etiketler = Array.isArray(kayit.etiketler) ? kayit.etiketler : [];
@@ -285,14 +271,9 @@ function bolumKodBul(kayit) {
   return null;
 }
 
-/* ═══ VERİ YÜKLEME ════════════════════════════════════════════ */
-const silinen = getSilinen();
-const lsData = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
-  .filter(k => !silinen.has(String(k.id)));
-
-/* Diğer koleksiyonlardaki etiketli kayıtları da çek */
+/* ═══ DİĞER KAYNAKLARDAN ETİKETLİ KAYITLARI TOPLA ═══════════════ */
 function digerKaynaklardan(data) {
-  const kollar = ["haberler","raporlar","makaleler","uluslararasi"];
+  const kollar = ["haberler","raporlar","makaleler","uluslararasi","ekosistem"];
   const goruldu = new Set(tumEkosistem.map(k => String(k.id)));
   const ekstra = [];
   kollar.forEach(kol => {
@@ -302,88 +283,51 @@ function digerKaynaklardan(data) {
       const uid = kol + "_" + kayit.id;
       if (goruldu.has(uid)) return;
       goruldu.add(uid);
-      ekstra.push({
-        ...kayit,
-        id: uid,
-        bolum: kod,
-        _kaynak_kol: kol,  // hangi koleksiyondan geldiği
-      });
+      ekstra.push({ ...kayit, id: uid, bolum: kod, _kaynak_kol: kol });
     });
   });
   return ekstra;
 }
 
-<script>
-// ═══ VERİ YÜKLEME (güncel) ════════════════════════════════════
-
-const EKOSISTEM_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/ekosistem.json";
-const HABERLER_EKOSISTEM_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
+/* ═══ VERİ YÜKLEME ═══════════════════════════════════════════════ */
+const EKOSISTEM_URL    = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/ekosistem.json";
+const HABERLER_URL_EKO = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
 
 const silinen = getSilinen();
-const lsData = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
+const lsData  = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
   .filter(k => !silinen.has(String(k.id)));
 
-// 1) Önce ekosistem.json'ı çek
-fetch(EKOSISTEM_URL + "?v=" + Date.now())
-  .then(r => r.ok ? r.json() : Promise.reject("ekosistem.json yok"))
-  .then(data => {
-    const sunucu = (data.ekosistem || []).filter(k => !silinen.has(String(k.id)));
-    const lsIds  = new Set(lsData.map(k => String(k.id)));
-    tumEkosistem = [...lsData, ...sunucu.filter(k => !lsIds.has(String(k.id)))];
-
-    // 2) Haberler.json'dan da etiketli kayıtları çek
-    return fetch(HABERLER_EKOSISTEM_URL + "?v=" + Date.now())
-      .then(r => r.ok ? r.json() : {})
-      .then(habData => {
-        const ekstra = digerKaynaklardan(habData);
-        tumEkosistem = [...tumEkosistem, ...ekstra]
-          .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
-        renderSayfa();
-      });
-  })
-  .catch(() => {
-    // ekosistem.json henüz yok — haberler.json'dan etiketlileri devşir
-    fetch(HABERLER_EKOSISTEM_URL + "?v=" + Date.now())
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(habData => {
-        const ekstra = digerKaynaklardan(habData);
-        const lsIds  = new Set(lsData.map(k => String(k.id)));
-        tumEkosistem = [
-          ...lsData,
-          ...ekstra.filter(k => !lsIds.has(String(k.id)))
-        ].sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
-        renderSayfa();
-      })
-      .catch(() => {
-        tumEkosistem = lsData;
-        renderSayfa();
-      });
-  });
-
-window.addEventListener("popstate", () => {
-  aktifSec = new URLSearchParams(location.search).get("sec") || "";
+function haberlerdenEkle(habData) {
+  const ekstra = digerKaynaklardan(habData);
+  const lsIds  = new Set(lsData.map(k => String(k.id)));
+  tumEkosistem = [
+    ...lsData,
+    ...tumEkosistem.filter(k => !lsIds.has(String(k.id))),
+    ...ekstra,
+  ].sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
   renderSayfa();
-});
-</script>
+}
+
+// 1) ekosistem.json → 2) haberler.json'dan etiketlileri ekle
+fetch(EKOSISTEM_URL + "?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
-    /* Ekosistem koleksiyonu */
     const sunucu = (data.ekosistem || []).filter(k => !silinen.has(String(k.id)));
     const lsIds  = new Set(lsData.map(k => String(k.id)));
     tumEkosistem = [...lsData, ...sunucu.filter(k => !lsIds.has(String(k.id)))];
-
-    /* Diğer koleksiyonlardan etiket eşleşenleri ekle */
-    const ekstra = digerKaynaklardan(data);
-    tumEkosistem = [...tumEkosistem, ...ekstra]
-      .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
-    renderSayfa();
+    // haberler.json'dan da etiketli kayıtları çek
+    return fetch(HABERLER_URL_EKO + "?v=" + Date.now())
+      .then(r => r.ok ? r.json() : {})
+      .then(habData => haberlerdenEkle(habData));
   })
   .catch(() => {
-    tumEkosistem = lsData;
-    renderSayfa();
+    // ekosistem.json yoksa doğrudan haberler.json'a git
+    fetch(HABERLER_URL_EKO + "?v=" + Date.now())
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(habData => haberlerdenEkle(habData))
+      .catch(() => { tumEkosistem = lsData; renderSayfa(); });
   });
 
-/* URL ?sec= parametresi değişirse */
 window.addEventListener("popstate", () => {
   aktifSec = new URLSearchParams(location.search).get("sec") || "";
   renderSayfa();
