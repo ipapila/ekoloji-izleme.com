@@ -883,6 +883,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
         **koleksiyonlar,
     }
 
+# ── Ana dosyayı yaz (geriye dönük uyumluluk) ──────────────
     json_str = json.dumps(cikti, ensure_ascii=False, indent=2)
     try:
         json.loads(json_str)
@@ -893,6 +894,29 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
     tmp = p.with_suffix(".tmp")
     tmp.write_text(json_str, encoding="utf-8")
     tmp.replace(p)
+
+    # ── Kategorileri ayrı dosyalara yaz ───────────────────────
+    cikti_dir = p.parent
+    dosya_haritasi = {
+        "haberler":    "haberler_veri.json",
+        "raporlar":    "raporlar_veri.json",
+        "makaleler":   "makaleler_veri.json",
+        "uluslararasi":"uluslararasi_veri.json",
+        "ekosistem":   "ekosistem_veri.json",
+    }
+    meta_cikti = {
+        "meta": cikti["meta"],
+    }
+    for kol, dosya_adi in dosya_haritasi.items():
+        parca = {
+            "meta": cikti["meta"],
+            kol:    koleksiyonlar[kol],
+        }
+        parca_str = json.dumps(parca, ensure_ascii=False, indent=2)
+        parca_tmp = cikti_dir / (dosya_adi + ".tmp")
+        parca_tmp.write_text(parca_str, encoding="utf-8")
+        parca_tmp.replace(cikti_dir / dosya_adi)
+        log.info(f"  ✓ {dosya_adi} yazıldı ({len(koleksiyonlar[kol])} kayıt)")
 
     log.info(f"\n✓ {cikti_dosyasi} yazıldı — "
              f"{len(koleksiyonlar['haberler'])} haber | "
