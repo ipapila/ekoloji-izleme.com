@@ -1,32 +1,31 @@
-name: Tara (Veri + Haberler)
-
+name: Tara (Veri + Haberler + Rapor)
 # Yalnızca manuel tetikleme — zamanlamayı diğer workflow'lar yönetiyor.
-# GitHub Actions → "Run workflow" butonuyla tek tıkla her ikisi başlar.
+# GitHub Actions → "Run workflow" butonuyla tek tıkla üçü birden başlar.
 on:
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
-
-  # ── Veri güncelle (guncelle.py → data.json → Flex) ─────────────────────
+  # ── Veri güncelle (guncelle.py → data.json → Flex + Plesk) ─────────────
   veri-guncelle:
     uses: ./.github/workflows/update_data.yml
-    secrets: inherit        # GITHUB_TOKEN, FLEX_WEBHOOK_URL, FLEX_WEBHOOK_SECRET
-
-  # ── Haber tara (tarayici.py → haberler.json → commit) ───────────────────
+    secrets: inherit
+  # ── Haber tara (tarayici.py → haberler.json → Plesk) ───────────────────
   haber-tara:
     uses: ./.github/workflows/haber-tarama.yml
-    secrets: inherit        # GITHUB_TOKEN
-
-  # ── Özet — her ikisi bittikten sonra çalışır ────────────────────────────
+    secrets: inherit
+  # ── Günlük rapor (rapor_uret.py → rapor.json → Plesk) ──────────────────
+  rapor-uret:
+    uses: ./.github/workflows/rapor.yml
+    secrets: inherit
+  # ── Özet — üçü bittikten sonra çalışır ─────────────────────────────────
   ozet:
-    needs: [veri-guncelle, haber-tara]
+    needs: [veri-guncelle, haber-tara, rapor-uret]
     runs-on: ubuntu-latest
     steps:
       - name: Tara tamamlandı
         run: |
-          echo "✅ Her iki tarama tamamlandı."
-          echo "   • Veri (data.json + Flex): ${{ needs.veri-guncelle.result }}"
+          echo "✅ Tüm taramalar tamamlandı."
+          echo "   • Veri (data.json + ihlaller.json): ${{ needs.veri-guncelle.result }}"
           echo "   • Haberler (haberler.json): ${{ needs.haber-tara.result }}"
+          echo "   • Rapor (rapor.json): ${{ needs.rapor-uret.result }}"
