@@ -319,7 +319,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   function chip(k) {
     return '<span style="display:inline-block;padding:4px 10px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:20px;font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;">' + k + '</span>';
   }
-  fetch("rapor.json?v=" + Date.now())
+	fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/rapor.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(rapor => {
       document.getElementById("raporYukleniyor").style.display = "none";
