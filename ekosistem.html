@@ -313,7 +313,58 @@ function digerKaynaklardan(data) {
   return ekstra;
 }
 
-fetch("data.json?v=" + Date.now())
+<script>
+// ═══ VERİ YÜKLEME (güncel) ════════════════════════════════════
+
+const EKOSISTEM_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/ekosistem.json";
+const HABERLER_EKOSISTEM_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
+
+const silinen = getSilinen();
+const lsData = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
+  .filter(k => !silinen.has(String(k.id)));
+
+// 1) Önce ekosistem.json'ı çek
+fetch(EKOSISTEM_URL + "?v=" + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject("ekosistem.json yok"))
+  .then(data => {
+    const sunucu = (data.ekosistem || []).filter(k => !silinen.has(String(k.id)));
+    const lsIds  = new Set(lsData.map(k => String(k.id)));
+    tumEkosistem = [...lsData, ...sunucu.filter(k => !lsIds.has(String(k.id)))];
+
+    // 2) Haberler.json'dan da etiketli kayıtları çek
+    return fetch(HABERLER_EKOSISTEM_URL + "?v=" + Date.now())
+      .then(r => r.ok ? r.json() : {})
+      .then(habData => {
+        const ekstra = digerKaynaklardan(habData);
+        tumEkosistem = [...tumEkosistem, ...ekstra]
+          .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
+        renderSayfa();
+      });
+  })
+  .catch(() => {
+    // ekosistem.json henüz yok — haberler.json'dan etiketlileri devşir
+    fetch(HABERLER_EKOSISTEM_URL + "?v=" + Date.now())
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(habData => {
+        const ekstra = digerKaynaklardan(habData);
+        const lsIds  = new Set(lsData.map(k => String(k.id)));
+        tumEkosistem = [
+          ...lsData,
+          ...ekstra.filter(k => !lsIds.has(String(k.id)))
+        ].sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
+        renderSayfa();
+      })
+      .catch(() => {
+        tumEkosistem = lsData;
+        renderSayfa();
+      });
+  });
+
+window.addEventListener("popstate", () => {
+  aktifSec = new URLSearchParams(location.search).get("sec") || "";
+  renderSayfa();
+});
+</script>
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
     /* Ekosistem koleksiyonu */
