@@ -1,0 +1,94 @@
+<!-- 
+  raporlar.html'de yapılacak 3 değişiklik:
+  
+  1) HABERLER_URL sabiti → raporlar.json'a yönlendir
+  2) yukle() fonksiyonu → raporlar.json + yedeği haberler.json
+  3) ekosistem.html'de → ekosistem.json oku
+-->
+
+<!-- ════════════════════════════════════════════════
+     DEĞİŞİKLİK 1 — raporlar.html
+     
+     BUNU BUL (yaklaşık satır 290):
+     const HABERLER_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
+     
+     BUNUNLA DEĞİŞTİR:
+════════════════════════════════════════════════ -->
+<script>
+const RAPORLAR_URL  = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/raporlar.json";
+const HABERLER_URL  = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json"; // yedek kaynak
+</script>
+
+<!-- ════════════════════════════════════════════════
+     DEĞİŞİKLİK 2 — raporlar.html
+     
+     BUNU BUL (yukle fonksiyonu, ~satır 380):
+     function yukle() {
+       const localRaporlar = typeof SITE !== "undefined" ? SITE.getList("raporlar") : [];
+       const silinen = _adminMod.getSilinen();
+     
+       fetch(HABERLER_URL + "?t=" + Date.now())
+         .then(r => r.ok ? r.json() : Promise.reject(r.status))
+         .then(data => {
+           const meta = data.meta?.guncelleme || data._meta?.guncelleme;
+           if (meta) { ... }
+           isleRaporlar(data.raporlar || [], localRaporlar, silinen, meta);
+         })
+         .catch(() => {
+           isleRaporlar([], localRaporlar, silinen, null);
+           document.getElementById("scanStatus").textContent = "Uzak kaynak alınamadı — yerel veri gösteriliyor";
+         });
+     }
+     
+     TAMAMIYLA BUNUNLA DEĞİŞTİR:
+════════════════════════════════════════════════ -->
+<script>
+function yukle() {
+  const localRaporlar = typeof SITE !== "undefined" ? SITE.getList("raporlar") : [];
+  const silinen = _adminMod.getSilinen();
+
+  // Önce raporlar.json'ı dene, boşsa haberler.json'dan devşir
+  fetch(RAPORLAR_URL + "?t=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject("raporlar.json yok"))
+    .then(data => {
+      const liste = data.raporlar || [];
+      const meta  = data.meta?.guncelleme;
+      if (meta) {
+        document.getElementById("osGuncelleme").innerHTML =
+          `Son güncelleme: <b>${new Date(meta).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</b>`;
+      }
+      if (liste.length > 0) {
+        isleRaporlar(liste, localRaporlar, silinen, meta);
+      } else {
+        // raporlar.json boş — haberler.json'dan raporları devşir (geçici)
+        yukleHaberlerdenDevşir(localRaporlar, silinen);
+      }
+    })
+    .catch(() => {
+      // raporlar.json henüz yok — haberler.json'dan devşir
+      yukleHaberlerdenDevşir(localRaporlar, silinen);
+    });
+}
+
+function yukleHaberlerdenDevşir(localRaporlar, silinen) {
+  fetch(HABERLER_URL + "?t=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      // haberler.json'daki raporlar koleksiyonu VEYA tüm haberlerden rapor niteliği taşıyanlar
+      const raporlar = data.raporlar || (data.haberler || []).filter(h => {
+        const m = ((h.baslik||"")+" "+(h.ozet||"")+" "+(h.kategori||"")).toLowerCase();
+        return m.includes("rapor") || m.includes("analiz") || m.includes("araştırma") ||
+               m.includes("stk") || m.includes("akademik") || m.includes("bilirkişi") ||
+               m.includes("meclis") || m.includes("mahkeme") || m.includes("dava");
+      });
+      const meta = data.meta?.guncelleme;
+      isleRaporlar(raporlar, localRaporlar, silinen, meta);
+      document.getElementById("scanStatus").textContent =
+        `${raporlar.length} rapor (haberler.json'dan) · raporlar.json henüz oluşturulmadı`;
+    })
+    .catch(() => {
+      isleRaporlar([], localRaporlar, silinen, null);
+      document.getElementById("scanStatus").textContent = "Veri alınamadı — yerel veriler gösteriliyor";
+    });
+}
+</script>
