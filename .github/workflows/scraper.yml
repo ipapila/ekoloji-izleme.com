@@ -1,55 +1,76 @@
-name: Ekoloji Izleme Botu v6
+name: Ekoloji Izleme Botu v7
 
 on:
-  push:
-    branches:
-      - main  # Her commit attığında bot otomatik çalışır
-  workflow_dispatch: # Manuel tetikleme hala kalsın
+  workflow_dispatch:       # Manuel tetikleme
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */6 * * *' # Her 6 saatte bir otomatik
+
+# NOT: push tetikleyicisi kaldırıldı — her commit'te bot çalışmasın,
+# gereksiz API çağrısı ve GitHub Actions dakikası harcar.
 
 jobs:
   scrape-and-deploy:
     runs-on: ubuntu-latest
-    
+
     permissions:
-      contents: write
+      contents: write  # JSON'ları repoya commit etmeyeceğiz ama gerekebilir
 
     steps:
-    - name: Repo Kodlarını Çek
-      uses: actions/checkout@v4
-      
-    # ... geri kalan adımlar aynı ...
+      - name: Repo Kodlarını Çek
+        uses: actions/checkout@v4
 
-    - name: Python Kurulumu
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - name: Python Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Bağımlılıkları Yükle
-      run: |
-        pip install requests beautifulsoup4 feedparser urllib3 lxml
+      - name: Bağımlılıkları Yükle
+        run: |
+          pip install requests beautifulsoup4 feedparser urllib3 lxml
 
-    - name: Botu Çalıştır ve Veri Üret
-      if: false # Bu satırı ekleyerek adımı atlayın
-      run: |
-        python scripts/tarayici.py --cikti data.json
+      # ── ADIM 1: Tarayıcıyı çalıştır → haberler.json + *_veri.json üretir ──
+      - name: Haber Tarayıcısını Çalıştır
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python tarayici.py --cikti haberler.json --max-haber 500 --max-diger 200
+          echo "✓ tarayici.py tamamlandı"
+          ls -lh haberler.json haberler_veri.json makaleler_veri.json uluslararasi_veri.json ekosistem_veri.json 2>/dev/null || true
 
-    - name: Üretilen JSON Verilerini GitHub Reposuna Commit Et
-    
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action Bot"
-        git add data.json
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Oto-Veri Güncellemesi: $(date +'%Y-%m-%d %H:%M')" && git push)
+      # ── ADIM 2: Dağıtıcıyı çalıştır → ihlaller.json, raporlar.json, kuresel.json üretir ──
+      - name: Dağıtıcıyı Çalıştır
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python dagitici.py
+          echo "✓ dagitici.py tamamlandı"
+          ls -lh ihlaller.json raporlar.json makaleler.json kuresel.json ekosistem.json 2>/dev/null || true
 
-    - name: Verileri Plesk Sunucusuna Güvenli SSH (SFTP) ile Gönder
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        port: 22 # Güvenli SSH portu
-        source: "data.json"
-        # ⚠️ Buraya Plesk'teki ana dizinin sunucudaki tam fiziksel yolunu yazıyoruz:
-        target: "/var/www/vhosts/ekoloji-izleme.com/httpdocs/"
+      # ── ADIM 3: Raporu güncelle ──
+      - name: Günlük Raporu Üret
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python rapor_uret.py || echo "Rapor üretilemedi (devam ediyor)"
+
+      # ── ADIM 4: Tüm JSON'ları Plesk sunucusuna gönder ──
+      - name: JSON Verileri Plesk'e Gönder (SFTP)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 22
+          source: "haberler.json,ihlaller.json,raporlar.json,makaleler.json,kuresel.json,ekosistem.json,rapor.json"
+          target: "/var/www/vhosts/ekoloji-izleme.com/httpdocs/"
+          strip_components: 0
+
+      # ── ADIM 5 (OPSİYONEL): Özet raporu GitHub'a commit et ──
+      # rapor.json küçük bir özet dosyasıdır, takip etmek mantıklı
+      - name: Rapor Özetini GitHub'a Kaydet
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Ekoloji Bot"
+          git add rapor.json || true
+          git diff --staged --quiet || git commit -m "bot: rapor guncellendi $(date +'%Y-%m-%d %H:%M UTC')"
+          git push || true
