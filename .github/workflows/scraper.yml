@@ -22,15 +22,10 @@ jobs:
       run: |
         pip install requests beautifulsoup4 feedparser urllib3
 
-    - name: Klasör Yapısını Listele ve Botu Çalıştır
+    - name: data Klasörünü Kontrol Et ve Botu Çalıştır
       run: |
         mkdir -p data
-        echo "=== ŞU ANKİ DİZİNDEKİ DOSYALAR ==="
-        ls -la
-        echo "=== SCRIPTKLER İÇİNDEKİ DOSYALAR ==="
-        ls -la scriptler || echo "scriptler klasörü bulunamadı!"
-        echo "=================================="
-        python scriptler/tarayici.py --output data
+        python scripts/tarayici.py --output data
 
     - name: Üretilen JSON Verilerini GitHub Reposuna Commit Et
       run: |
