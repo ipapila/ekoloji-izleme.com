@@ -319,7 +319,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   function chip(k) {
     return '<span style="display:inline-block;padding:4px 10px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:20px;font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;">' + k + '</span>';
   }
-	fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/rapor.json?v=" + Date.now())
+	fetch("https://ekoloji-izleme.com/data/rapor.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(rapor => {
       document.getElementById("raporYukleniyor").style.display = "none";
@@ -591,7 +591,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 <script>
 // ── İstatistikler ──
 (function istatistikYukle() {
-	fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json?v=" + Date.now())    .then(r => r.ok ? r.json() : Promise.reject())
+	fetch("https://ekoloji-izleme.com/data/haberler.json?v=" + Date.now())	.then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const meta = d._meta || {};
       const haberler = d.haberler || [];
@@ -655,7 +655,7 @@ function ihlallerRender(ihlaller) {
 }
 
 // data.json'dan ihlalleri çek, yoksa localStorage'dan al
-fetch("data.json?v=" + Date.now())
+fetch("https://ekoloji-izleme.com/data/data.json?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(d => ihlallerRender(d.ihlaller || []))
   .catch(() => ihlallerRender(SITE.getList("ihlaller") || SITE.defaults.ihlaller));
@@ -709,7 +709,7 @@ function haberlerRender(haberler) {
   `<a href="haberler.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(45,158,107,.07);border:1px dashed rgba(45,158,107,.2);color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;">Tüm Haberler →</a>`;
 }
 
-fetch("haberler.json")
+fetch("https://ekoloji-izleme.com/data/haberler.json")
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
     if (data.haberler?.length) {
