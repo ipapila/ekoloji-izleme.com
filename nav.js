@@ -221,53 +221,39 @@
     if (!bar) return;
 
     function _tickerRender(haberler) {
-      // Gelen verinin dizi olduğundan emin oluyoruz, değilse durduruyoruz
-      if (!Array.isArray(haberler)) return;
-
       const silinen = (() => {
         try { return new Set(JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]").map(String)); }
         catch { return new Set(); }
       })();
-
-      // Dizideki bozuk, null, undefined elemanları ve id'si olmayanları eliyoruz
-      const liste = haberler.filter(h => h && typeof h === 'object' && h.id && !silinen.has(String(h.id))).slice(0, 12);
+      const liste = haberler.filter(h => h && !silinen.has(String(h.id))).slice(0, 12);
       if (!liste.length) return;
-
       bar.style.display = "block";
       
       const items = liste.map(h => {
-        // İçerideki tüm alanların güvenliğini try/catch veya fallback'lerle sağlıyoruz
-        try {
-          const etiketStr = (Array.isArray(h.etiketler) && h.etiketler[0])
-            ? h.etiketler[0]
-            : (h.kategori || h.etiket || h.kaynak || "HABER");
-          
-          const etiketGoster = String(etiketStr || "HABER").slice(0, 14).toUpperCase();
-          const safeH = encodeURIComponent(JSON.stringify(h));
-          const baslikGoster = h.baslik || "Başlıksız Haber";
+        const etiketStr = (Array.isArray(h.etiketler) && h.etiketler[0])
+          ? h.etiketler[0]
+          : (h.kategori || h.etiket || h.kaynak || "HABER");
+        
+        // Güvenli string dönüşümü (Eğer hepsi boşsa 'HABER' yazacak)
+        const etiketGoster = String(etiketStr || "HABER").slice(0, 14).toUpperCase();
+        
+        // HTML attribute'ları bozmamak için string haline getirip encode ediyoruz
+        const safeH = encodeURIComponent(JSON.stringify(h));
 
-          return `
-          <div class="ticker-item" style="cursor:pointer;" onclick="_navTickerAcSafe('${safeH}')">
-            <span class="label" style="background:rgba(45,158,107,.18);color:var(--bright);border:1px solid rgba(45,158,107,.3);">
-              ${etiketGoster}
-            </span>
-            ${baslikGoster}${h.kaynak ? ` <span style="opacity:.5;font-size:.85em;">— ${h.kaynak}</span>` : ""}
-          </div>`;
-        } catch(e) {
-          // Eğer tek bir haber objesinde beklenmedik bir hata çıkarsa tüm ticker'ı bozmasın diye boş string dönüyoruz
-          return "";
-        }
+        return `
+        <div class="ticker-item" style="cursor:pointer;" onclick="_navTickerAcSafe('${safeH}')">
+          <span class="label" style="background:rgba(45,158,107,.18);color:var(--bright);border:1px solid rgba(45,158,107,.3);">
+            ${etiketGoster}
+          </span>
+          ${h.baslik || ""}${h.kaynak ? ` <span style="opacity:.5;font-size:.85em;">— ${h.kaynak}</span>` : ""}
+        </div>`;
       }).join("");
-
-      if (items.trim() !== "") {
-        document.getElementById("navTickerInner").innerHTML = items + items;
-      }
+      document.getElementById("navTickerInner").innerHTML = items + items;
     }
 
     fetch("haberler.json?v=" + Date.now())
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => {
-        // JSON yapısı { haberler: [...] } şeklinde de olsa, direkt [...] şeklinde de olsa korumaya alıyoruz
         const haberler = data && data.haberler ? data.haberler : (Array.isArray(data) ? data : []);
         if (haberler.length) _tickerRender(haberler);
         else _tickerFallback();
@@ -275,14 +261,15 @@
       .catch(_tickerFallback);
 
     function _tickerFallback() {
-      if (typeof SITE !== "undefined" && typeof SITE.getList === "function") {
+      if (typeof SITE !== "undefined") {
         const h = SITE.getList("haberler") || [];
-        if (h && h.length) _tickerRender(h);
+        if (h.length) _tickerRender(h);
       }
     }
   }
 })();
 
+// Tırnak işaretli verileri bozmadan açabilmek için yeni güvenli fonksiyon
 function _navTickerAcSafe(encodedH) {
   try {
     const h = JSON.parse(decodeURIComponent(encodedH));
@@ -293,7 +280,6 @@ function _navTickerAcSafe(encodedH) {
 }
 
 function _navTickerAc(h) {
-  if (!h) return;
   const etiketler = Array.isArray(h.etiketler) ? h.etiketler.join(" · ") : (h.kategori || h.etiket || h.kaynak || "");
   const m = document.createElement("div");
   m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);";
