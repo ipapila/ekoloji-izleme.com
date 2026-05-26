@@ -231,8 +231,7 @@
       const items = liste.map(h => `
         <div class="ticker-item" style="cursor:pointer;" onclick='_navTickerAc(${JSON.stringify(h).replace(/'/g, "&#39;")})'>
           <span class="label" style="background:rgba(45,158,107,.18);color:var(--bright);border:1px solid rgba(45,158,107,.3);">
-            ${(Array.isArray(h.etiketler) ? h.etiketler[0] : h.kategori || h.etiket || h.kaynak || "HABER").toString().slice(0, 14).toUpperCase()}
-          </span>
+          ${(Array.isArray(h.etiketler) && h.etiketler[0] ? h.etiketler[0] : h.kategori || h.etiket || h.kaynak || "HABER").toString().slice(0, 14).toUpperCase()}          </span>
           ${h.baslik}${h.kaynak ? ` <span style="opacity:.5;font-size:.85em;">— ${h.kaynak}</span>` : ""}
         </div>`).join("");
       document.getElementById("navTickerInner").innerHTML = items + items;
