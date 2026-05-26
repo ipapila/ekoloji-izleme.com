@@ -1,9 +1,9 @@
 name: Ekoloji Izleme Botu v5
 
 on:
-  workflow_dispatch: # Manuel çalıştırma butonunu aktif eder
+  workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *' # Her 6 saatte bir otomatik çalışır
+    - cron: '0 */6 * * *'
 
 jobs:
   scrape-and-deploy:
@@ -44,10 +44,5 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./
         server-dir: ./httpdocs/
-        # 🔐 Kütüphanenin kendi dilinde Plesk'e uyumlu esnek güvenlik modu:
         security: loose
-        # Zaman aşımını engellemek için süreyi uzatıyoruz (milisaniye cinsinden):
         timeout: 60000
-        # 🔐 GÜVENLİ FTPS BAĞLANTISINI ZORUNLU KILIYORUZ:
-        security: ftps
-        ftp-user: ${{ secrets.FTP_USERNAME }}
