@@ -1,9 +1,9 @@
 name: Ekoloji Izleme Botu v5
 
 on:
+  workflow_dispatch: # Manuel çalıştırma butonunu zorla aktif eder
   schedule:
-    - cron: '0 */6 * * *' # Her 6 saatte bir otomatik çalışır
-  workflow_dispatch: # Manuel tetikleme butonu
+    - cron: '0 */6 * * *'
 
 jobs:
   scrape-and-deploy:
