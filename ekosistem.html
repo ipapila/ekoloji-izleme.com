@@ -290,8 +290,8 @@ function digerKaynaklardan(data) {
 }
 
 /* ═══ VERİ YÜKLEME ═══════════════════════════════════════════════ */
-const EKOSISTEM_URL    = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/ekosistem.json";
-const HABERLER_URL_EKO = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
+const EKOSISTEM_URL    = "ekosistem.json";  // Local — Plesk'ten
+const HABERLER_URL_EKO = "haberler.json";   // Local — Plesk'ten
 
 const silinen = getSilinen();
 const lsData  = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
