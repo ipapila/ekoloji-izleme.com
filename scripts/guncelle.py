@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ekoloji-izleme.com — Otomatik Güncelleme v6
-v6 YENİLİKLERİ:
-  - 4 koleksiyon desteği: haberler | raporlar | makaleler | uluslararasi
-  - RAPOR_RSS, MAKALE_RSS, ULUSLARARASI_RSS kaynak listeleri eklendi
-  - SSL bypass (verify=False), fallback selector, timeout=12
-  - icerik_tipi ve dil alanları
+ekoloji-izleme.com — Otomatik Güncelleme v7
+v7 YENİLİKLERİ:
+  - İhlal tarama eklendi (IHLAL_RSS kaynakları)
+  - Koordinat tahmini (il bazlı)
+  - Kategori otomatik tespiti
+  - Şiddet skoru
 """
 
 import env_yukle
@@ -24,10 +24,221 @@ HARITA_KAYNAKLARI = {"harita","OGM","DKMP","BSGM","harita_import","harita_verisi
 SSL_NO_VERIFY_HOSTS = {"mapeg.gov.tr", "ilan.gov.tr"}
 FALLBACK_SELECTOR = "article h2 a, article h3 a, .post-title a, .entry-title a, h2.title a, h3.title a, [class*='title'] a"
 
-# ── Rapor/analiz sinyalleri ─────────────────────────────────────
 RAPOR_SINYAL = ["rapor","araştırma","analiz","inceleme","değerlendirme","politika","strateji",
                 "report","analysis","research","assessment","policy","findings"]
 KOSE_SINYAL  = ["köşe","görüş","yorum","perspektif","opinion","commentary","column"]
+
+# ══════════════════════════════════════════════════════════════════
+#  İL KOORDİNATLARI
+# ══════════════════════════════════════════════════════════════════
+
+IL_KOORD = {
+    "adana":(37.0000,35.3213),"adıyaman":(37.7648,38.2786),"afyon":(38.7507,30.5567),
+    "ağrı":(39.7191,43.0503),"amasya":(40.6499,35.8353),"ankara":(39.9208,32.8541),
+    "antalya":(36.8841,30.7056),"artvin":(41.1828,41.8183),"aydın":(37.8560,27.8416),
+    "balıkesir":(39.6484,27.8826),"bilecik":(40.1506,29.9792),"bingöl":(38.8854,40.4981),
+    "bitlis":(38.4006,42.1095),"bolu":(40.7396,31.6061),"burdur":(37.7265,30.2906),
+    "bursa":(40.1826,29.0665),"çanakkale":(40.1553,26.4142),"çankırı":(40.6013,33.6134),
+    "çorum":(40.5506,34.9556),"denizli":(37.7765,29.0864),"diyarbakır":(37.9144,40.2306),
+    "edirne":(41.6818,26.5623),"elazığ":(38.6810,39.2264),"erzincan":(39.7500,39.5000),
+    "erzurum":(39.9043,41.2679),"eskişehir":(39.7767,30.5206),"gaziantep":(37.0662,37.3833),
+    "giresun":(40.9128,38.3895),"gümüşhane":(40.4386,39.4814),"hakkari":(37.5744,43.7408),
+    "hatay":(36.4018,36.3498),"ısparta":(37.7648,30.5566),"içel":(36.8000,34.6333),
+    "mersin":(36.8000,34.6333),"istanbul":(41.0082,28.9784),"izmir":(38.4192,27.1287),
+    "kars":(40.6013,43.0975),"kastamonu":(41.3887,33.7827),"kayseri":(38.7312,35.4787),
+    "kırklareli":(41.7333,27.2167),"kırşehir":(39.1425,34.1709),"kocaeli":(40.8533,29.8815),
+    "konya":(37.8746,32.4932),"kütahya":(39.4167,29.9833),"malatya":(38.3552,38.3095),
+    "manisa":(38.6191,27.4289),"kahramanmaraş":(37.5858,36.9371),"mardin":(37.3212,40.7245),
+    "muğla":(37.2153,28.3636),"muş":(38.9462,41.7539),"nevşehir":(38.6939,34.6857),
+    "niğde":(37.9667,34.6833),"ordu":(40.9860,37.8797),"rize":(41.0201,40.5234),
+    "sakarya":(40.6940,30.4358),"samsun":(41.2867,36.3300),"siirt":(37.9333,41.9500),
+    "sinop":(42.0231,35.1531),"sivas":(39.7477,37.0179),"tekirdağ":(40.9781,27.5115),
+    "tokat":(40.3167,36.5500),"trabzon":(41.0015,39.7178),"tunceli":(39.1079,39.5480),
+    "şanlıurfa":(37.1591,38.7969),"uşak":(38.6823,29.4082),"van":(38.4891,43.4089),
+    "yozgat":(39.8181,34.8147),"zonguldak":(41.4564,31.7987),"aksaray":(38.3687,34.0370),
+    "bayburt":(40.2552,40.2249),"karaman":(37.1759,33.2287),"kırıkkale":(39.8468,33.5153),
+    "batman":(37.8812,41.1351),"şırnak":(37.5164,42.4611),"bartın":(41.6344,32.3375),
+    "ardahan":(41.1105,42.7022),"iğdır":(39.9167,44.0333),"yalova":(40.6500,29.2667),
+    "karabük":(41.2061,32.6204),"kilis":(36.7184,37.1212),"osmaniye":(37.0742,36.2462),
+    "düzce":(40.8438,31.1565),
+}
+
+def il_koord_bul(metin):
+    """Metinden il adı bulup koordinat döndür."""
+    metin_lower = metin.lower()
+    for il, koord in IL_KOORD.items():
+        if il in metin_lower:
+            return koord
+    return None
+
+# ══════════════════════════════════════════════════════════════════
+#  KATEGORİ TESPİTİ
+# ══════════════════════════════════════════════════════════════════
+
+KATEGORI_ESLEME = [
+    (["acele kamulaştırma","kamulaştırma kararı"],                     "Acele Kamulaştırma"),
+    (["maden ocağı","maden izni","madencilik","taş ocağı","kireç ocağı","granit"],"Maden Ocağı"),
+    (["taş ocağı","mermer ocağı","kireçtaşı","taş-mermer"],            "Taş-Mermer Ocağı"),
+    (["hes","hidroelektrik","baraj","nehir","dere","çay"],              "HES"),
+    (["res","rüzgar enerji","rüzgar türbin","enerji santrali"],         "RES"),
+    (["ges","güneş enerji","solar"],                                    "GES"),
+    (["termik","kömür santral","fosil"],                                "Termik Reaktör"),
+    (["nükleer","akkuyu","atom"],                                       "Nükleer Enerji"),
+    (["jeotermal"],                                                     "Jeotermal"),
+    (["orman","ağaç kes","ağaç katli","ormansız"],                     "Orman Alanı"),
+    (["sulak alan","bataklık","göl","lagün"],                          "Sulak Alan"),
+    (["milli park","tabiat parkı","doğal sit","koruma alanı"],         "Milli Park"),
+    (["kıyı","sahil","deniz tahrib","plaj"],                           "Kıyı İhlalleri"),
+    (["atık","çöp","depolama","döküm","kirlilik"],                     "Atık & Depolama"),
+    (["kaçak yapı","kaçak inşaat","imar ihlal"],                       "Kaçak Yapılaşma"),
+    (["iklim","sera gazı","karbon","emisyon"],                         "İklim Olayları"),
+    (["yaban hayat","nesli tüken","nesli tehlike","tür yok"],          "Yaban Hayatı"),
+    (["çiftçi","köylü","tarım arazi"],                                 "Tarım Arazisi İhlali"),
+    (["su hakkı","içme suyu","su kaynak"],                             "Su Hakkı"),
+    (["sanayi bölge","osb","fabrika","tesis"],                         "Sanayi Bölgesi"),
+]
+
+def kategori_tespit(baslik, ozet=""):
+    metin = (baslik + " " + ozet).lower()
+    for anahtar_listesi, kategori in KATEGORI_ESLEME:
+        if any(k in metin for k in anahtar_listesi):
+            return kategori
+    return "Ekolojik İhlal"
+
+# ══════════════════════════════════════════════════════════════════
+#  ŞİDDET SKORU
+# ══════════════════════════════════════════════════════════════════
+
+def siddet_tespit(baslik, ozet=""):
+    metin = (baslik + " " + ozet).lower()
+    kritik = ["acele kamulaştırma","nükleer","termik","kömür","katliamı","yıkım","ÇED geçti",
+              "ruhsat verildi","ihale","inşaat başladı","tahribat","yok edildi"]
+    orta   = ["maden","hes","res","ges","baraj","orman","kamulaştırma","ruhsat",
+              "izin","proje","risk","tehdit","kirlilik"]
+    if any(k in metin for k in kritik): return "kritik"
+    if any(k in metin for k in orta):   return "orta"
+    return "takipte"
+
+# ══════════════════════════════════════════════════════════════════
+#  İHLAL RSS KAYNAKLARI
+# ══════════════════════════════════════════════════════════════════
+
+IHLAL_RSS = [
+    {"ad": "Google News",  "etiket": "Acele Kamulaştırma",
+     "url": "https://news.google.com/rss/search?q=acele+kamulaştırma+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "Maden Ocağı",
+     "url": "https://news.google.com/rss/search?q=maden+ocağı+ruhsat+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "HES",
+     "url": "https://news.google.com/rss/search?q=HES+baraj+dere+ihlal+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "RES",
+     "url": "https://news.google.com/rss/search?q=rüzgar+enerji+RES+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "Orman Alanı",
+     "url": "https://news.google.com/rss/search?q=orman+tahribi+ağaç+katliamı+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "Kıyı İhlalleri",
+     "url": "https://news.google.com/rss/search?q=kıyı+tahribatı+sahil+yapılaşma+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "Atık & Depolama",
+     "url": "https://news.google.com/rss/search?q=atık+depolama+kirlilik+Türkiye+çevre&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "ÇED",
+     "url": "https://news.google.com/rss/search?q=ÇED+olumlu+maden+baraj+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "Sulak Alan",
+     "url": "https://news.google.com/rss/search?q=sulak+alan+kurutma+dolgu+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Google News",  "etiket": "Termik Reaktör",
+     "url": "https://news.google.com/rss/search?q=termik+santral+kömür+Türkiye+çevre&hl=tr&gl=TR&ceid=TR:tr",
+     "web": "https://news.google.com"},
+    {"ad": "Bianet",       "etiket": "Ekolojik İhlal",
+     "url": "https://bianet.org/bianet/feed/rss",
+     "web": "https://bianet.org"},
+    {"ad": "Gazete Duvar", "etiket": "Ekolojik İhlal",
+     "url": "https://www.gazeteduvar.com.tr/feed",
+     "web": "https://www.gazeteduvar.com.tr"},
+]
+
+IHLAL_ANAHTAR = [
+    "acele kamulaştırma","maden ocağı","taş ocağı","hes","res","ges","termik","nükleer",
+    "orman tahribi","ağaç katliamı","sulak alan","kıyı tahribatı","atık depolama",
+    "çed","ÇED","kaçak yapı","kaçak inşaat","kirlilik","tahribat","yıkım","ruhsat",
+    "baraj","dere","kamulaştırma","maden izni","ormansızlaşma","jeotermal",
+]
+
+def ihlal_mi(baslik, ozet=""):
+    metin = (baslik + " " + ozet).lower()
+    return any(k.lower() in metin for k in IHLAL_ANAHTAR)
+
+def ihlal_rss_cek(kaynak):
+    ihlaller = []
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "ekoloji-izleme-bot/2.0 (+https://ekoloji-izleme.com)",
+    ]
+    r = None
+    for ua in user_agents:
+        try:
+            r = requests.get(kaynak["url"], timeout=12, headers={
+                "User-Agent": ua,
+                "Accept": "application/rss+xml,application/xml,*/*",
+            })
+            if r.status_code == 200: break
+            r = None
+        except Exception: continue
+
+    if r is None or r.status_code != 200:
+        status = r.status_code if r is not None else "bağlantı hatası"
+        print(f"  ⚠️  {kaynak['ad']} [ihlaller]: HTTP {status} — atlanıyor")
+        return ihlaller
+
+    try:
+        root  = ET.fromstring(r.content)
+        ns    = {"atom": "http://www.w3.org/2005/Atom"}
+        items = root.findall(".//item") or root.findall(".//atom:entry", ns)
+        kabul = red = 0
+        for item in items[:30]:
+            def txt(tag):
+                el = item.find(tag)
+                return (el.text or "").strip() if el is not None else ""
+            baslik = txt("title")
+            ozet   = html_temizle(txt("description") or txt("summary") or "")
+            url    = txt("link") or txt("guid")
+            tarih  = tarih_normalize(txt("pubDate") or txt("published") or "")
+            if not baslik or not url: continue
+            if not ihlal_mi(baslik, ozet):
+                red += 1
+                continue
+            koord = il_koord_bul(baslik + " " + ozet)
+            ihlaller.append({
+                "baslik":     baslik,
+                "konum":      _il_adi_bul(baslik + " " + ozet),
+                "kategori":   kategori_tespit(baslik, ozet),
+                "siddet":     siddet_tespit(baslik, ozet),
+                "tarih":      tarih,
+                "kaynak":     kaynak["ad"],
+                "kaynak_url": url,
+                "aciklama":   ozet,
+                "lat":        koord[0] if koord else None,
+                "lng":        koord[1] if koord else None,
+                "foto_url":   "",
+                "etiketler":  [kaynak["etiket"]],
+            })
+            kabul += 1
+        print(f"  📡 {kaynak['ad']} [ihlaller]: {kabul} kabul / {red} red")
+    except Exception as e:
+        print(f"  ⚠️  {kaynak['ad']} [ihlaller]: parse hatası — {e}")
+    return ihlaller
+
+def _il_adi_bul(metin):
+    metin_lower = metin.lower()
+    for il in IL_KOORD:
+        if il in metin_lower:
+            return il.title()
+    return "Türkiye"
 
 # ══════════════════════════════════════════════════════════════════
 #  KAYNAK LİSTELERİ
@@ -98,45 +309,32 @@ ULUSLARARASI_RSS = [
 ]
 
 EKOSISTEM_RSS = [
-    # turler
     {"ad": "Google News",  "etiket": "Nesli Tehlike Türler",   "genel": False, "hedef": "ekosistem", "bolum": "turler",         "dil": "tr",
      "url": "https://news.google.com/rss/search?q=nesli+tehlike+tür+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # yaban
     {"ad": "Google News",  "etiket": "Yaban Hayatı",           "genel": False, "hedef": "ekosistem", "bolum": "yaban",          "dil": "tr",
      "url": "https://news.google.com/rss/search?q=yaban+hayatı+izleme+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
     {"ad": "Doğa Derneği", "etiket": "Yaban Hayatı",           "genel": False, "hedef": "ekosistem", "bolum": "yaban",          "dil": "tr",
      "url": "https://news.google.com/rss/search?q=site:dogadernegi.org&hl=tr&gl=TR&ceid=TR:tr", "web": "https://dogadernegi.org"},
-    # su-canlilari
     {"ad": "Google News",  "etiket": "Su Canlıları",            "genel": False, "hedef": "ekosistem", "bolum": "su-canlilari",   "dil": "tr",
      "url": "https://news.google.com/rss/search?q=balık+ölümü+su+kirliliği+deniz+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # hayvan-haklari
     {"ad": "Google News",  "etiket": "Hayvan Hakları",          "genel": False, "hedef": "ekosistem", "bolum": "hayvan-haklari", "dil": "tr",
      "url": "https://news.google.com/rss/search?q=hayvan+hakları+istismar+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # ciftci
     {"ad": "Google News",  "etiket": "Çiftçi & Köylü",         "genel": False, "hedef": "ekosistem", "bolum": "ciftci",         "dil": "tr",
      "url": "https://news.google.com/rss/search?q=çiftçi+köylü+tarım+maden+kamulaştırma+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # balikci
     {"ad": "Google News",  "etiket": "Balıkçı Toplulukları",   "genel": False, "hedef": "ekosistem", "bolum": "balikci",        "dil": "tr",
      "url": "https://news.google.com/rss/search?q=balıkçı+deniz+kirliliği+av+yasağı+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # yerli
     {"ad": "Google News",  "etiket": "Yerli & Yerel Haklar",   "genel": False, "hedef": "ekosistem", "bolum": "yerli",          "dil": "tr",
      "url": "https://news.google.com/rss/search?q=yerel+halk+maden+HES+RES+direniş+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # kadinlar
     {"ad": "Google News",  "etiket": "Kadınlar & Ekoloji",     "genel": False, "hedef": "ekosistem", "bolum": "kadinlar",       "dil": "tr",
      "url": "https://news.google.com/rss/search?q=kadın+çevre+ekoloji+maden+HES+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # genclik
     {"ad": "Google News",  "etiket": "Gençlik & Ekoloji",      "genel": False, "hedef": "ekosistem", "bolum": "genclik",        "dil": "tr",
      "url": "https://news.google.com/rss/search?q=iklim+gençlik+Türkiye+genç+aktivist&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # kentsel
     {"ad": "Google News",  "etiket": "Kentsel Çevre",          "genel": False, "hedef": "ekosistem", "bolum": "kentsel",        "dil": "tr",
      "url": "https://news.google.com/rss/search?q=yeşil+alan+kentsel+dönüşüm+hava+kirliliği+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # esitsizlik
     {"ad": "Google News",  "etiket": "Ekolojik Eşitsizlik",    "genel": False, "hedef": "ekosistem", "bolum": "esitsizlik",     "dil": "tr",
      "url": "https://news.google.com/rss/search?q=çevre+adaleti+ekolojik+eşitsizlik+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # goc
     {"ad": "Google News",  "etiket": "İklim Göçü",             "genel": False, "hedef": "ekosistem", "bolum": "goc",            "dil": "tr",
      "url": "https://news.google.com/rss/search?q=iklim+göçü+yerinden+edilme+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    # savas
     {"ad": "Google News",  "etiket": "Savaş & Ekoloji",        "genel": False, "hedef": "ekosistem", "bolum": "savas",          "dil": "tr",
      "url": "https://news.google.com/rss/search?q=savaş+çevre+ekoloji+kirlilik&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
 ]
@@ -234,7 +432,7 @@ def update_remote_data(new_data, sha):
     if not token:
         print("❌ GITHUB_TOKEN yok!")
         return
-    url     = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
+    url      = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
     json_str = json.dumps(new_data, ensure_ascii=False, indent=2)
     try:
         json.loads(json_str)
@@ -274,10 +472,10 @@ def tarih_normalize(ts):
     return ts[:10] if len(ts) >= 10 else datetime.date.today().isoformat()
 
 def sonraki_id(liste):
-  return max((x.get("id") or 0 for x in liste), default=0) + 1 if liste else 1
+    return max((x.get("id") or 0 for x in liste), default=0) + 1 if liste else 1
 
 # ══════════════════════════════════════════════════════════════════
-#  RSS ÇEKİCİ (tüm koleksiyonlar)
+#  RSS ÇEKİCİ (haberler/raporlar/makaleler/uluslararasi/ekosistem)
 # ══════════════════════════════════════════════════════════════════
 
 def rss_cek(kaynak):
@@ -328,7 +526,6 @@ def rss_cek(kaynak):
                 "icerik_tipi": icerik_tipi_tespit(baslik, ozet, hedef),
                 "dil": dil, "_hedef": hedef,
             })
-            # ekosistem kaynakları bolum alanı taşır
             if "bolum" in kaynak:
                 haberler[-1]["bolum"] = kaynak["bolum"]
             kabul += 1
@@ -385,33 +582,6 @@ def web_cek(kaynak):
             })
             kabul += 1
         print(f"  🌐 {kaynak['ad']} [{hedef}]: {kabul} kabul / {red} red (eşik={esik})")
-    except requests.exceptions.SSLError:
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        try:
-            r = requests.get(url_str, timeout=15, verify=False,
-                             headers={"User-Agent": "Mozilla/5.0"})
-            r.raise_for_status()
-            soup = BeautifulSoup(r.text, "html.parser")
-            linkler = soup.select(kaynak["secici"])[:20] or soup.select(FALLBACK_SELECTOR)[:20]
-            kabul = red = 0
-            for a in linkler:
-                baslik = a.get_text(" ", strip=True)
-                if not baslik or len(baslik) < 10: continue
-                href = a.get("href","")
-                if not href: continue
-                link = href if href.startswith("http") else url_str.rstrip("/") + "/" + href.lstrip("/")
-                if ekoloji_puani(baslik, "", genel, hedef) < esik: red += 1; continue
-                haberler.append({
-                    "baslik": baslik, "kaynak": kaynak["ad"], "kaynak_web": kaynak["web"],
-                    "tarih": datetime.date.today().isoformat(), "etiket": kaynak["etiket"],
-                    "ozet": "", "url": link,
-                    "icerik_tipi": icerik_tipi_tespit(baslik, "", hedef),
-                    "dil": "tr", "_hedef": hedef,
-                })
-                kabul += 1
-            print(f"  🌐 {kaynak['ad']} [{hedef}]: {kabul} kabul / {red} red (SSL atlandı)")
-        except Exception as e2:
-            print(f"  ⚠️  {kaynak['ad']}: {e2}")
     except Exception as e:
         print(f"  ⚠️  {kaynak['ad']}: {e}")
     return haberler
@@ -439,10 +609,10 @@ def main():
     silinen = onceki - len(data["ihlaller"])
     if silinen: print(f"🧹 {silinen} harita kaydı temizlendi")
 
-    # ── Global görülmüş kümeler (tüm koleksiyonlar) ──
-    mevcut_urls = set()
+    # Global görülmüş kümeler
+    mevcut_urls      = set()
     mevcut_basliklar = set()
-    for kol in ("haberler","raporlar","makaleler","uluslararasi","ekosistem"):
+    for kol in ("ihlaller","haberler","raporlar","makaleler","uluslararasi","ekosistem"):
         for h in data.get(kol,[]):
             mevcut_urls.add(h.get("url",""))
             if h.get("baslik"):
@@ -455,16 +625,34 @@ def main():
           f"{len(data.get('uluslararasi',[]))} uluslararası | "
           f"{len(data.get('ekosistem',[]))} ekosistem")
 
-    # ── Tüm kaynakları tara ──
+    # ── İhlal tarama ──
+    print(f"\n🔴 İhlal taranıyor… ({len(IHLAL_RSS)} kaynak)")
+    ihlal_id = sonraki_id(data.get("ihlaller",[]))
+    yeni_ihlaller = []
+    for kaynak in IHLAL_RSS:
+        for ihlal in ihlal_rss_cek(kaynak):
+            bn  = re.sub(r"\s+","",ihlal.get("baslik","")).strip().lower()
+            url = ihlal.get("kaynak_url","")
+            if url not in mevcut_urls and bn not in mevcut_basliklar:
+                ihlal["id"] = ihlal_id
+                ihlal_id += 1
+                yeni_ihlaller.append(ihlal)
+                mevcut_urls.add(url)
+                if bn: mevcut_basliklar.add(bn)
+
+    data["ihlaller"] = yeni_ihlaller + data.get("ihlaller",[])
+    print(f"  ✅ ihlaller      : +{len(yeni_ihlaller)} yeni → toplam {len(data['ihlaller'])}")
+
+    # ── Haber/rapor/makale/uluslararasi/ekosistem tarama ──
     tum_kaynaklar = KAYNAK_RSS + RAPOR_RSS + MAKALE_RSS + ULUSLARARASI_RSS + EKOSISTEM_RSS
     print(f"\n🔍 RSS taranıyor… ({len(tum_kaynaklar)} kaynak)")
-    yeni_hedefler: dict = {"haberler":[],"raporlar":[],"makaleler":[],"uluslararasi":[],"ekosistem":[]}
-    id_sayaclar = {kol: sonraki_id(data.get(kol,[])) for kol in yeni_hedefler}
+    yeni_hedefler = {"haberler":[],"raporlar":[],"makaleler":[],"uluslararasi":[],"ekosistem":[]}
+    id_sayaclar   = {kol: sonraki_id(data.get(kol,[])) for kol in yeni_hedefler}
 
     for kaynak in tum_kaynaklar:
         for h in rss_cek(kaynak):
             hedef = h.pop("_hedef", "haberler")
-            bn = re.sub(r"\s+","",h.get("baslik","")).strip().lower()
+            bn    = re.sub(r"\s+","",h.get("baslik","")).strip().lower()
             if h["url"] not in mevcut_urls and bn not in mevcut_basliklar:
                 h["id"] = id_sayaclar[hedef]
                 id_sayaclar[hedef] += 1
@@ -476,7 +664,7 @@ def main():
     for kaynak in KAYNAK_WEB:
         for h in web_cek(kaynak):
             hedef = h.pop("_hedef", "haberler")
-            bn = re.sub(r"\s+","",h.get("baslik","")).strip().lower()
+            bn    = re.sub(r"\s+","",h.get("baslik","")).strip().lower()
             if h["url"] not in mevcut_urls and bn not in mevcut_basliklar:
                 h["id"] = id_sayaclar[hedef]
                 id_sayaclar[hedef] += 1
@@ -484,19 +672,18 @@ def main():
                 mevcut_urls.add(h["url"])
                 if bn: mevcut_basliklar.add(bn)
 
-    # ── Koleksiyonları güncelle ──
     for kol, yeni in yeni_hedefler.items():
         data[kol] = yeni + data.get(kol,[])
         print(f"  ✅ {kol:15s}: +{len(yeni)} yeni → toplam {len(data[kol])}")
 
     data["_meta"] = {
-        "guncelleme":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "kaynak":        "otomatik_tarama_v6",
-        "ihlal_sayisi":  len(data.get("ihlaller",[])),
-        "haber_sayisi":  len(data.get("haberler",[])),
-        "rapor_sayisi":  len(data.get("raporlar",[])),
-        "makale_sayisi": len(data.get("makaleler",[])),
-        "ulus_sayisi":   len(data.get("uluslararasi",[])),
+        "guncelleme":       datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "kaynak":           "otomatik_tarama_v7",
+        "ihlal_sayisi":     len(data.get("ihlaller",[])),
+        "haber_sayisi":     len(data.get("haberler",[])),
+        "rapor_sayisi":     len(data.get("raporlar",[])),
+        "makale_sayisi":    len(data.get("makaleler",[])),
+        "ulus_sayisi":      len(data.get("uluslararasi",[])),
         "ekosistem_sayisi": len(data.get("ekosistem",[])),
     }
 
