@@ -2,8 +2,8 @@ name: Ekoloji Izleme Botu v5
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Her 6 saatte bir (Gece 00:00, 06:00, 12:00, 18:00) otomatik çalışır
-  workflow_dispatch: # GitHub arayüzünden manuel tetikleme butonu açar
+    - cron: '0 */6 * * *' # Her 6 saatte bir otomatik çalışır
+  workflow_dispatch: # Manuel tetikleme butonu
 
 jobs:
   scrape-and-deploy:
@@ -20,18 +20,19 @@ jobs:
 
     - name: Bağımlılıkları Yükle
       run: |
-        pip install requests beautifulsoup4 feedparser urllib3
+        pip install requests beautifulsoup4 feedparser urllib3 lxml
 
-    - name: data Klasörünü Kontrol Et ve Botu Çalıştır
+    - name: Botu Çalıştır ve Veri Üret
       run: |
-        mkdir -p data
-        python scripts/tarayici.py --cikti data
+        # Script data.tmp -> data değişimi yaptığı için işletim sisteminde çakışma yaratan klasör açma adımını çıkardık
+        python scripts/tarayici.py --cikti data.json
 
     - name: Üretilen JSON Verilerini GitHub Reposuna Commit Et
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
-        git add data/*.json
+        # Üretilen veri dosyalarını takibe alıyoruz
+        git add data.json
         # Değişiklik yoksa hata vermemesi için kontrol ekliyoruz
         git diff --quiet && git diff --staged --quiet || (git commit -m "Oto-Veri Güncellemesi: $(date +'%Y-%m-%d %H:%M')" && git push)
 
@@ -41,6 +42,8 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./data/
-        server-dir: ./httpdocs/data/
+        local-dir: ./
+        server-dir: ./httpdocs/
+        # Sadece güncellenen ana veri dosyasını ve ilişkili json'ları sunucuya atması için filtre ekliyoruz
+        only-include: '["data.json"]'
         state-name: .ftp-deploy-data-state.json
