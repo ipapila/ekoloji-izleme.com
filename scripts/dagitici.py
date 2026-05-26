@@ -425,7 +425,7 @@ def main():
     if args.tara:
         print("Tarayıcı başlatılıyor…")
         r = subprocess.run(
-            [sys.executable, "tarayici.py"],
+            [sys.executable, "scripts/tarayici.py"],
             capture_output=True, text=True
         )
         print(r.stdout)
