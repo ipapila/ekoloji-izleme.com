@@ -1,7 +1,10 @@
 name: Ekoloji Izleme Botu v6
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main  # Her commit attığında bot otomatik çalışır
+  workflow_dispatch: # Manuel tetikleme hala kalsın
   schedule:
     - cron: '0 */6 * * *'
 
@@ -15,6 +18,8 @@ jobs:
     steps:
     - name: Repo Kodlarını Çek
       uses: actions/checkout@v4
+      
+    # ... geri kalan adımlar aynı ...
 
     - name: Python Kurulumu
       uses: actions/setup-python@v5
