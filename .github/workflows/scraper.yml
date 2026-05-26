@@ -39,6 +39,8 @@ jobs:
 
     - name: Verileri Plesk Sunucusuna Senkronize Et (FTP)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+     - name: Verileri Plesk Sunucusuna Senkronize Et (FTP)
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
@@ -47,3 +49,5 @@ jobs:
         server-dir: ./httpdocs/
         only-include: '["data.json"]'
         state-name: .ftp-deploy-data-state.json
+        # 🌐 GÜVENLİK DUVARINI AŞMAK İÇİN PASİF MODU AKTİF EDİYORUZ:
+        passive: true
