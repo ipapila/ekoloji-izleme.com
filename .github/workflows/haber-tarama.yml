@@ -18,6 +18,11 @@ jobs:
           python-version: '3.10'
       - name: Bagımlılıkları yükle
         run: pip install requests beautifulsoup4 lxml feedparser
+      - name: Mevcut haberler.json Plesk'ten indir
+        run: |
+          curl -sf "https://ekoloji-izleme.com/data/haberler.json" -o haberler.json \
+            && echo "haberler.json indirildi ($(wc -c < haberler.json) byte)" \
+            || echo "Plesk'ten indirilemedi, sifirdan baslaniyor."
       - name: Haberleri tara
         run: python scripts/tarayici.py
         env:
@@ -48,7 +53,7 @@ jobs:
             echo "HTTP: ${HTTP_STATUS}"
             cat /tmp/resp.json
           done
-          echo "📤 haberler.json Plesk'e gönderiliyor..."
+          echo "haberler.json Plesk'e gönderiliyor..."
           HTTP_STATUS=$(curl -s -o /tmp/upload_response.json -w "%{http_code}" \
             -X POST \
             -H "Content-Type: application/json" \
@@ -57,7 +62,7 @@ jobs:
           echo "HTTP durum: ${HTTP_STATUS}"
           cat /tmp/upload_response.json
           if [ "$HTTP_STATUS" != "200" ]; then
-            echo "❌ Yükleme başarısız (HTTP ${HTTP_STATUS})"
+            echo "Yukleme basarisiz (HTTP ${HTTP_STATUS})"
             exit 1
           fi
-          echo "✅ Yükleme tamamlandı."
+          echo "Yukleme tamamlandi."
