@@ -26,14 +26,14 @@ jobs:
 
       - name: Bağımlılıkları Yükle
         run: |
-          pip install requests beautifulsoup4 feedparser urllib3 lxml
+          pip install -r requirements.txt
 
       # ── ADIM 1: Tarayıcıyı çalıştır → haberler.json + *_veri.json üretir ──
       - name: Haber Tarayıcısını Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          python tarayici.py --cikti haberler.json --max-haber 500 --max-diger 200
+          python scripts/tarayici.py --cikti haberler.json --max-haber 500 --max-diger 200
           echo "✓ tarayici.py tamamlandı"
           ls -lh haberler.json haberler_veri.json makaleler_veri.json uluslararasi_veri.json ekosistem_veri.json 2>/dev/null || true
 
@@ -42,7 +42,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          python dagitici.py
+          python scripts/dagitici.py
           echo "✓ dagitici.py tamamlandı"
           ls -lh ihlaller.json raporlar.json makaleler.json kuresel.json ekosistem.json 2>/dev/null || true
 
@@ -51,7 +51,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          python rapor_uret.py || echo "Rapor üretilemedi (devam ediyor)"
+          python scripts/rapor_uret.py || echo "Rapor üretilemedi (devam ediyor)"
 
       # ── ADIM 4: Tüm JSON'ları Plesk sunucusuna gönder ──
       - name: JSON Verileri Plesk'e Gönder (SFTP)
