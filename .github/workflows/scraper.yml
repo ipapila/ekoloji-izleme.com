@@ -25,7 +25,7 @@ jobs:
     - name: data Klasörünü Kontrol Et ve Botu Çalıştır
       run: |
         mkdir -p data
-        python scripts/tarayici.py --output data
+        python scripts/tarayici.py --cikti data
 
     - name: Üretilen JSON Verilerini GitHub Reposuna Commit Et
       run: |
