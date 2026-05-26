@@ -44,9 +44,10 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./
         server-dir: ./httpdocs/
-        only-include: '["data.json"]'
-        state-name: .ftp-deploy-data-state.json
-        passive: true
+        # 🔐 Kütüphanenin kendi dilinde Plesk'e uyumlu esnek güvenlik modu:
+        security: loose
+        # Zaman aşımını engellemek için süreyi uzatıyoruz (milisaniye cinsinden):
+        timeout: 60000
         # 🔐 GÜVENLİ FTPS BAĞLANTISINI ZORUNLU KILIYORUZ:
         security: ftps
         ftp-user: ${{ secrets.FTP_USERNAME }}
