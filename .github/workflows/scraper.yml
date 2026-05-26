@@ -1,9 +1,9 @@
-name: Ekoloji Izleme Botu
+name: Ekoloji Izleme Botu v5
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Her 6 saatte bir çalışır
-  workflow_dispatch: # Manuel tetikleme butonu
+    - cron: '0 */6 * * *' # Her 6 saatte bir (Gece 00:00, 06:00, 12:00, 18:00) otomatik çalışır
+  workflow_dispatch: # GitHub arayüzünden manuel tetikleme butonu açar
 
 jobs:
   scrape-and-deploy:
@@ -22,24 +22,25 @@ jobs:
       run: |
         pip install requests beautifulsoup4 feedparser urllib3
 
-    - name: Botu Çalıştır ve Veri Üret
+    - name: data Klasörünü Kontrol Et ve Botu Çalıştır
       run: |
+        mkdir -p data
         python cbs_proxy.py --output data
 
-    - name: Üretilen Veriyi GitHub Reposuna Commit Et
+    - name: Üretilen JSON Verilerini GitHub Reposuna Commit Et
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
         git add data/*.json
-        git diff --quiet && git diff --staged --quiet || git commit -m "Oto-Veri Güncellemesi: $(date +'%Y-%m-%d %H:%M')"
-        git push
+        # Değişiklik yoksa hata vermemesi için kontrol ekliyoruz
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Oto-Veri Güncellemesi: $(date +'%Y-%m-%d %H:%M')" && git push)
 
-    - name: Verileri Plesk Sunucusuna Yükle (FTP Deployment)
+    - name: Verileri Plesk Sunucusuna Senkronize Et (FTP)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        server: ${{ secrets.FTP_SERVER }}       # Plesk FTP Sunucu Adresi (örn: ftp.ekoloji-izleme.com)
-        username: ${{ secrets.FTP_USERNAME }}   # Plesk FTP Kullanıcı Adı
-        password: ${{ secrets.FTP_PASSWORD }}   # Plesk FTP Şifresi
-        local-dir: ./data/                      # GitHub'daki veri klasörü
-        server-dir: ./httpdocs/data/            # Plesk'teki hedef klasör
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./data/
+        server-dir: ./httpdocs/data/
         state-name: .ftp-deploy-data-state.json
