@@ -36,13 +36,15 @@ jobs:
         git add data.json
         git diff --quiet && git diff --staged --quiet || (git commit -m "Oto-Veri Güncellemesi: $(date +'%Y-%m-%d %H:%M')" && git push)
 
-    - name: Verileri Plesk Sunucusuna Senkronize Et (FTP)
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+    - name: Verileri Plesk Sunucusuna SFTP (SSH) ile Güvenli Gönder
+      uses: sshpool/sftp-deploy-action@v1.3.1
       with:
-        server: ${{ secrets.FTP_SERVER }}
+        host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
-        server-dir: ./httpdocs/
-        security: loose
-        timeout: 60000
+        port: 22 # Standart güvenli SSH portu
+        local-dir: './'
+        # ⚠️ Buraya Plesk'teki HTTPDOCS klasörünün sunucudaki tam yolunu yazıyoruz:
+        server-dir: '/var/www/vhosts/ekoloji-izleme.com/httpdocs/'
+        # Sadece bizim ürettiğimiz güncel veri dosyasını fırlatması için:
+        include: '["data.json"]'
