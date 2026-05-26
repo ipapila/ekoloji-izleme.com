@@ -798,7 +798,7 @@ function tickerHaberAc(h) {
   document.body.appendChild(m);
 }
 
-fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json?v=" + Date.now())
+fetch("https://ekoloji-izleme.com/data/haberler.json?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
     const haberler = data.haberler || (Array.isArray(data) ? data : []);
