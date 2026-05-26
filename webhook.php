@@ -6,7 +6,15 @@
  */
 
 // ── Ayarlar ──────────────────────────────────────────────────
-define('SECRET',      getenv('WEBHOOK_SECRET') ?: 'Smtppl5862');
+// ⚠️  WEBHOOK_SECRET ortam değişkeni Plesk Panel → Domains → ekoloji-izleme.com
+//     → Hosting Settings → Environment Variables kısmında tanımlanmalı.
+$_secret = getenv('WEBHOOK_SECRET');
+if (!$_secret) {
+    http_response_code(503);
+    echo json_encode(['ok' => false, 'hata' => 'Sunucu yapılandırma hatası: WEBHOOK_SECRET tanımlı değil']);
+    exit;
+}
+define('SECRET', $_secret);
 define('IZIN_DOSYA',  ['data.json', 'ihlaller.json', 'haberler.json', 'rapor.json', 'icerik.json']);
 define('HEDEF_DIZIN', __DIR__ . '/');   // httpdocs/ kökü
 // ─────────────────────────────────────────────────────────────

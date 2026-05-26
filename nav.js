@@ -39,7 +39,6 @@
        </a>`;
 
   const navHTML = `
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <nav>
   <a href="index.html" class="nav-logo">
     <span>ekoloji-izleme<b>.com</b></span>
@@ -196,7 +195,7 @@
     ${adminBtn}
   </div>
 
-  <div class="hamburger" onclick="document.querySelector('.nav-menu').style.display=document.querySelector('.nav-menu').style.display==='flex'?'none':'flex'">
+  <div class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menüyü aç/kapat" aria-expanded="false">
     <span></span><span></span><span></span>
   </div>
 </nav>
@@ -309,3 +308,25 @@ function adminCikis() {
   else sessionStorage.removeItem("ekoloji_admin_session");
   location.reload();
 }
+
+// ── Mobil navigasyon ──
+function toggleMobileNav() {
+  const menu = document.querySelector(".nav-menu");
+  const btn  = document.getElementById("hamburgerBtn");
+  if (!menu || !btn) return;
+  const acik = menu.style.display === "flex";
+  menu.style.display = acik ? "none" : "flex";
+  btn.setAttribute("aria-expanded", String(!acik));
+}
+
+// Dışarı tıklanınca mobil menüyü kapat
+document.addEventListener("click", function(e) {
+  const menu = document.querySelector(".nav-menu");
+  const btn  = document.getElementById("hamburgerBtn");
+  if (!menu || menu.style.display !== "flex") return;
+  if (!menu.contains(e.target) && btn && !btn.contains(e.target)) {
+    menu.style.display = "none";
+    if (btn) btn.setAttribute("aria-expanded", "false");
+  }
+});
+

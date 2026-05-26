@@ -29,8 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 /* ── Kimlik doğrulama ── */
+// ⚠️  Plesk Panel → Environment Variables → UPLOAD_SECRET ile tanımlayın
+$_beklenen = getenv('UPLOAD_SECRET');
+if (!$_beklenen) {
+    hata('Sunucu yapılandırma hatası: UPLOAD_SECRET tanımlı değil', 503);
+}
 $secret = trim($_POST['secret'] ?? '');
-if ($secret !== 'admin') {
+if (!hash_equals($_beklenen, $secret)) {
     hata('Yetkisiz erişim.', 401);
 }
 
