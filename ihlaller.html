@@ -205,8 +205,8 @@ document.getElementById("searchBox").addEventListener("input", filter);
 const silinen = _adminMod.getSilinen("ihlaller");
 const urlKat  = new URLSearchParams(location.search).get("kat");
 
-// Önce data.json'dan çek, yoksa localStorage
-fetch("data.json?v=" + Date.now())
+// Önce ihlaller.json'dan çek (dagitici.py tarafından üretilir), yoksa localStorage
+fetch("ihlaller.json?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(d => {
     const json  = (d.ihlaller || []).filter(x => !silinen.has(String(x.id)));
