@@ -6,7 +6,7 @@
  */
 
 // ── Ayarlar ──────────────────────────────────────────────────
-define('SECRET',      getenv('WEBHOOK_SECRET') ?: 'BURAYA_TOKEN_YAZIN');
+define('SECRET',      getenv('WEBHOOK_SECRET') ?: 'Smtppl5862');
 define('IZIN_DOSYA',  ['data.json', 'ihlaller.json', 'haberler.json', 'rapor.json', 'icerik.json']);
 define('HEDEF_DIZIN', __DIR__ . '/');   // httpdocs/ kökü
 // ─────────────────────────────────────────────────────────────
