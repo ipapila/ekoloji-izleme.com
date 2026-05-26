@@ -8,6 +8,10 @@ on:
 jobs:
   scrape-and-deploy:
     runs-on: ubuntu-latest
+    
+    # 🔐 GİTHUB'A YAZMA YETKİSİ VEREN KRİTİK SATIRLAR BURASI:
+    permissions:
+      contents: write
 
     steps:
     - name: Repo Kodlarını Çek
@@ -24,16 +28,13 @@ jobs:
 
     - name: Botu Çalıştır ve Veri Üret
       run: |
-        # Script data.tmp -> data değişimi yaptığı için işletim sisteminde çakışma yaratan klasör açma adımını çıkardık
         python scripts/tarayici.py --cikti data.json
 
     - name: Üretilen JSON Verilerini GitHub Reposuna Commit Et
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
-        # Üretilen veri dosyalarını takibe alıyoruz
         git add data.json
-        # Değişiklik yoksa hata vermemesi için kontrol ekliyoruz
         git diff --quiet && git diff --staged --quiet || (git commit -m "Oto-Veri Güncellemesi: $(date +'%Y-%m-%d %H:%M')" && git push)
 
     - name: Verileri Plesk Sunucusuna Senkronize Et (FTP)
@@ -44,6 +45,5 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./
         server-dir: ./httpdocs/
-        # Sadece güncellenen ana veri dosyasını ve ilişkili json'ları sunucuya atması için filtre ekliyoruz
         only-include: '["data.json"]'
         state-name: .ftp-deploy-data-state.json
