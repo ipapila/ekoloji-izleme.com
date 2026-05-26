@@ -31,10 +31,12 @@ jobs:
         pip install requests beautifulsoup4 feedparser urllib3 lxml
 
     - name: Botu Çalıştır ve Veri Üret
+      if: false # Bu satırı ekleyerek adımı atlayın
       run: |
         python scripts/tarayici.py --cikti data.json
 
     - name: Üretilen JSON Verilerini GitHub Reposuna Commit Et
+    
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
