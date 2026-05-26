@@ -36,15 +36,13 @@ jobs:
         git add data.json
         git diff --quiet && git diff --staged --quiet || (git commit -m "Oto-Veri Güncellemesi: $(date +'%Y-%m-%d %H:%M')" && git push)
 
-    - name: Verileri Plesk Sunucusuna SFTP (SSH) ile Güvenli Gönder
-      uses: sshpool/sftp-deploy-action@v1.3.1
+    - name: Verileri Plesk Sunucusuna Güvenli SSH (SFTP) ile Gönder
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        port: 22 # Standart güvenli SSH portu
-        local-dir: './'
-        # ⚠️ Buraya Plesk'teki HTTPDOCS klasörünün sunucudaki tam yolunu yazıyoruz:
-        server-dir: '/var/www/vhosts/ekoloji-izleme.com/httpdocs/'
-        # Sadece bizim ürettiğimiz güncel veri dosyasını fırlatması için:
-        include: '["data.json"]'
+        port: 22 # Güvenli SSH portu
+        source: "data.json"
+        # ⚠️ Buraya Plesk'teki ana dizinin sunucudaki tam fiziksel yolunu yazıyoruz:
+        target: "/var/www/vhosts/ekoloji-izleme.com/httpdocs/"
