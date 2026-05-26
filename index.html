@@ -199,7 +199,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
     <div class="crosshair-ring" style="opacity:.12;"></div>
     <div class="crosshair-ring" style="opacity:.15;"></div>
     <img
-      src="ekolojiizleme_amblem_transparan.png"
+      src="ekoloji-izleme_amblem_transparan.png"
       alt="Ekoloji İzleme Amblemi"
       style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:.88;pointer-events:none;"
     >
@@ -650,11 +650,38 @@ function ihlallerRender(ihlaller) {
   `;
 }
 
-// ihlaller.json'dan çek (dagitici.py üretir), yoksa localStorage fallback
-fetch("ihlaller.json?v=" + Date.now())
-  .then(r => r.ok ? r.json() : Promise.reject())
-  .then(d => ihlallerRender(d.ihlaller || []))
-  .catch(() => ihlallerRender(SITE.getList("ihlaller") || SITE.defaults.ihlaller));
+// ihlaller.json + haberler.json birleşik okuma
+const _IHLAL_K = [
+  "ihlal","tahribat","katliamı","katliami","izinsiz","ruhsatsız","ruhsatsiz",
+  "kaçak","kacak","çed","ÇED","acele kamulaştırma","taş ocağı","maden ocağı",
+  "termik santral","nükleer santral","ağaç kesiml","orman tahri","orman yakıl",
+  "su kirliliği","deniz kirliliği","hava kirliliği","atık depo","kaçak döküm",
+  "sit alanı ihlal","kıyı dolgu","dere yatağı","yürütmeyi durdur",
+  "gözaltı","direniş","nöbet","kamulaştırma kararı","mapeg","epdk kararı"
+];
+function _ihlalMi(h){
+  const m=((h.baslik||"")+" "+(h.ozet||"")+" "+(h.kategori||"")).toLowerCase();
+  return _IHLAL_K.some(k=>m.includes(k.toLowerCase()));
+}
+Promise.all([
+  fetch("ihlaller.json?v="+Date.now()).then(r=>r.ok?r.json():{}).catch(()=>({})),
+  fetch("haberler.json?v="+Date.now()).then(r=>r.ok?r.json():{}).catch(()=>({}))
+]).then(([di,dh])=>{
+  const jsonIhlal = di.ihlaller || [];
+  const haberIhlal = (dh.haberler||[]).filter(_ihlalMi).map(h=>({
+    id: h.id, baslik: h.baslik,
+    konum: h.konum||h.bolge||"Türkiye",
+    kategori: h.kategori||"Ekolojik İhlal",
+    siddet: h.siddet||(h._puan>5?"kritik":h._puan>3?"orta":"takipte"),
+    tarih: h.tarih, aciklama: h.ozet||"", kaynak: h.kaynak||""
+  }));
+  const gorulen=new Set(); const birlesik=[];
+  for(const i of [...(SITE.getList("ihlaller")||[]),...jsonIhlal,...haberIhlal]){
+    const s=String(i.id);
+    if(!gorulen.has(s)){gorulen.add(s);birlesik.push(i);}
+  }
+  ihlallerRender(birlesik.length ? birlesik : SITE.defaults.ihlaller);
+});
 
 // ── Haber detay modal ──
 function haberDetay(h) {
