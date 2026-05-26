@@ -591,7 +591,8 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 <script>
 // ── İstatistikler ──
 (function istatistikYukle() {
-	fetch("https://ekoloji-izleme.com/data/haberler.json?v=" + Date.now())	.then(r => r.ok ? r.json() : Promise.reject())
+	fetch("https://ekoloji-izleme.com/data/haberler.json?v=" + Date.now())	
+	.then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const meta = d._meta || {};
       const haberler = d.haberler || [];
