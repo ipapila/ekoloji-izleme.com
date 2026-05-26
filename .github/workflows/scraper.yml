@@ -47,3 +47,6 @@ jobs:
         only-include: '["data.json"]'
         state-name: .ftp-deploy-data-state.json
         passive: true
+        # 🔐 GÜVENLİ FTPS BAĞLANTISINI ZORUNLU KILIYORUZ:
+        security: ftps
+        ftp-user: ${{ secrets.FTP_USERNAME }}
