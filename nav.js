@@ -228,12 +228,19 @@
       const liste = haberler.filter(h => !silinen.has(String(h.id))).slice(0, 12);
       if (!liste.length) return;
       bar.style.display = "block";
-      const items = liste.map(h => `
+      const items = liste.map(h => {
+        const etiketStr = (Array.isArray(h.etiketler) && h.etiketler[0])
+          ? h.etiketler[0]
+          : (h.kategori || h.etiket || h.kaynak || "HABER");
+        const etiketGoster = String(etiketStr).slice(0, 14).toUpperCase();
+        return `
         <div class="ticker-item" style="cursor:pointer;" onclick='_navTickerAc(${JSON.stringify(h).replace(/'/g, "&#39;")})'>
           <span class="label" style="background:rgba(45,158,107,.18);color:var(--bright);border:1px solid rgba(45,158,107,.3);">
-          ${(Array.isArray(h.etiketler) && h.etiketler[0] ? h.etiketler[0] : h.kategori || h.etiket || h.kaynak || "HABER").toString().slice(0, 14).toUpperCase()}          </span>
+            ${etiketGoster}
+          </span>
           ${h.baslik}${h.kaynak ? ` <span style="opacity:.5;font-size:.85em;">— ${h.kaynak}</span>` : ""}
-        </div>`).join("");
+        </div>`;
+      }).join("");
       document.getElementById("navTickerInner").innerHTML = items + items;
     }
 
