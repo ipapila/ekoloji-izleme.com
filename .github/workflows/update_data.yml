@@ -15,39 +15,53 @@ jobs:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
       - name: Bağımlılıkları yükle
         run: pip install requests beautifulsoup4 lxml
+
       - name: Haberleri güncelle (guncelle.py)
         run: python scripts/guncelle.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Güncel data.json'u GitHub'dan indir
+
+      - name: Değişiklikleri commit et
         run: |
-          curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.raw+json" \
-            "https://api.github.com/repos/${{ github.repository }}/contents/data.json" \
-            -o data.json
-          echo "data.json boyutu: $(wc -c < data.json) byte"
-          echo "Haber sayısı: $(python3 -c "import json; d=json.load(open('data.json')); print(len(d.get('haberler',[])))")"
-      - name: data.json'u Flex sunucuya gönder
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json ihlaller.json || true
+          git diff --cached --quiet && echo "Değişiklik yok, commit atlanıyor." || \
+            git commit -m "auto: data.json güncellendi $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git push
+
+      - name: data.json + ihlaller.json Flex sunucuya gönder
         run: |
-          HTTP_STATUS=$(curl -s -o /tmp/webhook_response.txt -w "%{http_code}" \
-            -X POST "${{ secrets.FLEX_WEBHOOK_URL }}" \
-            -H "X-Webhook-Secret: ${{ secrets.FLEX_WEBHOOK_SECRET }}" \
-            -H "Content-Type: application/json" \
-            --data-binary @data.json)
-          echo "HTTP Status: $HTTP_STATUS"
-          cat /tmp/webhook_response.txt
-          if [ "$HTTP_STATUS" != "200" ]; then
-            echo "Webhook başarısız (HTTP $HTTP_STATUS)"
-          else
-            echo "Flex sunucu güncellendi."
-          fi
+          for DOSYA in data.json ihlaller.json; do
+            if [ ! -f "$DOSYA" ]; then
+              echo "$DOSYA bulunamadı, atlanıyor."
+              continue
+            fi
+            echo "$DOSYA Flex'e gönderiliyor..."
+            HTTP_STATUS=$(curl -s -o /tmp/flex_resp.txt -w "%{http_code}" \
+              -X POST "${{ secrets.FLEX_WEBHOOK_URL }}?dosya=${DOSYA}" \
+              -H "X-Webhook-Secret: ${{ secrets.FLEX_WEBHOOK_SECRET }}" \
+              -H "Content-Type: application/json" \
+              --data-binary @"$DOSYA")
+            echo "HTTP Status: $HTTP_STATUS"
+            cat /tmp/flex_resp.txt
+            if [ "$HTTP_STATUS" != "200" ]; then
+              echo "$DOSYA Flex gönderimi başarısız (HTTP $HTTP_STATUS)"
+            else
+              echo "$DOSYA Flex'e gönderildi."
+            fi
+          done
+
       - name: icerik.json varsa Flex'e gönder
         run: |
           if [ -f icerik.json ]; then
@@ -61,6 +75,7 @@ jobs:
           else
             echo "icerik.json bulunamadı, atlanıyor."
           fi
+
       - name: data.json + ihlaller.json Plesk'e gönder
         env:
           UPLOAD_TOKEN: ${{ secrets.PLESK_UPLOAD_TOKEN }}
@@ -80,8 +95,8 @@ jobs:
             echo "HTTP durum: ${HTTP_STATUS}"
             cat /tmp/plesk_resp.json
             if [ "$HTTP_STATUS" != "200" ]; then
-              echo "$DOSYA yükleme başarısız (HTTP ${HTTP_STATUS})"
+              echo "$DOSYA Plesk yükleme başarısız (HTTP ${HTTP_STATUS})"
             else
-              echo "$DOSYA yükleme tamamlandı."
+              echo "$DOSYA Plesk'e yüklendi."
             fi
           done
