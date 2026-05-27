@@ -6,12 +6,12 @@ const SITE = {
 
   defaults: {
     ihlaller: [
-      { id: 1, tarih: "2025-05-15", baslik: "Akbelen Ormanlarında İzinsiz Ağaç Kesimine Devam", konum: "Muğla", kategori: "Maden", siddet: "kritik", aciklama: "İktidar destekli maden şirketi ÇED kararına rağmen kesimi sürdürüyor.", kaynak: "Bianet" },
-      { id: 2, tarih: "2025-05-14", baslik: "Gediz Havzası'nda Tekstil Fabrikası Atık Deşarjı", konum: "Kütahya", kategori: "Su Kirliliği", siddet: "orta", aciklama: "Çevre izin belgesi olmayan fabrikanın atıkları Gediz Nehri'ne karıştı.", kaynak: "Gazete Duvar" },
-      { id: 3, tarih: "2025-05-13", baslik: "Karadeniz Kıyısında Balık Çiftliği Kaçak İnşaat", konum: "Trabzon", kategori: "Kıyı", siddet: "kritik", aciklama: "Kıyı koruma bandı içine izinsiz kafes kurulumu tespit edildi.", kaynak: "Yerel Kaynak" },
-      { id: 4, tarih: "2025-05-12", baslik: "Tuz Gölü Çevresinde Sanayi Bölgesi Yayılımı", konum: "Ankara/Konya", kategori: "Tarım Arazisi", siddet: "takipte", aciklama: "DKMPGM onaylı sit alanına yakın bölgede ruhsatsız yapılaşma.", kaynak: "MAPEG" },
-      { id: 5, tarih: "2025-05-11", baslik: "Hasankeyf Havzası'nda 3 Yeni HES Lisansı", konum: "Batman/Siirt", kategori: "Su Hakkı", siddet: "kritik", aciklama: "Resmî Gazete'de yayımlanan kararname ile 3 HES projesine lisans verildi.", kaynak: "Resmî Gazete" },
-      { id: 6, tarih: "2025-05-10", baslik: "Kazdağları'nda Maden Arama Ruhsatı Yenilendi", konum: "Balıkesir", kategori: "Orman", siddet: "orta", aciklama: "Kazdağları eteklerinde altın arama sahası genişletildi.", kaynak: "MAPEG" },
+      { id: 1, tarih: "2025-05-15", baslik: "Akbelen Ormanlarında İzinsiz Ağaç Kesimine Devam", konum: "Muğla", kategori: "Maden", siddet: "kritik", aciklama: "İktidar destekli maden şirketi ÇED kararına rağmen kesimi sürdürüyor.", kaynak: "Bianet", kaynak_url: "https://bianet.org/haber/akbelen" },
+      { id: 2, tarih: "2025-05-14", baslik: "Gediz Havzası'nda Tekstil Fabrikası Atık Deşarjı", konum: "Kütahya", kategori: "Su Kirliliği", siddet: "orta", aciklama: "Çevre izin belgesi olmayan fabrikanın atıkları Gediz Nehri'ne karıştı.", kaynak: "Gazete Duvar", kaynak_url: "https://www.gazeteduvar.com.tr/cevre" },
+      { id: 3, tarih: "2025-05-13", baslik: "Karadeniz Kıyısında Balık Çiftliği Kaçak İnşaat", konum: "Trabzon", kategori: "Kıyı", siddet: "kritik", aciklama: "Kıyı koruma bandı içine izinsiz kafes kurulumu tespit edildi.", kaynak: "Yerel Kaynak", kaynak_url: "" },
+      { id: 4, tarih: "2025-05-12", baslik: "Tuz Gölü Çevresinde Sanayi Bölgesi Yayılımı", konum: "Ankara/Konya", kategori: "Tarım Arazisi", siddet: "takipte", aciklama: "DKMPGM onaylı sit alanına yakın bölgede ruhsatsız yapılaşma.", kaynak: "MAPEG", kaynak_url: "https://mapeg.gov.tr" },
+      { id: 5, tarih: "2025-05-11", baslik: "Hasankeyf Havzası'nda 3 Yeni HES Lisansı", konum: "Batman/Siirt", kategori: "Su Hakkı", siddet: "kritik", aciklama: "Resmî Gazete'de yayımlanan kararname ile 3 HES projesine lisans verildi.", kaynak: "Resmî Gazete", kaynak_url: "https://www.resmigazete.gov.tr" },
+      { id: 6, tarih: "2025-05-10", baslik: "Kazdağları'nda Maden Arama Ruhsatı Yenilendi", konum: "Balıkesir", kategori: "Orman", siddet: "orta", aciklama: "Kazdağları eteklerinde altın arama sahası genişletildi.", kaynak: "MAPEG", kaynak_url: "https://mapeg.gov.tr" },
     ],
     haberler: [
       { id: 1, tarih: "2025-05-16", baslik: "Çevre Gönüllüleri Fırtına Vadisi'nde Nöbet Tutuyor", ozet: "3 haftadır süren nöbet RES projesini durdurdu.", kaynak: "Bianet", etiket: "Direniş" },
@@ -43,7 +43,11 @@ const SITE = {
   },
 
   init() {
-    if (!this.get("ihlaller")) this.set("ihlaller", this.defaults.ihlaller);
+    // kaynak_url eksik eski veriyse sıfırla
+    const mevcut = this.get("ihlaller");
+    if (!mevcut || (mevcut.length > 0 && !mevcut[0].hasOwnProperty("kaynak_url"))) {
+      this.set("ihlaller", this.defaults.ihlaller);
+    }
     if (!this.get("haberler")) this.set("haberler", this.defaults.haberler);
     if (!this.get("raporlar")) this.set("raporlar", this.defaults.raporlar);
     if (!this.get("nextId"))   this.set("nextId", { ihlaller: 10, haberler: 10, raporlar: 10 });
