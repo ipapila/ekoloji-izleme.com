@@ -294,6 +294,12 @@ def dosya_yaz(yol: Path, yeni_items: list, hedef_adi: str, mevcut: list):
     birlesik.sort(key=lambda x: x.get("tarih") or "1970", reverse=True)
     birlesik = birlesik[:MAX_KAYIT[hedef_adi]]
 
+    # ihlaller sayfası kaynak_url bekliyor, url varsa eşle
+    if hedef_adi == "ihlaller":
+        for item in birlesik:
+            if not item.get("kaynak_url") and item.get("url"):
+                item["kaynak_url"] = item["url"]
+
     cikti = {
         "meta": {
             "guncelleme": datetime.now(timezone.utc).isoformat(),

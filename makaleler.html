@@ -90,7 +90,9 @@
       padding-top:16px;border-top:1px solid rgba(45,158,107,.1);
     }
     .card-author{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;}
-    .card-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(122,158,138,.5);}
+    .card-kaynak-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--bright);text-decoration:none;padding:2px 7px;border:1px solid rgba(45,158,107,.25);border-radius:2px;background:rgba(45,158,107,.07);transition:all .2s;white-space:nowrap;}
+.card-kaynak-btn:hover{background:rgba(45,158,107,.2);}
+.card-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(122,158,138,.5);}
     .read-time{
       position:absolute;top:20px;right:20px;font-family:'JetBrains Mono',monospace;
       font-size:8.5px;color:rgba(45,158,107,.35);letter-spacing:.07em;
@@ -400,6 +402,7 @@ function renderGrid() {
       <div class="card-footer">
         <span class="card-author">${m.yazar || ''}</span>
         <span class="card-date">${tarih}</span>
+        ${(m.url||m.kaynak_url) ? `<a href="${m.url||m.kaynak_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="card-kaynak-btn">Kaynak →</a>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -450,7 +453,7 @@ function makaleAc(id) {
   const mpdf      = document.getElementById('mpdf');
   const murl      = document.getElementById('murl');
   const dosyaUrl  = m.pdf_url || m.dosya || '';
-  const kaynakUrl = m.url || '';
+  const kaynakUrl = m.url || m.kaynak_url || '';
   const isPdf     = u => u && /\.pdf(\?|$)/i.test(u);
   const isDoc     = u => u && /\.(doc|docx)(\?|$)/i.test(u);
 

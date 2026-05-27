@@ -40,6 +40,8 @@
 .count-bar b{color:var(--bright);}
 .admin-sil-btn{padding:4px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8.5px;cursor:pointer;letter-spacing:.06em;white-space:nowrap;}
 .admin-sil-btn:hover{background:rgba(232,92,42,.25);}
+.kaynak-link-btn{display:inline-flex;align-items:center;padding:4px 10px;background:rgba(45,158,107,.12);color:var(--bright);border:1px solid rgba(45,158,107,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-decoration:none;transition:all .2s;}
+.kaynak-link-btn:hover{background:rgba(45,158,107,.25);}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;padding:40px;max-width:560px;width:90%;position:relative;}
@@ -145,6 +147,7 @@ function render(data) {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
         <span class="date">${formatDate(item.tarih)}</span>
+        ${(item.kaynak_url||item.url) ? `<a href="${item.kaynak_url||item.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="kaynak-link-btn">Kaynak →</a>` : ''}
         ${adminMod ? `<button class="admin-sil-btn" onclick="event.stopPropagation();ihlalSil('${item.id}')">SİL</button>` : ''}
       </div>
     </div>
@@ -183,7 +186,7 @@ function openModal(id) {
     <div class="modal-field"><label>Tarih</label><p>${formatDate(item.tarih)}</p></div>
     ${item.kaynak ? `<div class="modal-field"><label>Kaynak</label><p>${item.kaynak}</p></div>` : ''}
     ${item.aciklama ? `<div class="modal-field"><label>Açıklama</label><p>${item.aciklama}</p></div>` : ''}
-    ${item.kaynak_url ? `<div style="margin-top:18px;"><a href="${item.kaynak_url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Kaynağa Git →</a></div>` : ''}
+    ${(item.kaynak_url||item.url) ? `<div style="margin-top:18px;"><a href="${item.kaynak_url||item.url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Kaynağa Git →</a></div>` : ''}
   `;
   document.getElementById("modal").classList.add("open");
 }
@@ -205,8 +208,8 @@ document.getElementById("searchBox").addEventListener("input", filter);
 const silinen = _adminMod.getSilinen("ihlaller");
 const urlKat  = new URLSearchParams(location.search).get("kat");
 
-// Önce ihlaller.json'dan çek (dagitici.py tarafından üretilir), yoksa localStorage
-fetch("ihlaller.json?v=" + Date.now())
+// Önce data.json'dan çek, yoksa localStorage
+fetch("data.json?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(d => {
     const json  = (d.ihlaller || []).filter(x => !silinen.has(String(x.id)));
