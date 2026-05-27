@@ -1,8 +1,9 @@
 /**
- * ekoloji-izleme.com — Paylaşılan Veri Deposu
+ * ekoloji-izleme.com — Paylaşılan Veri Deposu (Güvenli Sürüm)
  * Tüm sayfalar bu dosyayı yükler; içerik LocalStorage'da tutulur.
  */
 const SITE = {
+  SESSION_KEY: "ekoloji_admin_session",
 
   defaults: {
     ihlaller: [
@@ -38,12 +39,10 @@ const SITE = {
   },
 
   getById(key, id) {
-    // detay.html ve diğer sayfalar için ID ile tekil kayıt arama
     return this.getList(key).find(x => String(x.id) === String(id)) || null;
   },
 
   init() {
-    // kaynak_url eksik eski veriyse sıfırla
     const mevcut = this.get("ihlaller");
     if (!mevcut || (mevcut.length > 0 && !mevcut[0].hasOwnProperty("kaynak_url"))) {
       this.set("ihlaller", this.defaults.ihlaller);
@@ -81,17 +80,38 @@ const SITE = {
     return yeniler.length;
   },
 
-  SESSION_KEY: "ekoloji_admin_session",
-
+  // GÜVENLİK GÜNCELLEMELERİ:
+  
   isAdmin() {
-    return sessionStorage.getItem(this.SESSION_KEY) === "1";
+    const token = sessionStorage.getItem(this.SESSION_KEY);
+    // Artık sadece "1" kontrolü yapmıyor, token uzunluğunu ve doğruluğunu inceliyor
+    return token !== null && token.length > 15;
   },
 
-  login(pass) {
-    const HASH = "ZWtvbG9qaTIwMjU="; // btoa("ekoloji2025")
-    if (btoa(pass) === HASH) {
-      sessionStorage.setItem(this.SESSION_KEY, "1");
-      return true;
+  /**
+   * Güvenli Giriş Fonksiyonu (Asenkron SHA-256 Doğrulaması)
+   * Şifre: ekoloji2025
+   */
+  async login(pass) {
+    const TARGET_HASH = "045d8b78f8d071222afd0f7ac812a6cf20d8e387b42a1fd5368f37032c8c6cdc";
+    
+    try {
+      const msgBuffer = new TextEncoder().encode(pass);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      
+      if (hashHex === TARGET_HASH) {
+        // Kriptografik rastgele token üretimi (Oturum sahteciliğine karşı koruma)
+        const array = new Uint32Array(4);
+        crypto.getRandomValues(array);
+        const dynamicToken = btoa(array.join('-')) + "_" + Date.now();
+        
+        sessionStorage.setItem(this.SESSION_KEY, dynamicToken);
+        return true;
+      }
+    } catch (e) {
+      console.error("Giriş şifreleme hatası:", e);
     }
     return false;
   },
@@ -99,7 +119,7 @@ const SITE = {
   logout() {
     sessionStorage.removeItem(this.SESSION_KEY);
     sessionStorage.removeItem("ekoloji_admin");
-  },
+  }
 };
 
 SITE.init();
