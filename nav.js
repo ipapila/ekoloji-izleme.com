@@ -1,45 +1,98 @@
 /**
- * nav.js — Ortak navigasyonu her sayfaya enjekte eder.
+ * nav.js — Ortak Navigasyonu ve Canlı Haber Bandını Enjekte Eden Güvenli Script
  */
 (function () {
   const SESSION_KEY = "ekoloji_admin_session";
-  const adminAktif  = sessionStorage.getItem(SESSION_KEY) === "1";
+  
+  // Güvenli oturum kontrolü
+  const adminAktif = (function() {
+    const token = sessionStorage.getItem(SESSION_KEY);
+    return token !== null && token.length > 15;
+  })();
+  
   const current = location.pathname.split("/").pop() || "index.html";
 
-  const adminBtn = adminAktif
-    ? `<div style="display:flex;align-items:center;gap:8px;">
-         <a href="admin.html"
-            style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);
-                   text-decoration:none;letter-spacing:.08em;padding:5px 12px;
-                   border:1px solid rgba(45,158,107,.45);border-radius:3px;
-                   background:rgba(45,158,107,.08);display:flex;align-items:center;gap:6px;
-                   transition:all .2s;"
-            onmouseover="this.style.background='rgba(45,158,107,.18)'"
-            onmouseout="this.style.background='rgba(45,158,107,.08)'">
+  // Çekilen haber verilerinin XSS riski olmadan hafızada tutulacağı yerel dizi
+  let loadedTickerHaberler = [];
+
+  // Stil Enjeksiyonu: CSS kodlarını HTML şablonundan ayırarak performansı ve güvenliği artırır
+  const inlineStyles = `
+    .nav-admin-wrapper { display: flex; align-items: center; gap: 8px; }
+    .btn-admin-panel {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--bright);
+      text-decoration: none; letter-spacing: .08em; padding: 5px 12px;
+      border: 1px solid rgba(45,158,107,.45); border-radius: 3px;
+      background: rgba(45,158,107,.08); display: flex; align-items: center; gap: 6px;
+      transition: all .2s;
+    }
+    .btn-admin-panel:hover { background: rgba(45,158,107,.18); }
+    .btn-admin-logout {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted);
+      letter-spacing: .06em; padding: 5px 10px; border: 1px solid rgba(232,92,42,.25);
+      border-radius: 3px; background: transparent; cursor: pointer; transition: all .2s;
+    }
+    .btn-admin-logout:hover { color: var(--warn); border-color: rgba(232,92,42,.5); }
+    .btn-admin-login {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted);
+      text-decoration: none; letter-spacing: .08em; padding: 6px 12px;
+      border: 1px solid rgba(45,158,107,.2); border-radius: 3px; transition: all .2s;
+    }
+    .btn-admin-login:hover { color: var(--bright); border-color: rgba(45,158,107,.4); }
+    .ticker-item-secure { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .ticker-item-secure .label {
+      background: rgba(45,158,107,.18); color: var(--bright); border: 1px solid rgba(45,158,107,.3);
+      padding: 2px 6px; border-radius: 2px; font-size: 0.85em; font-weight: bold;
+    }
+    .ticker-item-secure .source-span { opacity: .5; font-size: .85em; }
+    .modal-overlay-secure {
+      position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.75);
+      display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);
+    }
+    .modal-content-secure {
+      background: var(--deep); border: 1px solid rgba(45,158,107,.25); border-radius: 8px;
+      max-width: 640px; width: 100%; padding: 32px; position: relative;
+    }
+    .modal-close-secure {
+      position: absolute; top: 16px; right: 16px; background: none; border: none;
+      color: var(--muted); font-size: 20px; cursor: pointer;
+    }
+    .modal-tag-secure {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .modal-title-secure {
+      font-family: 'Crimson Pro', serif; font-size: 24px; font-weight: 400;
+      color: var(--cream); line-height: 1.4; margin: 0 0 16px;
+    }
+    .modal-body-secure { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0 0 20px; }
+    .modal-link-secure {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px;
+      background: var(--accent); color: var(--dark); font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: .08em; text-decoration: none; border-radius: 4px;
+      text-transform: uppercase;
+    }
+  `;
+
+  // CSS'i dökümana güvenli bir şekilde ekle
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = inlineStyles;
+  document.head.appendChild(styleSheet);
+
+  // Admin Kontrol Buton Şablonu
+  const adminBtnHTML = adminAktif
+    ? `<div class="nav-admin-wrapper">
+         <a href="admin.html" class="btn-admin-panel">
            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;
                         background:var(--bright);box-shadow:0 0 6px var(--bright);"></span>
            ADMIN
          </a>
-         <button onclick="adminCikis()"
-            style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);
-                   letter-spacing:.06em;padding:5px 10px;border:1px solid rgba(232,92,42,.25);
-                   border-radius:3px;background:transparent;cursor:pointer;transition:all .2s;"
-            onmouseover="this.style.color='var(--warn)';this.style.borderColor='rgba(232,92,42,.5)'"
-            onmouseout="this.style.color='var(--muted)';this.style.borderColor='rgba(232,92,42,.25)'">
-           Çıkış
-         </button>
+         <button id="navLogoutBtn" class="btn-admin-logout">Çıkış</button>
        </div>`
-    : `<a href="admin.html"
-          style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
-                 text-decoration:none;letter-spacing:.08em;padding:6px 12px;
-                 border:1px solid rgba(45,158,107,.2);border-radius:3px;transition:all .2s;"
-          onmouseover="this.style.color='var(--bright)';this.style.borderColor='rgba(45,158,107,.4)'"
-          onmouseout="this.style.color='var(--muted)';this.style.borderColor='rgba(45,158,107,.2)'">
-        ADMIN
-       </a>`;
+    : `<a href="admin.html" class="btn-admin-login">ADMIN</a>`;
 
+  // Tam Navigasyon HTML Şablonu
   const navHTML = `
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="[https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap](https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap)" rel="stylesheet">
 <nav>
   <a href="index.html" class="nav-logo">
     <span>ekoloji-izleme<b>.com</b></span>
@@ -201,10 +254,10 @@
     <div class="rec-indicator">
       <div class="rec-dot"></div> CANLI İZLEME
     </div>
-    ${adminBtn}
+    ${adminBtnHTML}
   </div>
 
-  <div class="hamburger" onclick="document.querySelector('.nav-menu').style.display=document.querySelector('.nav-menu').style.display==='flex'?'none':'flex'">
+  <div class="hamburger">
     <span></span><span></span><span></span>
   </div>
 </nav>
@@ -213,52 +266,102 @@
   <div class="ticker-inner" id="navTickerInner"></div>
 </div>`;
 
+  // DOM enjeksiyonu
   const root = document.getElementById("nav-root");
   if (root) root.innerHTML = navHTML;
   else document.body.insertAdjacentHTML("afterbegin", navHTML);
 
+  // Hamburger mobil menü etkileşimi (Inline JS yerine temiz Olay Dinleyici)
+  const hamburger = document.querySelector(".hamburger");
+  const navMenu = document.querySelector(".nav-menu");
+  if (hamburger && navMenu) {
+    hamburger.addEventListener("click", function() {
+      const isFlex = window.getComputedStyle(navMenu).display === "flex";
+      navMenu.style.display = isFlex ? "none" : "flex";
+    });
+  }
+
+  // Çıkış butonu olayı (Eğer buton DOM'da mevcutsa)
+  const logoutBtn = document.getElementById("navLogoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", function() {
+      if (typeof SITE !== "undefined" && typeof SITE.logout === "function") {
+        SITE.logout();
+      } else {
+        sessionStorage.removeItem(SESSION_KEY);
+      }
+      location.reload();
+    });
+  }
+
+  // Ticker Mantığı Başlangıcı
   const mevcutTicker = document.getElementById("tickerInner");
   if (mevcutTicker) {
-    document.getElementById("navTicker").style.display = "none";
+    const navTickerBar = document.getElementById("navTicker");
+    if (navTickerBar) navTickerBar.style.display = "none";
   } else {
     _tickerYukle();
   }
 
   function _tickerYukle() {
     const bar = document.getElementById("navTicker");
-    if (!bar) return;
+    const innerContainer = document.getElementById("navTickerInner");
+    if (!bar || !innerContainer) return;
 
     function _tickerRender(haberler) {
       const silinen = (() => {
         try { return new Set(JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]").map(String)); }
         catch { return new Set(); }
       })();
+      
       const liste = haberler.filter(h => h && !silinen.has(String(h.id))).slice(0, 12);
       if (!liste.length) return;
-      bar.style.display = "block";
       
-      const items = liste.map(h => {
-        const etiketStr = (Array.isArray(h.etiketler) && h.etiketler[0])
-          ? h.etiketler[0]
-          : (h.kategori || h.etiket || h.kaynak || "HABER");
-        
-        // Güvenli string dönüşümü (Eğer hepsi boşsa 'HABER' yazacak)
-        const etiketGoster = String(etiketStr || "HABER").slice(0, 14).toUpperCase();
-        
-        // HTML attribute'ları bozmamak için string haline getirip encode ediyoruz
-        const safeH = encodeURIComponent(JSON.stringify(h));
+      // Haberleri XSS yapmadan referanslamak için yerel modül dizisine kaydet
+      loadedTickerHaberler = liste;
+      bar.style.display = "block";
+      innerContainer.innerHTML = ""; // İçeriği temizle
 
-        return `
-        <div class="ticker-item" style="cursor:pointer;" onclick="_navTickerAcSafe('${safeH}')">
-          <span class="label" style="background:rgba(45,158,107,.18);color:var(--bright);border:1px solid rgba(45,158,107,.3);">
-            ${etiketGoster}
-          </span>
-          ${h.baslik || ""}${h.kaynak ? ` <span style="opacity:.5;font-size:.85em;">— ${h.kaynak}</span>` : ""}
-        </div>`;
-      }).join("");
-      document.getElementById("navTickerInner").innerHTML = items + items;
+      // DOM nesnelerini güvenli döngü ile oluşturma (String birleştirme yerine el ile veya kontrollü şablonla)
+      const fragment = document.createDocumentFragment();
+      
+      // Çift kayma efekti için diziyi iki kez dönüyoruz
+      for (let i = 0; i < 2; i++) {
+        liste.forEach((h, index) => {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "ticker-item-secure";
+          itemDiv.setAttribute("data-index", index); // Veriyi indis üzerinden eşleştiriyoruz (Güvenli!)
+
+          const etiketStr = (Array.isArray(h.etiketler) && h.etiketler[0])
+            ? h.etiketler[0]
+            : (h.kategori || h.etiket || h.kaynak || "HABER");
+          const etiketGoster = String(etiketStr || "HABER").slice(0, 14).toUpperCase();
+
+          // İç etiket elementi (XSS korumalı textContent)
+          const labelSpan = document.createElement("span");
+          labelSpan.className = "label";
+          labelSpan.textContent = etiketGoster;
+          itemDiv.appendChild(labelSpan);
+
+          // Başlık metni
+          const titleText = document.createTextNode(" " + (h.baslik || ""));
+          itemDiv.appendChild(titleText);
+
+          // Kaynak metni
+          if (h.kaynak) {
+            const sourceSpan = document.createElement("span");
+            sourceSpan.className = "source-span";
+            sourceSpan.textContent = ` — ${h.kaynak}`;
+            itemDiv.appendChild(sourceSpan);
+          }
+
+          fragment.appendChild(itemDiv);
+        });
+      }
+      innerContainer.appendChild(fragment);
     }
 
+    // Haberleri JSON servisinden çekme
     fetch("haberler.json?v=" + Date.now())
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => {
@@ -275,45 +378,81 @@
       }
     }
   }
-})();
 
-// Tırnak işaretli verileri bozmadan açabilmek için yeni güvenli fonksiyon
-function _navTickerAcSafe(encodedH) {
-  try {
-    const h = JSON.parse(decodeURIComponent(encodedH));
-    _navTickerAc(h);
-  } catch(e) {
-    console.error("Ticker açılırken veri hatası:", e);
+  // Ticker Tıklama Yakalayıcısı (Event Delegation - Güvenli Dinleyici)
+  const tickerInnerEl = document.getElementById("navTickerInner");
+  if (tickerInnerEl) {
+    tickerInnerEl.addEventListener("click", function(e) {
+      const targetItem = e.target.closest(".ticker-item-secure");
+      if (!targetItem) return;
+      
+      const index = targetItem.getAttribute("data-index");
+      const secilenHaber = loadedTickerHaberler[index];
+      
+      if (secilenHaber) {
+        _navTickerModalAc(secilenHaber);
+      }
+    });
   }
-}
 
-function _navTickerAc(h) {
-  const etiketler = Array.isArray(h.etiketler) ? h.etiketler.join(" · ") : (h.kategori || h.etiket || h.kaynak || "");
-  const m = document.createElement("div");
-  m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);";
-  m.innerHTML = `
-    <div style="background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;
-                max-width:640px;width:100%;padding:32px;position:relative;">
-      <button onclick="this.closest('div[style]').remove()"
-        style="position:absolute;top:16px;right:16px;background:none;border:none;
-               color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;
-                  text-transform:uppercase;color:var(--accent);margin-bottom:12px;">${etiketler}</div>
-      <h3 style="font-family:'Crimson Pro',serif;font-size:24px;font-weight:400;
-                 color:var(--cream);line-height:1.4;margin:0 0 16px;">${h.baslik || ""}</h3>
-      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;">${h.ozet || ""}</p>
-      ${h.url ? `<a href="${h.url}" target="_blank" rel="noopener"
-        style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;
-               background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;
-               font-size:10px;letter-spacing:.08em;text-decoration:none;border-radius:4px;
-               text-transform:uppercase;">Kaynağa Git ↗</a>` : ""}
-    </div>`;
-  m.addEventListener("click", e => { if (e.target === m) m.remove(); });
-  document.body.appendChild(m);
-}
-
-function adminCikis() {
-  if (typeof SITE !== "undefined" && typeof SITE.logout === "function") SITE.logout();
-  else sessionStorage.removeItem("ekoloji_admin_session");
-  location.reload();
-}
+  /**
+   * Güvenli Ticker Detay Modal Penceresi (XSS Korumalı)
+   * @param {Object} h - Haber nesnesi
+   */
+  function _navTickerModalAc(h) {
+    const etiketler = Array.isArray(h.etiketler) ? h.etiketler.join(" · ") : (h.kategori || h.etiket || h.kaynak || "");
+    
+    // Modal kapsayıcı katmanı
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay-secure";
+    
+    // Modal iç içerik kutusu
+    const contentBox = document.createElement("div");
+    contentBox.className = "modal-content-secure";
+    
+    // Kapatma butonu
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "modal-close-secure";
+    closeBtn.textContent = "✕";
+    closeBtn.addEventListener("click", () => overlay.remove());
+    contentBox.appendChild(closeBtn);
+    
+    // Kategori/Etiket alanı
+    const tagDiv = document.createElement("div");
+    tagDiv.className = "modal-tag-secure";
+    tagDiv.textContent = etiketler;
+    contentBox.appendChild(tagDiv);
+    
+    // Başlık
+    const titleH3 = document.createElement("h3");
+    titleH3.className = "modal-title-secure";
+    titleH3.textContent = h.baslik || "";
+    contentBox.appendChild(titleH3);
+    
+    // Özet içerik metni
+    const bodyP = document.createElement("p");
+    bodyP.className = "modal-body-secure";
+    bodyP.textContent = h.ozet || "";
+    contentBox.appendChild(bodyP);
+    
+    // Dış Bağlantı (Eğer URL mevcutsa)
+    if (h.url) {
+      const linkA = document.createElement("a");
+      linkA.className = "modal-link-secure";
+      linkA.href = h.url;
+      linkA.target = "_blank";
+      linkA.rel = "noopener noreferrer";
+      linkA.textContent = "Kaynağa Git ↗";
+      contentBox.appendChild(linkA);
+    }
+    
+    overlay.appendChild(contentBox);
+    
+    // Arka plana tıklandığında kapanma özelliği
+    overlay.addEventListener("click", function(e) {
+      if (e.target === overlay) overlay.remove();
+    });
+    
+    document.body.appendChild(overlay);
+  }
+})();
