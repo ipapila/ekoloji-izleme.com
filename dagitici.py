@@ -41,6 +41,21 @@ MODEL             = "claude-haiku-4-5-20251001"
 
 # Kaynak dosya
 HABERLER_DOSYA = Path("haberler.json")
+DATA_JSON_DOSYA = Path("data.json")
+def data_json_guncelle(ihlaller: list):
+    mevcut = {}
+    if DATA_JSON_DOSYA.exists():
+        try:
+            mevcut = json.loads(DATA_JSON_DOSYA.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    mevcut["ihlaller"] = ihlaller
+    if "_meta" not in mevcut:
+        mevcut["_meta"] = {}
+    mevcut["_meta"]["guncelleme"] = datetime.now(timezone.utc).isoformat()
+    mevcut["_meta"]["ihlal_sayisi"] = len(ihlaller)
+    DATA_JSON_DOSYA.write_text(json.dumps(mevcut, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  ✓ data.json: ihlaller güncellendi ({len(ihlaller)} kayıt)")
 
 # Hedef dosyalar ve varsayılan yapıları
 HEDEFLER = {
@@ -424,7 +439,11 @@ def dagit(gonder_github=False):
         mevcut = dosya_oku(dosya, hedef_adi)
         n = dosya_yaz(dosya, siniflar[hedef_adi], hedef_adi, mevcut)
         toplam_yeni += n
-
+      
+    # data.json'u güncelle (ihlaller.html buradan okuyor)
+    ihlaller_mevcut = dosya_oku(HEDEFLER["ihlaller"], "ihlaller")
+    data_json_guncelle(ihlaller_mevcut)
+  
     # haberler.json meta güncelle
     kaynak["meta"]["dagitici_calistirma"] = datetime.now(timezone.utc).isoformat()
     HABERLER_DOSYA.write_text(json.dumps(kaynak, ensure_ascii=False, indent=2), encoding="utf-8")
