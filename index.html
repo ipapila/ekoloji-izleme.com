@@ -94,6 +94,9 @@
 .haberler-sol p{font-size:13.5px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:20px;}
 .haber-kaynaklar{display:flex;flex-direction:column;gap:7px;}
 .haber-kaynak-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.07em;padding:4px 9px;border-radius:2px;background:rgba(45,158,107,.1);color:var(--accent);border:1px solid rgba(45,158,107,.2);display:inline-block;width:fit-content;}
+.haber-kat-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;padding:5px 11px;border-radius:3px;background:rgba(45,158,107,.07);color:var(--muted);border:1px solid rgba(45,158,107,.15);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.haber-kat-btn:hover{background:rgba(45,158,107,.15);color:var(--accent);}
+.aktif-kat-btn{background:rgba(45,158,107,.18)!important;color:var(--bright)!important;border-color:rgba(45,158,107,.4)!important;}
 .haberler-liste{display:flex;flex-direction:column;gap:2px;}
 .haber-item{background:var(--deep);padding:18px 22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;text-decoration:none;transition:all .2s;border-left:2px solid transparent;}
 .haber-item:hover{background:#162b1f;border-left-color:var(--accent);padding-left:28px;}
@@ -383,26 +386,22 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
       <h2>SON<br>HABERLER</h2>
       <p>RSS beslemeleri ve web kaynaklarından çekilen çevre haberleri.</p>
       <div id="adminTaramaAlani" style="display:none;flex-direction:column;gap:10px;margin-bottom:20px;"></div>
-      <div class="haber-kaynaklar">
-        <span class="haber-kaynak-tag">İklim Haber</span>
-        <span class="haber-kaynak-tag">Yeşil Gazete</span>
-        <span class="haber-kaynak-tag">Sözcü / Çevre</span>
-        <span class="haber-kaynak-tag">Cumhuriyet</span>
-        <span class="haber-kaynak-tag">Google News TR</span>
-        <span class="haber-kaynak-tag">TEMA · WWF</span>
-        <span class="haber-kaynak-tag">Greenpeace TR</span>
-        <span class="haber-kaynak-tag">Euronews TR</span>
-        <span class="haber-kaynak-tag">CSB Duyurular</span>
+      <!-- Kategori sekme butonları -->
+      <div id="haberKatTabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;">
+        <button class="haber-kat-btn aktif-kat-btn" data-kat="" onclick="haberKatSec(this)">Tümü</button>
+        <button class="haber-kat-btn" data-kat="Maden ve Enerji" onclick="haberKatSec(this)">Maden & Enerji</button>
+        <button class="haber-kat-btn" data-kat="İklim ve Afet" onclick="haberKatSec(this)">İklim & Afet</button>
+        <button class="haber-kat-btn" data-kat="Orman ve Doğa" onclick="haberKatSec(this)">Orman & Doğa</button>
+        <button class="haber-kat-btn" data-kat="Yaban Hayatı" onclick="haberKatSec(this)">Yaban Hayatı</button>
+        <button class="haber-kat-btn" data-kat="Hukuki Süreçler" onclick="haberKatSec(this)">Hukuki</button>
+        <button class="haber-kat-btn" data-kat="İnsan Hakları" onclick="haberKatSec(this)">İnsan Hakları</button>
+        <a href="haberler.html" class="haber-kat-btn" style="text-decoration:none;">Tümünü Gör →</a>
       </div>
     </div>
     <div>
       <div class="haberler-liste" id="haberlerListe">
-        <div class="haber-item" style="opacity:.45;pointer-events:none;">
-          <div>
-            <h4>Haberler yükleniyor…</h4>
-            <div class="haber-meta">tarayici.py çalıştırıldıktan sonra haberler.json oluşur</div>
-          </div>
-          <span class="haber-source-badge">—</span>
+        <div id="haberYukleniyor" class="haber-item" style="opacity:.45;pointer-events:none;">
+          <div><h4>Yükleniyor…</h4></div>
         </div>
       </div>
       <div class="haberler-footer">
@@ -591,7 +590,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 <script>
 // ── İstatistikler ──
 (function istatistikYukle() {
-	fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json?v=" + Date.now())    .then(r => r.ok ? r.json() : Promise.reject())
+	fetch("haberler.json?v=" + Date.now())    .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const meta = d._meta || {};
       const haberler = d.haberler || [];
@@ -633,16 +632,21 @@ function fmtDate(d) {
 
 function ihlallerRender(ihlaller) {
   const sonList = (ihlaller || []).sort((a,b) => new Date(b.tarih)-new Date(a.tarih)).slice(0,6);
-  document.getElementById("sonIhlalerList").innerHTML = sonList.map(i => `
-    <a href="ihlaller.html" class="violation-item ${clsMap[i.siddet]||''}">
-      <span class="v-severity ${siddetMap[i.siddet]||'dusuk'}">${labelMap[i.siddet]||i.siddet}</span>
+  document.getElementById("sonIhlalerList").innerHTML = sonList.map(i => {
+    const konum = i.konum || i.il || "";
+    const kat   = i.kategori || i.tip || "";
+    const meta  = [konum, kat].filter(Boolean).join(" · ");
+    const href  = (i.kaynak_url || i.url) ? (i.kaynak_url || i.url) : "ihlaller.html";
+    const target= (i.kaynak_url || i.url) ? ' target="_blank" rel="noopener"' : "";
+    return `<a href="${href}"${target} class="violation-item ${clsMap[i.siddet]||''}">
+      <span class="v-severity ${siddetMap[i.siddet]||'dusuk'}">${labelMap[i.siddet]||i.siddet||"—"}</span>
       <div class="v-info">
-        <h4>${i.baslik}</h4>
-        <p>${i.konum} · ${i.kategori}</p>
+        <h4>${i.baslik||"—"}</h4>
+        ${meta ? `<p>${meta}</p>` : ""}
       </div>
       <div class="v-date">${fmtDate(i.tarih)}</div>
-    </a>
-  `).join("") + `<a href="ihlaller.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;background:rgba(45,158,107,.07);border:1px dashed rgba(45,158,107,.2);color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;transition:all .2s;" onmouseover="this.style.background='rgba(45,158,107,.15)'" onmouseout="this.style.background='rgba(45,158,107,.07)'">Tüm İhlalleri Gör →</a>`;
+    </a>`;
+  }).join("") + `<a href="ihlaller.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;background:rgba(45,158,107,.07);border:1px dashed rgba(45,158,107,.2);color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;transition:all .2s;" onmouseover="this.style.background='rgba(45,158,107,.15)'" onmouseout="this.style.background='rgba(45,158,107,.07)'">Tüm İhlalleri Gör →</a>`;
 
   const kritik   = ihlaller.filter(i=>i.siddet==="kritik").length;
   const thisWeek = ihlaller.filter(i=>{ if(!i.tarih) return false; return (Date.now()-new Date(i.tarih).getTime()) < 7*86400000; }).length;
@@ -654,11 +658,27 @@ function ihlallerRender(ihlaller) {
   `;
 }
 
-// data.json'dan ihlalleri çek, yoksa localStorage'dan al
-fetch("data.json?v=" + Date.now())
-  .then(r => r.ok ? r.json() : Promise.reject())
-  .then(d => ihlallerRender(d.ihlaller || []))
-  .catch(() => ihlallerRender(SITE.getList("ihlaller") || SITE.defaults.ihlaller));
+// ihlaller.json önce, sonra data.json, son çare localStorage
+(async function ihlallerYukle() {
+  let ihlaller = [];
+  // 1. ihlaller.json (otomatik tarama)
+  try {
+    const r = await fetch("ihlaller.json?v=" + Date.now());
+    if (r.ok) { const d = await r.json(); ihlaller = d.ihlaller || []; }
+  } catch {}
+  // 2. data.json (admin kayıtları)
+  try {
+    const r = await fetch("data.json?v=" + Date.now());
+    if (r.ok) {
+      const d = await r.json();
+      const ekstra = (d.ihlaller || []).filter(x => !ihlaller.some(y => y.id === x.id));
+      ihlaller = [...ihlaller, ...ekstra];
+    }
+  } catch {}
+  // 3. localStorage fallback
+  if (!ihlaller.length) ihlaller = SITE.getList("ihlaller") || [];
+  ihlallerRender(ihlaller);
+})();
 
 // ── Haber detay modal ──
 function haberDetay(h) {
@@ -689,9 +709,19 @@ function haberDetay(h) {
 }
 
 // ── Haberler render ──
-function haberlerRender(haberler) {
+// Tüm haberler önbellekte
+let _tumHaberlerIndex = [];
+
+function haberlerRender(haberler, filtre) {
   const liste = document.getElementById("haberlerListe");
-  if (!haberler || !haberler.length) return;
+  const yukleniyor = document.getElementById("haberYukleniyor");
+  if (yukleniyor) yukleniyor.remove();
+  if (!haberler || !haberler.length) {
+    liste.innerHTML = '<div class="haber-item" style="opacity:.5;pointer-events:none;"><div><h4>Veri bulunamadı</h4><div class="haber-meta">Bir sonraki otomatik taramada güncellenecek</div></div></div>';
+    return;
+  }
+  _tumHaberlerIndex = haberler;
+  if (filtre) haberler = haberler.filter(h => h._haber_kat === filtre);
   // Kullanıcının sildiği kayıtları gösterme
   const silinen = new Set(JSON.parse(localStorage.getItem("ekoloji_haber_silinen") || "[]").map(String));
   const haber_id = h => String(h._id || h.id || "");
@@ -709,20 +739,19 @@ function haberlerRender(haberler) {
   `<a href="haberler.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(45,158,107,.07);border:1px dashed rgba(45,158,107,.2);color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;">Tüm Haberler →</a>`;
 }
 
-fetch("haberler.json")
+fetch("haberler.json?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
-    if (data.haberler?.length) {
-      haberlerRender(data.haberler);
+    const liste = data.haberler || (Array.isArray(data) ? data : []);
+    if (liste.length) {
+      haberlerRender(liste);
       const g = document.getElementById("taramaLog");
       if (g && data.meta?.guncelleme) g.textContent = "Son güncelleme: " + new Date(data.meta.guncelleme).toLocaleString("tr-TR");
     } else {
-      haberlerRender(SITE.get("haberler") || SITE.defaults.haberler);
+      haberlerRender([]);
     }
   })
-  .catch(() => {
-    haberlerRender(SITE.get("haberler") || SITE.defaults.haberler);
-  });
+  .catch(() => haberlerRender([]));
 
 function adminKontrol(){
   if(SITE.isAdmin()) return true;
@@ -798,7 +827,7 @@ function tickerHaberAc(h) {
   document.body.appendChild(m);
 }
 
-fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json?v=" + Date.now())
+fetch("haberler.json?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
     const haberler = data.haberler || (Array.isArray(data) ? data : []);
