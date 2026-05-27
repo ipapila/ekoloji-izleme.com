@@ -76,6 +76,16 @@ KURALLAR = [
         "insan hakları ihlal", "gözaltı", "tutuklama", "işkence",
         "zorla kaybetme", "toplu tutuklama", "ifade özgürlüğü ihlal",
         "basın özgürlüğü ihlal",
+        # Resmi kararlar — maden/enerji ruhsat ve lisansları
+        "maden ruhsatı", "maden işletme", "maden arama ruhsat",
+        "üretim lisansı", "enerji lisansı", "RES lisans", "GES lisans", "HES lisans",
+        "jeotermal lisans", "termik santral lisans", "petrol arama ruhsat",
+        "ÇED olumlu", "ÇED gerekli değil", "ÇED muafiyet",
+        "orman izni verildi", "orman arazisi tahsis", "2634 sayılı",
+        "acele kamulaştırma kararı", "kamulaştırma kararnamesi",
+        "kamu yararı kararı", "resmî gazete karar",
+        "MAPEG", "EPDK karar", "KİK ihale enerji", "KİK ihale maden",
+        "Akkuyu", "nükleer santral lisans",
         # Çevre ihlalleri (mevcut)
         "çev ihlali", "çevre ihlali", "çevre katliamı",
         "ÇED", "çed kararı", "çed raporu", "ÇED'siz",
