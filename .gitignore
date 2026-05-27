@@ -1,8 +1,6 @@
-# ekoloji-izleme.com — .gitignore
-# ⚠️  Bu dosyanın adı ".gitignore" olmalı (noktalı, önde)
-
-# Gizli bilgiler — git'e gitmez
+# Gizli bilgiler
 .env
+*.env
 
 # Python
 __pycache__/
@@ -13,21 +11,27 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Veri dosyaları (dinamik, Plesk'te üretiliyor — git'e girmez)
+# Veri dosyaları — webhook ile Plesk'e gidiyor, repoda gerekmez
 haberler.json
+ihlaller.json
+raporlar.json
+makaleler.json
+ekosistem.json
+kuresel.json
+data.json
+icerik.json
+rapor.json
 haberler_veri.json
 raporlar_veri.json
 makaleler_veri.json
 uluslararasi_veri.json
 ekosistem_veri.json
-data.json
-ihlaller.json
-rapor.json
-icerik.json
-*.tmp
-
-# PHP geçici dosyalar
-*.tmp.*
+haberler_veri.json
 
 # Log dosyaları
 *.log
+bot.log
+
+# Geçici
+*.tmp
+.tmp/
