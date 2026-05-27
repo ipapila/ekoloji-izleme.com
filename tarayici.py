@@ -80,6 +80,52 @@ RSS_KAYNAKLARI = [
      "kaynak": "Sözcü", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
     {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",
      "kaynak": "Cumhuriyet", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
+
+    # ── Hayvan Hakları / Vegan ──────────────────────────────────────
+    {"url": "https://haberler.tvd.org.tr/feed/",
+     "kaynak": "TVD", "kategori": "Hayvan Hakları / Vegan", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://haberler.tvd.org.tr/category/turkiyeden/feed/",
+     "kaynak": "TVD Türkiye", "kategori": "Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:haytap.org&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "HAYTAP", "kategori": "Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=hayvan+hak%C4%B1+sokak+hayvan%C4%B1+k%C4%B1s%C4%B1rla%C5%9Ft%C4%B1rma+itlaf+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=hayvan+istismar%C4%B1+dava+T%C3%BCrkiye+mahkeme&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Hayvan Hakları / Hukuk", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=vegan+bitkisel+s%C3%BCrd%C3%BCr%C3%BClebilir+beslenme+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Vegan / Sürdürülebilir", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=end%C3%BCstriyel+hayvanc%C4%B1l%C4%B1k+%C3%A7evre+kirlilik+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Endüstriyel Hayvancılık", "genel": False, "hedef": "haberler", "dil": "tr"},
+
+    # ── İnsan Hakları ───────────────────────────────────────────────
+    {"url": "https://www.ihd.org.tr/feed/",
+     "kaynak": "İHD", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://www.amnesty.org.tr/feed/",
+     "kaynak": "Amnesty TR", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:ihd.org.tr&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "İHD", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:amnesty.org.tr&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Amnesty TR", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=insan+haklar%C4%B1+ihlal+T%C3%BCrkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://www.hrw.org/rss/news/section/europe/central-asia",
+     "kaynak": "Human Rights Watch", "kategori": "İnsan Hakları / Uluslararası", "genel": False, "hedef": "haberler", "dil": "en"},
+    {"url": "https://www.duvarenglish.com/export/rss",
+     "kaynak": "Duvar English", "kategori": "İnsan Hakları / Gündem", "genel": False, "hedef": "haberler", "dil": "en"},
+
+    # ── Çevre / Doğa / Toplumsal ────────────────────────────────────
+    {"url": "https://www.gazeteduvar.com.tr/rss/cevre-ve-ekoloji.xml",
+     "kaynak": "Gazete Duvar", "kategori": "Çevre / Ekoloji", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://medyascope.tv/rss-feed/",
+     "kaynak": "Medyascope", "kategori": "Gündem / Analiz", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://bianet.org/topic/insan-haklari/feed/rss",
+     "kaynak": "Bianet İH", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://bianet.org/topic/kadin/feed/rss",
+     "kaynak": "Bianet Kadın", "kategori": "Kadın / Toplumsal", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:gazeteduvar.com.tr+(%C3%A7evre+OR+ekoloji+OR+hayvan+haklar%C4%B1)&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Gazete Duvar", "kategori": "Çevre / Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=animal+rights+Turkey+vegan+welfare&hl=en&gl=US&ceid=US:en",
+     "kaynak": "Google News EN", "kategori": "Hayvan Hakları / Uluslararası", "genel": False, "hedef": "haberler", "dil": "en"},
 ]
 
 # ══════════════════════════════════════════════════════════════════
