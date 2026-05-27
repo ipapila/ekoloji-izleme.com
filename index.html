@@ -689,27 +689,17 @@ function ihlallerRender(ihlaller) {
 // ── Haber detay modal ──
 function haberDetay(h) {
   const tarihStr = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : '';
+  const hostname = safeHostname(h.url);
   const m = document.createElement("div");
   m.id = "haberModal";
   m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);";
-  m.innerHTML = `
-    <div style="background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;position:relative;">
-      <div style="padding:28px 32px 0;display:flex;justify-content:space-between;align-items:start;gap:16px;">
-        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:rgba(45,158,107,.12);border:1px solid rgba(45,158,107,.2);padding:3px 8px;border-radius:2px;white-space:nowrap;">${h.kategori||h.kaynak||''}</span>
-        <button onclick="document.getElementById('haberModal').remove()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:0;flex-shrink:0;">✕</button>
-      </div>
-      <div style="padding:16px 32px 32px;">
-        <h2 style="font-family:'Crimson Pro',serif;font-size:26px;font-weight:400;color:var(--cream);line-height:1.35;margin:0 0 14px;">${h.baslik}</h2>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:20px;display:flex;gap:16px;flex-wrap:wrap;">
-          <span>📰 ${h.kaynak||''}</span>${tarihStr?`<span>📅 ${tarihStr}</span>`:''}
-        </div>
-        ${h.ozet ? `<p style="font-size:15px;font-weight:300;color:var(--cream);line-height:1.75;margin-bottom:24px;">${h.ozet}</p>` : ''}
-        ${h.url ? '<a href="' + h.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--accent);color:var(--dark);font-family:\'JetBrains Mono\',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">'
-  + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
-  + ' Kaynağa Git — ' + safeHostname(h.url)
-  + '</a>' : ''}
-      </div>
-    </div>`;
+  m.innerHTML = '<div style="background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:680px;width:100%;padding:32px;position:relative;">'
+    + '<button onclick="document.getElementById(\'haberModal\').remove()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>'
+    + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">' + (h.kategori||h.etiket||h.kaynak||'') + '</div>'
+    + '<h3 style="font-family:\'Crimson Pro\',serif;font-size:24px;font-weight:400;color:var(--cream);line-height:1.4;margin:0 0 16px;">' + h.baslik + '</h3>'
+    + '<p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;">' + (h.ozet||'') + '</p>'
+    + (h.url ? '<a href="' + h.url + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:\'JetBrains Mono\',monospace;font-size:10px;letter-spacing:.08em;text-decoration:none;border-radius:4px;text-transform:uppercase;">Kaynağa Git ↗</a>' : '')
+    + '</div>';
   m.addEventListener("click", e => { if(e.target===m) m.remove(); });
   document.body.appendChild(m);
 }
