@@ -173,29 +173,142 @@ const DIL_AD = {
   AR:'Arapça', EL:'Yunanca', RU:'Rusça', KU:'Kürtçe', Diğer:'Diğer'
 };
 
+/* ─────────────────────────────────────────────────────────────
+   "Tür" normalizasyonu
+   haberler.json'da alan adları değişken olabilir:
+     tur | icerik_tipi | kategori | etiket
+   Sekme filtreleri Türkçe değerler bekliyor:
+     Haber | Rapor | Araştırma | Analiz | Aktivizm | Politika
+───────────────────────────────────────────────────────────── */
+const ICERIK_TIPI_MAP = {
+  // icerik_tipi değerleri → sekme değeri
+  haber:         'Haber',
+  rapor:         'Rapor',
+  kose:          'Analiz',
+  uluslararasi:  'Haber',
+  // İngilizce değerler
+  news:          'Haber',
+  report:        'Rapor',
+  research:      'Araştırma',
+  analysis:      'Analiz',
+  activism:      'Aktivizm',
+  policy:        'Politika',
+};
+const KATEGORI_MAP = {
+  'Uluslararası Haber':   'Haber',
+  'Uluslararası Analiz':  'Analiz',
+  'İklim Raporu':         'Rapor',
+  'STK Raporu':           'Rapor',
+  'Köşe / Yorum':         'Analiz',
+  'Haber':                'Haber',
+  'Rapor':                'Rapor',
+  'Analiz':               'Analiz',
+  'Araştırma':            'Araştırma',
+  'Aktivizm':             'Aktivizm',
+  'Politika':             'Politika',
+};
+
+function normalizeTur(item) {
+  // 1) data.json'daki klasik "tur" alanı
+  if (item.tur) return item.tur;
+  // 2) haberler.json'daki "icerik_tipi"
+  if (item.icerik_tipi) {
+    const mapped = ICERIK_TIPI_MAP[item.icerik_tipi.toLowerCase()];
+    if (mapped) return mapped;
+  }
+  // 3) kategori / etiket alanı
+  const kat = item.kategori || item.etiket || '';
+  const mappedKat = KATEGORI_MAP[kat];
+  if (mappedKat) return mappedKat;
+  // 4) varsayılan
+  return 'Haber';
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Dil normalizasyonu
+   haberler.json: dil: "en" (küçük harf)
+   kuresel.html filtre: "EN" (büyük harf)
+───────────────────────────────────────────────────────────── */
+function normalizeDil(item) {
+  const d = item.dil || '';
+  return d.toUpperCase();
+}
+
 let tumVeri = [];
 let seciliTur = '';
 let seciliDil = '';
 
+/* ─────────────────────────────────────────────────────────────
+   VERİ YÜKLEME
+   Öncelik sırası:
+   1) haberler.json → uluslararasi koleksiyonu
+   2) haberler.json → haberler koleksiyonundan dil:"en"/icerik_tipi:"uluslararasi" olanlar
+   3) data.json     → uluslararasi koleksiyonu (eski format)
+   4) SITE.getList('uluslararasi') (localStorage)
+───────────────────────────────────────────────────────────── */
 async function veriYukle() {
   try {
-    let ulus = [];
+    const ts = Date.now();
+    let sonuclar = [];
+    const gorulenUrller = new Set();
+
+    function ekle(liste, kaynakEtiket) {
+      (liste || []).forEach(item => {
+        const anahtar = (item.url || item.baslik || '').toLowerCase().trim();
+        if (!anahtar || gorulenUrller.has(anahtar)) return;
+        gorulenUrller.add(anahtar);
+        // Normalize et ve ekle
+        item._tur_normalize = normalizeTur(item);
+        item._dil_normalize = normalizeDil(item);
+        sonuclar.push(item);
+      });
+    }
+
+    // ── 1 & 2) haberler.json ──────────────────────────────────
     try {
-      const r = await fetch('data.json?v=' + Date.now());
+      const r = await fetch('haberler.json?v=' + ts);
       if (r.ok) {
-        const txt = await r.text();
+        const data = await r.json();
+
+        // Doğrudan uluslararasi koleksiyonu
+        ekle(data.uluslararasi, 'haberler.json/uluslararasi');
+
+        // haberler koleksiyonundan uluslararası nitelikli olanlar
+        // (icerik_tipi:"uluslararasi" VEYA dil != "tr" / "")
+        const haberUlus = (data.haberler || []).filter(h => {
+          const tip = (h.icerik_tipi || '').toLowerCase();
+          const dil = (h.dil || '').toLowerCase();
+          const kat = (h.kategori || h.etiket || '').toLowerCase();
+          return tip === 'uluslararasi'
+            || (dil && dil !== 'tr')
+            || kat.includes('uluslararas');
+        });
+        ekle(haberUlus, 'haberler.json/haberler[ulus]');
+      }
+    } catch(e) { console.warn('haberler.json yüklenemedi:', e); }
+
+    // ── 3) data.json (eski format) ────────────────────────────
+    try {
+      const r2 = await fetch('data.json?v=' + ts);
+      if (r2.ok) {
+        const txt = await r2.text();
         if (txt && txt.trim()) {
-          const d = JSON.parse(txt);
-          ulus = d.uluslararasi || [];
+          const d2 = JSON.parse(txt);
+          ekle(d2.uluslararasi, 'data.json/uluslararasi');
         }
       }
-    } catch {}
-    const yerel = typeof SITE !== 'undefined' ? (SITE.getList('uluslararasi') || []) : [];
-    if (yerel.length) {
-      const sunucuIds = new Set(ulus.map(x => String(x.id)));
-      ulus = [...yerel, ...ulus.filter(x => !sunucuIds.has(String(x.id)))];
+    } catch(e) { /* data.json olmayabilir, sessizce geç */ }
+
+    // ── 4) localStorage ───────────────────────────────────────
+    if (typeof SITE !== 'undefined') {
+      ekle(SITE.getList('uluslararasi'), 'localStorage');
     }
-    tumVeri = ulus.sort((a,b) => (b.tarih||'') > (a.tarih||'') ? 1 : -1);
+
+    // Tarihe göre sırala (yeniden eskiye)
+    tumVeri = sonuclar.sort((a, b) =>
+      (b.tarih || '') > (a.tarih || '') ? 1 : -1
+    );
+
     istatistikGuncelle();
     dilHaritaRender();
     kartRender();
@@ -208,22 +321,25 @@ async function veriYukle() {
 }
 
 function istatistikGuncelle() {
-  const diller = new Set(tumVeri.map(x => x.dil).filter(Boolean));
+  const diller   = new Set(tumVeri.map(x => x._dil_normalize).filter(Boolean));
   const kaynaklar = new Set(tumVeri.map(x => x.kaynak).filter(Boolean));
-  document.getElementById('statToplam').textContent = tumVeri.length || '—';
-  document.getElementById('statDil').textContent     = diller.size   || '—';
-  document.getElementById('statKaynak').textContent  = kaynaklar.size|| '—';
+  document.getElementById('statToplam').textContent  = tumVeri.length || '—';
+  document.getElementById('statDil').textContent     = diller.size    || '—';
+  document.getElementById('statKaynak').textContent  = kaynaklar.size || '—';
 }
 
 function dilHaritaRender() {
   const sayac = {};
-  tumVeri.forEach(x => { const d = x.dil || 'Diğer'; sayac[d] = (sayac[d]||0)+1; });
+  tumVeri.forEach(x => {
+    const d = x._dil_normalize || 'Diğer';
+    sayac[d] = (sayac[d] || 0) + 1;
+  });
   const dilGrid = document.getElementById('dilGrid');
   dilGrid.innerHTML = Object.entries(sayac)
-    .sort((a,b) => b[1]-a[1])
-    .map(([dil,n]) => `
+    .sort((a, b) => b[1] - a[1])
+    .map(([dil, n]) => `
       <button class="kg-dil-btn" data-dil="${dil}" onclick="dilFiltrele('${dil}')">
-        ${DIL_BAYRAK[dil]||'🌐'} ${DIL_AD[dil]||dil}
+        ${DIL_BAYRAK[dil] || '🌐'} ${DIL_AD[dil] || dil}
         <span class="kg-dil-sayi">${n}</span>
       </button>`).join('');
   document.getElementById('dilHarita').style.display = 'block';
@@ -241,8 +357,10 @@ function dilFiltrele(dil) {
 function kartRender() {
   const grid = document.getElementById('kartGrid');
   const filtreli = tumVeri.filter(x => {
-    if (seciliTur && x.tur !== seciliTur) return false;
-    if (seciliDil && x.dil !== seciliDil) return false;
+    // Tür filtresi: normalize edilmiş _tur_normalize alanını kullan
+    if (seciliTur && x._tur_normalize !== seciliTur) return false;
+    // Dil filtresi: normalize edilmiş _dil_normalize alanını kullan
+    if (seciliDil && x._dil_normalize !== seciliDil) return false;
     return true;
   });
   if (!filtreli.length) {
@@ -258,15 +376,18 @@ function kartRender() {
 
 function kartHtml(item) {
   const etiketler = Array.isArray(item.etiketler) ? item.etiketler : [];
+  const dil = item._dil_normalize || '';
+  const tur = item._tur_normalize || '';
   const fotoHtml = item.foto_url
     ? `<img class="kg-kart-foto" src="${item.foto_url}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=kg-kart-foto-placeholder>🌍</div>'">`
     : `<div class="kg-kart-foto-placeholder">🌍</div>`;
+  const baslikGoster = item.baslik_tr || item.baslik || '';
   const baslikEl = item.url
-    ? `<a class="kg-kart-baslik-tr" href="${item.url}" target="_blank" rel="noopener">${item.baslik_tr||item.baslik}</a>`
-    : `<span class="kg-kart-baslik-tr" style="cursor:default;">${item.baslik_tr||item.baslik}</span>`;
-  const orgBaslik = (item.baslik && item.baslik !== item.baslik_tr)
+    ? `<a class="kg-kart-baslik-tr" href="${item.url}" target="_blank" rel="noopener">${baslikGoster}</a>`
+    : `<span class="kg-kart-baslik-tr" style="cursor:default;">${baslikGoster}</span>`;
+  const orgBaslik = (item.baslik && item.baslik !== item.baslik_tr && item.baslik_tr)
     ? `<div class="kg-kart-baslik-org">${item.baslik}</div>` : '';
-  const etiketHtml = etiketler.slice(0,4).map(e =>
+  const etiketHtml = etiketler.slice(0, 4).map(e =>
     `<span class="kg-kart-etiket">${e}</span>`).join('');
   const linkHtml = item.url
     ? `<a class="kg-link" href="${item.url}" target="_blank" rel="noopener">Kaynağa Git →</a>`
@@ -275,8 +396,8 @@ function kartHtml(item) {
     ${fotoHtml}
     <div class="kg-kart-body">
       <div class="kg-kart-meta">
-        ${item.dil ? `<span class="kg-dil-rozet">${DIL_BAYRAK[item.dil]||''} ${item.dil}</span>` : ''}
-        ${item.tur ? `<span class="kg-tur-rozet">${item.tur}</span>` : ''}
+        ${dil ? `<span class="kg-dil-rozet">${DIL_BAYRAK[dil] || ''} ${dil}</span>` : ''}
+        ${tur ? `<span class="kg-tur-rozet">${tur}</span>` : ''}
         ${item.kaynak ? `<span class="kg-kaynak">${item.kaynak}</span>` : ''}
       </div>
       ${baslikEl}
@@ -285,7 +406,7 @@ function kartHtml(item) {
       ${etiketHtml ? `<div class="kg-kart-etiketler">${etiketHtml}</div>` : ''}
     </div>
     <div class="kg-kart-footer">
-      <span class="kg-tarih">${item.tarih||''}</span>
+      <span class="kg-tarih">${item.tarih || ''}</span>
       ${linkHtml}
     </div>
   </article>`;
@@ -310,10 +431,15 @@ document.getElementById('dilSelect').addEventListener('change', e => {
 
 (function urlParam() {
   const p = new URLSearchParams(location.search);
-  if (p.get('dil')) { seciliDil = p.get('dil'); document.getElementById('dilSelect').value = seciliDil; }
+  if (p.get('dil')) {
+    seciliDil = p.get('dil').toUpperCase();
+    document.getElementById('dilSelect').value = seciliDil;
+  }
   if (p.get('tur')) {
     seciliTur = p.get('tur');
-    document.querySelectorAll('.kg-tab').forEach(t => { t.classList.toggle('aktif', t.dataset.tur === seciliTur); });
+    document.querySelectorAll('.kg-tab').forEach(t => {
+      t.classList.toggle('aktif', t.dataset.tur === seciliTur);
+    });
   }
 })();
 
