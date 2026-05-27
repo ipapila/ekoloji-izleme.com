@@ -319,7 +319,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   function chip(k) {
     return '<span style="display:inline-block;padding:4px 10px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:20px;font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;">' + k + '</span>';
   }
-	fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/rapor.json?v=" + Date.now())
+	fetch("./rapor.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(rapor => {
       document.getElementById("raporYukleniyor").style.display = "none";
@@ -471,10 +471,10 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
     <div class="footer-col">
       <h4>Platform</h4>
       <ul>
-        <li><a href="index.html#platform">Hakkında</a></li>
-        <li><a href="mailto:info@ekoloji-izleme.com">İletişim</a></li>
-        <li><a href="index.html" onclick="setTimeout(()=>document.getElementById('gonulluModal')?.classList.add('open'),50);return false">Gönüllü Ol</a></li>
-        <li><a href="index.html" onclick="setTimeout(()=>document.getElementById('ihbarModal')?.classList.add('open'),50);return false">İhlal Bildir</a></li>
+        <li><a href="admin.html">Hakkında</a></li>
+        <li><a href="admin.html">İletişim</a></li>
+        <li><a href="admin.html">Gönüllü Ol</a></li>
+        <li><a href="admin.html">İhlal Bildir</a></li>
       </ul>
     </div>
   </div>
