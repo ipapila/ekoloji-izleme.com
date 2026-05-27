@@ -106,6 +106,251 @@ const _adminMod = {
   sil(col, id, onSuccess) {
     if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
     const sid = String(id);
+    if (typeof SITE !== "undefined") {
+      SITE.set(col, SITE.getList(col).filter(x => String(x.id) !== sid));
+    }
+    const s = this.getSilinen(col);
+    s.add(sid);
+    localStorage.setItem(this.keys[col], JSON.stringify([...s]));
+    if (onSuccess) onSuccess(sid);
+  }
+};
+
+let allData = [];
+let activeFilter = "hepsi";
+
+function formatDate(d) {
+  if (!d) return "—";
+  return new Date(d).toLocaleDateString("tr-TR", { day:"numeric", month:"short", year:"numeric" });
+}
+
+function render(data) {
+  const list = document.getElementById("ihlalerList");
+  const count = document.getElementById("countBar");
+  const adminMod = typeof SITE !== "undefined" && SITE.isAdmin();
+  if (!data.length) {
+    list.innerHTML = '<div class="empty-state">Bu kriterlere uyan ihlal kaydı bulunamadı.</div>';
+    count.innerHTML = "0 kayıt"; return;
+  }
+  count.innerHTML = `<b>${data.length}</b> ihlal kaydı gösteriliyor`;
+  list.innerHTML = data.map(item => `
+    <div class="ihlal-row ${item.siddet}" onclick="openModal('${item.id}')">
+      <div><span class="sev ${item.siddet}" onclick="event.stopPropagation();document.querySelector('.filter-btn[data-filter=&quot;'+item.siddet+'&quot;]')?.click()" style="cursor:pointer;" title="Bu şiddet düzeyini filtrele">${(item.siddet||'').charAt(0).toUpperCase()+(item.siddet||'').slice(1)}</span></div>
+      <div>
+        <h3>${item.baslik}</h3>
+        <div class="meta">${item.konum||''} · ${item.kategori ? `<span onclick="event.stopPropagation();document.getElementById('searchBox').value='${item.kategori}';filter()" style="cursor:pointer;text-decoration:underline dotted;" title="Bu kategoride ara">${item.kategori}</span>` : ''}${item.kaynak ? ' · ' + item.kaynak : ''}</div>
+        ${item.aciklama ? `<div class="desc">${item.aciklama}</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <span class="date">${formatDate(item.tarih)}</span>
+        ${adminMod ? `<button class="admin-sil-btn" onclick="event.stopPropagation();ihlalSil('${item.id}')">SİL</button>` : ''}
+      </div>
+    </div>
+  `).join("");
+}
+
+function filter() {
+  const q = document.getElementById("searchBox").value.toLowerCase();
+  let data = allData;
+  if (activeFilter !== "hepsi") data = data.filter(i => i.siddet === activeFilter);
+  if (q) data = data.filter(i => (i.baslik+i.konum+i.kategori+(i.aciklama||'')).toLowerCase().includes(q));
+  render(data);
+}
+
+function ihlalSil(id) {
+  _adminMod.sil("ihlaller", id, sid => {
+    allData = allData.filter(i => String(i.id) !== sid);
+    filter();
+  });
+}
+
+function openModal(id) {
+  const item = allData.find(i => String(i.id) === String(id));
+  if (!item) return;
+  const etiketler = Array.isArray(item.etiketler) ? item.etiketler : (item.etiketler ? (() => { try { return JSON.parse(item.etiketler); } catch(e){ return []; } })() : []);
+  const chipsHTML = etiketler.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join("")}</div>` : "";
+  document.getElementById("modalContent").innerHTML = `
+    ${item.foto_url ? `<img src="${item.foto_url}" alt="${item.baslik}" onerror="this.style.display='none'" style="width:100%;max-height:300px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">` : ""}
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+      <span class="badge ${item.siddet}" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 9px;border-radius:2px;text-transform:uppercase;">${item.siddet}</span>
+    </div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.1;margin-bottom:16px;">${item.baslik}</h2>
+    ${chipsHTML}
+    <div class="modal-field"><label>Konum</label><p>${item.konum||'—'}</p></div>
+    <div class="modal-field"><label>Kategori</label><p>${item.kategori||'—'}</p></div>
+    <div class="modal-field"><label>Tarih</label><p>${formatDate(item.tarih)}</p></div>
+    ${item.kaynak ? `<div class="modal-field"><label>Kaynak</label><p>${item.kaynak}</p></div>` : ''}
+    ${item.aciklama ? `<div class="modal-field"><label>Açıklama</label><p>${item.aciklama}</p></div>` : ''}
+    ${item.kaynak_url ? `<div style="margin-top:18px;"><a href="${item.kaynak_url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Kaynağa Git →</a></div>` : ''}
+  `;
+  document.getElementById("modal").classList.add("open");
+}
+
+function closeModal() { document.getElementById("modal").classList.remove("open"); }
+document.getElementById("modal").addEventListener("click", e => { if(e.target===e.currentTarget) closeModal(); });
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    filter();
+  });
+});
+document.getElementById("searchBox").addEventListener("input", filter);
+
+/* ─── Veri yükleme: ihlaller.json → data.json → localStorage ─── */
+const silinen = _adminMod.getSilinen("ihlaller");
+const urlKat  = new URLSearchParams(location.search).get("kat");
+
+function mergeWithLocal(jsonIhlaller) {
+  const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
+    .filter(x => !silinen.has(String(x.id)));
+  const localIds = new Set(local.map(x => String(x.id)));
+  return [...local, ...jsonIhlaller.filter(x => !localIds.has(String(x.id)))]
+    .sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));
+}
+
+function applyAndRender(merged) {
+  allData = merged;
+  if (urlKat) {
+    allData = allData.filter(i => i.kategori?.toLowerCase().includes(urlKat.toLowerCase()));
+    document.getElementById("searchBox").value = urlKat;
+  }
+  filter();
+}
+
+// 1. Önce ihlaller.json'ı dene
+fetch("ihlaller.json?v=" + Date.now())
+  .then(r => { if (!r.ok) throw new Error("ihlaller.json yok"); return r.json(); })
+  .then(d => {
+    // ihlaller.json doğrudan dizi ya da { ihlaller: [...] } olabilir
+    const arr = Array.isArray(d) ? d : (d.ihlaller || []);
+    applyAndRender(mergeWithLocal(arr.filter(x => !silinen.has(String(x.id)))));
+  })
+  .catch(() => {
+    // 2. data.json'ı dene
+    fetch("data.json?v=" + Date.now())
+      .then(r => { if (!r.ok) throw new Error("data.json yok"); return r.json(); })
+      .then(d => {
+        const arr = (d.ihlaller || []).filter(x => !silinen.has(String(x.id)));
+        applyAndRender(mergeWithLocal(arr));
+      })
+      .catch(() => {
+        // 3. Son çare: sadece localStorage
+        applyAndRender(mergeWithLocal([]));
+      });
+  });
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="tr">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-LTTD3L198S");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ekolojik İhlaller — ekoloji-izleme.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;align-items:center;}
+.filter-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;border-radius:3px;border:1px solid rgba(45,158,107,.2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--bright);background:rgba(45,158,107,.1);}
+.filter-btn.kritik.active{border-color:var(--warn);color:var(--warn);background:rgba(232,92,42,.1);}
+.filter-btn.orta.active{border-color:var(--alert);color:var(--alert);background:rgba(240,165,0,.1);}
+.search-box{flex:1;min-width:200px;max-width:320px;padding:8px 14px;background:var(--forest);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;outline:none;transition:border-color .2s;}
+.search-box:focus{border-color:var(--accent);}
+.search-box::placeholder{color:var(--muted);}
+.ihlaL-grid{display:flex;flex-direction:column;gap:2px;}
+.ihlal-row{background:var(--forest);border-left:3px solid var(--accent);padding:22px 28px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:start;transition:all .2s;cursor:pointer;}
+.ihlal-row:hover{background:var(--deep);padding-left:34px;}
+.ihlal-row.kritik{border-left-color:var(--warn);}
+.ihlal-row.orta{border-left-color:var(--alert);}
+.ihlal-row .sev{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;padding:3px 8px;border-radius:2px;text-transform:uppercase;font-weight:600;white-space:nowrap;margin-top:2px;}
+.ihlal-row .sev.kritik{background:rgba(232,92,42,.2);color:var(--warn);border:1px solid rgba(232,92,42,.3);}
+.ihlal-row .sev.orta{background:rgba(240,165,0,.2);color:var(--alert);border:1px solid rgba(240,165,0,.3);}
+.ihlal-row .sev.takipte{background:rgba(45,158,107,.2);color:var(--bright);border:1px solid rgba(45,158,107,.3);}
+.ihlal-row h3{font-size:16px;font-weight:400;color:var(--cream);margin-bottom:5px;}
+.ihlal-row .meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.05em;}
+.ihlal-row .desc{font-size:14px;color:rgba(122,158,138,.8);margin-top:6px;font-weight:300;}
+.ihlal-row .date{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(122,158,138,.5);text-align:right;white-space:nowrap;}
+.count-bar{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:20px;}
+.count-bar b{color:var(--bright);}
+.admin-sil-btn{padding:4px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8.5px;cursor:pointer;letter-spacing:.06em;white-space:nowrap;}
+.admin-sil-btn:hover{background:rgba(232,92,42,.25);}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;padding:40px;max-width:560px;width:90%;position:relative;}
+.modal h2{font-family:'Bebas Neue',sans-serif;font-size:32px;margin-bottom:8px;}
+.modal .close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;}
+.modal .close:hover{color:var(--cream);}
+.modal-field{margin-bottom:14px;}
+.modal-field label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;}
+.modal-field p{font-size:15px;color:var(--cream);}
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+<script src="site-data.js"></script>
+<script src="nav.js"></script>
+
+<div class="page-header">
+  <div class="section-tag">Günlük Tarama</div>
+  <h1 class="page-title">EKOLOJİK<br>İHLALLER</h1>
+  <p class="page-subtitle">Resmî Gazete, ÇED kararları ve bağımsız kaynaklardan derlenen belgeli ihlaller.</p>
+</div>
+
+<div class="content-area">
+  <div class="filter-bar">
+    <input class="search-box" id="searchBox" type="search" placeholder="Ara: konum, başlık, kategori…">
+    <button class="filter-btn active" data-filter="hepsi">Tümü</button>
+    <button class="filter-btn kritik" data-filter="kritik">● Kritik</button>
+    <button class="filter-btn orta" data-filter="orta">● Orta</button>
+    <button class="filter-btn" data-filter="takipte">● Takipte</button>
+  </div>
+  <div class="count-bar" id="countBar"></div>
+  <div class="ihlaL-grid" id="ihlalerList"></div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">ekoloji-izleme<b>.com</b><p>Bağımsız çevre gözlem platformu.</p></div>
+    <div class="footer-col"><h4>İzleme</h4><ul><li><a href="ihlaller.html">Tüm İhlaller</a></li><li><a href="raporlar.html">Raporlar</a></li></ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul><li><a href="admin.html">Admin</a></li><li><a href="index.html">Ana Sayfa</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 ekoloji-izleme.com</p><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(45,158,107,.35);">GPS: 39°53'E · 38.5°51'N</span></div>
+</footer>
+
+<script>
+
+/* ─── Admin silme yardımcıları ─── */
+const _adminMod = {
+  keys: {
+    ihlaller: "ekoloji_ihlal_silinen",
+    haberler:  "ekoloji_haber_silinen",
+    raporlar:  "ekoloji_rapor_silinen",
+  },
+  getSilinen(col) {
+    try { return new Set(JSON.parse(localStorage.getItem(this.keys[col]) || "[]").map(String)); }
+    catch { return new Set(); }
+  },
+  sil(col, id, onSuccess) {
+    if (!confirm("Bu kaydı silmek istiyor musunuz?")) return;
+    const sid = String(id);
     // localStorage'dan çıkar
     if (typeof SITE !== "undefined") {
       SITE.set(col, SITE.getList(col).filter(x => String(x.id) !== sid));
