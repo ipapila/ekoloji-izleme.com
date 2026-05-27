@@ -22,42 +22,43 @@ from pathlib import Path
 REPO_OWNER   = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
 REPO_NAME    = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")
 RAPOR_PATH   = "rapor.json"
+# Workflow yerel dosyaları Plesk'ten indirir → yerel okuma öncelikli
+HABERLER_YEREL = Path("haberler.json")
+IHLALLER_YEREL = Path("ihlaller.json")
 HABERLER_URL = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/haberler.json"
-DATA_URL     = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/data.json"
+DATA_URL     = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/ihlaller.json"
 SON_SAAT     = 24
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-MODEL      = "claude-haiku-4-5-20251001"
-MAX_TOKENS = 1800
+MODEL = "claude-haiku-4-5-20251001"
+
+MAX_TOKENS        = 1800
 
 
 # ──────────────────────────────────────────────────────────────────────
-# 1. VERİ ÇEKME — önce disk, yoksa URL
+# 1. VERİ ÇEKME
 # ──────────────────────────────────────────────────────────────────────
 
-def _json_oku(yerel_yol: str, url: str):
-    """Önce yerel dosyayı dene, yoksa URL'den çek."""
-    p = Path(yerel_yol)
-    if p.exists():
-        try:
-            veri = json.loads(p.read_text(encoding="utf-8"))
-            print(f"  ✓ {yerel_yol} diskten okundu")
-            return veri
-        except Exception as e:
-            print(f"  ⚠ {yerel_yol} okunamadı: {e}")
-    # Fallback: URL
+def _json_cek(url):
     try:
         r = requests.get(url, timeout=20)
         r.raise_for_status()
-        print(f"  ✓ {url} URL'den çekildi")
         return r.json()
     except Exception as e:
-        print(f"  ⚠ {url} çekilemedi: {e}")
+        print(f"⚠  {url} cekilemedi: {e}")
         return None
 
 
 def son_24_saat_haberleri():
-    veri = _json_oku("haberler.json", HABERLER_URL)
+    # Önce workflow'un indirdiği yerel dosyayı dene
+    if HABERLER_YEREL.exists():
+        try:
+            veri = json.loads(HABERLER_YEREL.read_text(encoding="utf-8"))
+            print(f"  yerel haberler.json okundu")
+        except Exception:
+            veri = _json_cek(HABERLER_URL)
+    else:
+        veri = _json_cek(HABERLER_URL)
     if not veri:
         return []
     haberler = veri.get("haberler", []) if isinstance(veri, dict) else veri
@@ -74,12 +75,19 @@ def son_24_saat_haberleri():
                 yeni.append(h)
         except Exception:
             pass
-    print(f"Son 24 saatte {len(yeni)} haber, toplam {len(haberler)} kayıt")
+    print(f"Son 24 saatte {len(yeni)} haber, toplam {len(haberler)} kayit")
     return yeni
 
 
 def son_24_saat_ihlalleri():
-    veri = _json_oku("data.json", DATA_URL)
+    if IHLALLER_YEREL.exists():
+        try:
+            veri = json.loads(IHLALLER_YEREL.read_text(encoding="utf-8"))
+            print(f"  yerel ihlaller.json okundu")
+        except Exception:
+            veri = _json_cek(DATA_URL)
+    else:
+        veri = _json_cek(DATA_URL)
     if not veri:
         return []
     ihlaller = veri if isinstance(veri, list) else veri.get("ihlaller", [])
@@ -93,7 +101,7 @@ def son_24_saat_ihlalleri():
                 yeni.append(ih)
         except Exception:
             pass
-    print(f"Son 24 saatte {len(yeni)} ihlal kaydı")
+    print(f"Son 24 saatte {len(yeni)} ihlal kaydi")
     return yeni
 
 
@@ -169,9 +177,10 @@ def _ihlal_ozet(ihlaller, maks=10):
 
 def rapor_uret(haberler, ihlaller):
     if not ANTHROPIC_API_KEY:
-        print("ANTHROPIC_API_KEY yok, rapor üretilemedi.")
+        print("ANTHROPIC_API_KEY yok, rapor uretilemedi.")
         return _bos_rapor()
 
+    # Öne çıkan kategoriler
     kategoriler = {}
     for h in haberler:
         k = h.get("kategori") or h.get("etiket") or "Diger"
@@ -214,10 +223,10 @@ def rapor_uret(haberler, ihlaller):
         rapor = json.loads(metin.strip())
         rapor["uretildi"] = datetime.now(timezone.utc).isoformat()
         rapor.setdefault("veri_ozet", {})["one_cikan_kategoriler"] = one_cikanlar
-        print("Rapor üretildi")
+        print("Rapor uretildi")
         return rapor
     except Exception as e:
-        print(f"Claude API hatası: {e}")
+        print(f"Claude API hatasi: {e}")
         return _bos_rapor()
 
 
@@ -245,19 +254,14 @@ def _sha_al():
 
 
 def github_yaz(rapor):
-    token = os.environ.get("GITHUB_TOKEN")
-    if not token:
-        print("GITHUB_TOKEN yok, yerel dosyaya yazılıyor.")
-        Path("rapor.json").write_text(
-            json.dumps(rapor, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-        return False
-
-    # Önce yerel diske yaz (commit adımı alabilsin)
+    # Her zaman yerel dosyaya yaz (webhook adımı Plesk'e gönderir)
     Path("rapor.json").write_text(
         json.dumps(rapor, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    print("rapor.json diske yazıldı")
+    token = os.environ.get("GITHUB_TOKEN")
+    if not token:
+        print("GITHUB_TOKEN yok, yalnızca yerel dosyaya yazıldı.")
+        return False
 
     sha     = _sha_al()
     icerik  = base64.b64encode(
@@ -276,10 +280,10 @@ def github_yaz(rapor):
         timeout=30,
     )
     if r.status_code in (200, 201):
-        print("rapor.json GitHub'a yazıldı")
+        print("rapor.json GitHub'a yazildi")
         return True
     else:
-        print(f"GitHub yazma hatası: {r.status_code}")
+        print(f"GitHub yazma hatasi: {r.status_code}")
         return False
 
 
@@ -288,9 +292,9 @@ def github_yaz(rapor):
 # ──────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    print(f"=== Günlük Rapor Üretimi — {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} ===")
+    print(f"=== Gunluk Rapor Uretimi — {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} ===")
     haberler = son_24_saat_haberleri()
     ihlaller = son_24_saat_ihlalleri()
     rapor    = rapor_uret(haberler, ihlaller)
     github_yaz(rapor)
-    print("=== Tamamlandı ===")
+    print("=== Tamamlandi ===")
