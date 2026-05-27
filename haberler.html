@@ -349,12 +349,11 @@ const HABER_KAT_DOSYALARI = {
 
 const ICERIK_STIL = {
   haber:        { badgeClass: "badge-haber",        label: "Haber"          },
-  rapor:        { badgeClass: "badge-rapor",         label: "Rapor & Analiz" },
-  kose:         { badgeClass: "badge-kose",          label: "Köşe & Yorum"   },
-  uluslararasi: { badgeClass: "badge-uluslararasi",  label: "Uluslararası"   },
+  rapor:        { badgeClass: "badge-rapor",        label: "Rapor & Analiz" },
+  kose:         { badgeClass: "badge-kose",         label: "Köşe & Yorum"   },
+  uluslararasi: { badgeClass: "badge-uluslararasi", label: "Uluslararası"   },
 };
 
-// 9 kategori → sidebar ID eşlemesi
 const KAT_ID_MAP = {
   "İklim ve Afet":          "ks_iklim",
   "Maden ve Enerji":        "ks_maden",
@@ -367,6 +366,29 @@ const KAT_ID_MAP = {
   "STK & Kampanyalar":      "ks_stk",
   "__kategorisiz":          "ks_kategorisiz",
 };
+
+/* ═══════════════════════════════════════════════════════════════
+   GÜVENLİK VE GÜVENLİ DOM YARDIMCILARI (XSS VE ÇÖKME KORUMASI)
+═══════════════════════════════════════════════════════════════ */
+function _esc(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeSetText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function safeListen(id, event, callback) {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener(event, callback);
+}
 
 /* ═══════════════════════════════════════════════════════════════
    DURUM
@@ -391,29 +413,25 @@ const _adminMod = {
 let tumHaberler     = [];
 let gorunenHaberler = [];
 let aktifKoleksiyon = "";
-let aktifHaberKat   = "";   // 9 kategori filtresi
+let aktifHaberKat   = "";  
 let duzenleId       = null;
 let importData      = null;
 
 /* ═══════════════════════════════════════════════════════════════
-   9 KATEGORİ TESPİTİ (frontend — tarayici.py'den haber_kategorisi
-   alanı gelirse kullanılır, yoksa burada hesaplanır)
+   9 KATEGORİ TESPİTİ
 ═══════════════════════════════════════════════════════════════ */
 function haberKatTespit(h) {
   if (h.haber_kategorisi) return h.haber_kategorisi;
 
-  // Türkçe büyük harf normalize (toLowerCase "İ"→"i̇" üretir, arama bozulur)
   const _M = {"İ":"i","Ş":"ş","Ğ":"ğ","Ü":"ü","Ö":"ö","Ç":"ç"};
   const _n = s => (s||"").replace(/[İŞĞÜÖÇ]/g, c => _M[c]||c).toLowerCase();
 
   const eylem = _n(h.eylem);
-  const kat   = _n(h.kategori || h.etiket);  // _n zorunlu — kat da normalize edilmeli
+  const kat   = _n(h.kategori || h.etiket);  
   const metin = _n([h.baslik, h.ozet, h.kategori, h.etiket,
                     ...(Array.isArray(h.etiketler) ? h.etiketler : [h.etiketler])
                    ].filter(Boolean).join(" "));
 
-  // ── 1) Doğrudan kategori alanı eşleştirme ──────────────────
-  // (scraper'dan gelen kategori değerleri — normalize edilmiş haliyle)
   const _D = {
     "iklim":                  "İklim ve Afet",
     "iklim olayları":         "İklim ve Afet",
@@ -447,7 +465,6 @@ function haberKatTespit(h) {
   };
   if (_D[kat]) return _D[kat];
 
-  // ── 2) Eylem alanı ─────────────────────────────────────────
   if (metin.includes("nöbet") || metin.includes("gözaltı") || metin.includes("tutuklama"))
     return "Nöbetler ve Gözaltılar";
   if (eylem.includes("direniş") || eylem.includes("eylem") ||
@@ -465,8 +482,7 @@ function haberKatTespit(h) {
       metin.includes("itiraz") || metin.includes("acele kamulaştırma"))
     return "Hukuki Süreçler";
 
-  // ── 3) Konu keyword analizi ─────────────────────────────────
-  if (metin.includes("orman yangın")) return "Orman ve Doğa";  // önce özel durum
+  if (metin.includes("orman yangın")) return "Orman ve Doğa"; 
 
   if (metin.includes("iklim") || metin.includes("yangın") ||
       metin.includes(" sel ")  || metin.includes("taşkın") ||
@@ -508,15 +524,14 @@ function haberKatTespit(h) {
       metin.includes("su havzası"))
     return "Su ve Kıyı";
 
-  // ── 4) Genel çevre / ekoloji → başlıktan konu tespit edilemedi
   if (kat.includes("çevre") || kat.includes("ekoloji") || kat.includes("haber"))
-    return "";   // "Tüm İçerik"te görünür, Kategorisiz'e de düşmez artık
+    return "";  
 
   return "";
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DETAY MODAL
+   DETAY MODAL (GÜVENLİ)
 ═══════════════════════════════════════════════════════════════ */
 function acModal(idx) {
   const h = gorunenHaberler[idx];
@@ -528,54 +543,69 @@ function acModal(idx) {
   const hkat   = h._haber_kat || "";
 
   const badgeRow = document.getElementById("mBadgeRow");
-  badgeRow.innerHTML = "";
-  const tipBadge = document.createElement("span");
-  tipBadge.className = "badge " + stil.badgeClass;
-  tipBadge.textContent = stil.label;
-  badgeRow.appendChild(tipBadge);
-  if (h.dil === "en") {
-    const enB = document.createElement("span"); enB.className="badge badge-en"; enB.textContent="EN"; badgeRow.appendChild(enB);
-  }
-  if (hkat) {
-    const kb = document.createElement("span");
-    kb.style.cssText="font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 8px;border-radius:2px;background:rgba(45,158,107,.08);color:var(--accent);border:1px solid rgba(45,158,107,.18);";
-    kb.textContent = hkat; badgeRow.appendChild(kb);
-  }
-  const cats = [h.kategori, h.etiket].filter(Boolean);
-  [...new Set(cats)].forEach(c => {
-    const s = document.createElement("span"); s.className="badge badge-haber"; s.textContent=c; badgeRow.appendChild(s);
-  });
-  if (h.eylem) {
-    const s = document.createElement("span");
-    s.style.cssText="font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 8px;border-radius:2px;background:rgba(240,165,0,.12);color:#f0a500;border:1px solid rgba(240,165,0,.25);";
-    s.textContent = h.eylem; badgeRow.appendChild(s);
+  if (badgeRow) {
+    badgeRow.innerHTML = "";
+    const tipBadge = document.createElement("span");
+    tipBadge.className = "badge " + stil.badgeClass;
+    tipBadge.textContent = stil.label;
+    badgeRow.appendChild(tipBadge);
+    if (h.dil === "en") {
+      const enB = document.createElement("span"); enB.className="badge badge-en"; enB.textContent="EN"; badgeRow.appendChild(enB);
+    }
+    if (hkat) {
+      const kb = document.createElement("span");
+      kb.style.cssText="font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 8px;border-radius:2px;background:rgba(45,158,107,.08);color:var(--accent);border:1px solid rgba(45,158,107,.18);";
+      kb.textContent = hkat; badgeRow.appendChild(kb);
+    }
+    const cats = [h.kategori, h.etiket].filter(Boolean);
+    [...new Set(cats)].forEach(c => {
+      const s = document.createElement("span"); s.className="badge badge-haber"; s.textContent=c; badgeRow.appendChild(s);
+    });
+    if (h.eylem) {
+      const s = document.createElement("span");
+      s.style.cssText="font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 8px;border-radius:2px;background:rgba(240,165,0,.12);color:#f0a500;border:1px solid rgba(240,165,0,.25);";
+      s.textContent = h.eylem; badgeRow.appendChild(s);
+    }
   }
 
   const foto = document.getElementById("mFoto");
-  if (h.foto_url) { foto.src=h.foto_url; foto.style.display="block"; foto.onerror=()=>foto.style.display="none"; }
-  else foto.style.display="none";
+  if (foto) {
+    if (h.foto_url) { foto.src=h.foto_url; foto.style.display="block"; foto.onerror=()=>foto.style.display="none"; }
+    else foto.style.display="none";
+  }
 
-  document.getElementById("mTitle").textContent = h.baslik;
-  document.getElementById("mMeta").innerHTML =
-    (h.kaynak?`<span>📰 ${h.kaynak}</span>`:"")+
-    (tarih   ?`<span>📅 ${tarih}</span>`:"")+
-    (domain  ?`<span>🔗 ${domain}</span>`:"");
+  safeSetText("mTitle", h.baslik);
+  
+  const mMeta = document.getElementById("mMeta");
+  if (mMeta) {
+    mMeta.innerHTML =
+      (h.kaynak?`<span>📰 ${_esc(h.kaynak)}</span>`:"")+
+      (tarih   ?`<span>📅 ${_esc(tarih)}</span>`:"")+
+      (domain  ?`<span>🔗 ${_esc(domain)}</span>`:"");
+  }
 
   const et = document.getElementById("mEtiketler");
-  const etiketler = Array.isArray(h.etiketler) ? h.etiketler : [];
-  if (etiketler.length) {
-    et.style.display="flex";
-    et.innerHTML = etiketler.map(e=>`<span onclick="modalEtiketTikla('${e.replace(/'/g,'\\'')}')" style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;cursor:pointer;" title="'${e}' ile ara">${e}</span>`).join("");
-  } else { et.style.display="none"; et.innerHTML=""; }
+  if (et) {
+    const etiketler = Array.isArray(h.etiketler) ? h.etiketler : [];
+    if (etiketler.length) {
+      et.style.display="flex";
+      et.innerHTML = etiketler.map(e=>`<span onclick="modalEtiketTikla('${_esc(e).replace(/'/g,'\\'')}')" style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;cursor:pointer;" title="'${_esc(e)}' ile ara">${_esc(e)}</span>`).join("");
+    } else { et.style.display="none"; et.innerHTML=""; }
+  }
 
-  document.getElementById("mOzet").textContent = h.ozet || "Özet yok. Kaynağa gidin.";
+  safeSetText("mOzet", h.ozet || "Özet yok. Kaynağa gidin.");
+  
   const link = document.getElementById("mLink");
-  if (h.url) {
-    link.href = h.url;
-    link.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Kaynağa Git — ${domain}`;
-    link.style.display="inline-flex";
-  } else link.style.display="none";
-  document.getElementById("detailModal").style.display="flex";
+  if (link) {
+    if (h.url) {
+      link.href = h.url;
+      link.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Kaynağa Git — ${_esc(domain)}`;
+      link.style.display="inline-flex";
+    } else link.style.display="none";
+  }
+  
+  const detailModal = document.getElementById("detailModal");
+  if (detailModal) detailModal.style.display="flex";
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -586,26 +616,34 @@ function acDuzenle(id, event) {
   const h = tumHaberler.find(x => String(x.id)===String(id));
   if (!h) return;
   duzenleId = id;
-  document.getElementById("edit_baslik").value   = h.baslik||"";
-  document.getElementById("edit_kaynak").value   = h.kaynak||"";
-  document.getElementById("edit_kategori").value = h.kategori||h.etiket||"Haber";
-  document.getElementById("edit_tarih").value    = h.tarih?h.tarih.slice(0,10):"";
-  document.getElementById("edit_url").value      = h.url||"";
-  document.getElementById("edit_ozet").value     = h.ozet||"";
-  document.getElementById("editModal").style.display="flex";
+  
+  const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+  setVal("edit_baslik", h.baslik||"");
+  setVal("edit_kaynak", h.kaynak||"");
+  setVal("edit_kategori", h.kategori||h.etiket||"Haber");
+  setVal("edit_tarih", h.tarih?h.tarih.slice(0,10):"");
+  setVal("edit_url", h.url||"");
+  setVal("edit_ozet", h.ozet||"");
+  
+  const editModal = document.getElementById("editModal");
+  if (editModal) editModal.style.display="flex";
 }
+
 function duzenleKaydet() {
   if (!duzenleId) return;
   const idx = tumHaberler.findIndex(x => String(x.id)===String(duzenleId));
   if (idx===-1) return;
+  
+  const getVal = id => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
+  
   tumHaberler[idx] = { ...tumHaberler[idx],
-    baslik:  document.getElementById("edit_baslik").value.trim(),
-    kaynak:  document.getElementById("edit_kaynak").value.trim(),
-    kategori:document.getElementById("edit_kategori").value,
-    etiket:  document.getElementById("edit_kategori").value,
-    tarih:   document.getElementById("edit_tarih").value,
-    url:     document.getElementById("edit_url").value.trim(),
-    ozet:    document.getElementById("edit_ozet").value.trim(),
+    baslik:  getVal("edit_baslik"),
+    kaynak:  getVal("edit_kaynak"),
+    kategori:getVal("edit_kategori"),
+    etiket:  getVal("edit_kategori"),
+    tarih:   getVal("edit_tarih"),
+    url:     getVal("edit_url"),
+    ozet:    getVal("edit_ozet"),
   };
   tumHaberler[idx]._haber_kat = haberKatTespit(tumHaberler[idx]);
   if (typeof SITE!=="undefined") {
@@ -614,17 +652,19 @@ function duzenleKaydet() {
     if (li>=0) ll[li]=tumHaberler[idx]; else ll.unshift(tumHaberler[idx]);
     SITE.set("haberler", ll);
   }
-  document.getElementById("editModal").style.display="none";
+  const editModal = document.getElementById("editModal");
+  if (editModal) editModal.style.display="none";
   filtrele(); guncelleSidebarSayac();
   gosterBildirim("✓ Haber güncellendi.");
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   RENDER
+   RENDER (XSS KORUMALI)
 ═══════════════════════════════════════════════════════════════ */
 function render(liste) {
   gorunenHaberler = liste;
   const grid = document.getElementById("haberGrid");
+  if (!grid) return;
   if (!liste.length) { grid.innerHTML='<div class="empty">Bu kategoride haber bulunamadı.</div>'; return; }
   const adminMod = typeof SITE!=="undefined" && SITE.isAdmin();
   grid.innerHTML = liste.map((h, i) => {
@@ -634,26 +674,26 @@ function render(liste) {
     const stil   = ICERIK_STIL[icerik]||ICERIK_STIL.haber;
     const enBadge = h.dil==="en"?`<span class="badge badge-en">EN</span>`:"";
     const hkat   = h._haber_kat||"";
-    const hkatBadge = hkat?`<span class="badge etiket-badge" onclick="event.stopPropagation();kartEtiketTikla('hkat','${hkat}')" style="background:rgba(45,158,107,.07);color:var(--accent);border:1px solid rgba(45,158,107,.15);font-size:7.5px;cursor:pointer;" title="${hkat} kategorisine git">${hkat}</span>`:"";
+    const hkatBadge = hkat?`<span class="badge etiket-badge" onclick="event.stopPropagation();kartEtiketTikla('hkat','${_esc(hkat)}')" style="background:rgba(45,158,107,.07);color:var(--accent);border:1px solid rgba(45,158,107,.15);font-size:7.5px;cursor:pointer;" title="${_esc(hkat)} kategorisine git">${_esc(hkat)}</span>`:"";
     const adminBtnler = adminMod?`
       <div class="admin-btn-group" onclick="event.stopPropagation()">
-        <button class="admin-duzenle-btn" onclick="acDuzenle('${h.id}',event)">DÜZENLE</button>
-        <button class="admin-sil-btn" onclick="haberSil('${h.id}')">SİL</button>
+        <button class="admin-duzenle-btn" onclick="acDuzenle('${_esc(h.id)}',event)">DÜZENLE</button>
+        <button class="admin-sil-btn" onclick="haberSil('${_esc(h.id)}')">SİL</button>
       </div>`:"";
-    return `<div class="haber-kart" data-icerik="${icerik}" onclick="acModal(${i})">
+    return `<div class="haber-kart" data-icerik="${_esc(icerik)}" onclick="acModal(${i})">
       <div>
-        <h3>${h.baslik}</h3>
+        <h3>${_esc(h.baslik)}</h3>
         <div class="haber-kart-meta">
-          <span>📰 ${h.kaynak||""}</span>
-          ${tarih ?`<span>📅 ${tarih}</span>`:""}
-          ${domain?`<a href="${h.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${domain}</a>`:""}
+          <span>📰 ${_esc(h.kaynak||"")}</span>
+          ${tarih ?`<span>📅 ${_esc(tarih)}</span>`:""}
+          ${domain?`<a href="${_esc(h.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${_esc(domain)}</a>`:""}
         </div>
       </div>
       <div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
-        <span class="badge ${stil.badgeClass}">${stil.label}</span>
+        <span class="badge ${_esc(stil.badgeClass)}">${_esc(stil.label)}</span>
         ${enBadge}
         ${hkatBadge}
-        <span class="badge badge-haber">${(h.kategori||h.etiket||"").slice(0,18)}</span>
+        <span class="badge badge-haber">${_esc((h.kategori||h.etiket||"").slice(0,18))}</span>
         ${adminBtnler}
       </div>
     </div>`;
@@ -671,7 +711,8 @@ function haberSil(id) {
    FİLTRE
 ═══════════════════════════════════════════════════════════════ */
 function filtrele() {
-  const q = document.getElementById("searchBox").value.toLowerCase();
+  const sBox = document.getElementById("searchBox");
+  const q = sBox ? sBox.value.toLowerCase() : "";
   render(tumHaberler.filter(h => {
     if (aktifKoleksiyon && h._koleksiyon !== aktifKoleksiyon) return false;
     if (aktifHaberKat === "__kategorisiz") {
@@ -698,7 +739,7 @@ function guncelleSidebarSayac() {
   const kategorisizSayi = tumHaberler.filter(h => !h._haber_kat || h._haber_kat === "").length;
   sayac["__kategorisiz"] = kategorisizSayi;
 
-  document.getElementById("ks_toplam").textContent = toplam;
+  safeSetText("ks_toplam", toplam);
   Object.entries(KAT_ID_MAP).forEach(([kat, elId]) => {
     const el = document.getElementById(elId);
     if (el) el.textContent = sayac[kat] || "0";
@@ -709,6 +750,7 @@ function guncelleSidebarSayac() {
    SIDEBAR KATEGORİ SEÇ
 ═══════════════════════════════════════════════════════════════ */
 function setHkat(el) {
+  if (!el) return;
   const yeniKat = el.dataset.hkat || "";
   const katDegisti = yeniKat !== aktifHaberKat;
   aktifHaberKat = yeniKat;
@@ -731,10 +773,10 @@ function setHkat(el) {
 function guncelleKolSayac() {
   const say = { haberler:0, raporlar:0, makaleler:0, uluslararasi:0 };
   tumHaberler.forEach(h => { if (say[h._koleksiyon]!==undefined) say[h._koleksiyon]++; });
-  document.getElementById("kSayiHaber").textContent  = say.haberler;
-  document.getElementById("kSayiRapor").textContent  = say.raporlar;
-  document.getElementById("kSayiMakale").textContent = say.makaleler;
-  document.getElementById("kSayiUlus").textContent   = say.uluslararasi;
+  safeSetText("kSayiHaber", say.haberler);
+  safeSetText("kSayiRapor", say.raporlar);
+  safeSetText("kSayiMakale", say.makaleler);
+  safeSetText("kSayiUlus", say.uluslararasi);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -744,16 +786,15 @@ function birlestir(data, localHaberler) {
   const silinen = _adminMod.getSilinen("haberler");
   const map = new Map();
   const kollar = [
-    { liste: data.haberler     || [], kol: "haberler"     },
-    { liste: data.raporlar     || [], kol: "raporlar"     },
-    { liste: data.makaleler    || [], kol: "makaleler"    },
+    { liste: data.haberler      || [], kol: "haberler"     },
+    { liste: data.raporlar      || [], kol: "raporlar"     },
+    { liste: data.makaleler     || [], kol: "makaleler"    },
     { liste: data.uluslararasi || [], kol: "uluslararasi" },
   ];
   [...kollar.flatMap(k => k.liste.map(h => ({...h, _koleksiyon: k.kol}))),
    ...localHaberler.map(h => ({...h, _koleksiyon: h._koleksiyon||"haberler"}))
   ].forEach(h => {
     if (silinen.has(String(h.id))) return;
-    // URL'ye ek olarak baslik+kaynak ile de dedup yap (Google News URL değişimine karşı)
     const baslikKey = (h.baslik||"").trim().toLowerCase().slice(0, 80);
     const urlKey = (h.url||"").toLowerCase();
     const anahtar = (urlKey && !urlKey.includes("news.google.com")) ? urlKey : (baslikKey || String(h.id));
@@ -762,7 +803,6 @@ function birlestir(data, localHaberler) {
         h.icerik_tipi = {raporlar:"rapor",makaleler:"kose",uluslararasi:"uluslararasi"}[h._koleksiyon]||"haber";
       }
       if (!h.kategori && h.etiket) h.kategori = h.etiket;
-      // 9 kategori tespiti
       h._haber_kat = haberKatTespit(h);
       map.set(anahtar, h);
     }
@@ -775,16 +815,13 @@ function birlestir(data, localHaberler) {
 ═══════════════════════════════════════════════════════════════ */
 function urlParamOku() {
   const params = new URLSearchParams(location.search);
-  // ?hkat=İklim ve Afet
   const hkat = params.get("hkat");
   if (hkat) {
     aktifHaberKat = hkat;
-    // sidebar'da ilgili öğeyi aktif yap
     document.querySelectorAll(".kat-item, .kat-tumü").forEach(el => {
       el.classList.toggle("aktif-kat", (el.dataset.hkat||"")===hkat);
     });
   }
-  // ?kol=raporlar
   const kol = params.get("kol");
   if (kol) {
     aktifKoleksiyon = kol;
@@ -825,14 +862,14 @@ function yukle(zorlaHkat) {
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
       const meta = data.meta?.guncelleme||data._meta?.guncelleme;
-      document.getElementById("scanStatus").textContent =
-        `${tumHaberler.length} kayıt`+(meta?" · "+new Date(meta).toLocaleString("tr-TR"):"");
+      const statusText = `${tumHaberler.length} kayıt`+(meta?" · "+new Date(meta).toLocaleString("tr-TR"):"");
+      safeSetText("scanStatus", statusText);
     })
     .catch(()=>{
       tumHaberler = birlestir({}, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
-      document.getElementById("scanStatus").textContent=`${tumHaberler.length} kayıt (yerel)`;
+      safeSetText("scanStatus", `${tumHaberler.length} kayıt (yerel)`);
     });
 }
 
@@ -851,7 +888,7 @@ function dosyaOku(file) {
       else if (parsed.haberler) liste=parsed.haberler;
       else if (parsed.features) liste=parsed.features.map(f=>f.properties||f).filter(Boolean);
       else if (parsed.ihlaller) liste=parsed.ihlaller;
-      if (!liste.length) { log.textContent="⚠ Tanınan kayıt bulunamadı."; return; }
+      if (!liste.length) { if(log) log.textContent="⚠ Tanınan kayıt bulunamadı."; return; }
       liste = liste.map((h,i)=>({
         id:h.id||("imp_"+Date.now()+"_"+i),baslik:h.baslik||h.name||h.ad||h.title||"",
         kaynak:h.kaynak||h.source||"",kategori:h.kategori||h.etiket||h.tip||"Haber",
@@ -860,13 +897,17 @@ function dosyaOku(file) {
         dil:h.dil||"tr",_koleksiyon:"haberler",
       })).filter(h=>h.baslik);
       importData = liste;
-      log.textContent=`✓ ${liste.length} kayıt algılandı.\n\nİlk 3 örnek:\n`+
-        liste.slice(0,3).map(h=>`• ${h.baslik.slice(0,60)}`).join("\n");
-      document.getElementById("importUygula").disabled=false;
-    } catch(err) { document.getElementById("importLog").textContent="❌ JSON parse hatası: "+err.message; }
+      if(log) {
+        log.textContent=`✓ ${liste.length} kayıt algılandı.\n\nİlk 3 örnek:\n`+
+          liste.slice(0,3).map(h=>`• ${h.baslik.slice(0,60)}`).join("\n");
+      }
+      const impUygulaBtn = document.getElementById("importUygula");
+      if (impUygulaBtn) impUygulaBtn.disabled=false;
+    } catch(err) { const log = document.getElementById("importLog"); if(log) log.textContent="❌ JSON parse hatası: "+err.message; }
   };
   reader.readAsText(file);
 }
+
 function importUygula() {
   if (!importData) return;
   const mevcutUrller   = new Set(tumHaberler.map(h=>(h.url||"").toLowerCase()));
@@ -877,7 +918,8 @@ function importUygula() {
   });
   tumHaberler = [...yeniler, ...tumHaberler].map(h=>({...h, _haber_kat:haberKatTespit(h)}));
   if (typeof SITE!=="undefined") SITE.set("haberler", tumHaberler);
-  document.getElementById("importModal").style.display="none";
+  const importModal = document.getElementById("importModal");
+  if (importModal) importModal.style.display="none";
   filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
   gosterBildirim(`✓ ${yeniler.length} yeni kayıt eklendi (${importData.length-yeniler.length} duplicate atlandı).`);
 }
@@ -894,28 +936,35 @@ function gosterBildirim(mesaj) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   EVENT LISTENERS
+   EVENT LISTENERS (GÜVENLİ BAĞLAMA)
 ═══════════════════════════════════════════════════════════════ */
-document.getElementById("detailClose").addEventListener("click", ()=>document.getElementById("detailModal").style.display="none");
-document.getElementById("detailModal").addEventListener("click", function(e){if(e.target===this)this.style.display="none";});
-document.getElementById("editClose").addEventListener("click",  ()=>document.getElementById("editModal").style.display="none");
-document.getElementById("editIptal").addEventListener("click",  ()=>document.getElementById("editModal").style.display="none");
-document.getElementById("editKaydet").addEventListener("click", duzenleKaydet);
-document.getElementById("editModal").addEventListener("click",  function(e){if(e.target===this)this.style.display="none";});
-document.getElementById("importClose").addEventListener("click",  ()=>document.getElementById("importModal").style.display="none");
-document.getElementById("importIptal").addEventListener("click",  ()=>document.getElementById("importModal").style.display="none");
-document.getElementById("importUygula").addEventListener("click", importUygula);
-document.getElementById("importDrop").addEventListener("click",   ()=>document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change",  e=>{if(e.target.files[0])dosyaOku(e.target.files[0]);});
-document.getElementById("importDrop").addEventListener("dragover",e=>{e.preventDefault();e.currentTarget.classList.add("dragover");});
-document.getElementById("importDrop").addEventListener("dragleave",e=>{e.currentTarget.classList.remove("dragover");});
-document.getElementById("importDrop").addEventListener("drop",    e=>{e.preventDefault();e.currentTarget.classList.remove("dragover");if(e.dataTransfer.files[0])dosyaOku(e.dataTransfer.files[0]);});
+safeListen("detailClose", "click", ()=> { const m = document.getElementById("detailModal"); if(m) m.style.display="none"; });
+safeListen("detailModal", "click", function(e){if(e.target===this)this.style.display="none";});
+safeListen("editClose", "click",  ()=> { const m = document.getElementById("editModal"); if(m) m.style.display="none"; });
+safeListen("editIptal", "click",  ()=> { const m = document.getElementById("editModal"); if(m) m.style.display="none"; });
+safeListen("editKaydet", "click", duzenleKaydet);
+safeListen("editModal", "click",  function(e){if(e.target===this)this.style.display="none";});
+safeListen("importClose", "click",  ()=> { const m = document.getElementById("importModal"); if(m) m.style.display="none"; });
+safeListen("importIptal", "click",  ()=> { const m = document.getElementById("importModal"); if(m) m.style.display="none"; });
+safeListen("importUygula", "click", importUygula);
+safeListen("importDrop", "click",   ()=> { const f = document.getElementById("importFile"); if(f) f.click(); });
+
+const impFile = document.getElementById("importFile");
+if(impFile) impFile.addEventListener("change", e=>{if(e.target.files[0])dosyaOku(e.target.files[0]);});
+
+const impDrop = document.getElementById("importDrop");
+if(impDrop) {
+  impDrop.addEventListener("dragover",e=>{e.preventDefault();e.currentTarget.classList.add("dragover");});
+  impDrop.addEventListener("dragleave",e=>{e.currentTarget.classList.remove("dragover");});
+  impDrop.addEventListener("drop",    e=>{e.preventDefault();e.currentTarget.classList.remove("dragover");if(e.dataTransfer.files[0])dosyaOku(e.dataTransfer.files[0]);});
+}
 
 document.addEventListener("keydown", e=>{
-  if(e.key==="Escape")["detailModal","editModal","importModal"].forEach(id=>document.getElementById(id).style.display="none");
+  if(e.key==="Escape")["detailModal","editModal","importModal"].forEach(id=>{
+    const m = document.getElementById(id); if(m) m.style.display="none";
+  });
 });
 
-// İçerik türü chip'leri (üst sağ)
 document.querySelectorAll(".tur-chip[data-kol]").forEach(btn=>{
   btn.addEventListener("click",()=>{
     if(aktifKoleksiyon===btn.dataset.kol){
@@ -932,7 +981,6 @@ document.querySelectorAll(".tur-chip[data-kol]").forEach(btn=>{
   });
 });
 
-// Koleksiyon chip'leri (alt çubuk)
 document.querySelectorAll(".kol-chip").forEach(chip=>{
   chip.addEventListener("click",()=>{
     aktifKoleksiyon=chip.dataset.kol||"";
@@ -942,19 +990,22 @@ document.querySelectorAll(".kol-chip").forEach(chip=>{
   });
 });
 
-// Admin araçları
+// Admin araçları korumalı yükleme
 if (typeof SITE!=="undefined" && SITE.isAdmin()) {
   const alan = document.getElementById("adminAlan");
-  const btnYenile=document.createElement("button"); btnYenile.className="btn-tara"; btnYenile.innerHTML="↻ Yenile";
-  btnYenile.onclick=()=>{btnYenile.disabled=true;btnYenile.innerHTML="↻ Yükleniyor…";yukle();setTimeout(()=>{btnYenile.disabled=false;btnYenile.innerHTML="↻ Yenile";},2000);};
-  alan.appendChild(btnYenile);
-  const btnDup=document.createElement("button"); btnDup.className="btn-dup"; btnDup.innerHTML="⊗ Duplicate Temizle";
-  btnDup.onclick=dupTemizleVeKaydet; alan.appendChild(btnDup);
-  const btnImport=document.createElement("button"); btnImport.className="btn-import"; btnImport.innerHTML="⬆ JSON / GeoJSON İçe Aktar";
-  btnImport.onclick=()=>{importData=null;document.getElementById("importLog").textContent="Dosya bekleniyor…";document.getElementById("importUygula").disabled=true;document.getElementById("importModal").style.display="flex";};
-  alan.appendChild(btnImport);
+  if (alan) {
+    const btnYenile=document.createElement("button"); btnYenile.className="btn-tara"; btnYenile.innerHTML="↻ Yenile";
+    btnYenile.onclick=()=>{btnYenile.disabled=true;btnYenile.innerHTML="↻ Yükleniyor…";yukle();setTimeout(()=>{btnYenile.disabled=false;btnYenile.innerHTML="↻ Yenile";},2000);};
+    alan.appendChild(btnYenile);
+    const btnDup=document.createElement("button"); btnDup.className="btn-dup"; btnDup.innerHTML="⊗ Duplicate Temizle";
+    btnDup.onclick=dupTemizleVeKaydet; alan.appendChild(btnDup);
+    const btnImport=document.createElement("button"); btnImport.className="btn-import"; btnImport.innerHTML="⬆ JSON / GeoJSON İçe Aktar";
+    btnImport.onclick=()=>{importData=null; const l = document.getElementById("importLog"); if(l) l.textContent="Dosya bekleniyor…"; const u = document.getElementById("importUygula"); if(u) u.disabled=true; const m = document.getElementById("importModal"); if(m) m.style.display="flex";};
+    alan.appendChild(btnImport);
+  }
 }
 
+// BAŞLAT
 yukle();
 </script>
 </body>
