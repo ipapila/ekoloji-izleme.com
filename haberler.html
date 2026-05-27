@@ -331,7 +331,21 @@
 /* ═══════════════════════════════════════════════════════════════
    YAPILANDIRMA
 ═══════════════════════════════════════════════════════════════ */
-const HABERLER_URL = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
+const HABERLER_URL = "./haberler.json";
+
+const HABER_KAT_DOSYALARI = {
+  "İklim ve Afet":          "./haberler-iklim.json",
+  "Maden ve Enerji":        "./haberler-maden.json",
+  "Orman ve Doğa":          "./haberler-orman.json",
+  "Su ve Kıyı":             "./haberler-su.json",
+  "Yaban Hayatı":           "./haberler-yaban.json",
+  "Direniş ve Eylemler":    "./haberler-direnis.json",
+  "Hukuki Süreçler":        "./haberler-hukuki.json",
+  "Nöbetler ve Gözaltılar": "./haberler-nobet.json",
+  "İnsan Hakları":          "./haberler-ihaklar.json",
+  "STK & Kampanyalar":      "./haberler-stk.json",
+  "Kategorisiz":            "./haberler-diger.json",
+};
 
 const ICERIK_STIL = {
   haber:        { badgeClass: "badge-haber",        label: "Haber"          },
@@ -504,8 +518,8 @@ function haberKatTespit(h) {
 /* ═══════════════════════════════════════════════════════════════
    DETAY MODAL
 ═══════════════════════════════════════════════════════════════ */
-function acModal(id) {
-  const h = tumHaberler.find(x => String(x.id) === String(id));
+function acModal(idx) {
+  const h = gorunenHaberler[idx];
   if (!h) return;
   const tarih  = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
   const domain = h.url ? (() => { try { return new URL(h.url).hostname.replace("www.",""); } catch(e){ return ""; } })() : "";
@@ -626,7 +640,7 @@ function render(liste) {
         <button class="admin-duzenle-btn" onclick="acDuzenle('${h.id}',event)">DÜZENLE</button>
         <button class="admin-sil-btn" onclick="haberSil('${h.id}')">SİL</button>
       </div>`:"";
-    return `<div class="haber-kart" data-icerik="${icerik}" onclick="acModal('${h.id}')">
+    return `<div class="haber-kart" data-icerik="${icerik}" onclick="acModal(${i})">
       <div>
         <h3>${h.baslik}</h3>
         <div class="haber-kart-meta">
@@ -695,16 +709,22 @@ function guncelleSidebarSayac() {
    SIDEBAR KATEGORİ SEÇ
 ═══════════════════════════════════════════════════════════════ */
 function setHkat(el) {
-  aktifHaberKat = el.dataset.hkat || "";
-  // aktif sınıfını güncelle
+  const yeniKat = el.dataset.hkat || "";
+  const katDegisti = yeniKat !== aktifHaberKat;
+  aktifHaberKat = yeniKat;
   document.querySelectorAll(".kat-item, .kat-tumü").forEach(e => e.classList.remove("aktif-kat"));
   el.classList.add("aktif-kat");
-  filtrele();
-  // URL'yi güncelle (pushState)
+  // URL'yi güncelle
   const u = new URL(location.href);
   if (aktifHaberKat) u.searchParams.set("hkat", aktifHaberKat);
   else u.searchParams.delete("hkat");
   history.replaceState({}, "", u.toString());
+  // Kategori değiştiyse ve sub-dosya varsa yeniden yükle
+  if (katDegisti && aktifHaberKat && HABER_KAT_DOSYALARI[aktifHaberKat]) {
+    yukle(aktifHaberKat);
+  } else {
+    filtrele();
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -791,19 +811,34 @@ function dupTemizleVeKaydet() {
   gosterBildirim(s>0?`✓ ${s} duplicate temizlendi.`:"Duplicate bulunamadı.");
 }
 
-function yukle() {
+function yukle(zorlaHkat) {
   const localHaberler = typeof SITE!=="undefined"?SITE.getList("haberler"):[];
-  fetch(HABERLER_URL+"?t="+Date.now())
+  // ?hkat= varsa sadece o kategorinin küçük dosyasını yükle
+  const aktifHkat = zorlaHkat || new URLSearchParams(location.search).get("hkat") || "";
+  const url = (aktifHkat && HABER_KAT_DOSYALARI[aktifHkat])
+    ? HABER_KAT_DOSYALARI[aktifHkat] + "?t=" + Date.now()
+    : HABERLER_URL + "?t=" + Date.now();
+
+  fetch(url)
     .then(r=>r.ok?r.json():Promise.reject(r.status))
     .then(data=>{
       tumHaberler = birlestir(data, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
       const meta = data.meta?.guncelleme||data._meta?.guncelleme;
+      const katEtiketi = aktifHkat ? ` · ${aktifHkat}` : "";
       document.getElementById("scanStatus").textContent =
-        `${tumHaberler.length} kayıt`+(meta?" · "+new Date(meta).toLocaleString("tr-TR"):"");
+        `${tumHaberler.length} kayıt${katEtiketi}`+(meta?" · "+new Date(meta).toLocaleString("tr-TR"):"");
     })
     .catch(()=>{
+      // Sub-kategori dosyası yoksa tüm listeyi yükle
+      if (aktifHkat && url !== HABERLER_URL + "?t=" + Date.now()) {
+        fetch(HABERLER_URL+"?t="+Date.now())
+          .then(r=>r.ok?r.json():Promise.reject())
+          .then(data=>{ tumHaberler=birlestir(data,localHaberler); urlParamOku(); filtrele(); guncelleKolSayac(); guncelleSidebarSayac(); })
+          .catch(()=>{ tumHaberler=birlestir({},localHaberler); urlParamOku(); filtrele(); });
+        return;
+      }
       tumHaberler = birlestir({}, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
