@@ -607,10 +607,16 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
       const haberSayisi = meta.haber_sayisi || haberler.length;
       document.getElementById("statHaber").textContent = haberSayisi.toLocaleString("tr-TR");
 
-      // Kayıtlı İhlal
-      const ihlalSayisi = meta.ihlal_sayisi || (d.ihlaller||[]).length;
+      // Kayıtlı İhlal — ayrıca ihlaller.json'dan çek
+      const ihlalSayisi = meta.ihlal_sayisi || 0;
       if (ihlalSayisi > 0)
         document.getElementById("statIhlal").textContent = ihlalSayisi.toLocaleString("tr-TR");
+      fetch("ihlaller.json?v=" + Date.now())
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(id => {
+          const s = (id.ihlaller || []).length;
+          if (s > 0) document.getElementById("statIhlal").textContent = s.toLocaleString("tr-TR");
+        }).catch(() => {});
 
       // İl Kapsama — sabit 81
       document.getElementById("statIl").textContent = "81";
@@ -700,8 +706,7 @@ function haberDetay(h) {
         ${h.ozet ? `<p style="font-size:15px;font-weight:300;color:var(--cream);line-height:1.75;margin-bottom:24px;">${h.ozet}</p>` : ''}
         ${h.url ? `<a href="${h.url}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Kaynağa Git — ${(new URL(h.url).hostname).replace('www.','')}
-        </a>` : ''}
+          `Kaynağa Git — ${safeHostname(h.url)}` : ''}
       </div>
     </div>`;
   m.addEventListener("click", e => { if(e.target===m) m.remove(); });
@@ -710,6 +715,17 @@ function haberDetay(h) {
 
 // ── Haberler render ──
 // Tüm haberler önbellekte
+
+function safeHostname(url) {
+  if (!url) return "";
+  try { return new URL(url).hostname.replace("www.", ""); }
+  catch { return url.split("/")[2]?.replace("www.", "") || ""; }
+}
+function safeJSON(h) {
+  try { return JSON.stringify(h).replace(/'/g, "&#39;"); }
+  catch { return "{}"; }
+}
+
 let _tumHaberlerIndex = [];
 
 function haberlerRender(haberler, filtre) {
@@ -728,10 +744,10 @@ function haberlerRender(haberler, filtre) {
   haberler = haberler.filter(h => !silinen.has(haber_id(h)));
   haberler = haberler.slice().sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));
   liste.innerHTML = haberler.slice(0, 8).map(h => `
-    <div class="haber-item" onclick='haberDetay(${JSON.stringify(h).replace(/'/g,"&#39;")})' style="cursor:pointer;">
+    <div class="haber-item" onclick='haberDetay(${safeJSON(h)})' style="cursor:pointer;">
       <div>
-        <h4>${h.baslik}</h4>
-        <div class="haber-meta">${h.kaynak}${h.tarih?' · '+new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}):''}${h.url?` · <a href="${h.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--accent);text-decoration:none;">${(new URL(h.url).hostname).replace('www.','')}</a>`:''}</div>
+        <h4>${h.baslik||"—"}</h4>
+        <div class="haber-meta">${h.kaynak||""}${h.tarih?' · '+new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}):''}${h.url?' · <a href="'+h.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--accent);text-decoration:none;">'+safeHostname(h.url)+'</a>':''}</div>
       </div>
       <span class="haber-source-badge">${(h.kategori||h.kaynak||'').slice(0,14)}</span>
     </div>
