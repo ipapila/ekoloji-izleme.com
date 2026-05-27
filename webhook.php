@@ -12,6 +12,9 @@
 
 // ── Ayarlar ─────────────────────────────────────────────────────────────
 define('SECRET',      getenv('WEBHOOK_SECRET') ?: 'Smtppl5862');
+@ini_set('post_max_size', '32M');
+@ini_set('upload_max_filesize', '32M');
+@ini_set('memory_limit', '256M');
 define('PYTHON',      '/usr/bin/python3');          // Plesk'te doğru yolu kontrol edin
 define('BOT_SCRIPT',  __DIR__ . '/bot.py');
 define('LOG_DOSYA',   __DIR__ . '/bot.log');
