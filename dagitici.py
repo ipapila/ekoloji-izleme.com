@@ -68,6 +68,15 @@ MAX_KAYIT = {
 KURALLAR = [
     # İHLALLER — somut olaylar, belgeler
     ("ihlaller", [
+        # Hayvan hakları & vegan
+        "hayvan istismarı", "hayvan hakları ihlal", "itlaf", "hayvan dövüşü",
+        "hayvanat bahçesi", "endüstriyel hayvancılık", "kümes hayvanı",
+        "hayvan ölümü", "toplu katliam hayvan",
+        # İnsan hakları
+        "insan hakları ihlal", "gözaltı", "tutuklama", "işkence",
+        "zorla kaybetme", "toplu tutuklama", "ifade özgürlüğü ihlal",
+        "basın özgürlüğü ihlal",
+        # Çevre ihlalleri (mevcut)
         "çev ihlali", "çevre ihlali", "çevre katliamı",
         "ÇED", "çed kararı", "çed raporu", "ÇED'siz",
         "acele kamulaştırma", "kamulaştırma kararı",
