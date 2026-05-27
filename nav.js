@@ -39,6 +39,7 @@
        </a>`;
 
   const navHTML = `
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <nav>
   <a href="index.html" class="nav-logo">
     <span>ekoloji-izleme<b>.com</b></span>
@@ -51,14 +52,16 @@
       </a>
       <div class="dropdown">
         <div class="dropdown-label">Enerji & Maden</div>
-        <a href="ihlaller.html?kat=Maden Ocağı"><span class="dot"></span>Maden Ocakları</a>
-        <a href="ihlaller.html?kat=Taş-Mermer Ocağı"><span class="dot"></span>Taş-Mermer Ocakları</a>
-        <a href="ihlaller.html?kat=Termik Reaktör"><span class="dot"></span>Termik Reaktörler</a>
+        <a href="ihlaller.html?kat=Maden"><span class="dot"></span>Maden Projeleri</a>
+        <a href="ihlaller.html?kat=Taş-Mermer"><span class="dot"></span>Taş-Mermer Ocakları</a>
+        <a href="ihlaller.html?kat=Termik"><span class="dot"></span>Termik Reaktörler</a>
         <a href="ihlaller.html?kat=HES"><span class="dot"></span>HES & Nehir Projeleri</a>
         <a href="ihlaller.html?kat=RES"><span class="dot"></span>RES & Rüzgar Santralleri</a>
         <a href="ihlaller.html?kat=GES"><span class="dot"></span>GES & Güneş Santralleri</a>
-        <a href="ihlaller.html?kat=Nükleer Enerji"><span class="dot"></span>Nükleer Enerji</a>
+        <a href="ihlaller.html?kat=Nükleer"><span class="dot"></span>Nükleer Enerji</a>
         <a href="ihlaller.html?kat=Jeotermal"><span class="dot"></span>Jeotermal</a>
+        <a href="ihlaller.html?kat=Enerji Lisans"><span class="dot"></span>Enerji Lisansları (EPDK)</a>
+        <a href="ihlaller.html?kat=Ruhsat"><span class="dot"></span>Maden Ruhsatları (MAPEG)</a>
         <hr>
         <div class="dropdown-label">Koruma Alanları</div>
         <a href="ihlaller.html?kat=Milli Park"><span class="dot"></span>Milli Parklar</a>
@@ -67,10 +70,16 @@
         <a href="ihlaller.html?kat=Sulak Alan"><span class="dot"></span>Sulak Alanlar</a>
         <a href="ihlaller.html?kat=Kültür Varlığı"><span class="dot"></span>Kültür Varlıkları</a>
         <hr>
-        <div class="dropdown-label">Diğer</div>
+        <div class="dropdown-label">Diğer İhlaller</div>
         <a href="ihlaller.html?kat=Acele Kamulaştırma"><span class="dot"></span>Acele Kamulaştırma</a>
         <a href="ihlaller.html?kat=Kıyı İhlalleri"><span class="dot"></span>Kıyı İhlalleri</a>
         <a href="ihlaller.html?kat=Ekolojik İhlal"><span class="dot"></span>Genel Ekolojik İhlaller</a>
+        <a href="ihlaller.html?kat=ÇED"><span class="dot"></span>ÇED Kararları</a>
+        <hr>
+        <div class="dropdown-label">Canlı Hakları</div>
+        <a href="ihlaller.html?kat=Hayvan"><span class="dot"></span>Hayvan Hakları</a>
+        <a href="ihlaller.html?kat=İnsan Hakları"><span class="dot"></span>İnsan Hakları</a>
+        <a href="ihlaller.html?kat=Köylü"><span class="dot"></span>Çiftçi & Köylü Hakları</a>
       </div>
     </li>
 
@@ -195,7 +204,7 @@
     ${adminBtn}
   </div>
 
-  <div class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menüyü aç/kapat" aria-expanded="false">
+  <div class="hamburger" onclick="document.querySelector('.nav-menu').style.display=document.querySelector('.nav-menu').style.display==='flex'?'none':'flex'">
     <span></span><span></span><span></span>
   </div>
 </nav>
@@ -308,25 +317,3 @@ function adminCikis() {
   else sessionStorage.removeItem("ekoloji_admin_session");
   location.reload();
 }
-
-// ── Mobil navigasyon ──
-function toggleMobileNav() {
-  const menu = document.querySelector(".nav-menu");
-  const btn  = document.getElementById("hamburgerBtn");
-  if (!menu || !btn) return;
-  const acik = menu.style.display === "flex";
-  menu.style.display = acik ? "none" : "flex";
-  btn.setAttribute("aria-expanded", String(!acik));
-}
-
-// Dışarı tıklanınca mobil menüyü kapat
-document.addEventListener("click", function(e) {
-  const menu = document.querySelector(".nav-menu");
-  const btn  = document.getElementById("hamburgerBtn");
-  if (!menu || menu.style.display !== "flex") return;
-  if (!menu.contains(e.target) && btn && !btn.contains(e.target)) {
-    menu.style.display = "none";
-    if (btn) btn.setAttribute("aria-expanded", "false");
-  }
-});
-
