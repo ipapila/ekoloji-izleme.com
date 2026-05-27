@@ -319,7 +319,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
   function chip(k) {
     return '<span style="display:inline-block;padding:4px 10px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:20px;font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;">' + k + '</span>';
   }
-	fetch("rapor.json?v=" + Date.now())
+	fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/rapor.json?v=" + Date.now())
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(rapor => {
       document.getElementById("raporYukleniyor").style.display = "none";
@@ -471,10 +471,10 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
     <div class="footer-col">
       <h4>Platform</h4>
       <ul>
-        <li><a href="admin.html">Hakkında</a></li>
-        <li><a href="admin.html">İletişim</a></li>
-        <li><a href="admin.html">Gönüllü Ol</a></li>
-        <li><a href="admin.html">İhlal Bildir</a></li>
+        <li><a href="index.html#platform">Hakkında</a></li>
+        <li><a href="mailto:info@ekoloji-izleme.com">İletişim</a></li>
+        <li><a href="index.html" onclick="setTimeout(()=>document.getElementById('gonulluModal')?.classList.add('open'),50);return false">Gönüllü Ol</a></li>
+        <li><a href="index.html" onclick="setTimeout(()=>document.getElementById('ihbarModal')?.classList.add('open'),50);return false">İhlal Bildir</a></li>
       </ul>
     </div>
   </div>
@@ -591,30 +591,34 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
 <script>
 // ── İstatistikler ──
 (function istatistikYukle() {
-  // Haberler sayısı
-  fetch("haberler.json?v=" + Date.now())
-    .then(r => r.ok ? r.json() : Promise.reject())
+	fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json?v=" + Date.now())    .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
-      const meta = d.meta || d._meta || {};
+      const meta = d._meta || {};
       const haberler = d.haberler || [];
-      const simdi = Date.now();
-      const son24 = haberler.filter(h => h.tarih && (simdi - new Date(h.tarih).getTime()) < 86400000).length;
-      document.getElementById("statSon24").textContent = son24.toLocaleString("tr-TR");
-      const haberSayisi = meta.toplam_haber || haberler.length;
-      document.getElementById("statHaber").textContent = haberSayisi.toLocaleString("tr-TR");
-      document.getElementById("statIl").textContent = "81";
-    })
-    .catch(() => { document.getElementById("statIl").textContent = "81"; });
 
-  // İhlal sayısı ayrı dosyadan
-  fetch("ihlaller.json?v=" + Date.now())
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(d => {
-      const ihlalSayisi = (d.ihlaller || []).length;
+      // Son 24 saat — tarihine göre filtrele
+      const simdi = Date.now();
+      const son24 = haberler.filter(h => {
+        if (!h.tarih) return false;
+        return (simdi - new Date(h.tarih).getTime()) < 86400000;
+      }).length;
+      document.getElementById("statSon24").textContent = son24.toLocaleString("tr-TR");
+
+      // Toplam Haber
+      const haberSayisi = meta.haber_sayisi || haberler.length;
+      document.getElementById("statHaber").textContent = haberSayisi.toLocaleString("tr-TR");
+
+      // Kayıtlı İhlal
+      const ihlalSayisi = meta.ihlal_sayisi || (d.ihlaller||[]).length;
       if (ihlalSayisi > 0)
         document.getElementById("statIhlal").textContent = ihlalSayisi.toLocaleString("tr-TR");
+
+      // İl Kapsama — sabit 81
+      document.getElementById("statIl").textContent = "81";
     })
-    .catch(() => {});
+    .catch(() => {
+      document.getElementById("statIl").textContent = "81";
+    });
 })();
 
 const siddetMap = { kritik:"kritik", orta:"orta", takipte:"dusuk" };
@@ -650,38 +654,11 @@ function ihlallerRender(ihlaller) {
   `;
 }
 
-// ihlaller.json + haberler.json birleşik okuma
-const _IHLAL_K = [
-  "ihlal","tahribat","katliamı","katliami","izinsiz","ruhsatsız","ruhsatsiz",
-  "kaçak","kacak","çed","ÇED","acele kamulaştırma","taş ocağı","maden ocağı",
-  "termik santral","nükleer santral","ağaç kesiml","orman tahri","orman yakıl",
-  "su kirliliği","deniz kirliliği","hava kirliliği","atık depo","kaçak döküm",
-  "sit alanı ihlal","kıyı dolgu","dere yatağı","yürütmeyi durdur",
-  "gözaltı","direniş","nöbet","kamulaştırma kararı","mapeg","epdk kararı"
-];
-function _ihlalMi(h){
-  const m=((h.baslik||"")+" "+(h.ozet||"")+" "+(h.kategori||"")).toLowerCase();
-  return _IHLAL_K.some(k=>m.includes(k.toLowerCase()));
-}
-Promise.all([
-  fetch("ihlaller.json?v="+Date.now()).then(r=>r.ok?r.json():{}).catch(()=>({})),
-  fetch("haberler.json?v="+Date.now()).then(r=>r.ok?r.json():{}).catch(()=>({}))
-]).then(([di,dh])=>{
-  const jsonIhlal = di.ihlaller || [];
-  const haberIhlal = (dh.haberler||[]).filter(_ihlalMi).map(h=>({
-    id: h.id, baslik: h.baslik,
-    konum: h.konum||h.bolge||"Türkiye",
-    kategori: h.kategori||"Ekolojik İhlal",
-    siddet: h.siddet||(h._puan>5?"kritik":h._puan>3?"orta":"takipte"),
-    tarih: h.tarih, aciklama: h.ozet||"", kaynak: h.kaynak||""
-  }));
-  const gorulen=new Set(); const birlesik=[];
-  for(const i of [...(SITE.getList("ihlaller")||[]),...jsonIhlal,...haberIhlal]){
-    const s=String(i.id);
-    if(!gorulen.has(s)){gorulen.add(s);birlesik.push(i);}
-  }
-  ihlallerRender(birlesik.length ? birlesik : SITE.defaults.ihlaller);
-});
+// data.json'dan ihlalleri çek, yoksa localStorage'dan al
+fetch("data.json?v=" + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(d => ihlallerRender(d.ihlaller || []))
+  .catch(() => ihlallerRender(SITE.getList("ihlaller") || SITE.defaults.ihlaller));
 
 // ── Haber detay modal ──
 function haberDetay(h) {
@@ -821,7 +798,7 @@ function tickerHaberAc(h) {
   document.body.appendChild(m);
 }
 
-fetch("haberler.json?v=" + Date.now())
+fetch("https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
     const haberler = data.haberler || (Array.isArray(data) ? data : []);
