@@ -37,6 +37,11 @@ const SITE = {
     return this.get(key) || [];
   },
 
+  getById(key, id) {
+    // detay.html ve diğer sayfalar için ID ile tekil kayıt arama
+    return this.getList(key).find(x => String(x.id) === String(id)) || null;
+  },
+
   init() {
     if (!this.get("ihlaller")) this.set("ihlaller", this.defaults.ihlaller);
     if (!this.get("haberler")) this.set("haberler", this.defaults.haberler);

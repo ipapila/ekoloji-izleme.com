@@ -106,8 +106,6 @@
 .modal-ozet{font-size:15px;font-weight:300;color:var(--cream);line-height:1.75;margin-bottom:24px;}
 .modal-kaynak-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--accent);color:var(--dark);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;}
 .modal-kaynak-btn:hover{background:var(--bright);}
-.haber-kaynak-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--bright);text-decoration:none;padding:2px 8px;border:1px solid rgba(45,158,107,.3);border-radius:2px;background:rgba(45,158,107,.1);transition:all .2s;white-space:nowrap;}
-.haber-kaynak-btn:hover{background:rgba(45,158,107,.22);}
 .modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;}
 .modal-close:hover{color:var(--cream);}
 
@@ -506,8 +504,8 @@ function haberKatTespit(h) {
 /* ═══════════════════════════════════════════════════════════════
    DETAY MODAL
 ═══════════════════════════════════════════════════════════════ */
-function acModal(idx) {
-  const h = gorunenHaberler[idx];
+function acModal(id) {
+  const h = tumHaberler.find(x => String(x.id) === String(id));
   if (!h) return;
   const tarih  = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
   const domain = h.url ? (() => { try { return new URL(h.url).hostname.replace("www.",""); } catch(e){ return ""; } })() : "";
@@ -558,9 +556,8 @@ function acModal(idx) {
 
   document.getElementById("mOzet").textContent = h.ozet || "Özet yok. Kaynağa gidin.";
   const link = document.getElementById("mLink");
-  const _hurl = h.url || h.kaynak_url || "";
-  if (_hurl) {
-    link.href = _hurl;
+  if (h.url) {
+    link.href = h.url;
     link.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Kaynağa Git — ${domain}`;
     link.style.display="inline-flex";
   } else link.style.display="none";
@@ -629,13 +626,13 @@ function render(liste) {
         <button class="admin-duzenle-btn" onclick="acDuzenle('${h.id}',event)">DÜZENLE</button>
         <button class="admin-sil-btn" onclick="haberSil('${h.id}')">SİL</button>
       </div>`:"";
-    return `<div class="haber-kart" data-icerik="${icerik}" onclick="acModal(${i})">
+    return `<div class="haber-kart" data-icerik="${icerik}" onclick="acModal('${h.id}')">
       <div>
         <h3>${h.baslik}</h3>
         <div class="haber-kart-meta">
           <span>📰 ${h.kaynak||""}</span>
           ${tarih ?`<span>📅 ${tarih}</span>`:""}
-          ${(h.url||h.kaynak_url) ? `<a href="${h.url||h.kaynak_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="haber-kaynak-btn">Kaynak →</a>` : ""}
+          ${domain?`<a href="${h.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${domain}</a>`:""}
         </div>
       </div>
       <div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">

@@ -95,23 +95,44 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   if (typeof SITE !== 'undefined' && SITE.ready) await SITE.ready();
-  render();
+  await render();
 });
 
-function render() {
+// JSON dosyalarından veri çekme — localStorage'da yoksa dosyadan ara
+const JSON_HARITASI = {
+  ihlaller: './ihlaller.json',
+  haberler: './haberler.json',
+  raporlar: './raporlar.json',
+  makaleler: './makaleler.json',
+};
+
+async function jsondenAra(kol, id) {
+  try {
+    const r = await fetch(JSON_HARITASI[kol] + '?v=' + Date.now());
+    if (!r.ok) return null;
+    const d = await r.json();
+    const liste = d[kol] || d.haberler || (Array.isArray(d) ? d : []);
+    return liste.find(x => String(x.id) === String(id)) || null;
+  } catch { return null; }
+}
+
+async function render() {
   const hash  = (location.hash || '').replace('#', '');
   const match = hash.match(/^(ihlal|haber|rapor|makale)-(.+)$/);
-  if (!match) { showHata('Geçersiz bağlantı', 'URL\'de kayıt türü ve ID belirtilmedi.'); return; }
+  if (!match) { showHata('Geçersiz bağlantı', 'URL'de kayıt türü ve ID belirtilmedi.'); return; }
 
   const [, tur, id] = match;
   const kol = { ihlal: 'ihlaller', haber: 'haberler', rapor: 'raporlar', makale: 'makaleler' }[tur];
-  const kayit = SITE.getById(kol, id);
-  if (!kayit) { showHata('Kayıt bulunamadı', `#${id} numaralı ${tur} mevcut değil veya silindi.`); return; }
 
-  if (tur === 'ihlal')   renderIhlal(kayit);
-  else if (tur === 'haber')  renderHaber(kayit);
-  else if (tur === 'rapor')  renderRapor(kayit);
-  else                       renderMakale(kayit);
+  // Önce localStorage, bulamazsa JSON dosyasından ara
+  let kayit = (typeof SITE !== 'undefined' && SITE.getById) ? SITE.getById(kol, id) : null;
+  if (!kayit) kayit = await jsondenAra(kol, id);
+  if (!kayit) { showHata('Kayıt bulunamadı', `#${id} numaralı ${tur} mevcut değil veya henüz yüklenmemiş.`); return; }
+
+  if (tur === 'ihlal')      renderIhlal(kayit);
+  else if (tur === 'haber') renderHaber(kayit);
+  else if (tur === 'rapor') renderRapor(kayit);
+  else                      renderMakale(kayit);
 }
 
 /* ─── İHLAL ─── */
@@ -135,7 +156,7 @@ function renderIhlal(k) {
     <div class="detay-icerik">
       ${metin(k.aciklama || 'Bu ihlal için detaylı açıklama henüz eklenmemiş.')}
     </div>
-    ${k.kaynak_url ? kaynakKutu(k.kaynak || k.kaynak_url, k.kaynak_url, 'Kaynağa Git →') : ''}
+    ${(k.kaynak_url||k.url) ? kaynakKutu(k.kaynak || k.kaynak_url || k.url, k.kaynak_url || k.url, 'Kaynağa Git →') : ''}
     ${navAltbar()}
   `;
   if (k.lat && k.lng) initMiniMap(k.lat, k.lng, k.baslik, k.kategori);

@@ -40,8 +40,6 @@
 .kayit-row .tarih{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(122,158,138,.45);text-align:right;white-space:nowrap;}
 .admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;cursor:pointer;}
 .admin-sil-btn:hover{background:rgba(232,92,42,.25);}
-.kaynak-link-btn{display:inline-flex;align-items:center;padding:4px 10px;background:rgba(45,158,107,.12);color:var(--bright);border:1px solid rgba(45,158,107,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-decoration:none;transition:all .2s;}
-.kaynak-link-btn:hover{background:rgba(45,158,107,.25);}
 .empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:40px 0;letter-spacing:.05em;opacity:.6;}
 .admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;margin-bottom:24px;}
 .admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
@@ -126,8 +124,8 @@ let aktifSec = new URLSearchParams(location.search).get("sec") || "";
 let gorunenKayitlar = [];
 
 /* ═══ MODAL ══════════════════════════════════════════════════════ */
-function acModal(idx) {
-  const k = gorunenKayitlar[idx]; if (!k) return;
+function acModal(id) {
+  const k = tumEkosistem.find(x => String(x.id) === String(id)); if (!k) return;
   document.getElementById("mBolum").textContent = BOLUMLER[k.bolum]?.ad || k.bolum || "";
   document.getElementById("mBaslik").textContent = k.baslik || "";
   const tarihStr = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
@@ -142,8 +140,7 @@ function acModal(idx) {
   document.getElementById("mIcerik").innerHTML = fotoHtml +
     (metin ? metin.split(/\n{2,}/).map(p=>`<p>${p.replace(/\n/g,"<br>")}</p>`).join("") : '<p style="opacity:.5">İçerik yok.</p>');
   const act = document.getElementById("mActions"); act.innerHTML = "";
-  const _kurl = k.url || k.kaynak_url || "";
-  if (_kurl) act.innerHTML += `<a href="${_kurl}" target="_blank" rel="noopener" class="modal-btn primary">Kaynağa Git →</a>`;
+  if (k.url)   act.innerHTML += `<a href="${k.url}"   target="_blank" rel="noopener" class="modal-btn primary">Kaynağa Git →</a>`;
   if (k.dosya) act.innerHTML += `<a href="${k.dosya}" target="_blank" rel="noopener" class="modal-btn outline">📄 Dosyayı Aç</a>`;
   document.getElementById("detailModal").classList.add("open");
 }
@@ -204,7 +201,7 @@ function renderKayitlar(liste, admin) {
   if (!liste.length) { el.innerHTML = '<div class="empty">Bu bölümde henüz kayıt yok.</div>'; return; }
   const kolAd = {haberler:"haber",raporlar:"rapor",makaleler:"makale",uluslararasi:"uluslararası"};
   el.innerHTML = liste.map((k,i) => `
-    <div class="kayit-row" onclick="acModal(${i})">
+    <div class="kayit-row" onclick="acModal('${k.id}')">
       <div>
         <h4>${k.baslik}</h4>
         <div class="meta">${k.kaynak||""}${k.konum?" · "+k.konum:""}${k._kaynak_kol?` <span style="opacity:.5;font-size:8.5px;">(${kolAd[k._kaynak_kol]||k._kaynak_kol})</span>`:""}</div>
@@ -212,7 +209,6 @@ function renderKayitlar(liste, admin) {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
         <span class="tarih">${k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}) : ""}</span>
-        ${(k.url||k.kaynak_url) ? `<a href="${k.url||k.kaynak_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="kaynak-link-btn">Kaynak →</a>` : ""}
         ${admin ? `<button class="admin-sil-btn" onclick="event.stopPropagation();kayitSilEkosistem('${k.id}')">SİL</button>` : ""}
       </div>
     </div>`).join("");

@@ -330,7 +330,7 @@ input.flatpickr-input:read-only{cursor:pointer!important;}
 /* ═══════════════════════════════════════════════════════════════
    YAPILANDIRMA
 ═══════════════════════════════════════════════════════════════ */
-const HABERLER_URL = "haberler.json"; // Local — Plesk'ten
+const HABERLER_URL = "./raporlar.json"; // yerel raporlar.json
 
 const KAT_ID_MAP = {
   "İklim ve Afet":          "ks_iklim",
@@ -492,8 +492,9 @@ function haberKatTespit(h) {
 /* ═══════════════════════════════════════════════════════════════
    DETAY MODAL
 ═══════════════════════════════════════════════════════════════ */
-function acModal(idx) {
-  const h = gorunenRaporlar[idx];
+function acModal(id) {
+  // ID ile ara — index yerine ID kullanmak async veri değişikliklerinde güvenli
+  const h = tumRaporlar.find(x => String(x.id) === String(id));
   if (!h) return;
   const tarih  = h.tarih ? new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}) : "";
 
@@ -623,7 +624,7 @@ function render(liste) {
         <button class="admin-duzenle-btn" onclick="acDuzenle('${h.id}',event)">DÜZENLE</button>
         <button class="admin-sil-btn" onclick="raporSil('${h.id}')">SİL</button>
       </div>`:"";
-    return `<div class="rapor-kart" onclick="acModal(${i})">
+    return `<div class="rapor-kart" onclick="acModal('${h.id}')">
       <div>
         <h3>${h.baslik}</h3>
         <div class="rapor-kart-meta">
@@ -726,9 +727,10 @@ function yukle() {
       }
       isleRaporlar(data.raporlar || [], localRaporlar, silinen, meta);
     })
-    .catch(() => {
+    .catch(err => {
+      console.warn("raporlar.json yüklenemedi:", err);
       isleRaporlar([], localRaporlar, silinen, null);
-      document.getElementById("scanStatus").textContent = "Uzak kaynak alınamadı — yerel veri gösteriliyor";
+      document.getElementById("scanStatus").textContent = "Rapor dosyası yüklenemedi — yerel veriler gösteriliyor";
     });
 }
 
