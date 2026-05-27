@@ -1,9 +1,9 @@
 name: Ekoloji Izleme Botu v7
 
 on:
-  workflow_dispatch:       # Admin panelinden manuel tetikleme
+  workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'  # Her 6 saatte bir otomatik
+    - cron: '0 */6 * * *'
 
 jobs:
   tara-ve-gonder:
@@ -13,60 +13,67 @@ jobs:
       contents: write
 
     steps:
-      # ── 1. Repo'yu çek ────────────────────────────────────────────────
       - name: Repo Kodlarını Çek
         uses: actions/checkout@v4
 
-      # ── 2. Python kur ─────────────────────────────────────────────────
       - name: Python Kurulumu
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # ── 3. Bağımlılıklar ──────────────────────────────────────────────
       - name: Bağımlılıkları Yükle
         run: |
           pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
 
-      # ── 4. Tarayıcıyı çalıştır ────────────────────────────────────────
       - name: Tarayıcıyı Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           python tarayici.py --cikti haberler.json
 
-      # ── 5. Dağıtıcıyı çalıştır ───────────────────────────────────────
       - name: Dağıtıcıyı Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           python dagitici.py
 
-      # ── 6. JSON'ları repo'ya commit et ───────────────────────────────
       - name: JSON'ları Repo'ya Commit Et
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
-          git add haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json || true
+          git add -f haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
           git push || true
 
-      # ── 7. Tüm JSON'ları Plesk webhook'a gönder ──────────────────────
       - name: JSON'ları Plesk'e Gönder
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
+          HATALI=0
           for dosya in haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json; do
-            if [ -f "$dosya" ]; then
-              echo "→ $dosya gönderiliyor..."
-              HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            if [ ! -f "$dosya" ]; then continue; fi
+            BOYUT=$(wc -c < "$dosya")
+            echo "→ $dosya gönderiliyor... (${BOYUT} byte)"
+            for deneme in 1 2 3; do
+              HTTP_STATUS=$(curl -s -o /tmp/webhook_yanit.txt -w "%{http_code}" \
+                --max-time 60 \
                 -X POST \
                 -H "Content-Type: application/json" \
                 -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
                 --data-binary "@${dosya}" \
-                "${WEBHOOK_URL}?dosya=${dosya}")
-              echo "  HTTP ${HTTP_STATUS}"
+                "${WEBHOOK_URL}?dosya=${dosya}" 2>/dev/null || echo "000")
+              echo "  Deneme ${deneme}: HTTP ${HTTP_STATUS}"
+              if [ "$HTTP_STATUS" = "200" ]; then break; fi
+              if [ "$deneme" -lt 3 ]; then sleep 5; fi
+            done
+            if [ "$HTTP_STATUS" != "200" ]; then
+              echo "  YANIT: $(cat /tmp/webhook_yanit.txt 2>/dev/null)"
+              HATALI=$((HATALI+1))
             fi
           done
-          echo "✓ Tüm dosyalar gönderildi."
+          if [ "$HATALI" -gt 0 ]; then
+            echo "⚠ ${HATALI} dosya gönderilemedi."
+          else
+            echo "✓ Tüm dosyalar başarıyla gönderildi."
+          fi
