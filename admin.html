@@ -233,7 +233,7 @@ input.flatpickr-input:read-only{cursor:pointer!important;}
           <div class="form-group"><label class="form-label">Tarih</label><input class="form-control" type="date" id="i-tarih"></div>
           <div class="form-group"><label class="form-label">Kaynak</label><input class="form-control" id="i-kaynak" placeholder="Bianet, Resmî Gazete…"></div>
         </div>
-        <div class="form-group"><label class="form-label">Kaynak URL</label><input class="form-control" id="i-kaynak-url" placeholder="https://..."></div>
+        <div class="form-group"><label class="form-label">Kaynak URL</label><input class="form-control" id="i-kaynak-url" placeholder="https://… (kaynak butonu için gerekli)" style="border-color:rgba(45,158,107,.4);"></div>
         <div class="form-group"><label class="form-label">Açıklama</label><textarea class="form-control" id="i-aciklama" placeholder="Detaylı açıklama"></textarea></div>
         <div class="form-group">
           <label class="form-label">Fotoğraf</label>
@@ -679,19 +679,27 @@ input.flatpickr-input:read-only{cursor:pointer!important;}
     <div class="modal-header"><h3>Otomatik Tarama</h3><button class="modal-kapat" onclick="kapat()">×</button></div>
     <div class="modal-body">
       <div id="ghAyarAlan" style="margin-bottom:16px;padding:16px 18px;background:rgba(0,0,0,.25);border-radius:4px;border:1px solid rgba(45,158,107,.12);">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">GitHub Actions Bağlantısı</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">GitHub Bağlantısı</div>
         <div class="form-row" style="margin-bottom:8px;">
           <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Repo</label><input class="form-control" id="ghRepo" placeholder="ipapila/ekoloji-izleme.com" style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
           <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Token</label><input class="form-control" type="password" id="ghToken" placeholder="ghp_..." style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0;">
+        <div class="form-row" style="margin-bottom:8px;">
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Workflow</label><input class="form-control" id="ghWorkflow" placeholder="tara.yml" style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:8px 0 6px;">Flex / Plesk Webhook</div>
+        <div class="form-row" style="margin-bottom:8px;">
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Webhook URL</label><input class="form-control" id="flexUrl" placeholder="https://ekoloji-izleme.com/webhook.php" style="font-family:'JetBrains Mono',monospace;font-size:11px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:9px;">Webhook Secret</label><input class="form-control" type="password" id="flexSecret" placeholder="••••" style="font-family:'JetBrains Mono',monospace;font-size:12px;"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
           <button class="btn btn-outline" style="font-size:11px;padding:6px 14px;" onclick="ghAyarKaydet()">Kaydet</button>
           <span id="ghAyarDurum" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);"></span>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:14px;">
         <button class="btn btn-primary" style="flex:1;" onclick="yapiTarama('actions')">⚡ GitHub Actions ile Tara</button>
-        <button class="btn btn-outline" style="flex:1;" onclick="yapiTarama('reload')">🔄 JSON Yenile</button>
+        <button class="btn btn-outline" style="flex:1;" onclick="yapiTarama('reload')">🔄 data.json Yenile</button>
       </div>
       <div class="tarama-log" id="taramaLog">Hazır.</div>
       <div id="bulunanlar"></div>
