@@ -818,7 +818,7 @@ function yukle(zorlaHkat) {
   const url = (aktifHkat && HABER_KAT_DOSYALARI[aktifHkat])
     ? HABER_KAT_DOSYALARI[aktifHkat] + "?t=" + Date.now()
     : HABERLER_URL + "?t=" + Date.now();
-  fetch(url
+  fetch(url)
     .then(r=>r.ok?r.json():Promise.reject(r.status))
     .then(data=>{
       tumHaberler = birlestir(data, localHaberler);
