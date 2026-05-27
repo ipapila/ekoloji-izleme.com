@@ -40,8 +40,9 @@
 .count-bar b{color:var(--bright);}
 .admin-sil-btn{padding:4px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8.5px;cursor:pointer;letter-spacing:.06em;white-space:nowrap;}
 .admin-sil-btn:hover{background:rgba(232,92,42,.25);}
-.kaynak-link-btn{display:inline-flex;align-items:center;padding:4px 10px;background:rgba(45,158,107,.12);color:var(--bright);border:1px solid rgba(45,158,107,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-decoration:none;transition:all .2s;}
-.kaynak-link-btn:hover{background:rgba(45,158,107,.25);}
+.kaynak-link-btn{display:inline-flex;align-items:center;padding:3px 9px;background:rgba(45,158,107,.12);color:var(--bright,#2d9e6b);border:1px solid rgba(45,158,107,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.05em;text-decoration:none;transition:all .15s;white-space:nowrap;}
+.kaynak-link-btn:hover{background:rgba(45,158,107,.22);}
+.kaynak-yok-badge{font-family:'JetBrains Mono',monospace;font-size:9px;color:#666;opacity:.45;padding:3px 7px;border:1px solid currentColor;border-radius:2px;white-space:nowrap;}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;padding:40px;max-width:560px;width:90%;position:relative;}
@@ -147,7 +148,7 @@ function render(data) {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
         <span class="date">${formatDate(item.tarih)}</span>
-        ${(item.kaynak_url||item.url) ? `<a href="${item.kaynak_url||item.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="kaynak-link-btn">Kaynak →</a>` : ''}
+        ${(item.kaynak_url||item.url) ? `<a href="${item.kaynak_url||item.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="kaynak-link-btn">Kaynak →</a>` : `<span class="kaynak-yok-badge">kaynak yok</span>`}
         ${adminMod ? `<button class="admin-sil-btn" onclick="event.stopPropagation();ihlalSil('${item.id}')">SİL</button>` : ''}
       </div>
     </div>
@@ -204,29 +205,38 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
 });
 document.getElementById("searchBox").addEventListener("input", filter);
 
-// Silinen listesi
 const silinen = _adminMod.getSilinen("ihlaller");
 const urlKat  = new URLSearchParams(location.search).get("kat");
 
-// Önce data.json'dan çek, yoksa localStorage
-fetch("data.json?v=" + Date.now())
-  .then(r => r.ok ? r.json() : Promise.reject())
-  .then(d => {
-    const json  = (d.ihlaller || []).filter(x => !silinen.has(String(x.id)));
-    const local = (SITE.getList("ihlaller") || []).filter(x => !silinen.has(String(x.id)));
-    const localIds = new Set(local.map(x => String(x.id)));
-    allData = [...local, ...json.filter(x => !localIds.has(String(x.id)))]
-              .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
-    if (urlKat) allData = allData.filter(i => i.kategori?.toLowerCase().includes(urlKat.toLowerCase()));
-    if (urlKat) document.getElementById("searchBox").value = urlKat;
-    filter();
-  })
-  .catch(() => {
-    allData = (SITE.getList("ihlaller") || []).filter(x => !silinen.has(String(x.id)))
-              .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
-    if (urlKat) allData = allData.filter(i => i.kategori?.toLowerCase().includes(urlKat.toLowerCase()));
-    filter();
-  });
+async function yukle() {
+  const local = (SITE.getList("ihlaller") || []).filter(x => !silinen.has(String(x.id)));
+  const goruldu = new Set(local.map(x => String(x.id)));
+  // ihlaller.json — otomatik tarama (url alanı dolu)
+  try {
+    const r = await fetch("ihlaller.json?v=" + Date.now());
+    if (r.ok) {
+      const d = await r.json();
+      (d.ihlaller || []).filter(x => !silinen.has(String(x.id))).forEach(x => {
+        if (!goruldu.has(String(x.id))) { goruldu.add(String(x.id)); local.push(x); }
+      });
+    }
+  } catch {}
+  // data.json — admin kayıtları (kaynak_url alanı dolu)
+  try {
+    const r = await fetch("data.json?v=" + Date.now());
+    if (r.ok) {
+      const d = await r.json();
+      (d.ihlaller || []).filter(x => !silinen.has(String(x.id))).forEach(x => {
+        if (!goruldu.has(String(x.id))) { goruldu.add(String(x.id)); local.push(x); }
+      });
+    }
+  } catch {}
+  allData = local.sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
+  if (urlKat) allData = allData.filter(i => i.kategori?.toLowerCase().includes(urlKat.toLowerCase()));
+  if (urlKat) document.getElementById("searchBox").value = urlKat;
+  filter();
+}
+yukle();
 </script>
 </body>
 </html>
