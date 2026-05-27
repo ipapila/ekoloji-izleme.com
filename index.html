@@ -912,5 +912,94 @@ function gonulluGonder() {
   setTimeout(function() { modalKapat('gonullu'); bildirimGoster('✓ E-posta istemciniz açıldı. Başvurunuz için teşekkür ederiz!'); }, 600);
 }
 </script>
+	// Haber yönetim sistemi
+let tumHaberler = [];
+
+// 1. Haberleri Kaynaktan Çekme Fonksiyonu
+function haberleriYukle() {
+  const listeEl = document.getElementById("haberlerListe");
+  if (!listeEl) return;
+
+  // Rapor sistemindeki cache-busting (v=Date.now) yaklaşımına uygun fetch
+  fetch("./haberler.json?v=" + Date.now())
+    .then(response => {
+      if (!response.ok) throw new Error("Ağ hatası");
+      return response.json();
+    })
+    .then(data => {
+      tumHaberler = data;
+      // Sayfa ilk açıldığında "Tümü" (boş string) kategorisini listele
+      haberleriListele("");
+    })
+    .catch(error => {
+      console.error("Haberler yüklenirken hata oluştu:", error);
+      listeEl.innerHTML = `
+        <div class="haber-item" style="opacity:.7; pointer-events:none;">
+          <div><h4>Haberler şu anda yüklenemedi. Lütfen daha sonra tekrar deneyin.</h4></div>
+        </div>
+      `;
+    });
+}
+
+// 2. Haberleri DOM'a Yazdırma ve Filtreleme Fonksiyonu
+function haberleriListele(kategori) {
+  const listeEl = document.getElementById("haberlerListe");
+  if (!listeEl) return;
+
+  // Yükleniyor yazısını ve eski içerikleri temizle
+  listeEl.innerHTML = "";
+
+  // Eğer kategori seçilmişse filtrele, seçilmemişse (boşsa) tümünü getir
+  const filtrelenmisHaberler = kategori 
+    ? tumHaberler.filter(haber => haber.kategori === kategori)
+    : tumHaberler;
+
+  // Filtreleme sonucu haber yoksa uyarı göster
+  if (filtrelenmisHaberler.length === 0) {
+    listeEl.innerHTML = `
+      <div class="haber-item" style="opacity:.6; pointer-events:none;">
+        <div><h4>Bu kategoride henüz güncel haber bulunmuyor.</h4></div>
+      </div>
+    `;
+    return;
+  }
+
+  // HTML mimarinize ve CSS sınıflarınıza tam uyumlu render döngüsü
+  filtrelenmisHaberler.forEach(haber => {
+    const haberLink = haber.link || "#";
+    const kaynakBadge = haber.kaynak 
+      ? `<span class="haber-source-badge">${haber.kaynak}</span>` 
+      : "";
+
+    const haberHTML = `
+      <a href="${haberLink}" class="haber-item" target="_blank">
+        <div>
+          <h4>${haber.baslik}</h4>
+          <div class="haber-meta">${haber.tarih || ""} ${haber.kategori ? "· " + haber.kategori : ""}</div>
+        </div>
+        ${kaynakBadge}
+      </a>
+    `;
+    listeEl.innerHTML += haberHTML;
+  });
+}
+
+// 3. Kategori Sekme Butonlarının Yönetimi (onclick="haberKatSec(this)")
+function haberKatSec(btn) {
+  // Tüm kategori butonlarından aktiflik sınıfını kaldır
+  document.querySelectorAll("#haberKatTabs .haber-kat-btn").forEach(b => {
+    b.classList.remove("aktif-kat-btn");
+  });
+  
+  // Tıklanan butona aktiflik sınıfını ekle
+  btn.classList.add("aktif-kat-btn");
+
+  // Butondaki data-kat değerini al ve listeleme fonksiyonuna gönder
+  const secilenKategori = btn.getAttribute("data-kat");
+  haberleriListele(secilenKategori);
+}
+
+// Sayfa yapısı hazır olduğunda otomatik olarak haberleri tetikle
+document.addEventListener("DOMContentLoaded", haberleriYukle);
 </body>
 </html>
