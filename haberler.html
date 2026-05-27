@@ -565,7 +565,7 @@ function acModal(idx) {
   const etiketler = Array.isArray(h.etiketler) ? h.etiketler : [];
   if (etiketler.length) {
     et.style.display="flex";
-    et.innerHTML = etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join("");
+    et.innerHTML = etiketler.map(e=>`<span onclick="modalEtiketTikla('${e.replace(/'/g,'\\'')}')" style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;cursor:pointer;" title="'${e}' ile ara">${e}</span>`).join("");
   } else { et.style.display="none"; et.innerHTML=""; }
 
   document.getElementById("mOzet").textContent = h.ozet || "Özet yok. Kaynağa gidin.";
@@ -634,7 +634,7 @@ function render(liste) {
     const stil   = ICERIK_STIL[icerik]||ICERIK_STIL.haber;
     const enBadge = h.dil==="en"?`<span class="badge badge-en">EN</span>`:"";
     const hkat   = h._haber_kat||"";
-    const hkatBadge = hkat?`<span class="badge" style="background:rgba(45,158,107,.07);color:var(--accent);border:1px solid rgba(45,158,107,.15);font-size:7.5px;">${hkat}</span>`:"";
+    const hkatBadge = hkat?`<span class="badge etiket-badge" onclick="event.stopPropagation();kartEtiketTikla('hkat','${hkat}')" style="background:rgba(45,158,107,.07);color:var(--accent);border:1px solid rgba(45,158,107,.15);font-size:7.5px;cursor:pointer;" title="${hkat} kategorisine git">${hkat}</span>`:"";
     const adminBtnler = adminMod?`
       <div class="admin-btn-group" onclick="event.stopPropagation()">
         <button class="admin-duzenle-btn" onclick="acDuzenle('${h.id}',event)">DÜZENLE</button>
@@ -714,12 +714,10 @@ function setHkat(el) {
   aktifHaberKat = yeniKat;
   document.querySelectorAll(".kat-item, .kat-tumü").forEach(e => e.classList.remove("aktif-kat"));
   el.classList.add("aktif-kat");
-  // URL'yi güncelle
   const u = new URL(location.href);
   if (aktifHaberKat) u.searchParams.set("hkat", aktifHaberKat);
   else u.searchParams.delete("hkat");
   history.replaceState({}, "", u.toString());
-  // Kategori değiştiyse ve sub-dosya varsa yeniden yükle
   if (katDegisti && aktifHaberKat && HABER_KAT_DOSYALARI[aktifHaberKat]) {
     yukle(aktifHaberKat);
   } else {
@@ -755,7 +753,10 @@ function birlestir(data, localHaberler) {
    ...localHaberler.map(h => ({...h, _koleksiyon: h._koleksiyon||"haberler"}))
   ].forEach(h => {
     if (silinen.has(String(h.id))) return;
-    const anahtar = (h.url||h.baslik||String(h.id)).toLowerCase();
+    // URL'ye ek olarak baslik+kaynak ile de dedup yap (Google News URL değişimine karşı)
+    const baslikKey = (h.baslik||"").trim().toLowerCase().slice(0, 80);
+    const urlKey = (h.url||"").toLowerCase();
+    const anahtar = (urlKey && !urlKey.includes("news.google.com")) ? urlKey : (baslikKey || String(h.id));
     if (!map.has(anahtar)) {
       if (!h.icerik_tipi) {
         h.icerik_tipi = {raporlar:"rapor",makaleler:"kose",uluslararasi:"uluslararasi"}[h._koleksiyon]||"haber";
@@ -813,32 +814,21 @@ function dupTemizleVeKaydet() {
 
 function yukle(zorlaHkat) {
   const localHaberler = typeof SITE!=="undefined"?SITE.getList("haberler"):[];
-  // ?hkat= varsa sadece o kategorinin küçük dosyasını yükle
   const aktifHkat = zorlaHkat || new URLSearchParams(location.search).get("hkat") || "";
   const url = (aktifHkat && HABER_KAT_DOSYALARI[aktifHkat])
     ? HABER_KAT_DOSYALARI[aktifHkat] + "?t=" + Date.now()
     : HABERLER_URL + "?t=" + Date.now();
-
-  fetch(url)
+  fetch(url
     .then(r=>r.ok?r.json():Promise.reject(r.status))
     .then(data=>{
       tumHaberler = birlestir(data, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
       const meta = data.meta?.guncelleme||data._meta?.guncelleme;
-      const katEtiketi = aktifHkat ? ` · ${aktifHkat}` : "";
       document.getElementById("scanStatus").textContent =
-        `${tumHaberler.length} kayıt${katEtiketi}`+(meta?" · "+new Date(meta).toLocaleString("tr-TR"):"");
+        `${tumHaberler.length} kayıt`+(meta?" · "+new Date(meta).toLocaleString("tr-TR"):"");
     })
     .catch(()=>{
-      // Sub-kategori dosyası yoksa tüm listeyi yükle
-      if (aktifHkat && url !== HABERLER_URL + "?t=" + Date.now()) {
-        fetch(HABERLER_URL+"?t="+Date.now())
-          .then(r=>r.ok?r.json():Promise.reject())
-          .then(data=>{ tumHaberler=birlestir(data,localHaberler); urlParamOku(); filtrele(); guncelleKolSayac(); guncelleSidebarSayac(); })
-          .catch(()=>{ tumHaberler=birlestir({},localHaberler); urlParamOku(); filtrele(); });
-        return;
-      }
       tumHaberler = birlestir({}, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
