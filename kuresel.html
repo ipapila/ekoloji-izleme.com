@@ -173,138 +173,103 @@ const DIL_AD = {
   AR:'Arapça', EL:'Yunanca', RU:'Rusça', KU:'Kürtçe', Diğer:'Diğer'
 };
 
-/* ─────────────────────────────────────────────────────────────
-   "Tür" normalizasyonu
-   haberler.json'da alan adları değişken olabilir:
-     tur | icerik_tipi | kategori | etiket
-   Sekme filtreleri Türkçe değerler bekliyor:
-     Haber | Rapor | Araştırma | Analiz | Aktivizm | Politika
-───────────────────────────────────────────────────────────── */
-const ICERIK_TIPI_MAP = {
-  // icerik_tipi değerleri → sekme değeri
-  haber:         'Haber',
-  rapor:         'Rapor',
-  kose:          'Analiz',
-  uluslararasi:  'Haber',
-  // İngilizce değerler
-  news:          'Haber',
-  report:        'Rapor',
-  research:      'Araştırma',
-  analysis:      'Analiz',
-  activism:      'Aktivizm',
-  policy:        'Politika',
-};
-const KATEGORI_MAP = {
-  'Uluslararası Haber':   'Haber',
-  'Uluslararası Analiz':  'Analiz',
-  'İklim Raporu':         'Rapor',
-  'STK Raporu':           'Rapor',
-  'Köşe / Yorum':         'Analiz',
-  'Haber':                'Haber',
-  'Rapor':                'Rapor',
-  'Analiz':               'Analiz',
-  'Araştırma':            'Araştırma',
-  'Aktivizm':             'Aktivizm',
-  'Politika':             'Politika',
+/* ─── Türkçe olmayan diller = uluslararası ─── */
+const TR_DILLER = new Set(['tr', '']);
+
+/* ─────────────────────────────────────────────
+   Tür normalizasyonu
+   haberler.json'da icerik_tipi her zaman "haber"
+   Kategori veya kaynak_turu'na göre sekme değerine çeviriyoruz
+───────────────────────────────────────────── */
+const KATEGORI_TUR_MAP = {
+  'rapor':           'Rapor',
+  'stk raporu':      'Rapor',
+  'iklim raporu':    'Rapor',
+  'akademik':        'Araştırma',
+  'araştırma':       'Araştırma',
+  'analiz':          'Analiz',
+  'politika':        'Politika',
+  'aktivizm':        'Aktivizm',
+  'eylem':           'Aktivizm',
+  'direniş':         'Aktivizm',
 };
 
 function normalizeTur(item) {
-  // 1) data.json'daki klasik "tur" alanı
   if (item.tur) return item.tur;
-  // 2) haberler.json'daki "icerik_tipi"
-  if (item.icerik_tipi) {
-    const mapped = ICERIK_TIPI_MAP[item.icerik_tipi.toLowerCase()];
-    if (mapped) return mapped;
+  const tip = (item.icerik_tipi || '').toLowerCase();
+  if (tip === 'rapor')  return 'Rapor';
+  if (tip === 'kose')   return 'Analiz';
+  const kat = (item.kategori || item.etiket || '').toLowerCase();
+  for (const [anahtar, deger] of Object.entries(KATEGORI_TUR_MAP)) {
+    if (kat.includes(anahtar)) return deger;
   }
-  // 3) kategori / etiket alanı
-  const kat = item.kategori || item.etiket || '';
-  const mappedKat = KATEGORI_MAP[kat];
-  if (mappedKat) return mappedKat;
-  // 4) varsayılan
   return 'Haber';
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Dil normalizasyonu
-   haberler.json: dil: "en" (küçük harf)
-   kuresel.html filtre: "EN" (büyük harf)
-───────────────────────────────────────────────────────────── */
 function normalizeDil(item) {
-  const d = item.dil || '';
-  return d.toUpperCase();
+  return (item.dil || 'tr').toUpperCase();
 }
 
-let tumVeri = [];
+/* ─────────────────────────────────────────────
+   Uluslararası kayıt filtresi
+   Kriter: dil "tr" değil  VEYA  kategori "uluslararas" içeriyor
+───────────────────────────────────────────── */
+function isUluslararasi(h) {
+  const dil = (h.dil || 'tr').toLowerCase();
+  const kat = (h.kategori || h.etiket || '').toLowerCase();
+  return !TR_DILLER.has(dil) || kat.includes('uluslararas');
+}
+
+let tumVeri   = [];
 let seciliTur = '';
 let seciliDil = '';
 
-/* ─────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
    VERİ YÜKLEME
-   Öncelik sırası:
-   1) haberler.json → uluslararasi koleksiyonu
-   2) haberler.json → haberler koleksiyonundan dil:"en"/icerik_tipi:"uluslararasi" olanlar
+   1) haberler.json → uluslararasi koleksiyonu (varsa)
+   2) haberler.json → haberler dizisinden uluslararası olanlar
    3) data.json     → uluslararasi koleksiyonu (eski format)
-   4) SITE.getList('uluslararasi') (localStorage)
-───────────────────────────────────────────────────────────── */
+   4) localStorage  (admin girişleri)
+───────────────────────────────────────────── */
 async function veriYukle() {
   try {
     const ts = Date.now();
-    let sonuclar = [];
-    const gorulenUrller = new Set();
+    const gorulen = new Set();
+    const sonuclar = [];
 
-    function ekle(liste, kaynakEtiket) {
+    function ekle(liste) {
       (liste || []).forEach(item => {
-        const anahtar = (item.url || item.baslik || '').toLowerCase().trim();
-        if (!anahtar || gorulenUrller.has(anahtar)) return;
-        gorulenUrller.add(anahtar);
-        // Normalize et ve ekle
-        item._tur_normalize = normalizeTur(item);
-        item._dil_normalize = normalizeDil(item);
+        const key = (item.url || item.baslik || '').toLowerCase().trim();
+        if (!key || gorulen.has(key)) return;
+        gorulen.add(key);
+        item._tur = normalizeTur(item);
+        item._dil = normalizeDil(item);
         sonuclar.push(item);
       });
     }
 
-    // ── 1 & 2) haberler.json ──────────────────────────────────
+    // 1 & 2) haberler.json
     try {
       const r = await fetch('haberler.json?v=' + ts);
       if (r.ok) {
         const data = await r.json();
-
-        // Doğrudan uluslararasi koleksiyonu
-        ekle(data.uluslararasi, 'haberler.json/uluslararasi');
-
-        // haberler koleksiyonundan uluslararası nitelikli olanlar
-        // (icerik_tipi:"uluslararasi" VEYA dil != "tr" / "")
-        const haberUlus = (data.haberler || []).filter(h => {
-          const tip = (h.icerik_tipi || '').toLowerCase();
-          const dil = (h.dil || '').toLowerCase();
-          const kat = (h.kategori || h.etiket || '').toLowerCase();
-          return tip === 'uluslararasi'
-            || (dil && dil !== 'tr')
-            || kat.includes('uluslararas');
-        });
-        ekle(haberUlus, 'haberler.json/haberler[ulus]');
+        ekle(data.uluslararasi);
+        ekle((data.haberler || []).filter(isUluslararasi));
       }
-    } catch(e) { console.warn('haberler.json yüklenemedi:', e); }
+    } catch(e) { console.warn('haberler.json:', e); }
 
-    // ── 3) data.json (eski format) ────────────────────────────
+    // 3) data.json (eski format, opsiyonel)
     try {
       const r2 = await fetch('data.json?v=' + ts);
       if (r2.ok) {
         const txt = await r2.text();
-        if (txt && txt.trim()) {
-          const d2 = JSON.parse(txt);
-          ekle(d2.uluslararasi, 'data.json/uluslararasi');
-        }
+        if (txt && txt.trim()) ekle(JSON.parse(txt).uluslararasi);
       }
-    } catch(e) { /* data.json olmayabilir, sessizce geç */ }
+    } catch(e) { /* yok olabilir */ }
 
-    // ── 4) localStorage ───────────────────────────────────────
-    if (typeof SITE !== 'undefined') {
-      ekle(SITE.getList('uluslararasi'), 'localStorage');
-    }
+    // 4) localStorage
+    if (typeof SITE !== 'undefined') ekle(SITE.getList('uluslararasi'));
 
-    // Tarihe göre sırala (yeniden eskiye)
     tumVeri = sonuclar.sort((a, b) =>
       (b.tarih || '') > (a.tarih || '') ? 1 : -1
     );
@@ -321,7 +286,7 @@ async function veriYukle() {
 }
 
 function istatistikGuncelle() {
-  const diller   = new Set(tumVeri.map(x => x._dil_normalize).filter(Boolean));
+  const diller    = new Set(tumVeri.map(x => x._dil).filter(Boolean));
   const kaynaklar = new Set(tumVeri.map(x => x.kaynak).filter(Boolean));
   document.getElementById('statToplam').textContent  = tumVeri.length || '—';
   document.getElementById('statDil').textContent     = diller.size    || '—';
@@ -331,11 +296,10 @@ function istatistikGuncelle() {
 function dilHaritaRender() {
   const sayac = {};
   tumVeri.forEach(x => {
-    const d = x._dil_normalize || 'Diğer';
+    const d = x._dil || 'Diğer';
     sayac[d] = (sayac[d] || 0) + 1;
   });
-  const dilGrid = document.getElementById('dilGrid');
-  dilGrid.innerHTML = Object.entries(sayac)
+  document.getElementById('dilGrid').innerHTML = Object.entries(sayac)
     .sort((a, b) => b[1] - a[1])
     .map(([dil, n]) => `
       <button class="kg-dil-btn" data-dil="${dil}" onclick="dilFiltrele('${dil}')">
@@ -348,19 +312,16 @@ function dilHaritaRender() {
 function dilFiltrele(dil) {
   seciliDil = (seciliDil === dil) ? '' : dil;
   document.getElementById('dilSelect').value = seciliDil;
-  document.querySelectorAll('.kg-dil-btn').forEach(b => {
-    b.classList.toggle('aktif', b.dataset.dil === seciliDil);
-  });
+  document.querySelectorAll('.kg-dil-btn').forEach(b =>
+    b.classList.toggle('aktif', b.dataset.dil === seciliDil));
   kartRender();
 }
 
 function kartRender() {
   const grid = document.getElementById('kartGrid');
   const filtreli = tumVeri.filter(x => {
-    // Tür filtresi: normalize edilmiş _tur_normalize alanını kullan
-    if (seciliTur && x._tur_normalize !== seciliTur) return false;
-    // Dil filtresi: normalize edilmiş _dil_normalize alanını kullan
-    if (seciliDil && x._dil_normalize !== seciliDil) return false;
+    if (seciliTur && x._tur !== seciliTur) return false;
+    if (seciliDil && x._dil !== seciliDil) return false;
     return true;
   });
   if (!filtreli.length) {
@@ -371,24 +332,25 @@ function kartRender() {
     </div>`;
     return;
   }
-  grid.innerHTML = filtreli.map(item => kartHtml(item)).join('');
+  grid.innerHTML = filtreli.map(kartHtml).join('');
 }
 
 function kartHtml(item) {
   const etiketler = Array.isArray(item.etiketler) ? item.etiketler : [];
-  const dil = item._dil_normalize || '';
-  const tur = item._tur_normalize || '';
+  const dil = item._dil || '';
+  const tur = item._tur || '';
   const fotoHtml = item.foto_url
-    ? `<img class="kg-kart-foto" src="${item.foto_url}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=kg-kart-foto-placeholder>🌍</div>'">`
+    ? `<img class="kg-kart-foto" src="${item.foto_url}" alt="" loading="lazy"
+         onerror="this.parentNode.innerHTML='<div class=kg-kart-foto-placeholder>🌍</div>'">`
     : `<div class="kg-kart-foto-placeholder">🌍</div>`;
   const baslikGoster = item.baslik_tr || item.baslik || '';
   const baslikEl = item.url
     ? `<a class="kg-kart-baslik-tr" href="${item.url}" target="_blank" rel="noopener">${baslikGoster}</a>`
     : `<span class="kg-kart-baslik-tr" style="cursor:default;">${baslikGoster}</span>`;
-  const orgBaslik = (item.baslik && item.baslik !== item.baslik_tr && item.baslik_tr)
+  const orgBaslik = (item.baslik && item.baslik_tr && item.baslik !== item.baslik_tr)
     ? `<div class="kg-kart-baslik-org">${item.baslik}</div>` : '';
-  const etiketHtml = etiketler.slice(0, 4).map(e =>
-    `<span class="kg-kart-etiket">${e}</span>`).join('');
+  const etiketHtml = etiketler.slice(0, 4)
+    .map(e => `<span class="kg-kart-etiket">${e}</span>`).join('');
   const linkHtml = item.url
     ? `<a class="kg-link" href="${item.url}" target="_blank" rel="noopener">Kaynağa Git →</a>`
     : '<span></span>';
@@ -423,9 +385,8 @@ document.querySelectorAll('.kg-tab').forEach(btn => {
 
 document.getElementById('dilSelect').addEventListener('change', e => {
   seciliDil = e.target.value;
-  document.querySelectorAll('.kg-dil-btn').forEach(b => {
-    b.classList.toggle('aktif', b.dataset.dil === seciliDil);
-  });
+  document.querySelectorAll('.kg-dil-btn').forEach(b =>
+    b.classList.toggle('aktif', b.dataset.dil === seciliDil));
   kartRender();
 });
 
@@ -437,9 +398,8 @@ document.getElementById('dilSelect').addEventListener('change', e => {
   }
   if (p.get('tur')) {
     seciliTur = p.get('tur');
-    document.querySelectorAll('.kg-tab').forEach(t => {
-      t.classList.toggle('aktif', t.dataset.tur === seciliTur);
-    });
+    document.querySelectorAll('.kg-tab').forEach(t =>
+      t.classList.toggle('aktif', t.dataset.tur === seciliTur));
   }
 })();
 
