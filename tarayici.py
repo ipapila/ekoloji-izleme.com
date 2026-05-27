@@ -80,112 +80,6 @@ RSS_KAYNAKLARI = [
      "kaynak": "Sözcü", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
     {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",
      "kaynak": "Cumhuriyet", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
-
-    # ── Resmî Gazete — Doğrudan ve Arama ─────────────────────────
-    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22maden+ruhsat%22+OR+%22maden+i%C5%9Fletme%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Resmî Gazete", "kategori": "Maden Ruhsatı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22enerji+lisans%22+OR+%22%C3%BCretim+lisans%22+OR+%22RES%22+OR+%22GES%22+OR+%22HES%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Resmî Gazete", "kategori": "Enerji Lisansı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22%C3%87ED+olumlu%22+OR+%22%C3%87ED+karar%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Resmî Gazete", "kategori": "ÇED Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22orman+izni%22+OR+%22orman+arazisi%22+OR+%222634+say%C4%B1l%C4%B1%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Resmî Gazete", "kategori": "Orman İzni / Tahsis", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22jeotermal%22+OR+%22JES%22+OR+%22do%C4%9Fal+gaz%22+OR+%22petrol+arama%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Resmî Gazete", "kategori": "Jeotermal / Petrol Lisansı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22termik+santral%22+OR+%22nükleer%22+OR+%22Akkuyu%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Resmî Gazete", "kategori": "Termik / Nükleer Karar", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:resmigazete.gov.tr+%22Do%C4%9Fa+Koruma%22+OR+%22Sulak+Alan%22+OR+%22tabiat+parka%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Resmî Gazete", "kategori": "Koruma Alanı Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── EPDK Lisans Kararları ─────────────────────────────────────
-    {"url": "https://news.google.com/rss/search?q=site:epdk.gov.tr&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "EPDK", "kategori": "Enerji Lisans Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=EPDK+RES+GES+HES+lisans+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "EPDK Lisans", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=EPDK+lisans+iptal+OR+ret+OR+onay+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "EPDK Lisans Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── MAPEG Maden Ruhsatları / İhaleler ────────────────────────
-    {"url": "https://news.google.com/rss/search?q=site:mapeg.gov.tr&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "MAPEG", "kategori": "Maden Ruhsatı / İhale", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=MAPEG+maden+ruhsat+ihale+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "MAPEG Maden Ruhsatı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=maden+arama+ruhsat%C4%B1+OR+i%C5%9Fletme+ruhsat%C4%B1+Türkiye+il&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Maden Ruhsatı", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── KİK — Kamu İhale Kurumu (enerji/maden) ───────────────────
-    {"url": "https://news.google.com/rss/search?q=site:kik.gov.tr+enerji+OR+maden+OR+aram&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "KİK", "kategori": "Kamu İhalesi / Enerji-Maden", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── Enerji ve Tabii Kaynaklar Bakanlığı ──────────────────────
-    {"url": "https://news.google.com/rss/search?q=site:enerji.gov.tr&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Enerji Bakanlığı", "kategori": "Enerji Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=Enerji+Bakanl%C4%B1%C4%9F%C4%B1+RES+GES+HES+lisans+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Enerji Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── ÇŞİDB — ÇED Kararları ────────────────────────────────────
-    {"url": "https://news.google.com/rss/search?q=site:csb.gov.tr+%22%C3%87ED%22+OR+%22Çevre+De%C4%9Flendirme%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "ÇŞİDB", "kategori": "ÇED Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=%C3%87ED+olumlu+karar+maden+enerji+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "ÇED Olumlu Karar", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=%C3%87ED+gerekli+de%C4%9Fil+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "ÇED Muafiyeti", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── Tarım ve Orman Bakanlığı (OGM/DKMP) ──────────────────────
-    {"url": "https://news.google.com/rss/search?q=site:ogm.gov.tr&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "OGM", "kategori": "Orman Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=OGM+orman+izin+tahsis+maden+enerji+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Orman İzni", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── Doğrudan Resmi Gazete Günlük Taraması ────────────────────
-    {"url": "https://news.google.com/rss/search?q=%22Resmî+Gazete%22+maden+OR+enerji+OR+orman+OR+kamulaştırma+OR+ÇED+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News / RG", "kategori": "Resmî Gazete Kararı", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-        # ── Hayvan Hakları / Vegan ──────────────────────────────────────
-    {"url": "https://haberler.tvd.org.tr/feed/",
-     "kaynak": "TVD", "kategori": "Hayvan Hakları / Vegan", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://haberler.tvd.org.tr/category/turkiyeden/feed/",
-     "kaynak": "TVD Türkiye", "kategori": "Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:haytap.org&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "HAYTAP", "kategori": "Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=hayvan+hak%C4%B1+sokak+hayvan%C4%B1+k%C4%B1s%C4%B1rla%C5%9Ft%C4%B1rma+itlaf+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=hayvan+istismar%C4%B1+dava+T%C3%BCrkiye+mahkeme&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Hayvan Hakları / Hukuk", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=vegan+bitkisel+s%C3%BCrd%C3%BCr%C3%BClebilir+beslenme+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Vegan / Sürdürülebilir", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=end%C3%BCstriyel+hayvanc%C4%B1l%C4%B1k+%C3%A7evre+kirlilik+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Endüstriyel Hayvancılık", "genel": False, "hedef": "haberler", "dil": "tr"},
-
-    # ── İnsan Hakları ───────────────────────────────────────────────
-    {"url": "https://www.ihd.org.tr/feed/",
-     "kaynak": "İHD", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://www.amnesty.org.tr/feed/",
-     "kaynak": "Amnesty TR", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:ihd.org.tr&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "İHD", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:amnesty.org.tr&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Amnesty TR", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=insan+haklar%C4%B1+ihlal+T%C3%BCrkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://www.hrw.org/rss/news/section/europe/central-asia",
-     "kaynak": "Human Rights Watch", "kategori": "İnsan Hakları / Uluslararası", "genel": False, "hedef": "haberler", "dil": "en"},
-    {"url": "https://www.duvarenglish.com/export/rss",
-     "kaynak": "Duvar English", "kategori": "İnsan Hakları / Gündem", "genel": False, "hedef": "haberler", "dil": "en"},
-
-    # ── Çevre / Doğa / Toplumsal ────────────────────────────────────
-    {"url": "https://www.gazeteduvar.com.tr/rss/cevre-ve-ekoloji.xml",
-     "kaynak": "Gazete Duvar", "kategori": "Çevre / Ekoloji", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://medyascope.tv/rss-feed/",
-     "kaynak": "Medyascope", "kategori": "Gündem / Analiz", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://bianet.org/topic/insan-haklari/feed/rss",
-     "kaynak": "Bianet İH", "kategori": "İnsan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://bianet.org/topic/kadin/feed/rss",
-     "kaynak": "Bianet Kadın", "kategori": "Kadın / Toplumsal", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:gazeteduvar.com.tr+(%C3%A7evre+OR+ekoloji+OR+hayvan+haklar%C4%B1)&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Gazete Duvar", "kategori": "Çevre / Hayvan Hakları", "genel": False, "hedef": "haberler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=animal+rights+Turkey+vegan+welfare&hl=en&gl=US&ceid=US:en",
-     "kaynak": "Google News EN", "kategori": "Hayvan Hakları / Uluslararası", "genel": False, "hedef": "haberler", "dil": "en"},
 ]
 
 # ══════════════════════════════════════════════════════════════════
@@ -426,40 +320,7 @@ WEB_KAYNAKLARI = [
     {"url": "https://www.epdk.gov.tr/Detay/Duyurular", "kaynak": "EPDK (Enerji)", "kategori": "Resmi / Enerji",
      "secici": ".announcement-list a, .title a, h3 a, h4 a, li a", "ozet_secici": ".description-text, p",
      "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    # ── Resmi Site Doğrudan Scraping ───────────────────────────────
-    {"url": "https://www.mapeg.gov.tr/Ihale",
-     "kaynak": "MAPEG (İhale)", "kategori": "Resmi / Maden İhalesi",
-     "secici": ".ihale-item a, h4 a, h3 a, table a, li a", "ozet_secici": "td, p, .detail",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": False},
-    {"url": "https://www.mapeg.gov.tr/MadenRuhsatGrup",
-     "kaynak": "MAPEG (Ruhsat)", "kategori": "Resmi / Maden Ruhsatı",
-     "secici": "table a, td a, h4 a, li a", "ozet_secici": "td, p",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": False},
-    {"url": "https://www.epdk.gov.tr/Detay/Icerik/3-0-24-5",
-     "kaynak": "EPDK (RES Lisans)", "kategori": "Resmi / Enerji Lisansı",
-     "secici": "table a, td a, .list-item a, h4 a", "ozet_secici": "td, p, .description",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.epdk.gov.tr/Detay/Icerik/3-0-24-3",
-     "kaynak": "EPDK (GES Lisans)", "kategori": "Resmi / Enerji Lisansı",
-     "secici": "table a, td a, .list-item a, h4 a", "ozet_secici": "td, p",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.epdk.gov.tr/Detay/Icerik/3-0-24-4",
-     "kaynak": "EPDK (HES Lisans)", "kategori": "Resmi / Enerji Lisansı",
-     "secici": "table a, td a, .list-item a, h4 a", "ozet_secici": "td, p",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.csb.gov.tr/ced-ed-belgelendirme",
-     "kaynak": "ÇŞİDB (ÇED)", "kategori": "Resmi / ÇED Kararı",
-     "secici": ".news-list a, h4 a, h3 a, .announcement a, li a", "ozet_secici": "p, .description",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.enerji.gov.tr/tr-TR/Sayfalar/Duyurular",
-     "kaynak": "Enerji Bakanlığı", "kategori": "Resmi / Enerji Kararı",
-     "secici": ".news-item a, h4 a, h3 a, .duyuru a, li a", "ozet_secici": "p, .excerpt",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.kik.gov.tr/ilanlar/",
-     "kaynak": "KİK (İhale)", "kategori": "Resmi / Kamu İhalesi",
-     "secici": ".ilan-baslik a, h4 a, h3 a, table a, .record a", "ozet_secici": "td, p",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-        {"url": "https://www.gazetepencere.com",     "kaynak": "Gazete Pencere",  "kategori": "Haber",
+    {"url": "https://www.gazetepencere.com",     "kaynak": "Gazete Pencere",  "kategori": "Haber",
      "secici": ".news-title a, h3 a, h2 a, .card-title a, article a", "ozet_secici": ".news-excerpt, p",
      "genel": True, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
     {"url": "https://t24.com.tr",                "kaynak": "T24",             "kategori": "Haber",
@@ -807,7 +668,11 @@ def baslik_normalize(baslik: str) -> str:
     return re.sub(r"\s+", " ", baslik).strip().lower()
 
 
-def haber_id(url: str, baslik: str) -> str:
+def haber_id(url: str, baslik: str, kaynak: str = "") -> str:
+    """Stabil ID üretir. Google News URL'leri çalıştırmalar arasında değiştiği için
+    bu kaynaklarda baslik+kaynak kullanılır."""
+    if url and ("news.google.com" in url or "/rss/articles/" in url):
+        return hashlib.md5(f"{baslik_normalize(baslik)}|{kaynak.lower().strip()}".encode()).hexdigest()[:12]
     return hashlib.md5(f"{url_normalize(url)}|{baslik_normalize(baslik)}".encode()).hexdigest()[:12]
 
 
@@ -878,7 +743,7 @@ def rss_tara(kaynaklar: list) -> dict:
                     continue
                 _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
                 kayit = {
-                    "id":          haber_id(link, baslik),
+                    "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
                     "baslik":      baslik,
                     "ozet":        ozet[:300] if ozet else "",
                     "url":         link,
@@ -948,7 +813,7 @@ def web_tara(kaynaklar: list) -> dict:
                     continue
                 _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
                 kayit = {
-                    "id":          haber_id(link, baslik),
+                    "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
                     "baslik":      baslik,
                     "ozet":        ozet,
                     "url":         link,
@@ -1030,7 +895,14 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
             h_id  = h["id"]
             h_url = url_normalize(h.get("url", ""))
             h_bas = baslik_normalize(h.get("baslik", ""))
-            if h_id in gorulen_idler or h_url in gorulen_urller or h_bas in gorulen_basliklar:
+            # Google News URL'leri değiştiği için ID ile değil baslik+kaynak ile kontrol et
+            kaynak_str = h.get("kaynak", "").lower().strip()
+            h_stabil = f"{h_bas}|{kaynak_str}" if h_bas else None
+            if h_id in gorulen_idler:
+                continue
+            if h_url and h_url in gorulen_urller and "news.google.com" not in h_url:
+                continue
+            if h_bas and h_bas in gorulen_basliklar:
                 continue
             yeni.append(h)
             gorulen_idler.add(h_id)
