@@ -1,57 +1,55 @@
 name: Ekoloji Izleme Botu v7
-
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 */6 * * *'
-
 jobs:
   tara-ve-gonder:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
-
     steps:
       - name: Repo Kodlarını Çek
         uses: actions/checkout@v4
-
       - name: Python Kurulumu
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Bağımlılıkları Yükle
         run: |
           pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
-
       - name: Tarayıcıyı Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           python tarayici.py --cikti haberler.json
-
       - name: Dağıtıcıyı Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           python dagitici.py
-
+      - name: Günlük Raporu Üret
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO_NAME:  ${{ github.event.repository.name }}
+        run: |
+          python rapor_uret.py
       - name: JSON'ları Repo'ya Commit Et
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
-          git add -f haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json || true
+          git add -f haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json rapor.json || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
           git push || true
-
       - name: JSON'ları Plesk'e Gönder
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
           HATALI=0
-          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json; do
+          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json rapor.json; do
             if [ ! -f "$dosya" ]; then continue; fi
             BOYUT=$(wc -c < "$dosya")
             echo "→ $dosya gönderiliyor... (${BOYUT} byte)"
