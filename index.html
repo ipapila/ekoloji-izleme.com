@@ -252,7 +252,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
       <p class="feature-desc">Resmî Gazete, ÇED kararları, MAPEG ve EPDK belgelerini her gün otomatik olarak tarıyoruz.</p>
     </a>
     <!-- ✅ DÜZELTİLDİ: href="ihlaller.html" → href="harita.html" -->
-    <a href="harita.html" class="feature-card">
+    <a href="https://ipapila.github.io/Turkiye-katmanlar/" target="_blank" rel="noopener" class="feature-card">
       <div class="feature-icon">🗺️</div><div class="feature-num">02</div>
       <div class="feature-name">Ekoloji Haritası</div>
       <p class="feature-desc">Tüm ihlaller, projeler ve direniş noktaları interaktif GeoJSON haritasında görselleştiriliyor.</p>
@@ -369,7 +369,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
         ></iframe>
       </div>
       <!-- ✅ DÜZELTİLDİ: external URL → harita.html (kendi sayfamız), target="_blank" kaldırıldı -->
-      <a href="harita.html" class="btn-outline" style="justify-content:center;font-size:10.5px;padding:12px 20px;">
+      <a href="https://ipapila.github.io/Turkiye-katmanlar/" target="_blank" rel="noopener" class="btn-outline" style="justify-content:center;...">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
         Tam Ekran Haritaya Git
       </a>
@@ -455,7 +455,7 @@ footer{background:var(--dark);padding:70px 80px 40px;border-top:1px solid rgba(4
         <li><a href="ihlaller.html?kat=Orman">Orman İhlalleri</a></li>
         <li><a href="ihlaller.html?kat=Su Kirliliği">Su Kirliliği</a></li>
         <!-- ✅ DÜZELTİLDİ: href="ihlaller.html" → href="harita.html" -->
-        <li><a href="harita.html">Ekoloji Haritası</a></li>
+        <li><a href="https://ipapila.github.io/Turkiye-katmanlar/" target="_blank" rel="noopener">Ekoloji Haritası</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -637,7 +637,7 @@ function fmtDate(d) {
 }
 
 function ihlallerRender(ihlaller) {
-  const sonList = (ihlaller || []).sort((a,b) => new Date(b.tarih)-new Date(a.tarih)).slice(0,6);
+  const sonList = (ihlaller || []).slice(0, 6);
   document.getElementById("sonIhlalerList").innerHTML = sonList.map(i => {
     const konum = i.konum || i.il || "";
     const kat   = i.kategori || i.tip || "";
@@ -664,27 +664,41 @@ function ihlallerRender(ihlaller) {
   `;
 }
 
-// ihlaller.json önce, sonra data.json, son çare localStorage
-(async function ihlallerYukle() {
-  let ihlaller = [];
-  // 1. ihlaller.json (otomatik tarama)
-  try {
-    const r = await fetch("ihlaller.json?v=" + Date.now());
-    if (r.ok) { const d = await r.json(); ihlaller = d.ihlaller || []; }
-  } catch {}
-  // 2. data.json (admin kayıtları)
-  try {
-    const r = await fetch("data.json?v=" + Date.now());
-    if (r.ok) {
-      const d = await r.json();
-      const ekstra = (d.ihlaller || []).filter(x => !ihlaller.some(y => y.id === x.id));
-      ihlaller = [...ihlaller, ...ekstra];
-    }
-  } catch {}
-  // 3. localStorage fallback
-  if (!ihlaller.length) ihlaller = SITE.getList("ihlaller") || [];
-  ihlallerRender(ihlaller);
+// ── İhlaller — ihlaller.html ile birebir aynı fetch zinciri ──
+const _ihlalSilinen = (() => {
+  try { return new Set(JSON.parse(localStorage.getItem("ekoloji_ihlal_silinen") || "[]").map(String)); }
+  catch { return new Set(); }
 })();
+
+function _ihlalMerge(jsonArr) {
+  const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
+    .filter(x => !_ihlalSilinen.has(String(x.id)));
+  const def = (!local.length && typeof SITE !== "undefined" && SITE.defaults?.ihlaller)
+    ? SITE.defaults.ihlaller.filter(x => !_ihlalSilinen.has(String(x.id))) : [];
+  const base = local.length ? local : def;
+  const baseIds = new Set(base.map(x => String(x.id)));
+  return [...base, ...jsonArr.filter(x => !baseIds.has(String(x.id)))]
+    .sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));
+}
+
+(()=>{ const c=new AbortController(); setTimeout(()=>c.abort(),8000);
+  return fetch("ihlaller.json?v="+Date.now(),{signal:c.signal}); })()
+  .then(r => { if(!r.ok) throw new Error(); return r.json(); })
+  .then(d => ihlallerRender(_ihlalMerge(
+    (Array.isArray(d) ? d : (d.ihlaller||[])).filter(x => !_ihlalSilinen.has(String(x.id)))
+  )))
+  .catch(() =>
+    fetch("data.json?v="+Date.now())
+      .then(r => { if(!r.ok) throw new Error(); return r.json(); })
+      .then(d => ihlallerRender(_ihlalMerge(
+        (d.ihlaller||[]).filter(x => !_ihlalSilinen.has(String(x.id)))
+      )))
+      .catch(() => {
+        const def = typeof SITE!=="undefined" && SITE.defaults?.ihlaller
+          ? SITE.defaults.ihlaller : [];
+        ihlallerRender(_ihlalMerge(def.filter(x => !_ihlalSilinen.has(String(x.id)))));
+      })
+  );
 
 // ── Haber detay modal ──
 function haberDetay(h) {
