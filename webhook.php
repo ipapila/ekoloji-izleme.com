@@ -1,32 +1,30 @@
 <?php
 /**
  * webhook.php — Plesk dosya alıcısı + Bot tetikleyici v2
- * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- * Sunucuda httpdocs/ kök dizinine koyun.
- *
- * Action'lar:
- *   POST ?action=tara  &token=SECRET  → bot.py çalıştırır (arka planda)
- *   GET  ?action=durum &token=SECRET  → son tarama durumunu döner
- *   POST ?dosya=x.json &token=SECRET  → JSON dosyası yazar (eski davranış)
  */
 
-// ── Ayarlar ─────────────────────────────────────────────────────────────
 define('SECRET',      getenv('WEBHOOK_SECRET') ?: 'Smtppl5862');
 @ini_set('post_max_size', '32M');
 @ini_set('upload_max_filesize', '32M');
 @ini_set('memory_limit', '256M');
-define('PYTHON',      '/usr/bin/python3');          // Plesk'te doğru yolu kontrol edin
+define('PYTHON',      '/usr/bin/python3');
 define('BOT_SCRIPT',  __DIR__ . '/bot.py');
 define('LOG_DOSYA',   __DIR__ . '/bot.log');
 define('KILITDOSYA',  sys_get_temp_dir() . '/ekoloji_bot.lock');
-define('IZIN_DOSYA',  ['data.json', 'ihlaller.json', 'haberler.json', 'rapor.json', 'icerik.json',
-                        'raporlar.json', 'makaleler.json', 'ekosistem.json', 'kuresel.json']);
+define('IZIN_DOSYA',  [
+    'data.json', 'ihlaller.json', 'haberler.json',
+    'rapor.json', 'icerik.json', 'raporlar.json',
+    'makaleler.json', 'ekosistem.json', 'kuresel.json',
+    // Haberler alt-kategori dosyaları
+    'haberler-iklim.json', 'haberler-maden.json', 'haberler-orman.json',
+    'haberler-su.json',    'haberler-yaban.json',  'haberler-direnis.json',
+    'haberler-hukuki.json','haberler-nobet.json',  'haberler-ihaklar.json',
+    'haberler-stk.json',   'haberler-diger.json',
+]);
 define('HEDEF_DIZIN', __DIR__ . '/');
-// ────────────────────────────────────────────────────────────────────────
 
 header('Content-Type: application/json; charset=utf-8');
 
-// ── Token doğrula ────────────────────────────────────────────────────────
 $token_header = $_SERVER['HTTP_X_WEBHOOK_SECRET'] ?? '';
 $token_query  = $_GET['token'] ?? '';
 if ($token_header !== SECRET && $token_query !== SECRET) {
@@ -37,85 +35,52 @@ if ($token_header !== SECRET && $token_query !== SECRET) {
 
 $action = $_GET['action'] ?? '';
 
-// ════════════════════════════════════════════════════════════════════════
-// ACTION: tara — bot.py'yi arka planda başlatır
-// ════════════════════════════════════════════════════════════════════════
+// ACTION: tara
 if ($action === 'tara') {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
         echo json_encode(['ok' => false, 'hata' => 'POST gerekli']);
         exit;
     }
-
-    // bot.py dosyası var mı?
     if (!file_exists(BOT_SCRIPT)) {
         http_response_code(500);
         echo json_encode(['ok' => false, 'hata' => 'bot.py bulunamadı: ' . BOT_SCRIPT]);
         exit;
     }
-
-    // Zaten çalışıyor mu? (kilit dosyasına bak)
     if (file_exists(KILITDOSYA)) {
         $pid = trim(file_get_contents(KILITDOSYA));
-        // PID hâlâ aktif mi?
         if ($pid && file_exists("/proc/$pid")) {
-            echo json_encode([
-                'ok'    => true,
-                'durum' => 'zaten_calisiyor',
-                'pid'   => (int)$pid,
-                'mesaj' => 'Bot zaten çalışıyor, lütfen bekleyin.'
-            ]);
+            echo json_encode(['ok' => true, 'durum' => 'zaten_calisiyor', 'pid' => (int)$pid]);
             exit;
         }
-        // Eski kilit dosyasını temizle
         @unlink(KILITDOSYA);
     }
-
-    // Arka planda başlat
     $python = escapeshellcmd(PYTHON);
     $script = escapeshellarg(BOT_SCRIPT);
     $log    = escapeshellarg(LOG_DOSYA);
     $kilit  = escapeshellarg(KILITDOSYA);
     $dizin  = escapeshellarg(__DIR__);
-
-    // nohup ile arka planda çalıştır, PID'i kilit dosyasına yaz
     $cmd = "cd $dizin && nohup $python $script >> $log 2>&1 & echo \$! > $kilit";
     shell_exec($cmd);
-
-    // Küçük bir bekleme ile PID'i oku
-    usleep(200000); // 0.2sn
+    usleep(200000);
     $pid = file_exists(KILITDOSYA) ? trim(file_get_contents(KILITDOSYA)) : '?';
-
-    echo json_encode([
-        'ok'    => true,
-        'durum' => 'baslatildi',
-        'pid'   => (int)$pid,
-        'log'   => LOG_DOSYA,
-        'mesaj' => 'Bot arka planda başlatıldı.'
-    ]);
+    echo json_encode(['ok' => true, 'durum' => 'baslatildi', 'pid' => (int)$pid]);
     exit;
 }
 
-// ════════════════════════════════════════════════════════════════════════
-// ACTION: durum — son log satırlarını döner
-// ════════════════════════════════════════════════════════════════════════
+// ACTION: durum
 if ($action === 'durum') {
     $calisiyor = false;
     $pid       = null;
-
     if (file_exists(KILITDOSYA)) {
         $pid = (int)trim(file_get_contents(KILITDOSYA));
         $calisiyor = $pid && file_exists("/proc/$pid");
     }
-
-    // Son log satırları
     $log_satirlar = [];
     if (file_exists(LOG_DOSYA)) {
         $satirlar = file(LOG_DOSYA, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $log_satirlar = array_slice($satirlar, -30); // son 30 satır
+        $log_satirlar = array_slice($satirlar, -30);
     }
-
-    // JSON dosyalarının boyutları
     $dosya_durumu = [];
     foreach (['haberler.json', 'ihlaller.json', 'raporlar.json', 'makaleler.json',
               'ekosistem.json', 'kuresel.json'] as $d) {
@@ -125,29 +90,20 @@ if ($action === 'durum') {
                'degistirme' => date('Y-m-d H:i:s', filemtime($yol))]
             : null;
     }
-
-    echo json_encode([
-        'ok'          => true,
-        'calisiyor'   => $calisiyor,
-        'pid'         => $pid,
-        'log'         => $log_satirlar,
-        'dosyalar'    => $dosya_durumu,
-        'zaman'       => date('Y-m-d H:i:s T'),
-    ]);
+    echo json_encode(['ok' => true, 'calisiyor' => $calisiyor, 'pid' => $pid,
+                      'log' => $log_satirlar, 'dosyalar' => $dosya_durumu,
+                      'zaman' => date('Y-m-d H:i:s T')]);
     exit;
 }
 
-// ════════════════════════════════════════════════════════════════════════
-// Varsayılan: JSON dosyası yaz (eski davranış — GitHub Actions uyumlu)
-// ════════════════════════════════════════════════════════════════════════
+// Varsayılan: JSON dosyası yaz
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['ok' => false, 'hata' => 'Yalnızca POST kabul edilir']);
     exit;
 }
 
-$dosya = $_GET['dosya'] ?? $_GET['file'] ?? 'data.json';
-$dosya = basename($dosya);
+$dosya = basename($_GET['dosya'] ?? $_GET['file'] ?? 'data.json');
 
 if (!in_array($dosya, IZIN_DOSYA, true)) {
     http_response_code(400);
