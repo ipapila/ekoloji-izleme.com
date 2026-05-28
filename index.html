@@ -664,27 +664,41 @@ function ihlallerRender(ihlaller) {
   `;
 }
 
-// ihlaller.json önce, sonra data.json, son çare localStorage
-(async function ihlallerYukle() {
-  let ihlaller = [];
-  // 1. ihlaller.json (otomatik tarama)
-  try {
-    const r = await fetch("ihlaller.json?v=" + Date.now());
-    if (r.ok) { const d = await r.json(); ihlaller = d.ihlaller || []; }
-  } catch {}
-  // 2. data.json (admin kayıtları)
-  try {
-    const r = await fetch("data.json?v=" + Date.now());
-    if (r.ok) {
-      const d = await r.json();
-      const ekstra = (d.ihlaller || []).filter(x => !ihlaller.some(y => y.id === x.id));
-      ihlaller = [...ihlaller, ...ekstra];
-    }
-  } catch {}
-  // 3. localStorage fallback
-  if (!ihlaller.length) ihlaller = SITE.getList("ihlaller") || [];
-  ihlallerRender(ihlaller);
+// ── İhlaller — ihlaller.html ile birebir aynı fetch zinciri ──
+const _ihlalSilinen = (() => {
+  try { return new Set(JSON.parse(localStorage.getItem("ekoloji_ihlal_silinen") || "[]").map(String)); }
+  catch { return new Set(); }
 })();
+
+function _ihlalMerge(jsonArr) {
+  const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
+    .filter(x => !_ihlalSilinen.has(String(x.id)));
+  const def = (!local.length && typeof SITE !== "undefined" && SITE.defaults?.ihlaller)
+    ? SITE.defaults.ihlaller.filter(x => !_ihlalSilinen.has(String(x.id))) : [];
+  const base = local.length ? local : def;
+  const baseIds = new Set(base.map(x => String(x.id)));
+  return [...base, ...jsonArr.filter(x => !baseIds.has(String(x.id)))]
+    .sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));
+}
+
+(()=>{ const c=new AbortController(); setTimeout(()=>c.abort(),8000);
+  return fetch("ihlaller.json?v="+Date.now(),{signal:c.signal}); })()
+  .then(r => { if(!r.ok) throw new Error(); return r.json(); })
+  .then(d => ihlallerRender(_ihlalMerge(
+    (Array.isArray(d) ? d : (d.ihlaller||[])).filter(x => !_ihlalSilinen.has(String(x.id)))
+  )))
+  .catch(() =>
+    fetch("data.json?v="+Date.now())
+      .then(r => { if(!r.ok) throw new Error(); return r.json(); })
+      .then(d => ihlallerRender(_ihlalMerge(
+        (d.ihlaller||[]).filter(x => !_ihlalSilinen.has(String(x.id)))
+      )))
+      .catch(() => {
+        const def = typeof SITE!=="undefined" && SITE.defaults?.ihlaller
+          ? SITE.defaults.ihlaller : [];
+        ihlallerRender(_ihlalMerge(def.filter(x => !_ihlalSilinen.has(String(x.id)))));
+      })
+  );
 
 // ── Haber detay modal ──
 function haberDetay(h) {
