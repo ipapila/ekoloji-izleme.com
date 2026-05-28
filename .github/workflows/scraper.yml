@@ -1,17 +1,13 @@
-name: Ekoloji Izleme Botu v7
-
+name: Ekoloji Izleme Botu v8
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 */6 * * *'
-
 jobs:
   tara-ve-gonder:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
-
     steps:
       - name: Repo Kodlarını Çek
         uses: actions/checkout@v4
@@ -23,16 +19,16 @@ jobs:
 
       - name: Bağımlılıkları Yükle
         run: |
-          pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
+          pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic firebase-admin
 
       - name: Mevcut haberler.json Plesk'ten İndir
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
-          # Plesk'teki güncel haberler.json'ı çek — duplicate önleme için
           BASE_URL=$(echo "${WEBHOOK_URL}" | sed 's|/webhook\.php.*||')
-          HTTP_STATUS=$(curl -s -o haberler.json -w "%{http_code}"             --max-time 30 "${BASE_URL}/haberler.json" 2>/dev/null || echo "000")
+          HTTP_STATUS=$(curl -s -o haberler.json -w "%{http_code}" \
+            --max-time 30 "${BASE_URL}/haberler.json" 2>/dev/null || echo "000")
           if [ "$HTTP_STATUS" = "200" ]; then
             KAYIT=$(python3 -c "import json; d=json.load(open('haberler.json')); print(len(d.get('haberler',[])))" 2>/dev/null || echo "?")
             echo "✓ haberler.json indirildi: ${KAYIT} mevcut kayıt"
@@ -52,6 +48,16 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           python dagitici.py
+
+      # ── YENİ ADIM: Firebase → ihlaller.json ─────────────────────
+      - name: Firebase İhlal Export
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_COLLECTION: ${{ secrets.FIREBASE_COLLECTION }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python scripts/firebase_ihlal_export.py
+      # ─────────────────────────────────────────────────────────────
 
       - name: JSON'ları Repo'ya Commit Et
         run: |
