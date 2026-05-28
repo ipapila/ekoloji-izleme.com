@@ -9,30 +9,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-/* ── Page header ── */
 .page-header{background:var(--forest);padding:100px 80px 60px;border-bottom:1px solid rgba(45,158,107,.15);}
 .page-header-inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
 .page-header h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
 .page-header h1 span{color:var(--warn);}
 
-/* ── Scan / status bar ── */
-.scan-bar{background:var(--dark);padding:14px 80px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(45,158,107,.1);flex-wrap:wrap;}
-.scan-status{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);flex:1;}
-
-/* ── Filter chips bar ── */
+/* Filtre & durum çubuğu */
 .filter-bar-top{background:var(--dark);padding:10px 80px;border-bottom:1px solid rgba(45,158,107,.07);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .sev-chip{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:2px;border:1px solid rgba(45,158,107,.2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
 .sev-chip:hover,.sev-chip.aktif{background:rgba(45,158,107,.12);border-color:var(--accent);color:var(--bright);}
 .sev-chip[data-sev="kritik"]:hover,.sev-chip[data-sev="kritik"].aktif{background:rgba(232,92,42,.12);border-color:var(--warn);color:var(--warn);}
 .sev-chip[data-sev="orta"]:hover,.sev-chip[data-sev="orta"].aktif{background:rgba(240,165,0,.12);border-color:var(--alert);color:var(--alert);}
-.search-box{font-family:"JetBrains Mono",monospace;font-size:11px;padding:7px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:240px;margin-left:auto;}
+.search-wrap{margin-left:auto;}
+.search-box{font-family:"JetBrains Mono",monospace;font-size:11px;padding:7px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:240px;}
 .search-box:focus{border-color:var(--accent);}
 
-/* ── Content layout ── */
+.scan-bar{background:var(--dark);padding:12px 80px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(45,158,107,.1);flex-wrap:wrap;}
+.scan-status{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);flex:1;}
+
+/* İçerik düzeni */
 .content{background:var(--dark);padding:40px 80px 60px;min-height:60vh;}
 .content-layout{display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:start;}
 
-/* ── Sidebar ── */
+/* Sidebar */
 .kat-sidebar{position:sticky;top:80px;}
 .kat-sidebar-title{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 0 10px;border-bottom:1px solid rgba(45,158,107,.1);margin-bottom:8px;}
 .kat-tumü{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid rgba(45,158,107,.15);background:rgba(45,158,107,.05);margin-bottom:10px;}
@@ -50,40 +49,39 @@
 .kat-sayi{font-family:"JetBrains Mono",monospace;font-size:8px;color:var(--muted);opacity:.5;flex-shrink:0;}
 .kat-item.aktif-kat .kat-sayi{opacity:.9;}
 
-/* ── İhlal listesi ── */
+/* İhlal listesi */
+.count-bar{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:16px;}
+.count-bar b{color:var(--bright);}
 .ihlal-grid{display:flex;flex-direction:column;gap:2px;}
 .ihlal-row{background:var(--forest);padding:22px 28px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:start;transition:all .2s;cursor:pointer;border-left:3px solid var(--accent);}
 .ihlal-row:hover{background:var(--deep);padding-left:34px;}
 .ihlal-row.kritik{border-left-color:var(--warn);}
 .ihlal-row.orta{border-left-color:var(--alert);}
-.ihlal-row .sev{font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.1em;padding:3px 8px;border-radius:2px;text-transform:uppercase;font-weight:600;white-space:nowrap;margin-top:2px;}
-.ihlal-row .sev.kritik{background:rgba(232,92,42,.2);color:var(--warn);border:1px solid rgba(232,92,42,.3);}
-.ihlal-row .sev.orta{background:rgba(240,165,0,.2);color:var(--alert);border:1px solid rgba(240,165,0,.3);}
-.ihlal-row .sev.takipte{background:rgba(45,158,107,.2);color:var(--bright);border:1px solid rgba(45,158,107,.3);}
+.sev-badge{font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.1em;padding:3px 8px;border-radius:2px;text-transform:uppercase;font-weight:600;white-space:nowrap;margin-top:2px;}
+.sev-badge.kritik{background:rgba(232,92,42,.2);color:var(--warn);border:1px solid rgba(232,92,42,.3);}
+.sev-badge.orta{background:rgba(240,165,0,.2);color:var(--alert);border:1px solid rgba(240,165,0,.3);}
+.sev-badge.takipte{background:rgba(45,158,107,.2);color:var(--bright);border:1px solid rgba(45,158,107,.3);}
 .ihlal-row h3{font-size:16px;font-weight:400;color:var(--cream);margin-bottom:5px;}
-.ihlal-row .meta{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);letter-spacing:.05em;}
-.ihlal-row .desc{font-size:14px;color:rgba(122,158,138,.8);margin-top:6px;font-weight:300;}
-.ihlal-row .date{font-family:"JetBrains Mono",monospace;font-size:9px;color:rgba(122,158,138,.5);text-align:right;white-space:nowrap;}
-.count-bar{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:16px;}
-.count-bar b{color:var(--bright);}
-.empty-msg{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;}
-.admin-sil-btn{padding:4px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:"JetBrains Mono",monospace;font-size:8.5px;cursor:pointer;white-space:nowrap;}
+.ihlal-meta{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);letter-spacing:.05em;}
+.ihlal-desc{font-size:14px;color:rgba(122,158,138,.8);margin-top:6px;font-weight:300;}
+.ihlal-date{font-family:"JetBrains Mono",monospace;font-size:9px;color:rgba(122,158,138,.5);text-align:right;white-space:nowrap;}
+.admin-sil-btn{padding:4px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:"JetBrains Mono",monospace;font-size:8.5px;cursor:pointer;white-space:nowrap;margin-top:4px;}
 .admin-sil-btn:hover{background:rgba(232,92,42,.25);}
+.empty-msg{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;}
 
-/* ── Detay modal ── */
+/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;padding:40px;max-width:560px;width:90%;position:relative;max-height:88vh;overflow-y:auto;}
-.modal h2{font-family:"Bebas Neue",sans-serif;font-size:32px;margin-bottom:8px;}
-.modal .close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;}
-.modal .close:hover{color:var(--cream);}
+.modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;padding:40px;max-width:580px;width:90%;position:relative;max-height:88vh;overflow-y:auto;}
+.modal-close-btn{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;}
+.modal-close-btn:hover{color:var(--cream);}
 .modal-field{margin-bottom:14px;}
 .modal-field label{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;}
-.modal-field p{font-size:15px;color:var(--cream);}
+.modal-field p{font-size:15px;color:var(--cream);line-height:1.6;}
 
 @media(max-width:900px){
   .page-header{padding:80px 28px 40px;}.page-header-inner{grid-template-columns:1fr;}
-  .scan-bar,.filter-bar-top{padding:14px 28px;}
+  .filter-bar-top,.scan-bar{padding:12px 24px;}
   .content{padding:24px 16px 40px;}
   .content-layout{grid-template-columns:1fr;}
   .kat-sidebar{position:static;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
@@ -91,6 +89,8 @@
   .kat-tumü{margin-bottom:0;}
   .kat-item{padding:6px 10px;}
   .kat-sayi{display:none;}
+  .search-wrap{margin-left:0;width:100%;}
+  .search-box{width:100%;}
 }
 </style>
 </head>
@@ -108,13 +108,14 @@
   </div>
 </div>
 
-<!-- Şiddet / Arama bar -->
 <div class="filter-bar-top">
   <button class="sev-chip aktif" data-sev="" onclick="setSev(this)">Tümü</button>
   <button class="sev-chip" data-sev="kritik" onclick="setSev(this)">● Kritik</button>
   <button class="sev-chip" data-sev="orta" onclick="setSev(this)">● Orta</button>
   <button class="sev-chip" data-sev="takipte" onclick="setSev(this)">● Takipte</button>
-  <input class="search-box" id="searchBox" type="search" placeholder="Ara: konum, başlık, kategori…" oninput="filtrele()">
+  <div class="search-wrap">
+    <input class="search-box" id="searchBox" type="search" placeholder="Ara: konum, başlık, kategori…" oninput="filtrele()">
+  </div>
 </div>
 
 <div class="scan-bar">
@@ -125,250 +126,292 @@
 <div class="content">
   <div class="content-layout">
 
-    <!-- ═══ SOL SIDEBAR ═══ -->
+    <!-- SOL SIDEBAR -->
     <aside class="kat-sidebar" id="katSidebar">
       <div class="kat-sidebar-title">Konu & Eylem Kategorileri</div>
 
       <div class="kat-tumü aktif-kat" data-kat="" onclick="setKat(this)">
         <span>Tüm İhlaller</span>
-        <b id="ks_toplam">…</b>
+        <b id="sid-toplam">…</b>
       </div>
 
       <div class="kat-separator">Enerji & Maden</div>
       <div class="kat-item" data-kat="Maden" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#f97316;box-shadow:0 0 4px #f9731640;"></div>
+        <div class="kat-dot" style="background:#f97316;"></div>
         <span class="kat-ad">Maden Projeleri</span>
-        <span class="kat-sayi" id="ks_Maden">…</span>
+        <span class="kat-sayi" id="sid-Maden">…</span>
       </div>
       <div class="kat-item" data-kat="Taş-Mermer" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#fb923c;box-shadow:0 0 4px #fb923c40;"></div>
+        <div class="kat-dot" style="background:#fb923c;"></div>
         <span class="kat-ad">Taş-Mermer Ocakları</span>
-        <span class="kat-sayi" id="ks_Taş-Mermer">…</span>
+        <span class="kat-sayi" id="sid-Tas-Mermer">…</span>
       </div>
       <div class="kat-item" data-kat="HES" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#38bdf8;box-shadow:0 0 4px #38bdf850;"></div>
+        <div class="kat-dot" style="background:#38bdf8;"></div>
         <span class="kat-ad">HES & Barajlar</span>
-        <span class="kat-sayi" id="ks_HES">…</span>
+        <span class="kat-sayi" id="sid-HES">…</span>
       </div>
       <div class="kat-item" data-kat="RES" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#a3e635;box-shadow:0 0 4px #a3e63540;"></div>
+        <div class="kat-dot" style="background:#a3e635;"></div>
         <span class="kat-ad">RES & Rüzgar</span>
-        <span class="kat-sayi" id="ks_RES">…</span>
+        <span class="kat-sayi" id="sid-RES">…</span>
       </div>
       <div class="kat-item" data-kat="GES" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#facc15;box-shadow:0 0 4px #facc1540;"></div>
+        <div class="kat-dot" style="background:#facc15;"></div>
         <span class="kat-ad">GES & Güneş</span>
-        <span class="kat-sayi" id="ks_GES">…</span>
+        <span class="kat-sayi" id="sid-GES">…</span>
       </div>
       <div class="kat-item" data-kat="Termik" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#ef4444;box-shadow:0 0 4px #ef444440;"></div>
+        <div class="kat-dot" style="background:#ef4444;"></div>
         <span class="kat-ad">Termik Santraller</span>
-        <span class="kat-sayi" id="ks_Termik">…</span>
+        <span class="kat-sayi" id="sid-Termik">…</span>
       </div>
       <div class="kat-item" data-kat="Nükleer" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#dc2626;box-shadow:0 0 4px #dc262640;"></div>
+        <div class="kat-dot" style="background:#dc2626;"></div>
         <span class="kat-ad">Nükleer Enerji</span>
-        <span class="kat-sayi" id="ks_Nükleer">…</span>
+        <span class="kat-sayi" id="sid-Nukleer">…</span>
       </div>
       <div class="kat-item" data-kat="Jeotermal" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#c084fc;box-shadow:0 0 4px #c084fc40;"></div>
+        <div class="kat-dot" style="background:#c084fc;"></div>
         <span class="kat-ad">Jeotermal</span>
-        <span class="kat-sayi" id="ks_Jeotermal">…</span>
+        <span class="kat-sayi" id="sid-Jeotermal">…</span>
       </div>
 
       <div class="kat-separator">Koruma Alanları</div>
       <div class="kat-item" data-kat="Milli Park" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#2d9e6b;box-shadow:0 0 4px rgba(45,158,107,.5);"></div>
+        <div class="kat-dot" style="background:#2d9e6b;"></div>
         <span class="kat-ad">Milli Parklar</span>
-        <span class="kat-sayi" id="ks_Milli Park">…</span>
+        <span class="kat-sayi" id="sid-MilliPark">…</span>
       </div>
       <div class="kat-item" data-kat="Orman Alanı" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#16a34a;box-shadow:0 0 4px #16a34a40;"></div>
+        <div class="kat-dot" style="background:#16a34a;"></div>
         <span class="kat-ad">Orman Alanları</span>
-        <span class="kat-sayi" id="ks_Orman Alanı">…</span>
+        <span class="kat-sayi" id="sid-OrmanAlani">…</span>
       </div>
       <div class="kat-item" data-kat="Sulak Alan" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#0ea5e9;box-shadow:0 0 4px #0ea5e940;"></div>
+        <div class="kat-dot" style="background:#0ea5e9;"></div>
         <span class="kat-ad">Sulak Alanlar</span>
-        <span class="kat-sayi" id="ks_Sulak Alan">…</span>
+        <span class="kat-sayi" id="sid-SulakAlan">…</span>
       </div>
 
       <div class="kat-separator">Hukuki & Kamulaştırma</div>
       <div class="kat-item" data-kat="Acele Kamulaştırma" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#94a3b8;box-shadow:0 0 4px #94a3b830;"></div>
+        <div class="kat-dot" style="background:#94a3b8;"></div>
         <span class="kat-ad">Acele Kamulaştırma</span>
-        <span class="kat-sayi" id="ks_Acele Kamulaştırma">…</span>
+        <span class="kat-sayi" id="sid-AcceleKamulashtirma">…</span>
       </div>
       <div class="kat-item" data-kat="ÇED" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#64748b;box-shadow:0 0 4px #64748b30;"></div>
+        <div class="kat-dot" style="background:#64748b;"></div>
         <span class="kat-ad">ÇED Kararları</span>
-        <span class="kat-sayi" id="ks_ÇED">…</span>
+        <span class="kat-sayi" id="sid-CED">…</span>
       </div>
 
       <div class="kat-separator">Su & Kıyı</div>
       <div class="kat-item" data-kat="Kıyı" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#06b6d4;box-shadow:0 0 4px #06b6d440;"></div>
+        <div class="kat-dot" style="background:#06b6d4;"></div>
         <span class="kat-ad">Kıyı İhlalleri</span>
-        <span class="kat-sayi" id="ks_Kıyı">…</span>
+        <span class="kat-sayi" id="sid-Kiyi">…</span>
       </div>
       <div class="kat-item" data-kat="Su Kirliliği" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#0284c7;box-shadow:0 0 4px #0284c740;"></div>
+        <div class="kat-dot" style="background:#0284c7;"></div>
         <span class="kat-ad">Su Kirliliği</span>
-        <span class="kat-sayi" id="ks_Su Kirliliği">…</span>
+        <span class="kat-sayi" id="sid-SuKirliligi">…</span>
       </div>
       <div class="kat-item" data-kat="Su Hakkı" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#0369a1;box-shadow:0 0 4px #0369a140;"></div>
+        <div class="kat-dot" style="background:#0369a1;"></div>
         <span class="kat-ad">Su Hakkı</span>
-        <span class="kat-sayi" id="ks_Su Hakkı">…</span>
+        <span class="kat-sayi" id="sid-SuHakki">…</span>
       </div>
 
       <div class="kat-separator">Canlı Hakları</div>
       <div class="kat-item" data-kat="Hayvan" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#f87171;box-shadow:0 0 4px #f8717140;"></div>
+        <div class="kat-dot" style="background:#f87171;"></div>
         <span class="kat-ad">Hayvan Hakları</span>
-        <span class="kat-sayi" id="ks_Hayvan">…</span>
+        <span class="kat-sayi" id="sid-Hayvan">…</span>
       </div>
       <div class="kat-item" data-kat="İnsan Hakları" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#fb7185;box-shadow:0 0 4px #fb718540;"></div>
+        <div class="kat-dot" style="background:#fb7185;"></div>
         <span class="kat-ad">İnsan Hakları</span>
-        <span class="kat-sayi" id="ks_İnsan Hakları">…</span>
+        <span class="kat-sayi" id="sid-InsanHaklari">…</span>
       </div>
       <div class="kat-item" data-kat="Köylü" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#d97706;box-shadow:0 0 4px #d9770640;"></div>
+        <div class="kat-dot" style="background:#d97706;"></div>
         <span class="kat-ad">Çiftçi & Köylü</span>
-        <span class="kat-sayi" id="ks_Köylü">…</span>
+        <span class="kat-sayi" id="sid-Koylu">…</span>
       </div>
 
       <div class="kat-separator">Diğer</div>
       <div class="kat-item" data-kat="Tarım Arazisi" onclick="setKat(this)">
-        <div class="kat-dot" style="background:#84cc16;box-shadow:0 0 4px #84cc1640;"></div>
+        <div class="kat-dot" style="background:#84cc16;"></div>
         <span class="kat-ad">Tarım Arazisi</span>
-        <span class="kat-sayi" id="ks_Tarım Arazisi">…</span>
+        <span class="kat-sayi" id="sid-TarimArazisi">…</span>
       </div>
-      <div class="kat-item" data-kat="Ekolojik İhlal" onclick="setKat(this)">
+      <div class="kat-item" data-kat="__diger" onclick="setKat(this)" style="opacity:.7;">
         <div class="kat-dot" style="background:#475569;"></div>
-        <span class="kat-ad">Genel Ekolojik İhlal</span>
-        <span class="kat-sayi" id="ks_Ekolojik İhlal">…</span>
+        <span class="kat-ad">Diğer / Genel</span>
+        <span class="kat-sayi" id="sid-Diger">…</span>
       </div>
     </aside>
 
-    <!-- ═══ SAĞ: İHLAL LİSTESİ ═══ -->
+    <!-- SAĞ: İHLAL LİSTESİ -->
     <div>
       <div class="count-bar" id="countBar"></div>
       <div class="ihlal-grid" id="ihlalerList">
-        <div class="empty-msg">İhlaller yükleniyor…</div>
+        <div class="empty-msg">Yükleniyor…</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Detay Modal -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <button class="close" onclick="closeModal()">✕</button>
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal()">✕</button>
     <div id="modalContent"></div>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   YARDIMCILARlar
-═══════════════════════════════════════════════════════════════ */
-function _esc(s){ if(!s)return""; return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
-function safeSetText(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
+/* ═══════════════════════════════════
+   YARDIMCILAR
+═══════════════════════════════════ */
+function _esc(s){
+  if(s===null||s===undefined)return"";
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function setText(id,t){const e=document.getElementById(id);if(e)e.textContent=String(t);}
 
-const _adminMod = {
-  getSilinen(col){
-    try{return new Set(JSON.parse(localStorage.getItem("ekoloji_"+col+"_silinen")||"[]").map(String));}
-    catch{return new Set();}
-  },
-  sil(col,id,cb){
-    if(!confirm("Bu kaydı silmek istiyor musunuz?"))return;
-    const sid=String(id);
-    if(typeof SITE!=="undefined")SITE.set(col,SITE.getList(col).filter(x=>String(x.id)!==sid));
-    const k="ekoloji_"+col+"_silinen"; const s=this.getSilinen(col); s.add(sid);
-    localStorage.setItem(k,JSON.stringify([...s]));
-    if(cb)cb(sid);
-  }
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   DURUM
-═══════════════════════════════════════════════════════════════ */
-let tumIhlaller    = [];
-let aktifSev       = "";
-let aktifKat       = "";
-
-/* ═══════════════════════════════════════════════════════════════
-   KATEGORİ TESPİTİ (sidebar'daki anahtar kelimelerle eşleş)
-═══════════════════════════════════════════════════════════════ */
-// Sidebar'daki data-kat değerlerinin tam listesi
-const SIDEBAR_KATLAR = [
-  "Maden","Taş-Mermer","HES","RES","GES","Termik","Nükleer","Jeotermal",
-  "Milli Park","Orman Alanı","Sulak Alan",
-  "Acele Kamulaştırma","ÇED",
-  "Kıyı","Su Kirliliği","Su Hakkı",
-  "Hayvan","İnsan Hakları","Köylü",
-  "Tarım Arazisi","Ekolojik İhlal"
-];
-
-function ihlalKatTespit(item){
-  const kat = (item.kategori||"").toLowerCase();
-  const metin = ((item.baslik||"")+" "+(item.aciklama||"")+" "+(item.kategori||"")).toLowerCase();
-  // Önce tam eşleşme dene
-  for(const k of SIDEBAR_KATLAR){
-    if(kat.includes(k.toLowerCase())) return k;
-  }
-  // Metin tabanlı
-  if(metin.includes("maden")) return "Maden";
-  if(metin.includes("taş ocak")||metin.includes("mermer")) return "Taş-Mermer";
-  if(metin.includes(" hes ")||metin.includes("baraj ")||metin.includes("regülat")) return "HES";
-  if(metin.includes(" res ")||metin.includes("rüzgar sant")) return "RES";
-  if(metin.includes(" ges ")||metin.includes("güneş sant")) return "GES";
-  if(metin.includes("termik")) return "Termik";
-  if(metin.includes("nükle")) return "Nükleer";
-  if(metin.includes("jeoterm")) return "Jeotermal";
-  if(metin.includes("milli park")||metin.includes("tabiat park")) return "Milli Park";
-  if(metin.includes("orman")||metin.includes("ormansızlaş")) return "Orman Alanı";
-  if(metin.includes("sulak alan")) return "Sulak Alan";
-  if(metin.includes("acele kamula")||metin.includes("kamulaştırma")) return "Acele Kamulaştırma";
-  if(metin.includes("çed")||metin.includes("ced ")) return "ÇED";
-  if(metin.includes("kıyı")||metin.includes("marina")||metin.includes("dolgu")) return "Kıyı";
-  if(metin.includes("su kirlilik")||metin.includes("deniz kirlilik")||metin.includes("su kirliliği")) return "Su Kirliliği";
-  if(metin.includes("su hakkı")||metin.includes("su kaynağı")) return "Su Hakkı";
-  if(metin.includes("hayvan")) return "Hayvan";
-  if(metin.includes("insan hakkı")||metin.includes("i̇nsan hakkı")) return "İnsan Hakları";
-  if(metin.includes("köylü")||metin.includes("çiftçi")) return "Köylü";
-  if(metin.includes("tarım arazi")||metin.includes("zeytinlik")) return "Tarım Arazisi";
-  return "Ekolojik İhlal";
+/* ─── Admin silme ─── */
+/* Orijinal site-data.js ile aynı key isimleri */
+function getSilinen(){
+  try{return new Set(JSON.parse(localStorage.getItem("ekoloji_ihlal_silinen")||"[]").map(String));}
+  catch{return new Set();}
+}
+function silKaydet(sid){
+  const s=getSilinen(); s.add(sid);
+  localStorage.setItem("ekoloji_ihlal_silinen",JSON.stringify([...s]));
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
+   DURUM
+═══════════════════════════════════ */
+let tumIhlaller = [];
+let aktifSev    = "";
+let aktifKat    = "";
+
+/* ═══════════════════════════════════
+   KATEGORİ TESPİTİ
+   data-kat değerleriyle eşleşen key'ler döner
+═══════════════════════════════════ */
+
+/* data-kat → element ID haritası (boşluk/Türkçe yok) */
+const KAT_EL = {
+  "Maden":                "sid-Maden",
+  "Taş-Mermer":           "sid-Tas-Mermer",
+  "HES":                  "sid-HES",
+  "RES":                  "sid-RES",
+  "GES":                  "sid-GES",
+  "Termik":               "sid-Termik",
+  "Nükleer":              "sid-Nukleer",
+  "Jeotermal":            "sid-Jeotermal",
+  "Milli Park":           "sid-MilliPark",
+  "Orman Alanı":          "sid-OrmanAlani",
+  "Sulak Alan":           "sid-SulakAlan",
+  "Acele Kamulaştırma":   "sid-AcceleKamulashtirma",
+  "ÇED":                  "sid-CED",
+  "Kıyı":                 "sid-Kiyi",
+  "Su Kirliliği":         "sid-SuKirliligi",
+  "Su Hakkı":             "sid-SuHakki",
+  "Hayvan":               "sid-Hayvan",
+  "İnsan Hakları":        "sid-InsanHaklari",
+  "Köylü":                "sid-Koylu",
+  "Tarım Arazisi":        "sid-TarimArazisi",
+  "__diger":              "sid-Diger",
+};
+
+function _n(s){ /* Türkçe normalize */
+  return (s||"").replace(/İ/g,"i").replace(/Ş/g,"ş").replace(/Ğ/g,"ğ")
+                .replace(/Ü/g,"ü").replace(/Ö/g,"ö").replace(/Ç/g,"ç").toLowerCase();
+}
+
+function katTespit(item){
+  const kat   = _n(item.kategori||"");
+  const metin = _n((item.baslik||"")+" "+(item.aciklama||"")+" "+(item.kategori||"")+" "+(item.konum||""));
+
+  /* Tam eşleşme — data-kat değerleriyle */
+  if(kat.includes("maden")&&!kat.includes("ruhsat"))           return "Maden";
+  if(kat.includes("taş")&&(kat.includes("ocak")||kat.includes("mermer"))) return "Taş-Mermer";
+  if(kat.includes("hes")||kat.includes("baraj")||kat.includes("regülat")) return "HES";
+  if(kat.includes("res")&&!kat.includes("resmi"))              return "RES";
+  if(kat.includes("ges")||(kat.includes("güneş")&&kat.includes("sant"))) return "GES";
+  if(kat.includes("termik"))                                   return "Termik";
+  if(kat.includes("nükle"))                                    return "Nükleer";
+  if(kat.includes("jeoterm"))                                  return "Jeotermal";
+  if(kat.includes("milli park")||kat.includes("tabiat park"))  return "Milli Park";
+  if(kat.includes("orman alan")||kat.includes("ormanlık"))     return "Orman Alanı";
+  if(kat.includes("sulak alan"))                               return "Sulak Alan";
+  if(kat.includes("acele kamulaş")||kat.includes("kamulaştırm")) return "Acele Kamulaştırma";
+  if(kat.includes("çed"))                                      return "ÇED";
+  if(kat.includes("kıyı")||kat.includes("dolgu")||kat.includes("marina")) return "Kıyı";
+  if(kat.includes("su kirlilik")||kat.includes("deniz kirlilik")) return "Su Kirliliği";
+  if(kat.includes("su hakkı"))                                 return "Su Hakkı";
+  if(kat.includes("hayvan"))                                   return "Hayvan";
+  if(kat.includes("insan hakkı")||kat.includes("i̇nsan hakkı")) return "İnsan Hakları";
+  if(kat.includes("köylü")||kat.includes("çiftçi"))           return "Köylü";
+  if(kat.includes("tarım arazi")||kat.includes("zeytinlik"))  return "Tarım Arazisi";
+  if(kat.includes("ruhsat")||kat.includes("enerji lisans"))   return "Maden";
+
+  /* Metin bazlı */
+  if(metin.includes("nükleer")||metin.includes("akkuyu"))     return "Nükleer";
+  if(metin.includes("jeotermal"))                             return "Jeotermal";
+  if(metin.includes("termik"))                                return "Termik";
+  if((metin.includes(" hes ")||metin.includes("hes\n")||metin.includes("baraj")||metin.includes("regülat"))) return "HES";
+  if(metin.includes(" res ")||metin.includes("rüzgar sant"))  return "RES";
+  if(metin.includes(" ges ")||metin.includes("güneş sant"))   return "GES";
+  if(metin.includes("maden")||metin.includes("madenci")||metin.includes("sondaj")) return "Maden";
+  if(metin.includes("taş ocak")||metin.includes("mermer ocak")||metin.includes("ocak işletme")) return "Taş-Mermer";
+  if(metin.includes("milli park")||metin.includes("tabiat park")||metin.includes("öçka")) return "Milli Park";
+  if(metin.includes("orman")||metin.includes("ağaç kesiml")||metin.includes("ormansız")) return "Orman Alanı";
+  if(metin.includes("sulak alan"))                            return "Sulak Alan";
+  if(metin.includes("acele kamulaş"))                         return "Acele Kamulaştırma";
+  if(metin.includes("kamulaştırm"))                           return "Acele Kamulaştırma";
+  if(metin.includes("çed")||metin.includes("ced "))           return "ÇED";
+  if(metin.includes("kıyı")||metin.includes("marina")||metin.includes("kıyıya dolgu")) return "Kıyı";
+  if(metin.includes("su kirliliği")||metin.includes("deniz kirliliği")||metin.includes("nehir kirliliği")) return "Su Kirliliği";
+  if(metin.includes("su hakkı")||metin.includes("içme suyu")) return "Su Hakkı";
+  if(metin.includes("hayvan"))                                return "Hayvan";
+  if(metin.includes("insan hakkı"))                           return "İnsan Hakları";
+  if(metin.includes("köylü")||metin.includes("çiftçi"))       return "Köylü";
+  if(metin.includes("tarım arazi")||metin.includes("zeytinlik")) return "Tarım Arazisi";
+
+  return "__diger";
+}
+
+/* ═══════════════════════════════════
    SIDEBAR SAYAÇ
-═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function guncelSidebar(){
   const sayac={};
   tumIhlaller.forEach(h=>{
-    const k=h._kat||"Ekolojik İhlal";
+    const k=h._kat||"__diger";
     sayac[k]=(sayac[k]||0)+1;
   });
-  safeSetText("ks_toplam", tumIhlaller.length);
-  SIDEBAR_KATLAR.forEach(k=>{
-    const el=document.getElementById("ks_"+k);
-    if(el) el.textContent=sayac[k]||"0";
+  setText("sid-toplam", tumIhlaller.length);
+  Object.entries(KAT_EL).forEach(([kat,elId])=>{
+    setText(elId, sayac[kat]||"0");
   });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SİDEBAR KATEGORİ SEÇ
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   SIDEBAR SEÇ
+═══════════════════════════════════ */
 function setKat(el){
   aktifKat=el.dataset.kat||"";
   document.querySelectorAll(".kat-item,.kat-tumü").forEach(e=>e.classList.remove("aktif-kat"));
   el.classList.add("aktif-kat");
   const u=new URL(location.href);
   aktifKat?u.searchParams.set("kat",aktifKat):u.searchParams.delete("kat");
-  history.replaceState({},"",(u.toString()));
+  history.replaceState({},"",u.toString());
   filtrele();
 }
 
@@ -379,21 +422,28 @@ function setSev(btn){
   filtrele();
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    RENDER
-═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function formatDate(d){
   if(!d)return"—";
-  return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"});
+  try{return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"});}
+  catch{return String(d);}
 }
 
 function filtrele(){
-  const sBox=document.getElementById("searchBox");
-  const q=(sBox?sBox.value:"").toLowerCase();
+  const q=(document.getElementById("searchBox")||{}).value||"";
+  const ql=q.toLowerCase();
   const liste=tumIhlaller.filter(h=>{
-    if(aktifSev && h.siddet!==aktifSev) return false;
-    if(aktifKat && h._kat!==aktifKat) return false;
-    if(q && !((h.baslik||"")+" "+(h.konum||"")+" "+(h.kategori||"")+" "+(h.aciklama||"")).toLowerCase().includes(q)) return false;
+    if(aktifSev && (h.siddet||"takipte")!==aktifSev) return false;
+    if(aktifKat){
+      if(aktifKat==="__diger"){
+        if(h._kat && h._kat!=="__diger") return false;
+      } else {
+        if(h._kat!==aktifKat) return false;
+      }
+    }
+    if(ql && !((h.baslik||"")+" "+(h.konum||"")+" "+(h.kategori||"")+" "+(h.aciklama||"")).toLowerCase().includes(ql)) return false;
     return true;
   });
   render(liste);
@@ -401,146 +451,170 @@ function filtrele(){
 
 function render(liste){
   const grid=document.getElementById("ihlalerList");
-  const countBar=document.getElementById("countBar");
-  if(!grid) return;
+  const bar=document.getElementById("countBar");
+  if(!grid)return;
+  if(bar) bar.innerHTML=`<b>${liste.length}</b> ihlal kaydı gösteriliyor`;
   if(!liste.length){
-    grid.innerHTML='<div class="empty-msg">Bu kriterlere uyan ihlal kaydı bulunamadı.</div>';
-    if(countBar) countBar.innerHTML="0 kayıt"; return;
+    grid.innerHTML='<div class="empty-msg">Bu kriterlere uyan ihlal bulunamadı.</div>';
+    return;
   }
-  if(countBar) countBar.innerHTML=`<b>${liste.length}</b> ihlal kaydı gösteriliyor`;
   const adminMod=typeof SITE!=="undefined"&&SITE.isAdmin();
-
   grid.innerHTML=liste.map(item=>{
-    const siddetClass=item.siddet||"takipte";
-    const siddetLabel=(item.siddet||"takipte").charAt(0).toUpperCase()+(item.siddet||"takipte").slice(1);
-    return `<div class="ihlal-row ${_esc(siddetClass)}" onclick="openModal('${_esc(item.id)}')">
-      <div><span class="sev ${_esc(siddetClass)}">${_esc(siddetLabel)}</span></div>
+    const sc=item.siddet||"takipte";
+    const sl=sc.charAt(0).toUpperCase()+sc.slice(1);
+    const meta=[item.konum,item.kategori,item.kaynak].filter(Boolean).join(" · ");
+    return `<div class="ihlal-row ${_esc(sc)}" onclick="openModal('${_esc(String(item.id))}')">
+      <div><span class="sev-badge ${_esc(sc)}">${_esc(sl)}</span></div>
       <div>
         <h3>${_esc(item.baslik)}</h3>
-        <div class="meta">${_esc(item.konum||"")}${item.konum&&item.kategori?" · ":""}${_esc(item.kategori||"")}${item.kaynak?" · "+_esc(item.kaynak):""}</div>
-        ${item.aciklama?`<div class="desc">${_esc(item.aciklama)}</div>`:""}
+        ${meta?`<div class="ihlal-meta">${_esc(meta)}</div>`:""}
+        ${item.aciklama?`<div class="ihlal-desc">${_esc(item.aciklama)}</div>`:""}
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
-        <span class="date">${formatDate(item.tarih)}</span>
-        ${adminMod?`<button class="admin-sil-btn" onclick="event.stopPropagation();ihlalSil('${_esc(item.id)}')">SİL</button>`:""}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <span class="ihlal-date">${formatDate(item.tarih)}</span>
+        ${adminMod?`<button class="admin-sil-btn" onclick="event.stopPropagation();ihlalSil('${_esc(String(item.id))}')">SİL</button>`:""}
       </div>
     </div>`;
   }).join("");
 }
 
-function ihlalSil(id){
-  _adminMod.sil("ihlaller",id,sid=>{
-    tumIhlaller=tumIhlaller.filter(i=>String(i.id)!==sid);
-    guncelSidebar(); filtrele();
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    MODAL
-═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function openModal(id){
   const item=tumIhlaller.find(i=>String(i.id)===String(id));
   if(!item)return;
   const etiketler=Array.isArray(item.etiketler)?item.etiketler:[];
-  const chipsHTML=etiketler.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${_esc(e)}</span>`).join("")}</div>`:"";
+  const chips=etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${_esc(e)}</span>`).join("");
   document.getElementById("modalContent").innerHTML=`
-    ${item.foto_url?`<img src="${_esc(item.foto_url)}" alt="" onerror="this.style.display='none'" style="width:100%;max-height:300px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">`:""}
+    ${item.foto_url?`<img src="${_esc(item.foto_url)}" alt="" onerror="this.style.display='none'" style="width:100%;max-height:280px;object-fit:cover;border-radius:5px;margin-bottom:16px;">`:""}
     <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 9px;border-radius:2px;text-transform:uppercase;" class="badge ${_esc(item.siddet||'takipte')}">${_esc(item.siddet||'takipte')}</span>
+      <span class="sev-badge ${_esc(item.siddet||'takipte')}">${_esc(item.siddet||'takipte')}</span>
     </div>
-    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.1;margin-bottom:16px;">${_esc(item.baslik)}</h2>
-    ${chipsHTML}
-    <div class="modal-field"><label>Konum</label><p>${_esc(item.konum||"—")}</p></div>
-    <div class="modal-field"><label>Kategori</label><p>${_esc(item.kategori||"—")}</p></div>
-    <div class="modal-field"><label>Tarih</label><p>${formatDate(item.tarih)}</p></div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.1;margin-bottom:${chips?'8':'16'}px;">${_esc(item.baslik)}</h2>
+    ${chips?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px;">${chips}</div>`:""}
+    ${item.konum?`<div class="modal-field"><label>Konum</label><p>${_esc(item.konum)}</p></div>`:""}
+    ${item.kategori?`<div class="modal-field"><label>Kategori</label><p>${_esc(item.kategori)}</p></div>`:""}
+    ${item.tarih?`<div class="modal-field"><label>Tarih</label><p>${formatDate(item.tarih)}</p></div>`:""}
     ${item.kaynak?`<div class="modal-field"><label>Kaynak</label><p>${_esc(item.kaynak)}</p></div>`:""}
     ${item.aciklama?`<div class="modal-field"><label>Açıklama</label><p>${_esc(item.aciklama)}</p></div>`:""}
     ${item.kaynak_url?`<div style="margin-top:18px;"><a href="${_esc(item.kaynak_url)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Kaynağa Git →</a></div>`:""}
   `;
-  document.getElementById("modal").classList.add("open");
+  document.getElementById("detailModal").classList.add("open");
 }
-function closeModal(){document.getElementById("modal").classList.remove("open");}
-document.getElementById("modal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeModal();});
+function closeModal(){document.getElementById("detailModal").classList.remove("open");}
+document.getElementById("detailModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeModal();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
 
-/* ═══════════════════════════════════════════════════════════════
-   VERİ BİRLEŞTİR + YENİDEN _kat AT
-═══════════════════════════════════════════════════════════════ */
-function mergeFull(jsonArr){
-  const silinen=_adminMod.getSilinen("ihlaller");
-  const local=(typeof SITE!=="undefined"?SITE.getList("ihlaller"):[]).filter(x=>!silinen.has(String(x.id)));
-  const defArr=(typeof SITE!=="undefined"&&SITE.defaults&&SITE.defaults.ihlaller)?SITE.defaults.ihlaller:[];
-  const localIds=new Set(local.map(x=>String(x.id)));
-  // Merge: local > json > defaults
-  const jsonFiltered=jsonArr.filter(x=>!silinen.has(String(x.id))&&!localIds.has(String(x.id)));
-  const defFiltered=defArr.filter(x=>!silinen.has(String(x.id))&&!localIds.has(String(x.id)));
-  const jsonIds=new Set(jsonFiltered.map(x=>String(x.id)));
-  const all=[...local,...jsonFiltered,...defFiltered.filter(x=>!jsonIds.has(String(x.id)))];
-  // _kat ata
-  return all.map(h=>({...h,_kat:ihlalKatTespit(h)})).sort((a,b)=>new Date(b.tarih||0)-new Date(a.tarih||0));
+function ihlalSil(id){
+  if(!confirm("Bu kaydı silmek istiyor musunuz?"))return;
+  const sid=String(id);
+  if(typeof SITE!=="undefined") SITE.set("ihlaller",SITE.getList("ihlaller").filter(x=>String(x.id)!==sid));
+  silKaydet(sid);
+  tumIhlaller=tumIhlaller.filter(i=>String(i.id)!==sid);
+  guncelSidebar(); filtrele();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   URL PARAM UYGULA
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   VERİ BİRLEŞTİR
+   Öncelik: localStorage > JSON > defaults
+   Silinen kayıtlar her kaynaktan çıkarılır
+═══════════════════════════════════ */
+function birlestirHepsi(jsonArr){
+  const silinen = getSilinen();
+
+  /* 1) localStorage */
+  const local = (typeof SITE!=="undefined" ? SITE.getList("ihlaller") : [])
+    .filter(x=>!silinen.has(String(x.id)));
+
+  /* 2) JSON'dan gelenler (localStorage'da olmayanlar) */
+  const localIds = new Set(local.map(x=>String(x.id)));
+  const jsonYeni = (jsonArr||[]).filter(x=>!silinen.has(String(x.id))&&!localIds.has(String(x.id)));
+
+  /* 3) Defaults (ikisinde de olmayanlar) */
+  const defArr = (typeof SITE!=="undefined"&&SITE.defaults&&SITE.defaults.ihlaller) ? SITE.defaults.ihlaller : [];
+  const birlesikIds = new Set([...local,...jsonYeni].map(x=>String(x.id)));
+  const defYeni = defArr.filter(x=>!silinen.has(String(x.id))&&!birlesikIds.has(String(x.id)));
+
+  const hepsi = [...local, ...jsonYeni, ...defYeni];
+
+  /* _kat ata */
+  hepsi.forEach(h=>{ if(!h._kat) h._kat = katTespit(h); });
+
+  return hepsi.sort((a,b)=>new Date(b.tarih||0)-new Date(a.tarih||0));
+}
+
+/* ═══════════════════════════════════
+   URL PARAM
+═══════════════════════════════════ */
 function urlParamUygula(){
-  const params=new URLSearchParams(location.search);
-  const kat=params.get("kat");
+  const p=new URLSearchParams(location.search);
+  const kat=p.get("kat");
   if(kat){
     aktifKat=kat;
     document.querySelectorAll(".kat-item,.kat-tumü").forEach(el=>{
       el.classList.toggle("aktif-kat",(el.dataset.kat||"")===kat);
     });
-    // Arama kutusuna da yansıt
-    const sb=document.getElementById("searchBox"); if(sb&&!sb.value) sb.value=kat;
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   VERİ YÜKLE
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   VERİ YÜKLE  — üç adımlı fetch zinciri
+═══════════════════════════════════ */
+function uygula(jsonArr){
+  tumIhlaller = birlestirHepsi(jsonArr);
+  urlParamUygula();
+  guncelSidebar();
+  filtrele();
+  setText("scanStatus", tumIhlaller.length + " kayıt");
+}
+
 function yukle(){
-  const abort=new AbortController();
-  const timer=setTimeout(()=>abort.abort(),8000);
-  fetch("ihlaller.json?t="+Date.now(),{signal:abort.signal})
-    .then(r=>{clearTimeout(timer);return r.ok?r.json():Promise.reject(r.status);})
+  setText("scanStatus","Yükleniyor…");
+
+  /* ADIM 1: ihlaller.json */
+  const ac=new AbortController();
+  const t1=setTimeout(()=>ac.abort(),8000);
+  fetch("ihlaller.json?t="+Date.now(),{signal:ac.signal})
+    .then(r=>{ clearTimeout(t1); if(!r.ok) throw new Error(r.status); return r.json(); })
     .then(d=>{
       const arr=Array.isArray(d)?d:(d.ihlaller||[]);
-      tumIhlaller=mergeFull(arr);
-      urlParamUygula();
-      guncelSidebar(); filtrele();
-      safeSetText("scanStatus",tumIhlaller.length+" kayıt");
+      setText("scanStatus","ihlaller.json · "+arr.length+" kayıt");
+      uygula(arr);
     })
     .catch(()=>{
-      // data.json dene
+      clearTimeout(t1);
+      /* ADIM 2: data.json */
       fetch("data.json?t="+Date.now())
-        .then(r=>r.ok?r.json():Promise.reject())
+        .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
         .then(d=>{
-          tumIhlaller=mergeFull(d.ihlaller||[]);
-          urlParamUygula(); guncelSidebar(); filtrele();
-          safeSetText("scanStatus",tumIhlaller.length+" kayıt (data.json)");
+          const arr=Array.isArray(d)?d:(d.ihlaller||[]);
+          setText("scanStatus","data.json · "+arr.length+" kayıt");
+          uygula(arr);
         })
         .catch(()=>{
-          // Sadece local + defaults
-          tumIhlaller=mergeFull([]);
-          urlParamUygula(); guncelSidebar(); filtrele();
-          safeSetText("scanStatus",tumIhlaller.length+" kayıt (yerel)");
+          /* ADIM 3: sadece localStorage + defaults */
+          setText("scanStatus","Yerel veri");
+          uygula([]);
         });
     });
 }
 
-/* Admin araçları */
+/* ═══════════════════════════════════
+   ADMİN ARAÇLARI
+═══════════════════════════════════ */
 if(typeof SITE!=="undefined"&&SITE.isAdmin()){
   const alan=document.getElementById("adminAlan");
   if(alan){
     const btn=document.createElement("button");
-    btn.className="btn-tara"; btn.innerHTML="↻ Yenile"; btn.style.cssText="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:3px;cursor:pointer;background:var(--accent);color:var(--dark);border:none;";
-    btn.onclick=()=>{btn.disabled=true;btn.innerHTML="↻ Yükleniyor…";yukle();setTimeout(()=>{btn.disabled=false;btn.innerHTML="↻ Yenile";},2000);};
+    btn.style.cssText="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:3px;cursor:pointer;background:var(--accent);color:var(--dark);border:none;";
+    btn.textContent="↻ Yenile";
+    btn.onclick=()=>{ btn.disabled=true; btn.textContent="↻ Yükleniyor…"; yukle(); setTimeout(()=>{btn.disabled=false;btn.textContent="↻ Yenile";},2500); };
     alan.appendChild(btn);
   }
 }
 
-// BAŞLAT
+/* BAŞLAT */
 yukle();
 </script>
 </body>
