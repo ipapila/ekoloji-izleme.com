@@ -92,7 +92,7 @@
 
   // Tam Navigasyon HTML Şablonu
   const navHTML = `
-<link href="[https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap](https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap)" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <nav>
   <a href="index.html" class="nav-logo">
     <span>ekoloji-izleme<b>.com</b></span>
@@ -210,6 +210,7 @@
         <a href="kuresel.html?tur=Analiz"><span class="dot"></span>Analizler</a>
         <a href="kuresel.html?tur=Aktivizm"><span class="dot"></span>Aktivizm</a>
         <a href="kuresel.html?tur=Politika"><span class="dot"></span>Politika</a>
+        <a href="kuresel.html?tur=Uluslararas%C4%B1+Medya"><span class="dot"></span>Uluslararası Medya</a>
         <hr>
         <div class="dropdown-label">Dile Göre</div>
         <a href="kuresel.html?dil=EN"><span class="dot"></span>🇬🇧 İngilizce</a>
