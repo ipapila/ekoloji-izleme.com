@@ -866,7 +866,12 @@ function yukle(zorlaHkat) {
       safeSetText("scanStatus", statusText);
     })
     .catch(()=>{
-      tumHaberler = birlestir({}, localHaberler);
+      // JSON dosyası yoksa SITE.defaults.haberler'i doğrudan kullan
+      const defaultHaberler = (typeof SITE!=="undefined" && SITE.defaults && SITE.defaults.haberler)
+        ? SITE.defaults.haberler : [];
+      // Yerel kayıtlarla defaults'ı birleştir; birlestir() kollar yapısını bekliyor
+      const fallbackData = { haberler: defaultHaberler, raporlar: [], makaleler: [], uluslararasi: [] };
+      tumHaberler = birlestir(fallbackData, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
       safeSetText("scanStatus", `${tumHaberler.length} kayıt (yerel)`);
