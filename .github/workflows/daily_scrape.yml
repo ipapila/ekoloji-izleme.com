@@ -1,0 +1,63 @@
+name: Günlük Tarama + Firebase Export
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # Her gün 06:00 UTC
+  workflow_dispatch:        # Manuel tetikleme
+
+jobs:
+  tara-ve-dagit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodu çek
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları yükle
+        run: |
+          pip install \
+            feedparser \
+            requests \
+            beautifulsoup4 \
+            lxml \
+            firebase-admin
+
+      # ── ADIM 1: Haber tarayıcı ──────────────────────────────────
+      - name: Haber Tarayıcı
+        run: python scripts/tarayici.py --cikti haberler.json
+
+      # ── ADIM 2: Dağıtıcı ────────────────────────────────────────
+      - name: Dağıtıcı
+        run: python scripts/dagitici.py
+
+      # ── ADIM 3: Firebase → ihlaller.json ────────────────────────
+      - name: Firebase İhlal Export
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_COLLECTION: ${{ secrets.FIREBASE_COLLECTION }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: python scripts/firebase_ihlal_export.py
+
+      # ── ADIM 4: Değişen dosyaları repoya push ───────────────────
+      - name: Değişiklikleri push et
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add haberler.json ihlaller.json \
+                  haberler_veri.json raporlar_veri.json \
+                  makaleler_veri.json uluslararasi_veri.json \
+                  ekosistem_veri.json \
+                  haberler-iklim.json haberler-maden.json \
+                  haberler-orman.json haberler-su.json \
+                  haberler-yaban.json haberler-direnis.json \
+                  haberler-hukuki.json haberler-nobet.json \
+                  haberler-stk.json haberler-diger.json \
+                  haberler-ihaklar.json || true
+          git diff --staged --quiet || \
+            git commit -m "otomatik: $(date +'%Y-%m-%d %H:%M') tarama + firebase export"
+          git push
