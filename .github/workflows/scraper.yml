@@ -19,7 +19,7 @@ jobs:
 
       - name: Bağımlılıkları Yükle
         run: |
-          pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic firebase-admin
+          pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
 
       - name: Mevcut haberler.json Plesk'ten İndir
         env:
@@ -49,15 +49,9 @@ jobs:
         run: |
           python dagitici.py
 
-      # ── YENİ ADIM: Firebase → ihlaller.json ─────────────────────
       - name: Firebase İhlal Export
-        env:
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_COLLECTION: ${{ secrets.FIREBASE_COLLECTION }}
-          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
         run: |
           python scripts/firebase_ihlal_export.py
-      # ─────────────────────────────────────────────────────────────
 
       - name: JSON'ları Repo'ya Commit Et
         run: |
