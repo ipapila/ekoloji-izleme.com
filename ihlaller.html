@@ -206,8 +206,12 @@ const urlKat  = new URLSearchParams(location.search).get("kat");
 function mergeWithLocal(jsonIhlaller) {
   const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
     .filter(x => !silinen.has(String(x.id)));
-  const localIds = new Set(local.map(x => String(x.id)));
-  return [...local, ...jsonIhlaller.filter(x => !localIds.has(String(x.id)))]
+  // LocalStorage'da kayıt yoksa SITE.defaults ekle
+  const defIhlaller = (local.length === 0 && typeof SITE !== "undefined" && SITE.defaults && SITE.defaults.ihlaller)
+    ? SITE.defaults.ihlaller.filter(x => !silinen.has(String(x.id))) : [];
+  const allLocal = local.length > 0 ? local : defIhlaller;
+  const localIds = new Set(allLocal.map(x => String(x.id)));
+  return [...allLocal, ...jsonIhlaller.filter(x => !localIds.has(String(x.id)))]
     .sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));
 }
 
@@ -221,7 +225,7 @@ function applyAndRender(merged) {
 }
 
 // 1. Önce ihlaller.json'ı dene
-fetch("ihlaller.json?v=" + Date.now())
+(()=>{ const c=new AbortController(); setTimeout(()=>c.abort(),8000); return fetch("ihlaller.json?v="+Date.now(),{signal:c.signal}); })()
   .then(r => { if (!r.ok) throw new Error("ihlaller.json yok"); return r.json(); })
   .then(d => {
     // ihlaller.json doğrudan dizi ya da { ihlaller: [...] } olabilir
@@ -238,10 +242,11 @@ fetch("ihlaller.json?v=" + Date.now())
       })
       .catch(() => {
         // 3. Son çare: localStorage + SITE.defaults
-        const defaults = (typeof SITE !== "undefined" && SITE.defaults && SITE.defaults.ihlaller)
+        const defIhlaller = (typeof SITE !== "undefined" && SITE.defaults && SITE.defaults.ihlaller)
           ? SITE.defaults.ihlaller : [];
-        applyAndRender(mergeWithLocal(defaults.filter(x => !silinen.has(String(x.id)))));
+        applyAndRender(mergeWithLocal(defIhlaller.filter(x => !silinen.has(String(x.id)))));
       });
   });
 </script>
 </body>
+</html>
