@@ -51,24 +51,44 @@ jobs:
 
       - name: Firebase İhlal Export
         run: |
-          python scripts/firebase_ihlal_export.py
+          # Script nerede olursa olsun bul ve çalıştır
+          if [ -f "scripts/firebase_ihlal_export.py" ]; then
+            echo "scripts/ klasöründen çalıştırılıyor"
+            python scripts/firebase_ihlal_export.py
+          elif [ -f "firebase_ihlal_export.py" ]; then
+            echo "Ana dizinden çalıştırılıyor"
+            python firebase_ihlal_export.py
+          else
+            echo "⚠ firebase_ihlal_export.py bulunamadı — scripti repoya ekle!"
+            echo "Konum: scripts/firebase_ihlal_export.py"
+            exit 1
+          fi
 
       - name: JSON'ları Repo'ya Commit Et
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
-          git add -f haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json || true
+          git add -f haberler.json ihlaller.json raporlar.json makaleler.json \
+                     ekosistem.json kuresel.json data.json \
+                     haberler-iklim.json haberler-maden.json haberler-orman.json \
+                     haberler-su.json haberler-yaban.json haberler-direnis.json \
+                     haberler-hukuki.json haberler-nobet.json haberler-ihaklar.json \
+                     haberler-stk.json haberler-diger.json || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
           git push || true
 
-      - name: JSON'ları Plesk'e Gönder
+      - name: Ana JSON'ları Plesk'e Gönder
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
+          # Plesk webhook'un izin verdiği dosyalar
           HATALI=0
-          for dosya in haberler.json haberler-maden.json haberler-iklim.json haberler-orman.json haberler-su.json haberler-yaban.json haberler-direnis.json haberler-hukuki.json haberler-nobet.json haberler-ihaklar.json haberler-stk.json haberler-diger.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json; do
-            if [ ! -f "$dosya" ]; then continue; fi
+          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json; do
+            if [ ! -f "$dosya" ]; then
+              echo "→ $dosya yok, atlanıyor"
+              continue
+            fi
             BOYUT=$(wc -c < "$dosya")
             echo "→ $dosya gönderiliyor... (${BOYUT} byte)"
             for deneme in 1 2 3; do
@@ -93,3 +113,28 @@ jobs:
           else
             echo "✓ Tüm dosyalar başarıyla gönderildi."
           fi
+
+      - name: Haberler Alt-Kategori JSON'larını Plesk'e Gönder
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          # Bu dosyalar webhook'ta izin listesinde yoksa 400 verir — hata sayılmaz
+          for dosya in haberler-iklim.json haberler-maden.json haberler-orman.json \
+                       haberler-su.json haberler-yaban.json haberler-direnis.json \
+                       haberler-hukuki.json haberler-nobet.json haberler-ihaklar.json \
+                       haberler-stk.json haberler-diger.json; do
+            if [ ! -f "$dosya" ]; then continue; fi
+            HTTP_STATUS=$(curl -s -o /tmp/yanit.txt -w "%{http_code}" \
+              --max-time 60 \
+              -X POST \
+              -H "Content-Type: application/json" \
+              -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
+              --data-binary "@${dosya}" \
+              "${WEBHOOK_URL}?dosya=${dosya}" 2>/dev/null || echo "000")
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "✓ $dosya gönderildi"
+            else
+              echo "⚠ $dosya gönderilemedi (HTTP ${HTTP_STATUS}) — webhook.php izin listesine ekle"
+            fi
+          done
