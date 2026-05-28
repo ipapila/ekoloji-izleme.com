@@ -5,10 +5,7 @@ rapor_uret.py — Günlük Bütünleşik Değerlendirme Raporu
 
 Son 24 saatin haberler.json + data.json verilerini okur,
 Claude'a gönderir, bütünleşik aktivist perspektifli rapor üretir,
-rapor.json olarak GitHub'a yazar.
-
-Çalıştırma:
-    python scripts/rapor_uret.py
+rapor.json olarak ve gunluk-raporlar.json arşivine GitHub'a yazar.
 """
 
 import json
@@ -22,17 +19,19 @@ from pathlib import Path
 REPO_OWNER   = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
 REPO_NAME    = os.environ.get("GITHUB_REPO_NAME",  "ekoloji-izleme.com")
 RAPOR_PATH   = "rapor.json"
-# Workflow yerel dosyaları Plesk'ten indirir → yerel okuma öncelikli
+ARSIV_PATH   = "gunluk-raporlar.json"
+ARSIV_YEREL  = Path("gunluk-raporlar.json")
 HABERLER_YEREL = Path("haberler.json")
 IHLALLER_YEREL = Path("ihlaller.json")
 HABERLER_URL = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/haberler.json"
 DATA_URL     = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/ihlaller.json"
+ARSIV_URL    = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/gunluk-raporlar.json"
 SON_SAAT     = 24
+ARSIV_MAKS   = 365  # en fazla 1 yıllık arşiv
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-MODEL = "claude-haiku-4-5-20251001"
-
-MAX_TOKENS        = 1800
+MODEL      = "claude-haiku-4-5-20251001"
+MAX_TOKENS = 1800
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -50,11 +49,10 @@ def _json_cek(url):
 
 
 def son_24_saat_haberleri():
-    # Önce workflow'un indirdiği yerel dosyayı dene
     if HABERLER_YEREL.exists():
         try:
             veri = json.loads(HABERLER_YEREL.read_text(encoding="utf-8"))
-            print(f"  yerel haberler.json okundu")
+            print("  yerel haberler.json okundu")
         except Exception:
             veri = _json_cek(HABERLER_URL)
     else:
@@ -83,7 +81,7 @@ def son_24_saat_ihlalleri():
     if IHLALLER_YEREL.exists():
         try:
             veri = json.loads(IHLALLER_YEREL.read_text(encoding="utf-8"))
-            print(f"  yerel ihlaller.json okundu")
+            print("  yerel ihlaller.json okundu")
         except Exception:
             veri = _json_cek(DATA_URL)
     else:
@@ -180,7 +178,6 @@ def rapor_uret(haberler, ihlaller):
         print("ANTHROPIC_API_KEY yok, rapor uretilemedi.")
         return _bos_rapor()
 
-    # Öne çıkan kategoriler
     kategoriler = {}
     for h in haberler:
         k = h.get("kategori") or h.get("etiket") or "Diger"
@@ -243,36 +240,98 @@ def _bos_rapor():
 
 
 # ──────────────────────────────────────────────────────────────────────
-# 3. GITHUB'A YAZ
+# 3. ARŞİV GÜNCELLE
+# Raporu gunluk-raporlar.json listesine ekler (en yeni başta)
 # ──────────────────────────────────────────────────────────────────────
 
-def _sha_al():
+def arsiv_girisi_olustur(rapor):
+    """Raporu raporlar.html'in beklediği formata dönüştür."""
+    tarih_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    uretildi  = rapor.get("uretildi", datetime.now(timezone.utc).isoformat())
+    vo = rapor.get("veri_ozet", {})
+    haber_n  = vo.get("haber_sayisi", 0)
+    ihlal_n  = vo.get("ihlal_sayisi", 0)
+    one_cikan = ", ".join(vo.get("one_cikan_kategoriler", [])[:3])
+
+    return {
+        "id":        f"gunluk-{tarih_str}",
+        "baslik":    rapor.get("baslik", "Günlük Rapor"),
+        "kaynak":    "ekoloji-izleme.com",
+        "kategori":  "Günlük Rapor",
+        "etiket":    "Günlük Rapor",
+        "tarih":     tarih_str,
+        "uretildi":  uretildi,
+        "ozet":      rapor.get("giris", ""),       # liste kartında özet olarak gösterilir
+        "giris":     rapor.get("giris", ""),
+        "yorum":     rapor.get("yorum", ""),
+        "bakia":     rapor.get("bakia", ""),
+        "icerik_tipi": "rapor",
+        "etiketler": [one_cikan] if one_cikan else [],
+        "veri_ozet": vo,
+        "hata":      rapor.get("hata", False),
+    }
+
+
+def arsiv_guncelle(rapor):
+    """Mevcut arşivi okur, yeni girişi öne ekler, yazar."""
+    # Mevcut arşivi al
+    mevcut = []
+    if ARSIV_YEREL.exists():
+        try:
+            mevcut = json.loads(ARSIV_YEREL.read_text(encoding="utf-8"))
+            if not isinstance(mevcut, list):
+                mevcut = mevcut.get("raporlar", [])
+        except Exception as e:
+            print(f"  arşiv okunamadı: {e}")
+    else:
+        # GitHub'dan çek
+        uzak = _json_cek(ARSIV_URL)
+        if uzak:
+            mevcut = uzak if isinstance(uzak, list) else uzak.get("raporlar", [])
+
+    tarih_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    # Aynı gün zaten varsa üstüne yaz (re-run durumu)
+    mevcut = [x for x in mevcut if x.get("id") != f"gunluk-{tarih_str}"]
+
+    # Yeni girişi başa ekle, sınırı uygula
+    yeni_giris = arsiv_girisi_olustur(rapor)
+    mevcut = [yeni_giris] + mevcut
+    mevcut = mevcut[:ARSIV_MAKS]
+
+    # Yerel yaz
+    ARSIV_YEREL.write_text(
+        json.dumps(mevcut, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(f"Arşive eklendi: {yeni_giris['id']} — toplam {len(mevcut)} rapor")
+    return mevcut
+
+
+# ──────────────────────────────────────────────────────────────────────
+# 4. GITHUB'A YAZ
+# ──────────────────────────────────────────────────────────────────────
+
+def _sha_al(dosya_yolu):
     token = os.environ.get("GITHUB_TOKEN")
-    url   = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{RAPOR_PATH}"
+    url   = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{dosya_yolu}"
     r = requests.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=15)
     return r.json().get("sha") if r.status_code == 200 else None
 
 
-def github_yaz(rapor):
-    # Her zaman yerel dosyaya yaz (webhook adımı Plesk'e gönderir)
-    Path("rapor.json").write_text(
-        json.dumps(rapor, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+def _github_yaz_dosya(dosya_yolu, icerik_dict_veya_liste, mesaj):
     token = os.environ.get("GITHUB_TOKEN")
     if not token:
-        print("GITHUB_TOKEN yok, yalnızca yerel dosyaya yazıldı.")
+        print(f"GITHUB_TOKEN yok — {dosya_yolu} yalnızca yerel yazıldı.")
         return False
-
-    sha     = _sha_al()
-    icerik  = base64.b64encode(
-        json.dumps(rapor, ensure_ascii=False, indent=2).encode()
-    ).decode()
-    tarih   = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    payload = {"message": f"gunluk rapor {tarih}", "content": icerik}
+    icerik_str = json.dumps(icerik_dict_veya_liste, ensure_ascii=False, indent=2)
+    sha = _sha_al(dosya_yolu)
+    payload = {
+        "message": mesaj,
+        "content": base64.b64encode(icerik_str.encode()).decode(),
+    }
     if sha:
         payload["sha"] = sha
-
-    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{RAPOR_PATH}"
+    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{dosya_yolu}"
     r   = requests.put(
         url,
         headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
@@ -280,15 +339,28 @@ def github_yaz(rapor):
         timeout=30,
     )
     if r.status_code in (200, 201):
-        print("rapor.json GitHub'a yazildi")
+        print(f"  {dosya_yolu} GitHub'a yazıldı")
         return True
     else:
-        print(f"GitHub yazma hatasi: {r.status_code}")
+        print(f"  {dosya_yolu} yazma hatası: {r.status_code}")
         return False
 
 
+def github_yaz(rapor, arsiv):
+    tarih = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    # rapor.json — mevcut format korunuyor
+    Path("rapor.json").write_text(
+        json.dumps(rapor, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    _github_yaz_dosya(RAPOR_PATH, rapor, f"gunluk rapor {tarih}")
+
+    # gunluk-raporlar.json — arşiv
+    _github_yaz_dosya(ARSIV_PATH, arsiv, f"gunluk rapor arsiv {tarih}")
+
+
 # ──────────────────────────────────────────────────────────────────────
-# 4. ANA AKIŞ
+# 5. ANA AKIŞ
 # ──────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
@@ -296,5 +368,6 @@ if __name__ == "__main__":
     haberler = son_24_saat_haberleri()
     ihlaller = son_24_saat_ihlalleri()
     rapor    = rapor_uret(haberler, ihlaller)
-    github_yaz(rapor)
+    arsiv    = arsiv_guncelle(rapor)
+    github_yaz(rapor, arsiv)
     print("=== Tamamlandi ===")
