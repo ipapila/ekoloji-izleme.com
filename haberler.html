@@ -155,20 +155,20 @@
     </div>
     <div class="search-wrap">
       <input class="search-box" id="searchBox" placeholder="Ara…" oninput="filtrele()">
-      <button class="tur-chip" data-kol="raporlar">📋 Rapor</button>
-      <button class="tur-chip" data-kol="makaleler">✍ Köşe</button>
-      <button class="tur-chip" data-kol="uluslararasi">🌍 Ulusl.</button>
+      <button class="tur-chip" data-kol="raporlar" onclick="setTurChip(this)">📋 Rapor</button>
+      <button class="tur-chip" data-kol="makaleler" onclick="setTurChip(this)">✍ Köşe</button>
+      <button class="tur-chip" data-kol="uluslararasi" onclick="setTurChip(this)">🌍 Ulusl.</button>
     </div>
   </div>
 </div>
 
 <!-- Koleksiyon özet çubuğu -->
 <div class="koleksiyon-bar" id="koleksiyonBar">
-  <span class="kol-chip aktif-kol" data-kol=""><b>—</b> Tümü</span>
-  <span class="kol-chip" data-kol="haberler"><b id="kSayiHaber">…</b> Haber</span>
-  <span class="kol-chip" data-kol="raporlar"><b id="kSayiRapor">…</b> Rapor & Analiz</span>
-  <span class="kol-chip" data-kol="makaleler"><b id="kSayiMakale">…</b> Köşe & Yorum</span>
-  <span class="kol-chip" data-kol="uluslararasi"><b id="kSayiUlus">…</b> Uluslararası</span>
+  <span class="kol-chip aktif-kol" data-kol="" onclick="setKoleksiyon(this)"><b>—</b> Tümü</span>
+  <span class="kol-chip" data-kol="haberler" onclick="setKoleksiyon(this)"><b id="kSayiHaber">…</b> Haber</span>
+  <span class="kol-chip" data-kol="raporlar" onclick="setKoleksiyon(this)"><b id="kSayiRapor">…</b> Rapor & Analiz</span>
+  <span class="kol-chip" data-kol="makaleler" onclick="setKoleksiyon(this)"><b id="kSayiMakale">…</b> Köşe & Yorum</span>
+  <span class="kol-chip" data-kol="uluslararasi" onclick="setKoleksiyon(this)"><b id="kSayiUlus">…</b> Uluslararası</span>
 </div>
 
 <div class="scan-bar">
@@ -791,8 +791,15 @@ function birlestir(data, localHaberler) {
     { liste: data.makaleler     || [], kol: "makaleler"    },
     { liste: data.uluslararasi || [], kol: "uluslararasi" },
   ];
+  // Yerel kayıt yoksa SITE.defaults'ı da dahil et
+  const defH = (typeof SITE!=="undefined"&&SITE.defaults) ? (SITE.defaults.haberler||[]) : [];
+  const defR = (typeof SITE!=="undefined"&&SITE.defaults) ? (SITE.defaults.raporlar||[])  : [];
+  const defHIds = new Set(localHaberler.map(h=>String(h.id)));
+  const extraDefs = [...defH.filter(h=>!defHIds.has(String(h.id))),
+                     ...defR.filter(h=>!defHIds.has(String(h.id)))];
+  const tumLocal = [...localHaberler, ...extraDefs];
   [...kollar.flatMap(k => k.liste.map(h => ({...h, _koleksiyon: k.kol}))),
-   ...localHaberler.map(h => ({...h, _koleksiyon: h._koleksiyon||"haberler"}))
+   ...tumLocal.map(h => ({...h, _koleksiyon: h._koleksiyon||"haberler"}))
   ].forEach(h => {
     if (silinen.has(String(h.id))) return;
     const baslikKey = (h.baslik||"").trim().toLowerCase().slice(0, 80);
@@ -855,9 +862,13 @@ function yukle(zorlaHkat) {
   const url = (aktifHkat && HABER_KAT_DOSYALARI[aktifHkat])
     ? HABER_KAT_DOSYALARI[aktifHkat] + "?t=" + Date.now()
     : HABERLER_URL + "?t=" + Date.now();
-  fetch(url)
-    .then(r=>r.ok?r.json():Promise.reject(r.status))
+  const controller = new AbortController();
+  const fetchTimer = setTimeout(()=>controller.abort(), 8000);
+  fetch(url, {signal: controller.signal})
+    .then(r=>{ clearTimeout(fetchTimer); return r.ok?r.json():Promise.reject(r.status); })
     .then(data=>{
+      // data array ise { haberler: data } formatına çevir
+      if (Array.isArray(data)) data = { haberler: data };
       tumHaberler = birlestir(data, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
@@ -866,12 +877,11 @@ function yukle(zorlaHkat) {
       safeSetText("scanStatus", statusText);
     })
     .catch(()=>{
-      // JSON dosyası yoksa SITE.defaults.haberler'i doğrudan kullan
-      const defaultHaberler = (typeof SITE!=="undefined" && SITE.defaults && SITE.defaults.haberler)
-        ? SITE.defaults.haberler : [];
-      // Yerel kayıtlarla defaults'ı birleştir; birlestir() kollar yapısını bekliyor
-      const fallbackData = { haberler: defaultHaberler, raporlar: [], makaleler: [], uluslararasi: [] };
-      tumHaberler = birlestir(fallbackData, localHaberler);
+      // haberler.json sunucuda yok — SITE.defaults kullan
+      const defH = (typeof SITE!=="undefined"&&SITE.defaults) ? SITE.defaults.haberler||[] : [];
+      const defR = (typeof SITE!=="undefined"&&SITE.defaults) ? SITE.defaults.raporlar||[]  : [];
+      const fallback = { haberler: defH, raporlar: defR, makaleler: [], uluslararasi: [] };
+      tumHaberler = birlestir(fallback, localHaberler);
       urlParamOku();
       filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
       safeSetText("scanStatus", `${tumHaberler.length} kayıt (yerel)`);
@@ -969,6 +979,32 @@ document.addEventListener("keydown", e=>{
     const m = document.getElementById(id); if(m) m.style.display="none";
   });
 });
+
+// setKoleksiyon: kol-chip onclick handler
+function setKoleksiyon(chip) {
+  aktifKoleksiyon = chip.dataset.kol || "";
+  document.querySelectorAll(".kol-chip").forEach(c => c.classList.remove("aktif-kol"));
+  chip.classList.add("aktif-kol");
+  document.querySelectorAll(".tur-chip").forEach(b => {
+    b.classList.toggle("aktif", b.dataset.kol === aktifKoleksiyon);
+  });
+  filtrele();
+}
+
+// setTurChip: tur-chip onclick handler
+function setTurChip(btn) {
+  if (aktifKoleksiyon === btn.dataset.kol) {
+    aktifKoleksiyon = "";
+    document.querySelectorAll(".tur-chip,.kol-chip").forEach(b => b.classList.remove("aktif","aktif-kol"));
+    document.querySelector('.kol-chip[data-kol=""]')?.classList.add("aktif-kol");
+  } else {
+    aktifKoleksiyon = btn.dataset.kol;
+    document.querySelectorAll(".tur-chip").forEach(b => b.classList.remove("aktif"));
+    btn.classList.add("aktif");
+    document.querySelectorAll(".kol-chip").forEach(c => c.classList.toggle("aktif-kol", (c.dataset.kol||"") === aktifKoleksiyon));
+  }
+  filtrele();
+}
 
 document.querySelectorAll(".tur-chip[data-kol]").forEach(btn=>{
   btn.addEventListener("click",()=>{
