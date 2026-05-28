@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duplicate Temizleyici — ihlaller</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+body { padding: 40px 80px; }
+h1 { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--white); margin-bottom: 8px; }
+.sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 40px; }
+.kart { background: var(--forest); border: 1px solid rgba(45,158,107,.2); border-radius: 6px; padding: 28px 32px; margin-bottom: 20px; max-width: 760px; }
+.kart h2 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--cream); margin-bottom: 10px; }
+.kart p { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; border-radius: 3px; cursor: pointer; border: none; transition: all .2s; }
+.btn-primary { background: var(--accent); color: var(--dark); }
+.btn-primary:hover { background: var(--bright); }
+.btn-warn { background: rgba(232,92,42,.15); color: var(--warn); border: 1px solid rgba(232,92,42,.3); }
+.btn-warn:hover { background: rgba(232,92,42,.3); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.log { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); background: rgba(0,0,0,.3); border: 1px solid rgba(45,158,107,.1); border-radius: 3px; padding: 14px 16px; margin-top: 16px; min-height: 60px; white-space: pre-wrap; line-height: 1.7; display: none; }
+.log.acik { display: block; }
+.sayac { font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-bottom: 8px; }
+.sayac b { color: var(--bright); }
+.sayac .warn { color: var(--warn); }
+.dup-liste { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; max-height: 300px; overflow-y: auto; }
+.dup-satir { background: rgba(232,92,42,.06); border: 1px solid rgba(232,92,42,.15); border-radius: 3px; padding: 8px 12px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--muted); display: flex; gap: 12px; align-items: baseline; }
+.dup-satir .id { color: rgba(45,158,107,.5); flex-shrink: 0; }
+.dup-satir .baslik { flex: 1; color: var(--cream); }
+</style>
+</head>
+<body>
+<script src="site-data.js"></script>
+
+<h1>Duplicate Temizleyici</h1>
+<p class="sub">ihlaller.json + localStorage — birleşik duplicate analiz ve temizleme</p>
+
+<!-- ADIM 1: Analiz -->
+<div class="kart">
+  <h2>1. Analiz Et</h2>
+  <p>Tüm kayıtları yükle, duplicate grupları bul ve raporla.<br>Hiçbir şey silinmez.</p>
+  <button class="btn btn-primary" id="btnAnaliz" onclick="analiz()">🔍 Analiz Başlat</button>
+  <div class="log" id="logAnaliz"></div>
+  <div id="dupListe"></div>
+</div>
+
+<!-- ADIM 2: Temizle -->
+<div class="kart" id="kartTemizle" style="display:none;">
+  <h2>2. Temizle</h2>
+  <p id="temizleAcik"></p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button class="btn btn-warn" id="btnTemizle" onclick="temizle()">🗑 Duplicate Sil</button>
+    <button class="btn btn-primary" onclick="analiz()">↻ Yeniden Analiz</button>
+  </div>
+  <div class="log" id="logTemizle"></div>
+</div>
+
+<script>
+const SILINEN_KEY = "ekoloji_ihlal_silinen";
+
+function log(elId, mesaj, append = true) {
+  const el = document.getElementById(elId);
+  el.classList.add("acik");
+  el.textContent = append ? el.textContent + mesaj + "\n" : mesaj + "\n";
+}
+
+function norm(s) {
+  return (s || "").toLowerCase()
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s]/g, "")
+    .replace(/\s+/g, " ").trim();
+}
+
+function anahtar(item) {
+  let url = (item.kaynak_url || item.url || "").trim().toLowerCase();
+  url = url.replace(/[?#].*$/, "").replace(/\/$/, "");
+  if (url && !url.includes("google") && url.length > 10) return "url::" + url;
+  return "baslik::" + norm(item.baslik || item.ad || "").slice(0, 60);
+}
+
+function veriYukle() {
+  return new Promise((resolve) => {
+    const silinen = (() => {
+      try { return new Set(JSON.parse(localStorage.getItem(SILINEN_KEY) || "[]").map(String)); }
+      catch { return new Set(); }
+    })();
+
+    const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
+      .filter(x => !silinen.has(String(x.id)));
+
+    fetch("ihlaller.json?v=" + Date.now())
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        const json = (Array.isArray(d) ? d : (d.ihlaller || []))
+          .filter(x => !silinen.has(String(x.id)));
+        const localIds = new Set(local.map(x => String(x.id)));
+        const birlesik = [...local, ...json.filter(x => !localIds.has(String(x.id)))];
+        resolve({ kayitlar: birlesik, silinen, kaynakJson: json });
+      })
+      .catch(() => {
+        resolve({ kayitlar: local, silinen, kaynakJson: [] });
+      });
+  });
+}
+
+let _dupGruplar = [];
+let _temizKayitlar = [];
+let _silinen;
+
+async function analiz() {
+  const btnA = document.getElementById("btnAnaliz");
+  btnA.disabled = true; btnA.textContent = "⏳ Analiz ediliyor…";
+  document.getElementById("logAnaliz").textContent = "";
+  document.getElementById("dupListe").innerHTML = "";
+  document.getElementById("kartTemizle").style.display = "none";
+  _dupGruplar = [];
+
+  const { kayitlar, silinen } = await veriYukle();
+  _silinen = silinen;
+
+  log("logAnaliz", `📂 Toplam kayıt: ${kayitlar.length}`);
+  log("logAnaliz", `🚫 Zaten silinmiş: ${silinen.size}`);
+
+  // Gruplama
+  const gruplar = {};
+  kayitlar.forEach(item => {
+    const k = anahtar(item);
+    if (!k.includes("::") || k.split("::")[1].length < 4) return; // anahtarı çok kısa
+    if (!gruplar[k]) gruplar[k] = [];
+    gruplar[k].push(item);
+  });
+
+  _dupGruplar = Object.values(gruplar).filter(g => g.length > 1);
+  const dupSayisi = _dupGruplar.reduce((acc, g) => acc + g.length - 1, 0);
+
+  log("logAnaliz", `✅ Unique kayıt  : ${kayitlar.length - dupSayisi}`);
+  log("logAnaliz", `🗑  Duplicate     : ${dupSayisi} (${_dupGruplar.length} grup)`);
+
+  if (_dupGruplar.length === 0) {
+    log("logAnaliz", "\n🎉 Duplicate bulunamadı, liste temiz!");
+    btnA.disabled = false; btnA.textContent = "🔍 Analiz Başlat";
+    return;
+  }
+
+  // Liste göster
+  const listeEl = document.getElementById("dupListe");
+  listeEl.innerHTML = `<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--warn);margin:14px 0 8px;">${_dupGruplar.length} duplicate grup:</div>
+    <div class="dup-liste">` +
+    _dupGruplar.map(grup =>
+      grup.map((item, i) =>
+        `<div class="dup-satir">
+          <span class="id">#${item.id || "?"}</span>
+          <span class="baslik">${(item.baslik || "").slice(0, 80)}</span>
+          <span style="color:${i===0?'var(--bright)':'var(--warn)'};">${i===0?"KORUNACAK":"SİLİNECEK"}</span>
+        </div>`
+      ).join("")
+    ).join(`<div style="height:6px;"></div>`) +
+    `</div>`;
+
+  // Temizle kartını aç
+  _temizKayitlar = kayitlar.filter(item => {
+    const k = anahtar(item);
+    const grup = gruplar[k];
+    if (!grup || grup.length <= 1) return true;
+    // Her gruptan sadece ilk (en eski/en dolu) kaydı tut
+    return grup[0] === item;
+  });
+
+  document.getElementById("temizleAcik").textContent =
+    `${dupSayisi} duplicate kayıt bulundu. "Duplicate Sil" tıklandığında bunlar localStorage'a silinmiş olarak işaretlenecek.`;
+  document.getElementById("kartTemizle").style.display = "block";
+
+  btnA.disabled = false; btnA.textContent = "🔍 Analiz Başlat";
+}
+
+function temizle() {
+  if (!_dupGruplar.length) return;
+  if (!confirm(`${_dupGruplar.reduce((a,g)=>a+g.length-1,0)} duplicate kaydı sil. Emin misiniz?`)) return;
+
+  const btnT = document.getElementById("btnTemizle");
+  btnT.disabled = true;
+
+  // Silinecek ID'leri topla (her gruptan 0. hariç hepsi)
+  const silSet = _silinen || new Set();
+  let eklenen = 0;
+
+  _dupGruplar.forEach(grup => {
+    grup.slice(1).forEach(item => {
+      if (item.id) { silSet.add(String(item.id)); eklenen++; }
+    });
+  });
+
+  localStorage.setItem(SILINEN_KEY, JSON.stringify([...silSet]));
+  log("logTemizle", `✓ ${eklenen} kayıt silindi olarak işaretlendi.`, false);
+  log("logTemizle", `  localStorage güncellendi: ${silSet.size} toplam silinmiş kayıt.`);
+  log("logTemizle", `\n→ Sayfayı yenile veya ihlaller.html'i aç, temizlenmiş listeyi göreceksin.`);
+
+  // İsteğe bağlı: SITE.set ile de güncelle
+  if (typeof SITE !== "undefined") {
+    SITE.set("ihlaller", _temizKayitlar);
+    log("logTemizle", `  SITE.ihlaller güncellendi: ${_temizKayitlar.length} kayıt.`);
+  }
+
+  document.getElementById("kartTemizle").innerHTML +=
+    `<div style="margin-top:14px;padding:12px 16px;background:rgba(45,158,107,.08);border:1px solid rgba(45,158,107,.2);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">
+      ✓ Temizleme tamamlandı. <a href="ihlaller.html" style="color:var(--accent);">İhlaller sayfasına dön →</a>
+    </div>`;
+
+  btnT.disabled = false;
+}
+</script>
+</body>
+</html>
