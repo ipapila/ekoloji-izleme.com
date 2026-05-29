@@ -26,7 +26,6 @@ jobs:
       - name: Mevcut haberler.json Plesk'ten İndir
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
           BASE_URL=$(echo "${WEBHOOK_URL}" | sed 's|/webhook\.php.*||')
           HTTP_STATUS=$(curl -s -o haberler.json -w "%{http_code}" \
@@ -62,7 +61,6 @@ jobs:
             python firebase_ihlal_export.py
           else
             echo "⚠ firebase_ihlal_export.py bulunamadı — scripti repoya ekle!"
-            echo "Konum: scripts/firebase_ihlal_export.py"
             exit 1
           fi
 
@@ -78,63 +76,3 @@ jobs:
                      haberler-stk.json haberler-diger.json || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
           git push || true
-
-      - name: Ana JSON'ları Plesk'e Gönder
-        env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-        run: |
-          HATALI=0
-          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json; do
-            if [ ! -f "$dosya" ]; then
-              echo "→ $dosya yok, atlanıyor"
-              continue
-            fi
-            BOYUT=$(wc -c < "$dosya")
-            echo "→ $dosya gönderiliyor... (${BOYUT} byte)"
-            for deneme in 1 2 3; do
-              HTTP_STATUS=$(curl -s -o /tmp/webhook_yanit.txt -w "%{http_code}" \
-                --max-time 60 \
-                -X POST \
-                -H "Content-Type: application/json" \
-                -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
-                --data-binary "@${dosya}" \
-                "${WEBHOOK_URL}?dosya=${dosya}" 2>/dev/null || echo "000")
-              echo "  Deneme ${deneme}: HTTP ${HTTP_STATUS}"
-              if [ "$HTTP_STATUS" = "200" ]; then break; fi
-              if [ "$deneme" -lt 3 ]; then sleep 5; fi
-            done
-            if [ "$HTTP_STATUS" != "200" ]; then
-              echo "  YANIT: $(cat /tmp/webhook_yanit.txt 2>/dev/null)"
-              HATALI=$((HATALI+1))
-            fi
-          done
-          if [ "$HATALI" -gt 0 ]; then
-            echo "⚠ ${HATALI} dosya gönderilemedi."
-          else
-            echo "✓ Tüm dosyalar başarıyla gönderildi."
-          fi
-
-      - name: Haberler Alt-Kategori JSON'larını Plesk'e Gönder
-        env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-        run: |
-          for dosya in haberler-iklim.json haberler-maden.json haberler-orman.json \
-                       haberler-su.json haberler-yaban.json haberler-direnis.json \
-                       haberler-hukuki.json haberler-nobet.json haberler-ihaklar.json \
-                       haberler-stk.json haberler-diger.json; do
-            if [ ! -f "$dosya" ]; then continue; fi
-            HTTP_STATUS=$(curl -s -o /tmp/yanit.txt -w "%{http_code}" \
-              --max-time 60 \
-              -X POST \
-              -H "Content-Type: application/json" \
-              -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
-              --data-binary "@${dosya}" \
-              "${WEBHOOK_URL}?dosya=${dosya}" 2>/dev/null || echo "000")
-            if [ "$HTTP_STATUS" = "200" ]; then
-              echo "✓ $dosya gönderildi"
-            else
-              echo "⚠ $dosya gönderilemedi (HTTP ${HTTP_STATUS}) — webhook.php izin listesine ekle"
-            fi
-          done
