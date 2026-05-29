@@ -244,9 +244,6 @@
 </footer>
 
 <script>
-/* ════════════════════════════════════════════════════════
-   ADMIN SİLME — orijinal _adminMod ile birebir aynı
-════════════════════════════════════════════════════════ */
 const _adminMod = {
   keys: {
     ihlaller: "ekoloji_ihlal_silinen",
@@ -270,19 +267,10 @@ const _adminMod = {
   }
 };
 
-/* ════════════════════════════════════════════════════════
-   DURUM
-════════════════════════════════════════════════════════ */
-let allData      = [];   /* tüm yüklü kayıtlar */
+let allData      = [];
 let activeFilter = "hepsi";
-let activeSkat   = "";   /* sidebar kategori filtresi */
+let activeSkat   = "";
 
-/* ════════════════════════════════════════════════════════
-   SIDEBAR: kategori tespiti
-   data-skat değerleri — kategori alanında substring arama
-════════════════════════════════════════════════════════ */
-
-/* data-skat → sayaç element ID */
 const SK_EL = {
   "Maden":        "sk-Maden",
   "Taş":          "sk-Tas",
@@ -308,7 +296,6 @@ const SK_EL = {
 
 function _n(s){ return (s||"").toLowerCase(); }
 
-/* Bir kaydın hangi sidebar key'lerine girdiğini döner (birden fazla olabilir) */
 function katEslestir(item){
   const hay = _n((item.kategori||"")+" "+(item.baslik||"")+" "+(item.aciklama||""));
   const sonuc = [];
@@ -356,9 +343,6 @@ function setSidebarKat(el){
   filter();
 }
 
-/* ════════════════════════════════════════════════════════
-   ORJINAL RENDER + FİLTRE MANTIĞI (değiştirilmedi)
-════════════════════════════════════════════════════════ */
 function formatDate(d) {
   if (!d) return "—";
   return new Date(d).toLocaleDateString("tr-TR", { day:"numeric", month:"short", year:"numeric" });
@@ -373,27 +357,29 @@ function render(data) {
     if(countEl) countEl.innerHTML = "0 kayıt"; return;
   }
   if(countEl) countEl.innerHTML = `<b>${data.length}</b> ihlal kaydı gösteriliyor`;
-  list.innerHTML = data.map(item => `
+  list.innerHTML = data.map(item => {
+    const kaynakUrl = item.kaynak_url || item.url || "";
+    return `
     <div class="ihlal-row ${item.siddet}" onclick="openModal('${item.id}')">
       <div><span class="sev ${item.siddet}">${(item.siddet||'').charAt(0).toUpperCase()+(item.siddet||'').slice(1)}</span></div>
       <div>
         <h3>${item.baslik}</h3>
         <div class="meta">${item.konum||''}${item.konum&&item.kategori?' · ':''}${item.kategori ? `<span onclick="event.stopPropagation();document.getElementById('searchBox').value='${item.kategori}';filter()" style="cursor:pointer;text-decoration:underline dotted;" title="Bu kategoride ara">${item.kategori}</span>` : ''}${item.kaynak ? ' · ' + item.kaynak : ''}</div>
         ${item.aciklama ? `<div class="desc">${item.aciklama}</div>` : ''}
+        ${kaynakUrl ? `<div style="margin-top:7px;"><a href="${kaynakUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid rgba(45,158,107,.25);border-radius:2px;background:rgba(45,158,107,.07);transition:all .2s;" onmouseover="this.style.background='rgba(45,158,107,.15)'" onmouseout="this.style.background='rgba(45,158,107,.07)'">↗ Kaynağa git</a></div>` : ''}
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
         <span class="date">${formatDate(item.tarih)}</span>
         ${adminMod ? `<button class="admin-sil-btn" onclick="event.stopPropagation();ihlalSil('${item.id}')">SİL</button>` : ''}
       </div>
     </div>
-  `).join("");
+  `}).join("");
 }
 
 function filter() {
   const q = (document.getElementById("searchBox").value || "").toLowerCase();
   let data = allData;
   if (activeFilter !== "hepsi") data = data.filter(i => i.siddet === activeFilter);
-  /* sidebar filtresi — substring eşleşmesi */
   if (activeSkat) {
     data = data.filter(i => katEslestir(i).includes(activeSkat));
   }
@@ -414,6 +400,7 @@ function openModal(id) {
   if (!item) return;
   const etiketler = Array.isArray(item.etiketler) ? item.etiketler : (item.etiketler ? (() => { try { return JSON.parse(item.etiketler); } catch(e){ return []; } })() : []);
   const chipsHTML = etiketler.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">${etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.2);color:#4db888;">${e}</span>`).join("")}</div>` : "";
+  const kaynakUrl = item.kaynak_url || item.url || "";
   document.getElementById("modalContent").innerHTML = `
     ${item.foto_url ? `<img src="${item.foto_url}" alt="${item.baslik}" onerror="this.style.display='none'" style="width:100%;max-height:300px;object-fit:cover;border-radius:5px;margin-bottom:16px;border:1px solid rgba(45,158,107,.15);">` : ""}
     <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
@@ -426,7 +413,7 @@ function openModal(id) {
     <div class="modal-field"><label>Tarih</label><p>${formatDate(item.tarih)}</p></div>
     ${item.kaynak ? `<div class="modal-field"><label>Kaynak</label><p>${item.kaynak}</p></div>` : ''}
     ${item.aciklama ? `<div class="modal-field"><label>Açıklama</label><p>${item.aciklama}</p></div>` : ''}
-    ${item.kaynak_url ? `<div style="margin-top:18px;"><a href="${item.kaynak_url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Kaynağa Git →</a></div>` : ''}
+    ${kaynakUrl ? `<div style="margin-top:18px;"><a href="${kaynakUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Kaynağa Git →</a></div>` : ''}
   `;
   document.getElementById("modal").classList.add("open");
 }
@@ -445,9 +432,6 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
 });
 document.getElementById("searchBox").addEventListener("input", filter);
 
-/* ════════════════════════════════════════════════════════
-   VERİ YÜKLEME — orijinal ihlaller.html ile birebir aynı
-════════════════════════════════════════════════════════ */
 const silinen = _adminMod.getSilinen("ihlaller");
 const urlKat  = new URLSearchParams(location.search).get("kat");
 
@@ -465,7 +449,6 @@ function mergeWithLocal(jsonIhlaller) {
 function applyAndRender(merged) {
   allData = merged;
   if (urlKat) {
-    /* URL'den gelen kat: önce sidebar'da eşleştir, yoksa arama kutusuna yaz */
     activeSkat = urlKat;
     document.querySelectorAll(".kat-item,.kat-tumü").forEach(el => {
       el.classList.toggle("aktif-kat", (el.dataset.skat||"") === urlKat ||
@@ -476,7 +459,6 @@ function applyAndRender(merged) {
   filter();
 }
 
-/* Fetch zinciri — orijinal ile aynı */
 (()=>{ const c=new AbortController(); setTimeout(()=>c.abort(),8000); return fetch("ihlaller.json?v="+Date.now(),{signal:c.signal}); })()
   .then(r => { if (!r.ok) throw new Error("ihlaller.json yok"); return r.json(); })
   .then(d => {
