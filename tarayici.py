@@ -8,6 +8,9 @@ v4 YENİLİKLERİ:
   - `icerik_tipi` ve `dil` alanları eklendi
   - SSL hataları otomatik aşılır (verify=False fallback)
   - `haber_kategorisi` alanı: 9 görüntü kategorisinden birini atar
+  - `_haber_kat` alanı eklendi (frontend filtresiyle uyumlu)
+  - Başlık suffix temizleme (duplicate azaltma)
+  - Bekleme süreleri düşürüldü (timeout optimizasyonu)
 """
 
 import argparse
@@ -601,8 +604,33 @@ EKOSISTEM_ANAHTAR = {
     "Kadınlar & Ekoloji":            ["kadın"],
 }
 
+# ── FIX 1: Başlık suffix temizleme — duplicate azaltma ──────────
+KAYNAK_SUFFIKSLERI = [
+    " - Bianet", " - İklim Haber", " - Yeşil Gazete", " - Evrensel",
+    " - Birgün", " - TEMA", " - Greenpeace", " - T24", " - Diken",
+    " - Artı Gerçek", " - Sözcü", " - Cumhuriyet", " - Medyascope",
+    " - Gazete Pencere", " - Carbon Brief", " - The Guardian",
+    " - Mongabay", " | Bianet", " | T24", " | Diken",
+]
+
+
+def baslik_temizle(baslik: str, kaynak: str) -> str:
+    """Başlık sonundaki ' - Kaynak Adı' suffix'ini temizler."""
+    for suffix in KAYNAK_SUFFIKSLERI:
+        if baslik.endswith(suffix):
+            return baslik[:-len(suffix)].strip()
+    # Dinamik kaynak adıyla da dene
+    for sep in [" - ", " | "]:
+        suffix_dyn = sep + kaynak
+        if baslik.endswith(suffix_dyn):
+            return baslik[:-len(suffix_dyn)].strip()
+    return baslik
+
 
 def zenginlestir(kayit: dict) -> dict:
+    # ── FIX 1 uygula: başlığı temizle ───────────────────────────
+    kayit["baslik"] = baslik_temizle(kayit.get("baslik", ""), kayit.get("kaynak", ""))
+
     metin  = (kayit.get("baslik", "") + " " + kayit.get("ozet", "")).lower()
     eylem  = kayit.get("eylem")
     etiket = list(kayit.get("etiketler") or [])
@@ -624,7 +652,10 @@ def zenginlestir(kayit: dict) -> dict:
         etiket.append(etiket_icerik)
     kayit["eylem"]            = eylem
     kayit["etiketler"]        = etiket
-    kayit["haber_kategorisi"] = haber_kategorisi_tespit(kayit)
+    # ── FIX 2: haber_kategorisi + _haber_kat birlikte set et ────
+    haber_kat = haber_kategorisi_tespit(kayit)
+    kayit["haber_kategorisi"] = haber_kat
+    kayit["_haber_kat"]       = haber_kat   # frontend filtresiyle uyumlu
     return kayit
 
 # ══════════════════════════════════════════════════════════════════
@@ -669,8 +700,6 @@ def baslik_normalize(baslik: str) -> str:
 
 
 def haber_id(url: str, baslik: str, kaynak: str = "") -> str:
-    """Stabil ID üretir. Google News URL'leri çalıştırmalar arasında değiştiği için
-    bu kaynaklarda baslik+kaynak kullanılır."""
     if url and ("news.google.com" in url or "/rss/articles/" in url):
         return hashlib.md5(f"{baslik_normalize(baslik)}|{kaynak.lower().strip()}".encode()).hexdigest()[:12]
     return hashlib.md5(f"{url_normalize(url)}|{baslik_normalize(baslik)}".encode()).hexdigest()[:12]
@@ -763,7 +792,8 @@ def rss_tara(kaynaklar: list) -> dict:
                 sonuc.setdefault(hedef, []).append(kayit)
                 kabul += 1
             log.info(f"  -> {kabul} kabul / {reddedilen} reddedildi")
-            time.sleep(0.8)
+            # ── FIX 3: Bekleme süresi düşürüldü (timeout optimizasyonu) ──
+            time.sleep(0.3)
         except Exception as e:
             log.warning(f"  RSS hatasi: {e}")
     return sonuc
@@ -835,7 +865,8 @@ def web_tara(kaynaklar: list) -> dict:
             log.info(f"  -> {kabul} kabul / {reddedilen} reddedildi")
         except Exception as e:
             log.warning(f"  Scrape hatasi: {e}")
-        time.sleep(1.2)
+        # ── FIX 3: Bekleme süresi düşürüldü ──────────────────────
+        time.sleep(0.4)
     return sonuc
 
 # ══════════════════════════════════════════════════════════════════
@@ -866,7 +897,11 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
         for h in eski.get(kol, []):
             gorulen_idler.add(h.get("id", ""))
             if h.get("url"):    gorulen_urller.add(url_normalize(h["url"]))
-            if h.get("baslik"): gorulen_basliklar.add(baslik_normalize(h["baslik"]))
+            # ── FIX 1: Eski kayıtlardaki başlıkları da temizle ──
+            if h.get("baslik"):
+                gorulen_basliklar.add(baslik_normalize(
+                    baslik_temizle(h["baslik"], h.get("kaynak", ""))
+                ))
 
     log.info("\n-- RSS: Haberler --")
     rss_haber = rss_tara(RSS_KAYNAKLARI)
@@ -895,9 +930,6 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
             h_id  = h["id"]
             h_url = url_normalize(h.get("url", ""))
             h_bas = baslik_normalize(h.get("baslik", ""))
-            # Google News URL'leri değiştiği için ID ile değil baslik+kaynak ile kontrol et
-            kaynak_str = h.get("kaynak", "").lower().strip()
-            h_stabil = f"{h_bas}|{kaynak_str}" if h_bas else None
             if h_id in gorulen_idler:
                 continue
             if h_url and h_url in gorulen_urller and "news.google.com" not in h_url:
@@ -945,7 +977,6 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
         **koleksiyonlar,
     }
 
-    # ── Ana dosyayı yaz (geriye dönük uyumluluk) ──────────────
     json_str = json.dumps(cikti, ensure_ascii=False, indent=2)
     try:
         json.loads(json_str)
@@ -957,7 +988,6 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
     tmp.write_text(json_str, encoding="utf-8")
     tmp.replace(p)
 
-    # ── Kategorileri ayrı dosyalara yaz ───────────────────────
     cikti_dir = p.parent
     dosya_haritasi = {
         "haberler":     "haberler_veri.json",
