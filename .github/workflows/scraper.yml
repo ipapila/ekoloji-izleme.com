@@ -6,6 +6,7 @@ on:
 jobs:
   tara-ve-gonder:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: write
     steps:
@@ -16,6 +17,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Bağımlılıkları Yükle
         run: |
@@ -38,6 +40,7 @@ jobs:
           fi
 
       - name: Tarayıcıyı Çalıştır
+        timeout-minutes: 20
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
@@ -51,7 +54,6 @@ jobs:
 
       - name: Firebase İhlal Export
         run: |
-          # Script nerede olursa olsun bul ve çalıştır
           if [ -f "scripts/firebase_ihlal_export.py" ]; then
             echo "scripts/ klasöründen çalıştırılıyor"
             python scripts/firebase_ihlal_export.py
@@ -82,7 +84,6 @@ jobs:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
-          # Plesk webhook'un izin verdiği dosyalar
           HATALI=0
           for dosya in haberler.json ihlaller.json raporlar.json makaleler.json ekosistem.json kuresel.json data.json; do
             if [ ! -f "$dosya" ]; then
@@ -119,7 +120,6 @@ jobs:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
-          # Bu dosyalar webhook'ta izin listesinde yoksa 400 verir — hata sayılmaz
           for dosya in haberler-iklim.json haberler-maden.json haberler-orman.json \
                        haberler-su.json haberler-yaban.json haberler-direnis.json \
                        haberler-hukuki.json haberler-nobet.json haberler-ihaklar.json \
