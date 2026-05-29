@@ -15,6 +15,7 @@ define('IZIN_DOSYA',  [
     'data.json', 'ihlaller.json', 'haberler.json',
     'rapor.json', 'icerik.json', 'raporlar.json',
     'makaleler.json', 'ekosistem.json', 'kuresel.json',
+    'gunluk-raporlar.json',
     // Haberler alt-kategori dosyaları
     'haberler-iklim.json', 'haberler-maden.json', 'haberler-orman.json',
     'haberler-su.json',    'haberler-yaban.json',  'haberler-direnis.json',
@@ -35,7 +36,26 @@ if ($token_header !== SECRET && $token_query !== SECRET) {
 
 $action = $_GET['action'] ?? '';
 
-// ACTION: tara
+// ── ACTION: dosya indir (GET) ─────────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && !$action) {
+    $dosya = basename($_GET['dosya'] ?? $_GET['file'] ?? '');
+    if (!$dosya || !in_array($dosya, IZIN_DOSYA, true)) {
+        http_response_code(400);
+        echo json_encode(['ok' => false, 'hata' => 'İzin verilmeyen dosya: ' . $dosya]);
+        exit;
+    }
+    $yol = HEDEF_DIZIN . $dosya;
+    if (!file_exists($yol)) {
+        http_response_code(404);
+        echo json_encode(['ok' => false, 'hata' => 'Dosya bulunamadı: ' . $dosya]);
+        exit;
+    }
+    // JSON olarak servis et
+    readfile($yol);
+    exit;
+}
+
+// ── ACTION: tara ──────────────────────────────────────────────────────
 if ($action === 'tara') {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
@@ -68,7 +88,7 @@ if ($action === 'tara') {
     exit;
 }
 
-// ACTION: durum
+// ── ACTION: durum ─────────────────────────────────────────────────────
 if ($action === 'durum') {
     $calisiyor = false;
     $pid       = null;
@@ -83,7 +103,7 @@ if ($action === 'durum') {
     }
     $dosya_durumu = [];
     foreach (['haberler.json', 'ihlaller.json', 'raporlar.json', 'makaleler.json',
-              'ekosistem.json', 'kuresel.json'] as $d) {
+              'ekosistem.json', 'kuresel.json', 'gunluk-raporlar.json'] as $d) {
         $yol = HEDEF_DIZIN . $d;
         $dosya_durumu[$d] = file_exists($yol)
             ? ['boyut_kb' => round(filesize($yol) / 1024, 1),
@@ -96,7 +116,7 @@ if ($action === 'durum') {
     exit;
 }
 
-// Varsayılan: JSON dosyası yaz
+// ── Varsayılan: JSON dosyası yaz (POST) ──────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['ok' => false, 'hata' => 'Yalnızca POST kabul edilir']);
