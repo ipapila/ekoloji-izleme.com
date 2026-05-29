@@ -1,9 +1,9 @@
 name: Günlük Rapor Üretimi
 
 on:
-  workflow_dispatch:         # Admin panelinden manuel tetikleme
+  workflow_dispatch:
   schedule:
-    - cron: '0 7 * * *'     # Her gün 07:00 UTC = 10:00 Türkiye saati
+    - cron: '0 7 * * *'
 
 jobs:
   rapor-uret:
@@ -13,11 +13,9 @@ jobs:
 
     steps:
 
-      # ── 1. Repo'yu çek ─────────────────────────────────────────
       - name: Repo Kodlarını Çek
         uses: actions/checkout@v4
 
-      # ── 2. Python kur ──────────────────────────────────────────
       - name: Python Kurulumu
         uses: actions/setup-python@v5
         with:
@@ -26,7 +24,6 @@ jobs:
       - name: Bağımlılıkları Yükle
         run: pip install requests
 
-      # ── 3. Plesk'ten güncel veri dosyalarını indir ─────────────
       - name: Güncel Verileri Plesk'ten İndir
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
@@ -41,8 +38,6 @@ jobs:
               echo "⚠ ${dosya} indirilemedi (HTTP ${STATUS})"
             fi
           done
-
-          # gunluk-raporlar.json arşivini de çek (varsa)
           STATUS=$(curl -s -o "gunluk-raporlar.json" -w "%{http_code}" \
             --max-time 30 "${BASE_URL}/gunluk-raporlar.json" 2>/dev/null || echo "000")
           if [ "$STATUS" = "200" ]; then
@@ -51,25 +46,36 @@ jobs:
             echo "ℹ gunluk-raporlar.json henüz yok, sıfırdan oluşturulacak"
           fi
 
-      # ── 4. Raporu Üret ─────────────────────────────────────────
       - name: Günlük Raporu Üret
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO_OWNER: ${{ github.repository_owner }}
           GITHUB_REPO_NAME: ${{ github.event.repository.name }}
         run: python scripts/rapor_uret.py
 
-      # ── 5. Üretilen dosyaları repo'ya commit et ────────────────
+      - name: Rapor Dosyası Üretildi mi Kontrol Et
+        run: |
+          if [ ! -f "rapor.json" ]; then
+            echo "HATA: rapor.json oluşturulmadı!"
+            exit 1
+          fi
+          echo "✓ rapor.json mevcut ($(wc -c < rapor.json) byte)"
+          if [ ! -f "gunluk-raporlar.json" ]; then
+            echo "HATA: gunluk-raporlar.json oluşturulmadı!"
+            exit 1
+          fi
+          echo "✓ gunluk-raporlar.json mevcut"
+
       - name: Değişiklikleri Commit Et
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
-          git add rapor.json gunluk-raporlar.json || true
-          git diff --staged --quiet || git commit -m "Günlük Rapor: $(date +'%Y-%m-%d')"
+          git add rapor.json gunluk-raporlar.json
+          git diff --staged --quiet \
+            && echo "Değişiklik yok, commit atlandı." \
+            || git commit -m "Günlük Rapor: $(date +'%Y-%m-%d')"
           git push || true
 
-      # ── 6. Her iki dosyayı Plesk'e gönder ─────────────────────
       - name: Dosyaları Plesk'e Gönder
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
@@ -79,7 +85,6 @@ jobs:
             echo "WEBHOOK_URL tanımlı değil, Plesk adımı atlandı."
             exit 0
           fi
-
           for dosya in rapor.json gunluk-raporlar.json; do
             if [ ! -f "${dosya}" ]; then
               echo "⚠ ${dosya} bulunamadı, atlandı."
