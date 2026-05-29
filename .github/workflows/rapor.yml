@@ -24,28 +24,28 @@ jobs:
       - name: Bağımlılıkları Yükle
         run: pip install requests
 
+      # ── Plesk'ten güncel veri dosyalarını indir ─────────────────
       - name: Güncel Verileri Plesk'ten İndir
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
-          BASE_URL=$(echo "${WEBHOOK_URL}" | sed 's|/webhook\.php.*||')
-          for dosya in haberler.json ihlaller.json raporlar.json; do
+          for dosya in haberler.json ihlaller.json raporlar.json gunluk-raporlar.json; do
             STATUS=$(curl -s -o "${dosya}" -w "%{http_code}" \
-              --max-time 30 "${BASE_URL}/${dosya}" 2>/dev/null || echo "000")
+              --max-time 30 \
+              -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
+              "${WEBHOOK_URL}?dosya=${dosya}" 2>/dev/null || echo "000")
             if [ "$STATUS" = "200" ]; then
               echo "✓ ${dosya} indirildi"
+            elif [ "$STATUS" = "404" ]; then
+              echo "ℹ ${dosya} henüz yok, sıfırdan oluşturulacak"
+              rm -f "${dosya}"
             else
               echo "⚠ ${dosya} indirilemedi (HTTP ${STATUS})"
             fi
           done
-          STATUS=$(curl -s -o "gunluk-raporlar.json" -w "%{http_code}" \
-            --max-time 30 "${BASE_URL}/gunluk-raporlar.json" 2>/dev/null || echo "000")
-          if [ "$STATUS" = "200" ]; then
-            echo "✓ gunluk-raporlar.json indirildi"
-          else
-            echo "ℹ gunluk-raporlar.json henüz yok, sıfırdan oluşturulacak"
-          fi
 
+      # ── Raporu Üret ─────────────────────────────────────────────
       - name: Günlük Raporu Üret
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -53,19 +53,21 @@ jobs:
           GITHUB_REPO_NAME: ${{ github.event.repository.name }}
         run: python scripts/rapor_uret.py
 
-      - name: Rapor Dosyası Üretildi mi Kontrol Et
+      # ── Dosya kontrolü ──────────────────────────────────────────
+      - name: Rapor Dosyası Kontrol Et
         run: |
           if [ ! -f "rapor.json" ]; then
             echo "HATA: rapor.json oluşturulmadı!"
             exit 1
           fi
-          echo "✓ rapor.json mevcut ($(wc -c < rapor.json) byte)"
+          echo "✓ rapor.json ($(wc -c < rapor.json) byte)"
           if [ ! -f "gunluk-raporlar.json" ]; then
             echo "HATA: gunluk-raporlar.json oluşturulmadı!"
             exit 1
           fi
-          echo "✓ gunluk-raporlar.json mevcut"
+          echo "✓ gunluk-raporlar.json"
 
+      # ── Repo'ya commit et ───────────────────────────────────────
       - name: Değişiklikleri Commit Et
         run: |
           git config --local user.email "action@github.com"
@@ -76,13 +78,14 @@ jobs:
             || git commit -m "Günlük Rapor: $(date +'%Y-%m-%d')"
           git push || true
 
+      # ── Dosyaları Plesk'e gönder ────────────────────────────────
       - name: Dosyaları Plesk'e Gönder
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
           if [ -z "${WEBHOOK_URL}" ]; then
-            echo "WEBHOOK_URL tanımlı değil, Plesk adımı atlandı."
+            echo "WEBHOOK_URL tanımlı değil, atlandı."
             exit 0
           fi
           for dosya in rapor.json gunluk-raporlar.json; do
@@ -92,13 +95,13 @@ jobs:
             fi
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
               --max-time 30 \
-              -X POST "${WEBHOOK_URL}" \
+              -X POST "${WEBHOOK_URL}?dosya=${dosya}" \
               -H "Content-Type: application/json" \
               -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
               --data-binary "@${dosya}" 2>/dev/null || echo "000")
             if [ "$STATUS" = "200" ] || [ "$STATUS" = "201" ]; then
               echo "✓ ${dosya} Plesk'e gönderildi"
             else
-              echo "⚠ ${dosya} Plesk gönderilemedi (HTTP ${STATUS})"
+              echo "⚠ ${dosya} gönderilemedi (HTTP ${STATUS})"
             fi
           done
