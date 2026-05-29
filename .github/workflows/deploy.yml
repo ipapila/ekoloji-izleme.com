@@ -1,0 +1,3 @@
+# .github/workflows/deploy.yml
+- name: Trigger Plesk deploy
+  run: curl -X POST "${{ secrets.WEBHOOK_URL }}"
