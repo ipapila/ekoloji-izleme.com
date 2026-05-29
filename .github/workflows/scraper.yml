@@ -7,6 +7,8 @@ jobs:
   tara-ve-gonder:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     permissions:
       contents: write
     steps:
@@ -23,13 +25,19 @@ jobs:
         run: |
           pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
 
-      - name: Mevcut haberler.json'u Repo'dan Kullan
+      - name: Mevcut haberler.json Plesk'ten İndir
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         run: |
-          if [ -f "haberler.json" ]; then
+          BASE_URL=$(echo "${WEBHOOK_URL}" | sed 's|/webhook\.php.*||')
+          HTTP_STATUS=$(curl -s -o haberler.json -w "%{http_code}" \
+            --max-time 30 "${BASE_URL}/haberler.json" 2>/dev/null || echo "000")
+          if [ "$HTTP_STATUS" = "200" ]; then
             KAYIT=$(python3 -c "import json; d=json.load(open('haberler.json')); print(len(d.get('haberler',[])))" 2>/dev/null || echo "?")
-            echo "✓ haberler.json repoda mevcut: ${KAYIT} kayıt"
+            echo "✓ haberler.json indirildi: ${KAYIT} mevcut kayıt"
           else
-            echo "⚠ haberler.json repoda yok — sıfırdan başlanıyor"
+            echo "⚠ haberler.json indirilemedi (HTTP ${HTTP_STATUS}) — sıfırdan başlanıyor"
+            rm -f haberler.json
           fi
 
       - name: Tarayıcıyı Çalıştır
@@ -62,12 +70,11 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
-          git pull --rebase origin main || true
           git add -f haberler.json ihlaller.json raporlar.json makaleler.json \
                      ekosistem.json kuresel.json data.json \
                      haberler-iklim.json haberler-maden.json haberler-orman.json \
                      haberler-su.json haberler-yaban.json haberler-direnis.json \
-                     haberler-hukuki.json haberler-nobet.json haberler-stk.json \
-                     haberler-diger.json 2>/dev/null || true
+                     haberler-hukuki.json haberler-nobet.json haberler-ihaklar.json \
+                     haberler-stk.json haberler-diger.json || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
-          git push origin main || true
+          git push || true
