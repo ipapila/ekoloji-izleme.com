@@ -14,15 +14,20 @@
 error_reporting(0);
 ini_set('display_errors', 0);
 
-$env_file = __DIR__ . '/.env';
-if (file_exists($env_file)) {
-    foreach (file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
-            [$k, $v] = explode('=', $line, 2);
+$ef = __DIR__ . '/.env';
+if (file_exists($ef)) {
+    foreach (file($ef, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $l) {
+        if (strpos($l, '=') !== false && strpos($l, '#') !== 0) {
+            [$k, $v] = explode('=', $l, 2);
             putenv(trim($k) . '=' . trim($v));
         }
     }
 }
+
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('X-Content-Type-Options: nosniff');
+
 /* ── Hata handler ── */
 function hata(string $msg, int $code = 400): void {
     http_response_code($code);
@@ -48,7 +53,7 @@ if (!hash_equals($_beklenen, $secret)) {
 
 /* ── Klasör kontrolü ── */
 $klasor = trim($_POST['klasor'] ?? '');
-$izinli_klasorler = ['ortam', 'dosya'];
+$izinli_klasorler = ['ortam', 'dosya', 'kok'];
 if (!in_array($klasor, $izinli_klasorler, true)) {
     hata('Geçersiz klasör: "' . htmlspecialchars($klasor) . '"');
 }
@@ -106,7 +111,7 @@ if ($klasor === 'ortam' && function_exists('mime_content_type')) {
 }
 
 /* ── Hedef klasörü oluştur ── */
-$hedef_klasor = __DIR__ . '/' . $klasor . '/';
+$hedef_klasor = $klasor === 'kok' ? __DIR__ . '/' : __DIR__ . '/' . $klasor . '/';
 if (!is_dir($hedef_klasor)) {
     if (!mkdir($hedef_klasor, 0755, true)) {
         hata('Klasör oluşturulamadı: ' . $klasor, 500);
