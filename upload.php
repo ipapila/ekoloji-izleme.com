@@ -11,13 +11,19 @@
  *   { ok: true,  url: "https://...", ad: "dosyaadi.jpg" }
  *   { ok: false, hata: "açıklama" }
  */
-<?php
 error_reporting(0);
 ini_set('display_errors', 0);
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('X-Content-Type-Options: nosniff');
 
+// .env dosyasından oku
+$env_file = __DIR__ . '/.env';
+if (file_exists($env_file)) {
+    foreach (file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
+            [$k, $v] = explode('=', $line, 2);
+            putenv(trim($k) . '=' . trim($v));
+        }
+    }
+}
 /* ── Hata handler ── */
 function hata(string $msg, int $code = 400): void {
     http_response_code($code);
