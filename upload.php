@@ -11,7 +11,9 @@
  *   { ok: true,  url: "https://...", ad: "dosyaadi.jpg" }
  *   { ok: false, hata: "açıklama" }
  */
-
+<?php
+error_reporting(0);
+ini_set('display_errors', 0);
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('X-Content-Type-Options: nosniff');
