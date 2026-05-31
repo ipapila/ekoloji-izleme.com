@@ -14,43 +14,37 @@ jobs:
     steps:
       - name: Repo Kodlarını Çek
         uses: actions/checkout@v4
-
       - name: Python Kurulumu
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
-
       - name: Bağımlılıkları Yükle
         run: pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
-
       - name: Güncel JSON'ları Plesk'ten İndir
         env:
           SITE_URL: ${{ secrets.SITE_URL }}
         run: |
-          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json kuresel.json ekosistem.json; do
+          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json kuresel.json ekosistem.json direnis.json haberler-maden.json haberler-iklim.json haberler-su.json haberler-yaban.json haberler-stk.json haberler-orman.json haberler-direnis.json haberler-hukuki.json; do
             curl -sf "${SITE_URL}/${dosya}" -o "${dosya}" && \
               echo "✓ ${dosya} indirildi ($(wc -c < ${dosya}) byte)" || \
               echo "⚠ ${dosya} indirilemedi, atlanıyor"
           done
-
       - name: Tarayıcıyı Çalıştır
         timeout-minutes: 20
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python tarayici.py --cikti haberler.json
-
       - name: Dağıtıcıyı Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python dagitici.py
-
       - name: JSON'ları Plesk'e Gönder
         env:
           UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
           SITE_URL: ${{ secrets.SITE_URL }}
         run: |
-          for dosya in haberler.json ihlaller.json haberler_veri.json raporlar_veri.json makaleler_veri.json uluslararasi_veri.json ekosistem_veri.json raporlar.json makaleler.json kuresel.json ekosistem.json haberler-maden.json haberler-iklim.json haberler-su.json haberler-yaban.json haberler-stk.json haberler-orman.json haberler-direnis.json haberler-hukuki.json; do
+          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json kuresel.json ekosistem.json direnis.json haberler-maden.json haberler-iklim.json haberler-su.json haberler-yaban.json haberler-stk.json haberler-orman.json haberler-direnis.json haberler-hukuki.json; do
             if [ -f "$dosya" ]; then
               echo "Gönderiliyor: $dosya"
               HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
@@ -63,17 +57,14 @@ jobs:
               echo "⚠ $dosya bulunamadı, atlanıyor"
             fi
           done
-
       - name: JSON'ları Repo'ya Commit Et
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
-          git add -f haberler.json ihlaller.json haberler_veri.json \
-            raporlar_veri.json makaleler_veri.json uluslararasi_veri.json \
-            ekosistem_veri.json raporlar.json makaleler.json kuresel.json \
-            ekosistem.json haberler-maden.json haberler-iklim.json \
-            haberler-su.json haberler-yaban.json haberler-stk.json \
-            haberler-orman.json haberler-direnis.json haberler-hukuki.json \
-            2>/dev/null || true
+          git add -f haberler.json ihlaller.json raporlar.json makaleler.json \
+            kuresel.json ekosistem.json direnis.json haberler-maden.json \
+            haberler-iklim.json haberler-su.json haberler-yaban.json \
+            haberler-stk.json haberler-orman.json haberler-direnis.json \
+            haberler-hukuki.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
           git push || true
