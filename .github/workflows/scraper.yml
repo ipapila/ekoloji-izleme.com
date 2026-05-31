@@ -41,7 +41,7 @@ jobs:
               HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
                 -X POST "${SITE_URL}/upload.php" \
                 -F "secret=${UPLOAD_SECRET}" \
-                -F "klasor=." \
+                -F "klasor=dosya" \
                 -F "dosya=@${dosya}")
               echo "HTTP $HTTP_CODE → $(cat /tmp/response.txt)"
               if [ "$HTTP_CODE" != "200" ]; then
