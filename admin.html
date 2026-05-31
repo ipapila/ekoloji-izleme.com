@@ -790,6 +790,12 @@ function tumVeriYukle(){
     _veri.ihlaller=[...lI,...ji.filter(x=>!iiDs.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
     const sr=(d.raporlar||[]).filter(x=>!sR.has(String(x.id)));const srIds=new Set(lR.map(x=>String(x.id)));
     _veri.raporlar=[...lR,...sr.filter(x=>!srIds.has(String(x.id)))].sort((a,b)=>(b.yil||0)>(a.yil||0)?-1:1);
+	fetch("raporlar.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(rd=>{
+      const rj=(rd.raporlar||[]).filter(x=>!sR.has(String(x.id)));
+      const mevIds=new Set(_veri.raporlar.map(x=>String(x.id)));
+      _veri.raporlar=[..._veri.raporlar,...rj.filter(x=>!mevIds.has(String(x.id)))].sort((a,b)=>(b.yil||0)>(a.yil||0)?-1:1);
+      tabloRender("raporlar");updateStats();
+  }).catch(()=>{});  
     const sm=(d.makaleler||[]).filter(x=>!sM.has(String(x.id)));const smIds=new Set(lM.map(x=>String(x.id)));
     _veri.makaleler=[...lM,...sm.filter(x=>!smIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
     const su=(d.uluslararasi||[]).filter(x=>!sU.has(String(x.id)));const suIds=new Set(lU.map(x=>String(x.id)));
