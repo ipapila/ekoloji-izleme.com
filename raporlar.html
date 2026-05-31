@@ -613,7 +613,8 @@ function acModal(id) {
   const mpdf = document.getElementById("mPdf");
   if (pdfUrl) {
     mpdf.href=pdfUrl;
-    mpdf.innerHTML = isPdf(pdfUrl)?`${DL} PDF İndir`:isDoc(pdfUrl)?`${DL} Dosyayı İndir`:`${SVG} Dosyayı Aç`;
+    const isHtml = u => u && /\.(html|htm)(\?|$)/i.test(u);
+	mpdf.innerHTML = isPdf(pdfUrl)?`${DL} PDF İndir`:isDoc(pdfUrl)?`${DL} Dosyayı İndir`:isHtml(pdfUrl)?`${SVG} HTML Raporu Oku`:`${SVG} Dosyayı Aç`;
     mpdf.style.display="inline-flex";
   } else { mpdf.style.display="none"; }
 
