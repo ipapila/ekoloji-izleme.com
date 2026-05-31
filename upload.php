@@ -133,7 +133,7 @@ if (!move_uploaded_file($_FILES['dosya']['tmp_name'], $hedef)) {
 $proto     = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host      = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $base_path = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
-$url       = $proto . '://' . $host . $base_path . '/' . $klasor . '/' . $yeni_ad;
+$url = $proto . '://' . $host . $base_path . '/' . $klasor . '/' . $yeni_ad;
 
 echo json_encode([
     'ok'  => true,
