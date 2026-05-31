@@ -1,4 +1,4 @@
-name: Ekoloji Izleme Botu v8
+name: Ekoloji Izleme Botu v9
 on:
   workflow_dispatch:
   schedule:
@@ -22,39 +22,46 @@ jobs:
           cache: 'pip'
 
       - name: Bağımlılıkları Yükle
-        run: |
-          pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
+        run: pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
 
       - name: Tarayıcıyı Çalıştır
         timeout-minutes: 20
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          python tarayici.py --cikti haberler.json
+        run: python tarayici.py --cikti haberler.json
 
       - name: Dağıtıcıyı Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          python dagitici.py
+        run: python dagitici.py
 
-      - name: Firebase İhlal Export
+      - name: JSON'ları Plesk'e Gönder
+        env:
+          UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
+          SITE_URL: ${{ secrets.SITE_URL }}
         run: |
-          if [ -f "scripts/firebase_ihlal_export.py" ]; then
-            echo "scripts/ klasöründen çalıştırılıyor"
-            python scripts/firebase_ihlal_export.py
-          elif [ -f "firebase_ihlal_export.py" ]; then
-            echo "Ana dizinden çalıştırılıyor"
-            python firebase_ihlal_export.py
-          else
-            echo "⚠ firebase_ihlal_export.py bulunamadı — scripti repoya ekle!"
-            exit 1
-          fi
+          for dosya in haberler.json ihlaller.json haberler_veri.json raporlar_veri.json makaleler_veri.json uluslararasi_veri.json ekosistem_veri.json; do
+            if [ -f "$dosya" ]; then
+              echo "Gönderiliyor: $dosya"
+              HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+                -X POST "${SITE_URL}/upload.php" \
+                -F "secret=${UPLOAD_SECRET}" \
+                -F "dosya=@${dosya}")
+              echo "HTTP $HTTP_CODE → $(cat /tmp/response.txt)"
+              if [ "$HTTP_CODE" != "200" ]; then
+                echo "⚠ $dosya gönderilemedi (HTTP $HTTP_CODE)"
+              fi
+            else
+              echo "⚠ $dosya bulunamadı, atlanıyor"
+            fi
+          done
 
       - name: JSON'ları Repo'ya Commit Et
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
-          git add -A -- '*.json' || git add -f haberler.json ihlaller.json data.json || true
+          git add -f haberler.json ihlaller.json haberler_veri.json \
+            raporlar_veri.json makaleler_veri.json uluslararasi_veri.json \
+            ekosistem_veri.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
           git push || true
