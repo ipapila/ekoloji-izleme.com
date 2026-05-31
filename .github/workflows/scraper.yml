@@ -34,23 +34,20 @@ jobs:
         env:
           UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
           SITE_URL: ${{ secrets.SITE_URL }}
-        run: |
-          for dosya in haberler.json ihlaller.json haberler_veri.json raporlar_veri.json makaleler_veri.json uluslararasi_veri.json ekosistem_veri.json; do
-            if [ -f "$dosya" ]; then
-              echo "Gönderiliyor: $dosya"
-              HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
-                -X POST "${SITE_URL}/upload.php" \
-                -F "secret=${UPLOAD_SECRET}" \
-                -F "klasor=kok" \
-                -F "dosya=@${dosya}")
-              echo "HTTP $HTTP_CODE → $(cat /tmp/response.txt)"
-              if [ "$HTTP_CODE" != "200" ]; then
-                echo "⚠ $dosya gönderilemedi (HTTP $HTTP_CODE)"
-              fi
-            else
-              echo "⚠ $dosya bulunamadı, atlanıyor"
-            fi
-          done
+    run: |
+      for dosya in haberler.json ihlaller.json haberler_veri.json raporlar_veri.json makaleler_veri.json uluslararasi_veri.json ekosistem_veri.json raporlar.json makaleler.json kuresel.json ekosistem.json haberler-maden.json haberler-iklim.json haberler-su.json haberler-yaban.json haberler-stk.json haberler-orman.json haberler-direnis.json haberler-hukuki.json; do
+      if [ -f "$dosya" ]; then
+        echo "Gönderiliyor: $dosya"
+        HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+          -X POST "${SITE_URL}/upload.php" \
+          -F "secret=${UPLOAD_SECRET}" \
+          -F "klasor=kok" \
+          -F "dosya=@${dosya}")
+        echo "HTTP $HTTP_CODE → $(cat /tmp/response.txt)"
+      else
+        echo "⚠ $dosya bulunamadı, atlanıyor"
+      fi
+    done
       - name: JSON'ları Repo'ya Commit Et
         run: |
           git config --local user.email "action@github.com"
