@@ -2909,6 +2909,27 @@
   ],
   "raporlar": [
     {
+      "id": 24,
+      "baslik": "Mavikent Adrasan Kumluca Entegre Rapor",
+      "tarih": "2026-05-31",
+      "yil": 2026,
+      "yazar": "ekoloji-izleme.com",
+      "tur": "Alan Araştırması",
+      "etiketler": [
+        "Ekolojik İhlal",
+        "Taş-Mermer Ocağı",
+        "Kıyı İhlalleri",
+        "Tarım & Köy",
+        "Su Hakkı",
+        "Hava Kirliliği",
+        "Deniz Kirliliği",
+        "Toprak Kirliliği"
+      ],
+      "ozet": "Bu rapor, Antalya'nın batı kıyı şeridinde yer alan beş yerleşim bölgesini kapsamaktadır: Mavikent, Kumluca, Demre, Finike ve Adrasan. QGIS tabanlı mekansal analiz çerçevesinde beş temel kirlilik kaynağı değerlendirilmiştir.",
+      "dosya": "https://ekoloji-izleme.com/dosya/Kumluca_rapor.pdf",
+      "foto_url": ""
+    },
+    {
       "id": 23,
       "baslik": "TÜRKİYE İKLİM RİSK DEĞERLENDİRME RAPORU",
       "yil": 2026,
@@ -3169,9 +3190,9 @@
     }
   ],
   "_meta": {
-    "guncelleme": "2026-05-31T10:07:10.138Z",
+    "guncelleme": "2026-05-31T13:09:20.475Z",
     "ihlal_sayisi": 140,
-    "rapor_sayisi": 13,
+    "rapor_sayisi": 14,
     "makale_sayisi": 2,
     "ulus_sayisi": 2
   }
