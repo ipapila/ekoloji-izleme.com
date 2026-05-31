@@ -14,7 +14,6 @@
 error_reporting(0);
 ini_set('display_errors', 0);
 
-// .env dosyasından oku
 $env_file = __DIR__ . '/.env';
 if (file_exists($env_file)) {
     foreach (file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
