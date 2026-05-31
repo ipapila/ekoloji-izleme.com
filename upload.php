@@ -116,7 +116,7 @@ if (!is_dir($hedef_klasor)) {
 /* ── Benzersiz dosya adı ── */
 $temiz_ad = preg_replace('/[^a-zA-Z0-9._-]/', '_', $orijinal_ad);
 $temiz_ad = preg_replace('/_+/', '_', $temiz_ad);  // çift alt çizgi temizle
-$yeni_ad  = date('Ymd_His') . '_' . $temiz_ad;
+$yeni_ad  = $temiz_ad;
 $hedef    = $hedef_klasor . $yeni_ad;
 
 /* ── Taşı ── */
