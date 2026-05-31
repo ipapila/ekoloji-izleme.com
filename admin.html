@@ -806,6 +806,7 @@ function tumVeriYukle(){
     const sDr=silGetir("direnis");const lDr=SITE.getList("direnis").filter(x=>!sDr.has(String(x.id)));
     const sdr=(d.direnis||[]).filter(x=>!sDr.has(String(x.id)));const sdrIds=new Set(lDr.map(x=>String(x.id)));
     _veri.direnis=[...lDr,...sdr.filter(x=>!sdrIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
+	if(lR.length)_veri.raporlar=[...lR,...(_veri.raporlar||[]).filter(x=>!new Set(lR.map(x=>String(x.id))).has(String(x.id)))].sort((a,b)=>(b.yil||0)>(a.yil||0)?-1:1);
     tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");tabloRender("ekosistem");tabloRender("direnis");
   }).catch(()=>{
     _veri.ihlaller=lI;_veri.raporlar=lR;_veri.makaleler=lM;_veri.uluslararasi=lU;
@@ -888,7 +889,7 @@ const form=alanlar.map(a=>{
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <input class="form-control" id="edit_dosya" type="url" value="${val}" style="flex:1;min-width:160px;">
         <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(100,160,255,.1);border:1px solid rgba(100,160,255,.3);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#7eb8ff;white-space:nowrap;flex-shrink:0;">📄 Yükle
-          <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.csv,.txt,.json,.geojson" style="display:none;" onchange="editDosyaYukle(this,'edit_dosya','edit_dosya_durum')">
+          <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.csv,.txt,.json,.geojson,.html,.htm" style="display:none;" onchange="editDosyaYukle(this,'edit_dosya','edit_dosya_durum')">
         </label>
       </div>
       <div id="edit_dosya_durum" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-top:5px;"></div>
