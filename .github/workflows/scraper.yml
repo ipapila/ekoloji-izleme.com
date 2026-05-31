@@ -14,27 +14,22 @@ jobs:
     steps:
       - name: Repo Kodlarını Çek
         uses: actions/checkout@v4
-
       - name: Python Kurulumu
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
-
       - name: Bağımlılıkları Yükle
         run: pip install requests beautifulsoup4 feedparser urllib3 lxml anthropic
-
       - name: Tarayıcıyı Çalıştır
         timeout-minutes: 20
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python tarayici.py --cikti haberler.json
-
       - name: Dağıtıcıyı Çalıştır
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python dagitici.py
-
       - name: JSON'ları Plesk'e Gönder
         env:
           UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
@@ -46,6 +41,7 @@ jobs:
               HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
                 -X POST "${SITE_URL}/upload.php" \
                 -F "secret=${UPLOAD_SECRET}" \
+                -F "klasor=." \
                 -F "dosya=@${dosya}")
               echo "HTTP $HTTP_CODE → $(cat /tmp/response.txt)"
               if [ "$HTTP_CODE" != "200" ]; then
@@ -55,7 +51,6 @@ jobs:
               echo "⚠ $dosya bulunamadı, atlanıyor"
             fi
           done
-
       - name: JSON'ları Repo'ya Commit Et
         run: |
           git config --local user.email "action@github.com"
