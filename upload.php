@@ -85,7 +85,7 @@ if ($klasor === 'ortam') {
         'pdf', 'doc', 'docx', 'xls', 'xlsx',
         'ppt', 'pptx', 'zip', 'rar', '7z',
         'csv', 'txt', 'json', 'geojson', 'kml', 'gpx',
-        'md', 'odt', 'ods',
+        'md', 'odt', 'ods', 'html', 'htm',
     ];
     $max_boyut_mb  = 50;
 }
