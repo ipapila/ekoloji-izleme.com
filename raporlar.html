@@ -583,7 +583,7 @@ function acModal(id) {
   const isPdf = u => u && /\.(pdf)(\?|$)/i.test(u);
   const isDoc = u => u && /\.(doc|docx|xls|xlsx|ppt|pptx)(\?|$)/i.test(u);
   const isHtml = u => u && /\.(html|htm)(\?|$)/i.test(u);
-	
+  mpdf.innerHTML = isPdf(pdfUrl)?...	
   const badgeRow = document.getElementById("mBadgeRow");
   badgeRow.innerHTML = "";
   const rb = document.createElement("span"); rb.className="badge badge-rapor"; rb.textContent="Rapor & Analiz"; badgeRow.appendChild(rb);
