@@ -1,4 +1,9 @@
 {
+  "meta": {
+    "guncelleme": "2026-06-02T03:05:56.413605+00:00",
+    "toplam": 14,
+    "yeni_eklenen": 0
+  },
   "raporlar": [
     {
       "id": 24,
@@ -24,20 +29,37 @@
     {
       "id": 23,
       "baslik": "TÜRKİYE İKLİM RİSK DEĞERLENDİRME RAPORU",
+      "tarih": "2026-05-24",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
       "tur": "Alan Araştırması",
       "etiketler": [
         "İklim Olayları"
       ],
-      "ozet": "ekoloji-izleme.com tarafından QGIS verilerine dayanılarak hazırlanan bu rapor, 2024-2050 dönemini kapsayan bir perspektifle Türkiye'nin yedi pilot ilindeki iklim değişikliği risklerini ve bu tehditlere karşı çözüm yollarını detaylandırmaktadır. Analizler; orman yangınları, su kıtlığı ve kıyı erozyonu gibi kritik alanlarda yüksek risk seviyeleri tespit ederek acil eylem planlarına ihtiyaç duyulduğunu vurgulamaktadır. Belge, çevresel felaketlerin önüne geçmek amacıyla yaklaşık 21,5 milyar TL tutarında kapsamlı bir yatırım ve finansman modeli önermektedir. Yapılacak bu yatırımların, ekonomik kayıpları engelleyerek maliyetinin çok üzerinde bir toplumsal ve çevresel fayda sağlayacağı öngörülmektedir. Sonuç olarak çalışma, sürdürülebilir bir gelecek için akıllı tarım, yenilenebilir enerji ve erken uyarı sistemleri gibi teknolojik dönüşümlerin hayata geçirilmesini tavsiye etmektedir.",
+      "ozet": "ekoloji-izleme.com tarafından QGIS verilerine dayanılarak hazırlanan bu rapor, 2024-2050 dönemini kapsayan bir perspektifle Türkiye'nin yedi pilot ilindeki iklim değişikliği risklerini ve bu tehditlere karşı çözüm yollarını detaylandırmaktadır.",
       "dosya": "https://ekoloji-izleme.com/dosya/Türkiye İklim Risk Raporu.pdf",
-      "foto_url": "https://ekoloji-izleme.com/ortam/iklim riski raporu.png",
-      "tarih": "2026-05-24"
+      "foto_url": "https://ekoloji-izleme.com/ortam/iklim riski raporu.png"
+    },
+    {
+      "id": 21,
+      "baslik": "DEVLET NE KARAR VERDİ?",
+      "tarih": "2026-05-24",
+      "yil": 2026,
+      "yazar": "ekoloji-izleme.com",
+      "tur": "Genel",
+      "etiketler": [
+        "Ekolojik İhlal",
+        "Acele Kamulaştırma",
+        "Milli Park"
+      ],
+      "ozet": "Resmî Gazete her sabah yayımlanır. Bu analiz, 19 Mart 2026 tarihli son Resmî Gazete sayısındaki dört önemli kararı anlatıyor.",
+      "dosya": "https://ekoloji-izleme.com/dosya/20260524_161711_devlet_ne_karar_verdi.docx.pdf",
+      "foto_url": ""
     },
     {
       "id": 22,
       "baslik": "Madencilik & Orman Tahribatı Türkiye | 2020 – Mayıs 2026",
+      "tarih": "2026-05-23",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
       "tur": "Alan Araştırması",
@@ -47,29 +69,43 @@
         "Maden Ocağı",
         "Orman Alanı"
       ],
-      "ozet": "Bu rapor, Türkiye'de 2020–Mayıs 2026 döneminde yaşanan madencilik faaliyetleri ve orman tahribatını belgelemektedir. Resmi istatistikler, STK raporları ve bağımsız araştırmalardan derlenen 36 kaydı kapsayan bu rapor şu tabloyu ortaya koymaktadır:\nSon 10 yılda 109.884 ha orman madenciliğe açılmıştır. 2008–2023 arasında 386.000 maden ruhsatı verilmiştir.\n2025 orman yangın sezonu 81.473 ha ile 2021'den sonra Cumhuriyet tarihinin ikinci en yıkıcı yılı olmuştur. İzmir Aliağa merkezli yangınlar 53 şehre yayılmış, 17 kişi hayatını kaybetmiş, 50.000+ kişi tahliye edilmiştir.\nErzincan İliç felaketi (13 Şubat 2024): 9 işçi göçük altında kaldı; Fırat Nehri havzasına siyanür karıştı.\nBartın-Amasra kömür madeni (Ekim 2022): 42 işçi yaşamını yitirdi.\nTemmuz 2025 Maden Kanunu değişikliği: Zeytinliklerde madenciliğe 'kamu yararı' kapısı açıldı; orman dışı alanlarda sessiz onay mekanizması getirildi.\nNisan 2026 itibarıyla Ordu-Aybastı Perşembe Yaylası'nda Taşzemin Madencilik, mahkeme kararına rağmen 250–300 jandarma koruması eşliğinde sit alanına iş makineleriyle girdi.\n\nTamamını okumak için raporu indirebilirsiniz.",
+      "ozet": "Bu rapor, Türkiye'de 2020–Mayıs 2026 döneminde yaşanan madencilik faaliyetleri ve orman tahribatını belgelemektedir.",
       "dosya": "https://ekoloji-izleme.com/pdf/20260521_043522_maden_orman_rapor_2020_2026.pdf",
-      "foto_url": "",
-      "tarih": "2026-05-23"
+      "foto_url": ""
     },
     {
-      "id": 21,
-      "baslik": "DEVLET NE KARAR VERDİ?",
+      "id": 14,
+      "baslik": "Mahkeme Kararlarına Rağmen Yaylalara Jandarma Eşliğinde Maden Girişi",
+      "tarih": "2026-04-29",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
-      "tur": "Genel",
+      "tur": "Yıllık Rapor",
       "etiketler": [
         "Ekolojik İhlal",
-        "Acele Kamulaştırma",
-        "Milli Park"
+        "Maden Ocağı"
       ],
-      "ozet": "Bu Makale Neden Yazıldı?\nResmî Gazete her sabah yayımlanır. İçinde kanunlar, yönetmelikler, Cumhurbaşkanlığı kararnameleri ve onlarca düzenleme vardır. Ama kimse bunu okumaz — çünkü ağır bir hukuk diliyle yazılmıştır. Oysa bu kararlar; ormanlarımızı, işlerimizi, evlerimizi ve cüzdanlarımızı doğrudan etkiler. Bu analiz, 19 Mart 2026 tarihli son Resmî Gazete sayısındaki dört önemli kararı size anlatıyor. Ne alındı, kimden alındı, kime verildi",
-      "dosya": "https://ekoloji-izleme.com/dosya/20260524_161711_devlet_ne_karar_verdi.docx.pdf",
+      "ozet": "29 Nisan 2026 tarihli ekoloji raporu, Türkiye genelinde doğayı doğrudan etkileyen çok sayıda çevresel ihlali ve hukuki süreci kapsamlı bir şekilde ele almaktadır.",
+      "dosya": "https://ekoloji-izleme.com/pdf/20260520_072516_ekoloji_raporu2_29nisan2026.pdf",
+      "foto_url": ""
+    },
+    {
+      "id": 13,
+      "baslik": "Ilımlı Bir Teklif: Fosil Yakıt Endüstrisini Ulusallaştırın",
+      "tarih": "2020-03-17",
+      "yil": 2020,
+      "yazar": "Kate Aronoff/ March 17, 2020",
+      "tur": "Alan Araştırması",
+      "etiketler": [
+        "Ekolojik İhlal",
+        "Politika Analizi"
+      ],
+      "ozet": "We're facing a shale crash, a likely recession, and a surefire climate crisis. One particular policy could help solve all three problems.",
+      "dosya": "https://newrepublic.com/article/156941/moderate-proposal-nationalize-fossil-fuel-industry",
       "foto_url": ""
     },
     {
       "id": 20,
-      "baslik": "Ortadoğu Savaşlarının Doğaya ve İnsana Etkisi: İklim, Ekoloji ve Adalet Üzerine Kapsamlı Bir Analiz",
+      "baslik": "Ortadoğu Savaşlarının Doğaya ve İnsana Etkisi",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
       "tur": "Genel",
@@ -77,7 +113,7 @@
         "Ekolojik İhlal",
         "Politika Analizi"
       ],
-      "ozet": "Bu metin, Ortadoğu'daki silahlı çatışmalar ile iklim krizi arasındaki yıkıcı ve iç içe geçmiş ilişkiyi derinlemesine incelemektedir. Bölgedeki savaşların devasa karbon ayak izi, tarım arazilerinin kasıtlı tahribatı ve su altyapısının çökertilmesi gibi ekolojik yıkımlara odaklanan kaynak, bu durumu bir ekokırım olarak tanımlamaktadır. Özellikle askeri emisyonların küresel iklim anlaşmalarında raporlanmamasındaki adaletsizliğe dikkat çekilerek, militarizmin çevresel maliyetleri vurgulanmaktadır. Savaşın ve doğa tahribatının en çok kadınları, yoksulları ve mültecileri vurduğu belirtilerek, toplumsal cinsiyet ve sınıf odaklı bir perspektif sunulmaktadır. Sonuç olarak yazar, gerçek bir çözüm için askeri harcamaların şeffaflığı, uluslararası hukukta çevre suçlarının tanınması ve ekolojik adalet ile barışın eş zamanlı inşasını savunmaktadır.",
+      "ozet": "Bu metin, Ortadoğu'daki silahlı çatışmalar ile iklim krizi arasındaki yıkıcı ve iç içe geçmiş ilişkiyi derinlemesine incelemektedir.",
       "dosya": "https://ekoloji-izleme.com/pdf/20260520_115103_Ortado__u_Sava__lar__n__n_Do__aya_ve___nsana_Etkisi____klim_.pdf",
       "foto_url": ""
     },
@@ -92,105 +128,73 @@
         "Hukuk & Dava",
         "Çiftçi & Köylü Sorunları"
       ],
-      "ozet": "Çiftçiler, üreticiler ve tüketici geniş halk kitleleri iklim değişikliğinden sorumlu değildir. Fakat sonuçlarını en ağır biçimde yaşamaktadırlar. Doğa uğradığı geri dönüşümsüz zararlarda adalet arayamazken tarımda adaletin bir nebze de olsa sağlanması için iklim değişikliği nedeniyle oluşan afetlerden zarara uğrayan kesimlerin zararlarının afet kapsamında tazmini sağlanmalıdır.\n\nMeteoroloji Genel Müdürlüğü (MGM) 76 il için alarm verirken; ani sel, lokal su baskınları, yıldırım düşmesi, dolu ve kuvvetli fırtınaya karşı dikkatli olunması uyarısında bulundu.\n\nKaradeniz Bölgesinde Amasya, Tokat, Çorum, Samsun, Ordu, Giresun, Trabzon, Gümüşhane, Bayburt ve çevresinde taşkın riski, İç Anadolu, Ege ve Akdeniz’de Ankara ve çevresi ile Akdeniz'in iç kesimlerinde sel ve kuvvetli rüzgarlar, Doğu ve Güneydoğu Anadolu Bölgesinde şiddetli rüzgarlara ek olarak çöl tozlarının taşınmasıyla \"çamur şeklinde yağışlar\" görülme riski bulunduğu bildirilmektedir.\n\nÜlke genelinde birçok tarım havzası aşırı, düzensiz ve mevsim normalleri dışında yağan yağışlar nedeniyle seller, su baskınları ve taşkınlara maruz kalmış/kalmaktadır.\n\nBazı küçük ve orta büyüklükte hayvancılık işletmelerinin barınakları, yem depoları, yem bitkisi ekili arazileri sel, su baskınları ve taşkınlardan etkilenmiş, yağışların devam edeceği bölgelerde etkilenmesi muhtemel olarak görülen yetiştiriciler olacağı değerlendirilmektedir. Bazı bölgelerde hayvanlar güvenli alanlara nakledilmiştir.\n\nEkili, dikili tarım arazileri ve özellikle sebze üretimi için kuzey illerimizde yeni dikimi tamamlanmış ve dikim için hazırlanan araziler sel ve su baskınlarından zarar görmüştür.\n\nSel, su baskını ve taşkınlar tarımsal üretim/ürün kayıplarına ve üretim maliyetlerinin artmasına neden olmaktadır. Ekili alanları sular altında bırakarak kök çürümesine, çamur tabakasının ürünlerin üzerini örterek kuruma sonucu ürün kaybına yol açmaktadır.\n\nSeller; tarla yollarını, sulama kanallarını, seraları ve makine ve ekipmanları tahrip etmektedir. Toprağın en verimli üst katmanını sürükleyerek erozyona yer yer toprak kaymasına neden olup tarım arazilerinin uzun vadede verimliliğinin düşmesine neden olmaktadır. Tarlalarda uzun süre kalan durgun sular, bitkilerde hastalıklar gelişmesine ve zararlı popülasyonlarının artmasına zemin hazırlamaktadır. Bozulan toprağı ekime hazır hale getirmek ekstra maliyet yaratmaktadır.\n\nEkili, dikili arazilerde yaşanan felaket sonucunda tohum, fide, fidan gibi kayıplar sezon kaçırılmadan yeniden üretim yapılabilmesi için üreticiye bedelsiz temin edilmelidir.\n\nYaşanan kayıplar ve hasar tespitleri hızla yapılmalı. Üreticilerin kayıpları, ÇKS kaydı ve Tarım Sigortası yaptırıp yaptırmadığına bakılmaksızın AFET kapsamında değerlendirilmeli ve hızla karşılanmalıdır.\n\nİklim değişikliğinin tarım arazileri, hayvan varlığı, alet ekipmanlar ve tarımsal yapılar üzerinde afete dönüşen yıkıcı etkilerine maruz kalmamak için sel ve su baskınlarına maruz kalma ve taşkın riski olan yerler tespit edilerek gerekli önlemler alınmalı yada risksiz alanlara nakil planlamaları geciktirilmeden yapılmalıdır.\n\nTMMOB\nZiraat Mühendisleri Odası\nYönetim Kurulu",
+      "ozet": "Çiftçiler, üreticiler ve tüketici geniş halk kitleleri iklim değişikliğinden sorumlu değildir. Fakat sonuçlarını en ağır biçimde yaşamaktadırlar.",
       "dosya": "https://www.zmo.org.tr/icerik/tarimsal-afet-ve-adalet-202605200930",
       "foto_url": ""
     },
     {
       "id": 18,
-      "baslik": "KAYIP VE ZARAR FONU DETAYLI ANALİZİ: COP31’DE ÇÖZÜLMESİ BEKLENEN KRİTİK DOSYA",
+      "baslik": "KAYIP VE ZARAR FONU DETAYLI ANALİZİ: COP31'DE ÇÖZÜLMESİ BEKLENEN KRİTİK DOSYA",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
-      "etiket": "Genel",
-      "ozet": "Bu metin, COP31 zirvesinin en kritik gündem maddelerinden biri olan Kayıp ve Zarar Fonu’nun tarihsel gelişimini ve çözüm bekleyen temel sorunlarını analiz etmektedir. İklim değişikliğinin yol açtığı ve geri dönülemez hale gelen hasarların finansmanı için kurulan bu yapının, Dünya Bankası‘nın rolü ve fon kaynaklarının zorunlu olup olmaması gibi konularda ciddi görüş ayrılıkları barındırdığı vurgulanmaktadır. Kaynakta, özellikle gelişmekte olan ülkelerin tarihsel sorumluluk çerçevesinde bağlayıcı destek talepleri ile gelişmiş ülkelerin gönüllülük esasına dayalı yaklaşımları arasındaki çatışma detaylandırılmaktadır. Ayrıca, Türkiye’nin hem ev sahibi hem de iklim krizinden doğrudan etkilenen bir ülke olarak bu müzakerelerdeki arabulucu rolü ve stratejik konumu değerlendirilmektedir. Sonuç olarak yazı, fonun işlerlik kazanmasının küresel iklim adaleti ve uluslararası güven inşası açısından bir turnusol kağıdı niteliği taşıdığını belirtmektedir.",
-      "dosya": "https://ekoloji-izleme.com/pdf/20260520_074650_KAYIP_VE_ZARAR_FONU_DETAYLI_ANAL__Z____COP31___DE_____Z__LME.pdf",
-      "foto_url": "",
       "tur": "Yıllık Rapor",
       "etiketler": [
         "Savaş & Ekoloji",
         "Savaş Teknolojisi & Çevre"
-      ]
+      ],
+      "ozet": "Bu metin, COP31 zirvesinin en kritik gündem maddelerinden biri olan Kayıp ve Zarar Fonu'nun tarihsel gelişimini ve çözüm bekleyen temel sorunlarını analiz etmektedir.",
+      "dosya": "https://ekoloji-izleme.com/pdf/20260520_074650_KAYIP_VE_ZARAR_FONU_DETAYLI_ANAL__Z____COP31___DE_____Z__LME.pdf",
+      "foto_url": ""
     },
     {
       "id": 17,
       "baslik": "Gezegeni Kurtarırken(!) Bombaların Altında Kalan Gerçek",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
-      "etiket": "Genel",
-      "ozet": "Bu metin, küresel askeri faaliyetlerin iklim krizi üzerindeki devasa ancak sistemli bir şekilde gizlenen etkilerini ele almaktadır. Savaş sektörünün sivil havacılıktan çok daha fazla karbon emisyonuna neden olduğu vurgulanırken, bu kirliliğin ulusal güvenlik bahanesiyle uluslararası iklim anlaşmalarının dışında tutulması eleştirilmektedir. Yazar, orduların tükettiği fosil yakıtlar ve çatışmaların yol açtığı ekolojik yıkım raporlanmadığı sürece çevreci mücadelenin samimi bir sonuca ulaşamayacağını savunmaktadır. Silahlanmaya ayrılan devasa bütçelerin yeşil enerji dönüşümüne aktarılması gerektiğini belirten kaynak, gerçek güvenliğin askeri güçle değil, ekolojik onarımla mümkün olduğunu hatırlatmaktadır. Sonuç olarak, iklim aktivizminin ancak anti-militarist bir duruşla birleştiğinde dünyayı kurtarabileceği mesajı verilmektedir.",
-      "dosya": "https://ekoloji-izleme.com/pdf/20260520_073858_Gezegeni_Kurtar__rken_____Bombalar__n_Alt__nda_Kalan_Ger__ek.pdf",
-      "foto_url": "",
       "tur": "Yıllık Rapor",
       "etiketler": [
         "Kentsel Çevre",
         "Savaş & Ekoloji",
         "Savaş Teknolojisi & Çevre"
-      ]
+      ],
+      "ozet": "Bu metin, küresel askeri faaliyetlerin iklim krizi üzerindeki devasa ancak sistemli bir şekilde gizlenen etkilerini ele almaktadır.",
+      "dosya": "https://ekoloji-izleme.com/pdf/20260520_073858_Gezegeni_Kurtar__rken_____Bombalar__n_Alt__nda_Kalan_Ger__ek.pdf",
+      "foto_url": ""
     },
     {
       "id": 16,
       "baslik": "İklim Krizinin Görünmez Suç Ortağı: Savaşın Ekolojik Maliyeti ve Sistematik İnkar",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
-      "etiket": "Genel",
-      "ozet": "Bu rapor, modern savaşların ve askeri faaliyetlerin iklim krizi üzerindeki yıkıcı ancak kasıtlı olarak gizlenen etkilerini eleştirel bir dille analiz etmektedir. Metin, orduların devasa karbon salınımlarının uluslararası iklim anlaşmalarında neden yer almadığını, \"ulusal güvenlik\" bahanesiyle sürdürülen bu hesap vermezliğin politik arka planını açıklamaktadır. Özellikle Gazze ve Ukrayna gibi çatışma bölgelerinden somut veriler sunarak, savaşın sadece insani değil, telafisi zor bir ekolojik yıkıma yol açtığı vurgulanmaktadır. Ayrıca, yapay zeka sistemlerinin ve akademik söylemlerin bu askeri kirliliği görmezden gelerek mevcut statükoyu nasıl yeniden ürettiği üzerinde durulmaktadır. Yazar, gerçek bir iklim adaleti için askeri emisyonların zorunlu olarak raporlanması ve küresel çevre politikalarına dahil edilmesi gerektiğini savunmaktadır.",
-      "dosya": "https://ekoloji-izleme.com/pdf/20260520_073356_savas_ekoloji_makalesi_docx.pdf",
-      "foto_url": "",
       "tur": "Yıllık Rapor",
       "etiketler": [
         "Savaş & Ekoloji",
         "Savaş Teknolojisi & Çevre"
-      ]
+      ],
+      "ozet": "Bu rapor, modern savaşların ve askeri faaliyetlerin iklim krizi üzerindeki yıkıcı ancak kasıtlı olarak gizlenen etkilerini eleştirel bir dille analiz etmektedir.",
+      "dosya": "https://ekoloji-izleme.com/pdf/20260520_073356_savas_ekoloji_makalesi_docx.pdf",
+      "foto_url": ""
     },
     {
       "id": 15,
       "baslik": "Ekoloji Haritasi – Son 48 Saat Raporu",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
-      "etiket": "Genel",
-      "ozet": "Bu rapor, Türkiye genelindeki çevresel tehditleri ve bu tehditlere karşı yürütülen yerel direniş hareketlerini kapsamlı bir şekilde incelemektedir. Özellikle Muş Varto’daki jeotermal sondaj girişimine karşı kadınların öncülük ettiği kararlı çadır nöbeti ve Muğla Akbelen’deki hukuki kazanımlar metnin odak noktasını oluşturmaktadır. Kaynaklar; madencilik faaliyetleri, kıyı dolgu projeleri ve kontrolsüz turizm yapılaşmalarının ekosistem üzerindeki yıkıcı etkilerini somut verilerle ortaya koymaktadır. Ayrıca Bolu ve Sinop gibi illerde planlanan geniş çaplı ağaç kesimleri ile Karadeniz sahilindeki atık sorununa dikkat çekilerek doğa tahribatının boyutları belgelenmektedir. Sonuç olarak metin, doğal kaynakların korunması mücadelesi ile endüstriyel genişleme arasındaki çatışmayı güncel bir perspektifle özetlemektedir.",
+      "tur": "Genel",
+      "etiketler": [
+        "Ekolojik İhlal",
+        "Acele Kamulaştırma",
+        "Milli Park"
+      ],
+      "ozet": "Bu rapor, Türkiye genelindeki çevresel tehditleri ve bu tehditlere karşı yürütülen yerel direniş hareketlerini kapsamlı bir şekilde incelemektedir.",
       "dosya": "https://ekoloji-izleme.com/pdf/20260520_072618_ekoloji_raporu_19_05_2026.docx",
       "foto_url": ""
-    },
-    {
-      "id": 14,
-      "baslik": "Mahkeme Kararlarına Rağmen Yaylalara Jandarma Eşliğinde Maden Girişi: Türkiye'de Ekolojik Yıkımın Güncel Coğrafyası",
-      "yil": 2026,
-      "yazar": "ekoloji-izleme.com",
-      "etiket": "Maden",
-      "ozet": "29 Nisan 2026 tarihli ekoloji raporu, Türkiye genelinde doğayı doğrudan etkileyen çok sayıda çevresel ihlali ve hukuki süreci kapsamlı bir şekilde ele almaktadır. Kaynaklar, Ordu’daki maden kuşatmasından Kazdağları’ndaki şüpheli ruhsat devirlerine, Bursa’daki baraj kazalarından Adana’daki plastik atık yangınlarına kadar geniş bir coğrafyadaki ekolojik tahribatı belgelemektedir. Raporda, mahkeme kararlarının uygulanmaması ve güvenlik güçlerinin şirket çıkarlarını koruması gibi sistematik sorunlar ile yerel halkın bu projelere karşı yürüttüğü direnişler vurgulanmaktadır. Ayrıca, enerji projeleri için yapılan acele kamulaştırmalar ve mevzuata aykırı tesislerin yarattığı riskler, ülkenin çevre politikaları ile uluslararası taahhütleri arasındaki derin uçurumu gözler önüne sermektedir. Bu dökümanlar, çevre krizinin sadece yerel değil, kurumsal ve yapısal bir sorun olduğunu ortaya koyan bütüncül bir tablo sunmaktadır.",
-      "dosya": "https://ekoloji-izleme.com/pdf/20260520_072516_ekoloji_raporu2_29nisan2026.pdf",
-      "foto_url": "",
-      "tur": "Yıllık Rapor",
-      "etiketler": [
-        "Ekolojik İhlal",
-        "Maden Ocağı"
-      ]
-    },
-    {
-      "id": 13,
-      "baslik": "Ilımlı Bir Teklif: Fosil Yakıt Endüstrisini Ulusallaştırın",
-      "yil": 2020,
-      "yazar": "Kate Aronoff/ March 17, 2020",
-      "etiket": "Genel",
-      "ozet": "A Moderate Proposal: Nationalize the Fossil Fuel Industry\nWe’re facing a shale crash, a likely recession, and a surefire climate crisis. One particular policy could help solve all three problems.\nMark Wilson/Getty Images\n\nThe Fed has pulled out its big guns, slashing interest rate targets to zero and announcing $700 billion worth of new quantitative easing. Republican Senator Mitt Romney seems to support giving every American $1,000, and Republicans in general are getting behind paid sick leave. Paul Krugman is calling for the government to spend 1 to 2 percent of gross domestic product per year on a permanent stimulus. And New York City Mayor Bill DeBlasio over the weekend floated the idea of the “nationalization of crucial factories and industries that produce medical supplies,” citing the example of the domestic mobilization for World War II.",
-      "dosya": "https://newrepublic.com/article/156941/moderate-proposal-nationalize-fossil-fuel-industry",
-      "foto_url": "",
-      "tur": "Alan Araştırması",
-      "etiketler": [
-        "Ekolojik İhlal",
-        "Politika Analizi"
-      ]
     },
     {
       "id": 12,
       "baslik": "MUĞLA DEM PARTİ EKOLOJİ KOMİSYONU RAPORU",
       "yil": 2026,
       "yazar": "GÜVEN GÖKNAR / MUĞLA DEM PARTİ EKOLOJİ KOMİSYONU EŞ SÖZCÜSÜ",
-      "etiket": "Veri",
-      "ozet": "2025 yılı ekoloji tahribatın çok fazla yerlerden olduğu yerlerden biri Muğla ilidir. Torba yasanın çıkması ile birlikte Akbelende köylülerin yaşam alanları ve topraklarını kamulaştırma başladı. Marmaris’te özellikle Sinpaş firması mahkeme kararına rağmen milli parkı ve doğayı yok etmeye devam ediyor. Birçok ilçede taş ocakları, madenler, sit alanları, orman kampları, barajlar ve kıyı ihlalleri gibi doğa katliamları devam etmektedir.\n\nÖrgütlenme: \n\nDEM Parti Muğla Ekoloji Komisyonu Eş sözcüsü seçildikten sonra her ilçeden komisyona \nüye belirlemeye başladık. Belirlediğimiz üyeler aşağıda verilmiştir.\n\nKomisyon Üyelerimiz \nBodrum\n●\tMir Bahattin Demir\n●\tNihat Gençosman\n●\tNihat Koyuncu\nMilas\n●\tÖzlem  Kesken\n●\tHanifi YIlmaz\nMenteşe\n●\tCevher Kahraman\n●\tKazım Yılmaz\nMarmaris\n●\tGüven Göknar\n●\tNurgül Kumbaroğlu\nDatça\n●\tGüngör Erçil\n●\tProf. Dr. Beyza Üstün\n●\tSedat Yağcıoğlu\nFethiye\n●\tYonca Aydınoğlu\nGökova\n●\tCandan Süsoy\nMuğla İl Eş Başkanları\n●\tZuhal Macit\n●\tMehmet Kaya\nÖrgütlenmeden Sorumlu\n●\tAhmet İşçi\n\nEkoloji Komisyonu olarak oluşturuldu.\n\nZoom üzerinden ve Muğla’da yüz yüze komisyon olarak birer toplantı yaptık.\nMuğla’daki toplantıda her komisyon üyesi kendi ilçesindeki ekolojik sonuçlarını rapor haline getirilmesi kararı toplantıda alındı. Bu raporlar baz alınarak:\n•\tMuğla’da ekoloji sayıştayı düzenlenmesi için öneride bulunuldu. İlçelerde DEM parti üyelerine, bileşenlerine, dostlarına\nekoloji eğitimi veya halk toplantısı yapılması kararlaştırıldı. Muğla’da ekoloji toplantılarına ve eylemlerine DEM Parti Ekoloji Komisyonundaki üyelerimiz komisyon adına katılmaları önerildi. \n\nKomisyon Çalışmalarımız: \n\nMuğla’da Toprağımızı vermiyoruz grubu oluşturulduğunda katılım sağladık ve Muğla Toprağımızı vermiyoruz mitingi düzenlendi. Miting öncesinde bütün komisyonlarında DEM Parti Ekoloji Komisyonu olarak yer aldık.\n\nMilas’ta pazarda bildiri dağıtımı,basın açıklaması Halk TV programına katılım ve Akbelen’de ki Ekolojiden sorumlu vekilimiz İbrahim Akın ile ziyaretlerde bulunduk. Daha sonraki günlerde vekilimizle Muğla’da pazar yerinde bildiri dağıtımı, akşam basın açıklaması ve Destin Köyü’ne ziyarette bulunduk. Yatağan'da Turgut Köy’ne ziyarette bulunduk.\n\nMitingde Eş Genel Başkanımız Tülay Hatimoğulları katılım sağladı. Mitingin her alanında DEM Parti olarak çalışmalarda yer aldık. Muğla için başarılı bir miting gerçekleşti.\n\nMitinge Komisyondaki arkadaşlarımızla MUÇEP’in ve diğer ekoloji örgütlerinin öznesi olarak ve aynı zamanda örgütleyicisi olarak katılım sağladık. \n\nMuğla Ekoloji sorunları ve komisyon görüşümüz: \n\nDEM Muğla Ekoloji Komisyonu olarak hazırladığımız bu raporda ilçelerdeki ekolojik sorunlar her ilçedeki komisyon üyeleri tarafından hazırlanmıştır. Aşağıda İlçe bazında yer verilmiştir\n\n\nBODRUM\n\nBodrumda Dem parti ekoloji komisyonu olarak bugüne kadar gündeme gelen ve tartışılan ekolojik sorunlarını genel hatları ile sıralıyoruz.\n\n1.Torba Yalıkavak arası çevre yolu ulaşım projesi.\n2.Torba’dan Dağbelen’e yapılmak istenen tünel projesi.\n3. Bodrumun hemen hemen tamamında sorunlar oluşturan kanalizasyon projesi\n4. DSİ tarafından yapılmış olan İçme suyu isale hattında patlayan borular\n5. Cengiz inşaat vd şirketler tarafından Tilkiçik koyu, Turgutreis ve daha birçok yerde yapılmak istenen marinalar.\n6. Cengiz inşaat’ın Gökburun projesi \n7. Güneş enerji santralleri projeleri\n8. Mazı RES projeleri.\n9. Tavşanburnu tatil köyü projesi.\n10. Cennet Koyu ve benzeri sahillerin MUÇEV tarafından kiraya verilmesi\n11. Koylara yapılmak istenen gemi bağlama tonozları\n12. Derelerin kirliliği\n13. Sahillere ve plajlara yapılan kaçak ve kural dışı iskele ve platformlar\n14. Bodruma su sağlamak için yapıldığı iddia edilen Ekinanbarı desalinasyon projesi\n15. Bodrumun imar ve betonlaşma sorunu\n16. Mazı ile Çamarasi mevkiinde orman vasfından çıkarılan araziler\n17. Gerenkuyu limak otel projesi\n18. Sarıay kaçak beton santrali\n19. Rüzgar beton santrali ve yanındaki kaçak taş ve toprak depolama tesisleri\n20.Torba yolunda Türkbükü mevkiinde taş ocağı tesisleri (Taş ve toprak eleme tesisleri)\n21. Dereköy taş ocakları projeleri\n22. Mandarin otel üstünde Aşçı holdinge tahsis edilen 76 dönüm orman arazisi\n23. Bodrumda Torba ve Dereköy (peksimet) vahşi depolama alanları\n24. Bodrumun içme suyu problemleri ve Bodrum barajı.\n25.Yalıkavak kesme dağ mevkiinde Rönesans inşaata satılan hazine arazi\n\n\nFETHİYE\n\nFethiye'deki ekoloji mücadelesinde FETDER öncülük yapmaktadır. Kıyılar Halkındır İnisiyatifi de aktif olarak sahada direnmeyi sürdürmektedir. Ancak sürekli toplum zararına ve doğa tahribatına yol açan yeni projelerle Fethiye açık bir saldırı altındadır. Bunlardan bazılarını sadece başlıklarla aşağıda sıralamaya çalıştık. Sıralamaya giremeyen otopark projesi, belli firmalara kıyıların peşkeş çekilmesi konuları güncelliğini korumaktadır.\n- Anayasaya aykırı olarak kıyıların özel mülkleştirilmesi ticarileştirilmesi büyük otellerin plajlara el koyması ve olası sonuçları \n1. Çalış sahili boyunca Caretta carettaların yumurtlama alanı tahribatları\n2.Akdeniz foklarının ve Su samurlarının neslinin tükenme tehlikesi\n3. Yapılaşma nedeniyle kuş cenneti'nde kuş türlerinin tehlikeye girmesi\n4.  Fethiye körfez kirliliği gün geçtikçe ağırlaşan bir sorun olarak karşımıza çıkmaktadır.\nYapılması planlananlar: \n5. Fethiye Körfezi'nde yapılması planlanan kruvaziyer liman projesi\n6.  Büyük boncuklu ve Küçük boncuklu koylarına tekne bağlama iskelesi projesi\n7. Yeşil üzümlü krom eleme tesisi sorunu ile ilgili çet gerekli değil raporunun çıkması\n8. Faralya sömbeki burnunda Alman firmasının ekolojik Otel projesi nedeniyle ağaç kesimi projesi\n9. Maden araştırma sahası kurulması için 12.940 dönüm ormanlık alanının ihale edileceği bilgisi\n10. Göcek Ayten koyu yat bağlama iskelesi projesi\n11. Söğütlü köyünde su sorunu yaşanması suyunu savunanlara Jandarma müdahalesi\n\nİptal ettirilen müdahaleler: \n1. Bu arada direnişler sayesinde Aksazlar Koyu Marina Projesi iptal ettirildi \n2. Aynı şekilde Günlüklü koyu için yapı ruhsat imar durum belgeleri iptal ettirildi.\n\nGÖKOVA\n\n1.Akyaka Orman Kampı ve Gökova Özel Çevre Koruma Bölgesi’nde (bölge 1.derecede sit alanı olmasına karşın)Danıştay kararlarına rağmen betonlaşma, kapasite artışı ve ticari faaliyetleri sürmekte.\n2. Danıştay'ın Gökova doğal sit alanlarına ilişkin iptal kararı kesinleşti. Gökova Körfezi'nin doğal sit statüsünü düşürerek bölgeyi yapılaşma tehdidiyle karşı karşıya bırakan düzenleme, Muğla Büyükşehir Belediyesi'nin açtığı dava sonucunda Danıştay tarafından kesin olarak iptal edildi ki bu davanın kazanılmasında STK'ların çalışmaları MBB ( Muğla Büyükşehir Belediyesi) sinin davayı kazanmasında büyük önem taşımaktadır.\n\nKÖYCEĞİZ\n\n1.DSİ 21. Bölge Müdürlüğü tarafından yapılması planlanan “Balcılar Barajı ve Sulaması, Hidroelektrik Santralları, Malzeme Ocakları, Kırma-eleme-yıkama Tesisi ve Beton Santralı” projesine verilen “çevresel etki değerlendirme (ÇED) olumlu” kararı, Muğla 4. İdare Mahkemesi tarafından iptal edildi.\n2.Köyceğiz İlçesi Güralan Mevkii ile Ula İlçesi Kavakçalı Mahallesi sınırlarında yapılması planlanan kalker ocağı tesisleri için yöre halkı ve STK’ların mücadelesi devam etmektedir.\n3.Köyceğiz Göl’ü Bağcılar Barajı ile Sandras suyunu başka bölgelere taşımak isteyen DSİ\n4.Yayla Köyü Krom yeraltı ocağı\n\n\nDATÇA\n\n1.Kargı Koyu'nda ÖİB'nin plan değişikliği\n2. Datça yat limanı,\n3.Billurkent'te kaçak yapı.\n4. Batı Akdeniz Suyunu ekonomik sektörlere dağıtan Su Yönetimi planına karşı SY Genel Müd. Aleyĥine 4 böĺgeden dava açılmıştır (Türkiye'de ilk kez; BAH, BMH, Kuzey Ege)\n\nMARMARİS\nMarmaris’de DEM Parti ekoloji komisyonu olarak ekoloji sorunlarla mücadele ediyoruz ve öznesi oluyoruz.\n1. Sinpaş ÇED olumlu kararı aleyhimize sonuçlandı ve Sinpaş ruhsat iptal davası Danıştay’da\n2.  Karacasöğüt MUÇEV Marina\n3. Karacasöğüt Global Marina\n4. Selimiye MUÇEV Marina ÇED olumlu kararı çıktı\n5. Bozburun MUÇEV Marina henüz ÇED süreci başlamadı\n6. Yeşilbelde doğalgaz hattı\n7. Hisarönü  parseldeki yaşlı bakım evi (Sulak alan yıkıma uğratıldı. Parsel bazlı imar plan değişikliğinin iptali talepli davamız devam ediyor)\n8. Turgut çekek yeri davası lehimize sonuçlanmıştır. Dosyayı firma ve Çevre müdürlüğü Danıştay’a taşıdı.\n9.İncekum Cleo Ltd. Şti. kiralanan yerel yol yapımı.\n10.Atıksuların arıtılmadan derelere desarj edilmesi. Koku ve kirliliğin oluşması.\n11.Siteler ve İçmeler arası otellerin kıyı kanununu ihlal etmesi.\n\nMİLAS\n\n1-Yeniköy ve Kemerköy santrallerinin işletmecisi YK Enerji'nin Akbelen Ormanı ve zeytinleri kesmesi\n2-Yine YK Enerji'nin GES santralleri ve Geyik Barajı'nın suyunu kullanması, \n3-Ekinamɓarı'nda  bizzat BŞB tarafından ÇŞİD bakanından kamu yararı kararı alarak, deniz suyunu arıtması (desalinasyon)\n4– Dereköy mahallesi suyunun Yeniköy santralleri alınması\n5-beş parmak dağlarında işletilen feldspat madeninin kamyonlarla taşınması sonucu olusan  saglik sorunlari\n(Akciğer hastalıkları-nefes darlığı gibi)\n6-Taş ocakları ve mermer ocaklarının verdiği tahribat\n7- Milas Sarıkaya Mah. Toprak Maden.A.Ş. Feldspat Ocağı\n8-Milas Yeniköy Kemerköy santralleri Güneş Enerji Santrali\n9-Milas Güllük limanı kapasite artışı\n10-Milas Kıyıkışlacık limanı kapasite artışı\n11-Milas Kayabaşı mah. İBB Madencilik kayrak taşı ocağı\n12-Milas İkiztaş ESAN Feldspat Ocağı\n13-Milas Beşparmak ve Ilbıra dağlarındaki\n14-Milas  Yeniköy Kemerköy santralleri genişlemesi için 1.600 tapu için acele kamulaştırma kararı\n\nORTACA\n1.Dalyan Kanalı\n2.Dalaman’da Hilton Oteli GES’İ\n\nMENTEŞE-YATAĞAN\n\n1.Kafaca’da Yatağan A.Ş GES \n2.Destinde Çimento Fabrikası\n3.Yatağan A.Ş mahkemece kapatılmasına rağmen Dipsi Çay’ını kullanması ve Zeytin ağaçlarını kesmesi\n\nMUĞLA DEM PARTİ EKOLOJİ KOMİSYONU EŞ SÖZCÜSÜ\n\nGÜVEN GÖKNAR",
-      "dosya": "https://ekoloji-izleme.com/dosya/20260524_162231_Mu_la_ekoloji_raporu_ek.docx",
-      "foto_url": "",
       "tur": "Genel",
       "etiketler": [
         "Ekolojik İhlal",
@@ -198,25 +202,23 @@
         "Maden Ocağı",
         "Taş-Mermer Ocağı",
         "Kıyı İhlalleri"
-      ]
+      ],
+      "ozet": "2025 yılı ekoloji tahribatın çok fazla yerlerden olduğu yerlerden biri Muğla ilidir.",
+      "dosya": "https://ekoloji-izleme.com/dosya/20260524_162231_Mu_la_ekoloji_raporu_ek.docx",
+      "foto_url": ""
     },
     {
       "id": 11,
       "baslik": "Türkiye'de Ekolojik Yıkımın Güncel Coğrafyası",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
-      "etiket": "Maden",
-      "ozet": "29 Nisan 2026 tarihinde, Türkiye'nin dört bir yanından gelen ekoloji haberleri, ülkedeki doğa tahribatının hem coğrafi genişliğini hem de kurumsal derinliğini bir kez daha ortaya koydu. Mahkeme kararlarının fiilen işlevsiz kılındığı, koruma statülerinin kâğıt üzerinde bırakıldığı ve kamu güvenlik güçlerinin özel şirketlerin çıkarları doğrultusunda konuşlandırıldığı bir tablonun göstergesi olan bu haberler, münferit ihlaller olarak değil; sistematik bir ekolojik ayrışma sürecinin parçaları olarak okunmalıdır. Bu rapor; Karadeniz'den Ege'ye, Akdeniz'den Doğu Anadolu'ya uzanan bir çizgide tek günde belgelenen on ayrı çevresel gelişmeyi —maden ihlallerini, ekolojik suçları, enerji santrallerine yönelik halk direncini ve kamulaştırma kararlarını— analitik bir çerçevede bir araya getirmektedir.",
-      "dosya": "",
-      "foto_url": "",
       "tur": "Yıllık Rapor",
       "etiketler": [
         "Ekolojik İhlal"
-      ]
+      ],
+      "ozet": "29 Nisan 2026 tarihinde, Türkiye'nin dört bir yanından gelen ekoloji haberleri, ülkedeki doğa tahribatının hem coğrafi genişliğini hem de kurumsal derinliğini bir kez daha ortaya koydu.",
+      "dosya": "",
+      "foto_url": ""
     }
-  ],
-  "_meta": {
-    "guncelleme": "2026-06-02T03:03:12.175Z",
-    "toplam": 14
-  }
+  ]
 }
