@@ -1,7 +1,5 @@
-
 # ─── HABER KATEGORİ NORMALIZASYONU ────────────────────────────────────────────
 
-# Ham kategori / başlık / özet metninden → nav kategorisine eşleme
 HABER_KAT_KURALLARI = [
     ("İklim ve Afet",        ["iklim", "deprem", "sel ", "yangın", "afet", "kuraklık",
                                "erozyon", "sera gazı", "karbon", "iklim krizi", "hava kirlil"]),
@@ -31,33 +29,27 @@ HABER_KAT_KURALLARI = [
                                "amnesty", "ihd ", "tvd ", "haytap"]),
     ("Maden ve Enerji",      ["orman / maden", "tarım alanları / maden", "maden riski",
                                "jes ", "çed kararları", "hes / res", "ihale / enerji"]),
-    # Geniş çevre/ekoloji haberleri → Hukuki Süreçler (ceza, denetim)
     ("Hukuki Süreçler",      ["çevre ceza", "idari ceza", "ceza kesil", "ceza veril",
                                "aktivist tutukla", "cop31", "aktivist gözaltı",
                                "çevre aktivist", "kirleten ceza"]),
-    # Kıyı, körfez, deniz kirliliği → Su ve Kıyı
     ("Su ve Kıyı",           ["koy", "körfez", "beton deniz", "denize beton", "kıyı talan",
                                "deniz kirlil", "iskele", "marina", "atık su ceza"]),
-    # Genel ekoloji/çevre → Maden ve Enerji (kapsayıcı)
     ("Maden ve Enerji",      ["çevre ihlali", "ekoloji", "gündem / çevre", "çevre / gündem",
                                "kirlilik", "soma termik", "termik ceza"]),
 ]
 
 def haber_kat_tespit(item: dict) -> str:
-    """Bir haber kaydının normalize nav kategorisini tespit eder."""
     metin = " ".join([
         str(item.get("kategori", "")),
         str(item.get("baslik", "")),
         str(item.get("ozet", "")),
         " ".join(item.get("etiketler", [])),
     ]).lower()
-
     for kat, anahtar_kelimeler in HABER_KAT_KURALLARI:
         if any(k in metin for k in anahtar_kelimeler):
             return kat
     return "Kategorisiz"
 
-# Sub-kategori dosya adı haritası
 HABER_KAT_DOSYA = {
     "İklim ve Afet":           "haberler-iklim.json",
     "Maden ve Enerji":         "haberler-maden.json",
@@ -75,24 +67,15 @@ HABER_KAT_DOSYA = {
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-dagitici.py — Tarama sonuçlarını 6 hedef JSON dosyasına dağıtır.
+dagitici.py — Tarama sonuçlarını hedef JSON dosyalarına dağıtır.
 
 Akış:
-  1. tarayici.py'yi çalıştırır (veya mevcut haberler.json'ı okur)
-  2. Her öğeyi kural tabanlı sınıflandırır
-  3. Belirsiz olanları Claude'a gönderir (toplu, maliyet düşük)
-  4. 6 dosyayı günceller:
-       haberler.json     → haberler sayfası (mevcut)
-       ihlaller.json     → izleme / ihlaller sayfası
-       raporlar.json     → raporlar sayfası
-       makaleler.json    → makaleler / analiz sayfası
-       kuresel.json      → küresel bakış sayfası
-       ekosistem.json    → ekosistem sayfası
-
-Çalıştırma:
-    python scripts/dagitici.py              # sadece dağıt
-    python scripts/dagitici.py --tara       # önce tara, sonra dağıt
-    python scripts/dagitici.py --tara --gonder  # tara + dağıt + GitHub'a yaz
+  1. tarayici.py çalıştırır (--tara ile)
+  2. haberler.json'daki yeni öğeleri kural tabanlı sınıflandırır
+  3. ihlaller.json'a yeni ihlalleri yazar
+  4. haberler.json içindeki raporlar/makaleler/uluslararasi/ekosistem
+     koleksiyonlarını ayrı dosyalara senkronize eder (site uyumluluğu)
+  5. haberler alt-kategori dosyalarını yazar
 """
 
 import argparse
@@ -105,6 +88,7 @@ import base64
 import requests
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from collections import defaultdict
 
 # ─── AYARLAR ──────────────────────────────────────────────────────────
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -113,20 +97,9 @@ REPO_OWNER        = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
 REPO_NAME         = os.environ.get("GITHUB_REPO_NAME", "ekoloji-izleme.com")
 MODEL             = "claude-haiku-4-5-20251001"
 
-# Kaynak dosya
-HABERLER_DOSYA = Path("haberler.json")
+HABERLER_DOSYA  = Path("haberler.json")
+IHLALLER_DOSYA  = Path("ihlaller.json")
 
-# Hedef dosyalar ve varsayılan yapıları
-HEDEFLER = {
-    "ihlaller":  Path("ihlaller.json"),
-    "raporlar":  Path("raporlar.json"),
-    "makaleler": Path("makaleler.json"),
-    "kuresel":   Path("kuresel.json"),
-    "ekosistem": Path("ekosistem.json"),
-    "haberler":  Path("haberler.json"),  # zaten var, sadece meta güncellenir
-}
-
-# Her hedef için max kayıt sayısı
 MAX_KAYIT = {
     "ihlaller":  500,
     "raporlar":  300,
@@ -138,9 +111,7 @@ MAX_KAYIT = {
 
 # ─── KURAL TABANLI SINIFLANDIRICI ─────────────────────────────────────
 
-# (kategori_adı, hedef, anahtar_kelimeler)
 KURALLAR = [
-    # İHLALLER — somut olaylar, belgeler
     ("ihlaller", [
         "çev ihlali", "çevre ihlali", "çevre katliamı",
         "ÇED", "çed kararı", "çed raporu", "ÇED'siz",
@@ -157,8 +128,6 @@ KURALLAR = [
         "dere yatağı yapı", "kıyı tahribatı", "kıyı dolgu",
         "yangın sorumlu", "orman yangını ihmal",
     ]),
-
-    # RAPORLAR — araştırma, belge, hukuk
     ("raporlar", [
         "rapor yayımlandı", "araştırma raporu", "izleme raporu",
         "dava açıldı", "mahkeme kararı", "yürütmeyi durdurma",
@@ -172,8 +141,6 @@ KURALLAR = [
         "çevre hukuku", "Aarhus sözleşmesi",
         "AB çevre direktifi", "Paris anlaşması Türkiye",
     ]),
-
-    # MAKALELER — analiz, yorum, akademik
     ("makaleler", [
         "analiz:", "inceleme:", "köşe yazısı",
         "akademik çalışma", "üniversite araştırması",
@@ -186,8 +153,6 @@ KURALLAR = [
         "karbon ayak izi", "emisyon analiz",
         "gıda güvenliği ekoloji", "tarım ekolojisi",
     ]),
-
-    # KÜRESEL — uluslararası, dünya geneli
     ("kuresel", [
         "dünya genelinde", "küresel ısınma",
         "COP ", "IPCC", "BM iklim", "Paris anlaşması",
@@ -200,8 +165,6 @@ KURALLAR = [
         "karbon vergi AB", "sınır karbon mekanizması",
         "fosil yakıt global", "yenilenebilir enerji dünya",
     ]),
-
-    # EKOSİSTEM — canlılar, habitat, topluluklar
     ("ekosistem", [
         "nesli tükenmekte", "nesli tehlike", "yaban hayat",
         "habitat kaybı", "habitat tahribatı",
@@ -219,10 +182,6 @@ KURALLAR = [
 ]
 
 def kural_siniflandir(item: dict) -> str:
-    """
-    Kurallar ile hızlı sınıflandırma.
-    Döndürür: 'ihlaller' | 'raporlar' | 'makaleler' | 'kuresel' | 'ekosistem' | 'haberler' | 'belirsiz'
-    """
     metin = (
         (item.get("baslik") or "") + " " +
         (item.get("ozet") or "") + " " +
@@ -232,22 +191,18 @@ def kural_siniflandir(item: dict) -> str:
     kaynak_turu = item.get("kaynak_turu", "")
     kategori    = (item.get("kategori") or "").lower()
 
-    # Harita kaydı → doğrudan ihlal
     if kaynak_turu == "harita":
         return "ihlaller"
 
-    # Kaynak kategori eşleşmesi
     if kategori in ["çevre ihlali", "hed / res / baraj", "kamulaştırma", "çed kararları", "orman / maden"]:
         return "ihlaller"
     if kategori in ["stk"]:
         return "raporlar"
     if kategori in ["iklim"]:
-        # iklim haberleri: küresel ise kuresel, yerel ise haberler
         if any(k in metin for k in ["küresel", "dünya", "cop ", "ipcc", "ab ", "avrupa"]):
             return "kuresel"
         return "haberler"
 
-    # Kural eşleşmesi — sıra önemli
     puan = {h: 0 for h, _ in KURALLAR}
     for hedef, kelimeler in KURALLAR:
         for k in kelimeler:
@@ -256,18 +211,16 @@ def kural_siniflandir(item: dict) -> str:
 
     en_yuksek = max(puan.values())
     if en_yuksek == 0:
-        return "haberler"  # ekoloji filtresi geçti ama kural yok → genel haber
+        return "haberler"
 
-    # Birden fazla eşit puan varsa belirsiz
     en_iyi = [h for h, p in puan.items() if p == en_yuksek]
     if len(en_iyi) == 1:
         return en_iyi[0]
 
-    # Beraberlik → belirsiz (Claude'a gönderilecek)
     return "belirsiz"
 
 
-# ─── CLAUDE SINIFLANDIRICI (toplu, maliyet düşük) ─────────────────────
+# ─── CLAUDE SINIFLANDIRICI ────────────────────────────────────────────
 
 SINIF_SISTEM = """Sen bir ekoloji platformu için içerik sınıflandırıcısısın.
 Her öğe için şu 6 kategoriden birini seç:
@@ -283,22 +236,15 @@ SADECE JSON döndür, başka hiçbir şey ekleme:
 [{"id":"...","hedef":"..."},...]"""
 
 def claude_siniflandir(belirsizler: list) -> dict:
-    """
-    Belirsiz öğeleri Claude'a toplu gönderir.
-    Döndürür: {id: hedef} dict
-    """
     if not ANTHROPIC_API_KEY or not belirsizler:
         return {}
-
     sonuclar = {}
-    # 20'li gruplar halinde gönder (token limiti için)
     for i in range(0, len(belirsizler), 20):
         grup = belirsizler[i:i+20]
         icerik = json.dumps([
             {"id": h["id"], "baslik": h.get("baslik",""), "ozet": (h.get("ozet","") or "")[:150]}
             for h in grup
         ], ensure_ascii=False)
-
         try:
             r = requests.post(
                 "https://api.anthropic.com/v1/messages",
@@ -317,7 +263,6 @@ def claude_siniflandir(belirsizler: list) -> dict:
             )
             r.raise_for_status()
             metin = r.json()["content"][0]["text"].strip()
-            # JSON temizle
             if "```" in metin:
                 metin = metin.split("```")[1]
                 if metin.startswith("json"):
@@ -329,35 +274,29 @@ def claude_siniflandir(belirsizler: list) -> dict:
             time.sleep(0.5)
         except Exception as e:
             print(f"  Claude API hatası: {e}")
-            # Hata durumunda hepsini haberler'e at
             for h in grup:
                 sonuclar[h["id"]] = "haberler"
-
     return sonuclar
 
 
-# ─── DOSYA YÖNETİMİ ───────────────────────────────────────────────────
+# ─── İHLALLER DOSYA YÖNETİMİ ─────────────────────────────────────────
 
-def dosya_oku(yol: Path, anahtar: str) -> list:
-    """Mevcut JSON dosyasından liste okur, yoksa boş döner."""
-    if not yol.exists():
-        return []
-    try:
-        veri = json.loads(yol.read_text(encoding="utf-8"))
-        if isinstance(veri, list):
-            return veri
-        return veri.get(anahtar, veri.get("haberler", veri.get("items", [])))
-    except Exception:
-        return []
+def ihlaller_guncelle(yeni_ihlaller: list) -> int:
+    """Yeni ihlalleri ihlaller.json'a ekler, duplicate'leri atlar."""
+    mevcut = []
+    if IHLALLER_DOSYA.exists():
+        try:
+            veri = json.loads(IHLALLER_DOSYA.read_text(encoding="utf-8"))
+            mevcut = veri.get("ihlaller", [])
+        except Exception:
+            mevcut = []
 
-def dosya_yaz(yol: Path, yeni_items: list, hedef_adi: str, mevcut: list):
-    """Yeni öğeleri mevcut listeye ekler, tekrar edenleri atar, yazar."""
-    mevcut_idler = {i.get("id","") for i in mevcut}
-    eklenecek = [i for i in yeni_items if i.get("id","") not in mevcut_idler]
+    mevcut_idler = {i.get("id", "") for i in mevcut}
+    eklenecek = [i for i in yeni_ihlaller if i.get("id", "") not in mevcut_idler]
 
     birlesik = eklenecek + mevcut
     birlesik.sort(key=lambda x: x.get("tarih") or "1970", reverse=True)
-    birlesik = birlesik[:MAX_KAYIT[hedef_adi]]
+    birlesik = birlesik[:MAX_KAYIT["ihlaller"]]
 
     cikti = {
         "meta": {
@@ -365,15 +304,43 @@ def dosya_yaz(yol: Path, yeni_items: list, hedef_adi: str, mevcut: list):
             "toplam": len(birlesik),
             "yeni_eklenen": len(eklenecek),
         },
-        hedef_adi: birlesik,
+        "ihlaller": birlesik,
     }
-    # haberler.json için eski yapıyı koru
-    if hedef_adi == "haberler":
-        cikti["haberler"] = cikti.pop(hedef_adi)
-
-    yol.write_text(json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"  ✓ {yol.name}: {len(birlesik)} kayıt ({len(eklenecek)} yeni)")
+    IHLALLER_DOSYA.write_text(json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  ✓ ihlaller.json: {len(birlesik)} kayıt ({len(eklenecek)} yeni)")
     return len(eklenecek)
+
+
+# ─── HABERLER.JSON SENKRONIZASYONU ────────────────────────────────────
+
+def haberler_senkronize(kaynak: dict) -> int:
+    """
+    haberler.json içindeki raporlar/makaleler/uluslararasi/ekosistem
+    koleksiyonlarını ayrı dosyalara yazar (site uyumluluğu için).
+    """
+    ESLESME = {
+        "raporlar":     ("raporlar.json",  "raporlar"),
+        "makaleler":    ("makaleler.json", "makaleler"),
+        "uluslararasi": ("kuresel.json",   "kuresel"),
+        "ekosistem":    ("ekosistem.json", "ekosistem"),
+    }
+    toplam = 0
+    for kaynak_adi, (hedef_dosya, hedef_anahtar) in ESLESME.items():
+        liste = kaynak.get(kaynak_adi, [])
+        liste = liste[:MAX_KAYIT.get(hedef_anahtar, 300)]
+        cikti = {
+            "meta": {
+                "guncelleme": datetime.now(timezone.utc).isoformat(),
+                "toplam": len(liste),
+            },
+            hedef_anahtar: liste,
+        }
+        Path(hedef_dosya).write_text(
+            json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        print(f"  ✓ {hedef_dosya}: {len(liste)} kayıt senkronize edildi")
+        toplam += len(liste)
+    return toplam
 
 
 # ─── GITHUB'A YÜKLE ───────────────────────────────────────────────────
@@ -383,11 +350,8 @@ def github_yaz(dosya_yolu: Path):
         return
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{dosya_yolu.name}"
     headers = {"Authorization": f"Bearer {GITHUB_TOKEN}", "Content-Type": "application/json"}
-
-    # Mevcut SHA al
     r = requests.get(url, headers=headers, timeout=15)
     sha = r.json().get("sha") if r.status_code == 200 else None
-
     icerik = base64.b64encode(dosya_yolu.read_bytes()).decode()
     payload = {
         "message": f"dagitici: {dosya_yolu.name} guncellendi {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
@@ -395,7 +359,6 @@ def github_yaz(dosya_yolu: Path):
     }
     if sha:
         payload["sha"] = sha
-
     r = requests.put(url, headers=headers, json=payload, timeout=30)
     if r.status_code in (200, 201):
         print(f"    → GitHub: {dosya_yolu.name} yüklendi")
@@ -407,12 +370,11 @@ def github_yaz(dosya_yolu: Path):
 
 def dagit(gonder_github=False):
     print("═" * 55)
-    print("  ekoloji-izleme.com — Dağıtıcı v1")
+    print("  ekoloji-izleme.com — Dağıtıcı v2")
     print("═" * 55)
 
-    # 1. Kaynak oku
     if not HABERLER_DOSYA.exists():
-        print("HATA: haberler.json bulunamadı. Önce tarayici.py çalıştır.")
+        print("HATA: haberler.json bulunamadı.")
         sys.exit(1)
 
     kaynak = json.loads(HABERLER_DOSYA.read_text(encoding="utf-8"))
@@ -420,7 +382,7 @@ def dagit(gonder_github=False):
     harita_kayit = kaynak.get("harita_kayitlari", [])
     tum_items    = haberler + harita_kayit
 
-    # Sadece son 48 saatin yeni içerikleri işle (performans)
+    # Son 48 saatin yeni öğeleri
     sinir = datetime.now(timezone.utc) - timedelta(hours=48)
     yeni_items = []
     for h in tum_items:
@@ -433,14 +395,13 @@ def dagit(gonder_github=False):
             if t >= sinir:
                 yeni_items.append(h)
         except Exception:
-            yeni_items.append(h)  # tarih yoksa dahil et
+            yeni_items.append(h)
 
     print(f"\nİşlenecek: {len(yeni_items)} yeni öğe (son 48 saat)")
 
-    # 2. Kural tabanlı sınıflandır
-    siniflar = {k: [] for k in HEDEFLER}
+    # Kural tabanlı sınıflandır
+    siniflar = defaultdict(list)
     belirsizler = []
-
     for item in yeni_items:
         hedef = kural_siniflandir(item)
         if hedef == "belirsiz":
@@ -449,51 +410,44 @@ def dagit(gonder_github=False):
             siniflar[hedef].append(item)
 
     print(f"\nKural sınıflandırma:")
-    for k, v in siniflar.items():
-        print(f"  {k:12s}: {len(v)}")
+    for k in ["ihlaller", "raporlar", "makaleler", "kuresel", "ekosistem", "haberler"]:
+        print(f"  {k:12s}: {len(siniflar[k])}")
     print(f"  {'belirsiz':12s}: {len(belirsizler)}")
 
-    # 3. Belirsizleri Claude'a gönder
+    # Belirsizleri Claude'a gönder
     if belirsizler:
         print(f"\nClaude ile {len(belirsizler)} belirsiz öğe sınıflandırılıyor…")
         claude_sonuc = claude_siniflandir(belirsizler)
         for item in belirsizler:
-            hedef = claude_sonuc.get(item["id"], "haberler")
-            if hedef in siniflar:
-                siniflar[hedef].append(item)
-            else:
-                siniflar["haberler"].append(item)
+            hedef = claude_sonuc.get(item.get("id",""), "haberler")
+            siniflar[hedef].append(item)
 
-    # 4. Dosyalara yaz
+    # 1. İhlalleri ayrı dosyaya yaz
     print("\nDosyalar güncelleniyor…")
-    toplam_yeni = 0
-    for hedef_adi, dosya in HEDEFLER.items():
-        if hedef_adi == "haberler":
-            continue  # haberler.json tarayici.py tarafından yönetilir
-        mevcut = dosya_oku(dosya, hedef_adi)
-        n = dosya_yaz(dosya, siniflar[hedef_adi], hedef_adi, mevcut)
-        toplam_yeni += n
+    toplam_yeni = ihlaller_guncelle(siniflar["ihlaller"])
 
-    # haberler.json: _haber_kat ata ve meta güncelle
+    # 2. haberler.json: _haber_kat ata + meta güncelle
     haberler_liste = kaynak.get("haberler", [])
     for item in haberler_liste:
         if not item.get("_haber_kat") or item["_haber_kat"] == "?":
             item["_haber_kat"] = haber_kat_tespit(item)
     kaynak["haberler"] = haberler_liste
-    kaynak["meta"]["dagitici_calistirma"] = datetime.now(timezone.utc).isoformat()
+    kaynak.setdefault("meta", {})["dagitici_calistirma"] = datetime.now(timezone.utc).isoformat()
     HABERLER_DOSYA.write_text(json.dumps(kaynak, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"  ✓ haberler.json: meta güncellendi + _haber_kat atandı")
 
-    # Sub-kategori dosyaları yaz
+    # 3. haberler.json koleksiyonlarını ayrı dosyalara senkronize et
+    print("\nKoleksiyonlar senkronize ediliyor…")
+    haberler_senkronize(kaynak)
+
+    # 4. Alt-kategori dosyaları yaz
     print("  Alt-kategori dosyaları yazılıyor…")
-    from collections import defaultdict
     kat_gruplari = defaultdict(list)
     for item in haberler_liste:
         kat_gruplari[item["_haber_kat"]].append(item)
 
-    kat_ozet = {}
     for kat, items in kat_gruplari.items():
-        dosya_adi = HABER_KAT_DOSYA.get(kat, f"haberler-diger.json")
+        dosya_adi = HABER_KAT_DOSYA.get(kat, "haberler-diger.json")
         yol = Path(dosya_adi)
         cikti = {
             "meta": {"guncelleme": datetime.now(timezone.utc).isoformat(),
@@ -502,7 +456,6 @@ def dagit(gonder_github=False):
         }
         yol.write_text(json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8")
         boyut_kb = round(yol.stat().st_size / 1024, 1)
-        kat_ozet[kat] = (len(items), boyut_kb)
         print(f"    {dosya_adi}: {len(items)} kayıt ({boyut_kb} KB)")
 
     print(f"  ✓ {len(kat_gruplari)} alt-kategori dosyası yazıldı")
@@ -510,24 +463,29 @@ def dagit(gonder_github=False):
     # 5. GitHub'a yükle
     if gonder_github:
         print("\nGitHub'a yükleniyor…")
-        for hedef_adi, dosya in HEDEFLER.items():
+        dosyalar = [
+            HABERLER_DOSYA, IHLALLER_DOSYA,
+            Path("raporlar.json"), Path("makaleler.json"),
+            Path("kuresel.json"), Path("ekosistem.json"),
+        ]
+        for dosya in dosyalar:
             if dosya.exists():
                 github_yaz(dosya)
                 time.sleep(0.3)
 
-    print(f"\n✓ Dağıtım tamamlandı — {toplam_yeni} yeni öğe dağıtıldı")
+    print(f"\n✓ Dağıtım tamamlandı — {toplam_yeni} yeni ihlal dağıtıldı")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Tarama sonuçlarını 6 JSON dosyasına dağıt")
-    parser.add_argument("--tara",   action="store_true", help="Önce tarayici.py çalıştır")
-    parser.add_argument("--gonder", action="store_true", help="GitHub'a yükle")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--tara",   action="store_true")
+    parser.add_argument("--gonder", action="store_true")
     args = parser.parse_args()
 
     if args.tara:
         print("Tarayıcı başlatılıyor…")
         r = subprocess.run(
-            [sys.executable, "scripts/tarayici.py"],
+            [sys.executable, "tarayici.py"],
             capture_output=True, text=True
         )
         print(r.stdout)
