@@ -327,6 +327,16 @@ def haberler_senkronize(kaynak: dict) -> int:
     toplam = 0
     for kaynak_adi, (hedef_dosya, hedef_anahtar) in ESLESME.items():
         liste = kaynak.get(kaynak_adi, [])
+
+        # makaleler: Google News kaynaklı yorum/haber kategorilerini çıkar
+        if kaynak_adi == "makaleler":
+            liste = [
+                m for m in liste
+                if not (
+                    m.get("kaynak", "") == "Google News" and
+                    m.get("kategori", "") in ["Hukuki Yorum", "Yorum / Değerlendirme", "Köşe / Görüş"]
+                )
+            ]
         liste = liste[:MAX_KAYIT.get(hedef_anahtar, 300)]
         cikti = {
             "meta": {
