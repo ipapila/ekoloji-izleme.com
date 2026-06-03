@@ -6,7 +6,7 @@ on:
     workflows: ["Ekoloji Izleme Botu v9"]
     types:
       - completed
-      schedule:
+  schedule:
     - cron: '15 7 * * *'
 
 jobs:
