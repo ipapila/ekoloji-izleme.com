@@ -2,8 +2,10 @@ name: Günlük Rapor Üretimi
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '1 7 * * *'
+  workflow_run:
+    workflows: ["Ekoloji Izleme Botu v9"]
+    types:
+      - completed
 
 jobs:
   rapor-uret:
