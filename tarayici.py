@@ -18,7 +18,8 @@ import re
 import sys
 import time
 import urllib3
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+TR_TZ = timezone(timedelta(hours=3))  # Türkiye saati UTC+3
 from pathlib import Path
 from typing import Optional
 from urllib.parse import urljoin
@@ -78,6 +79,7 @@ RSS_KAYNAKLARI = [
      "kaynak": "Google News", "kategori": "Tarım Alanları / Maden", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://www.sozcu.com.tr/rss/cevre.xml",
      "kaynak": "Sözcü", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:mapeg.gov.tr+maden+ruhsat&hl=tr&gl=TR&ceid=TR:tr", "kaynak": "MAPEG (Maden)", "kategori": "Resmi / Maden", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://www.cumhuriyet.com.tr/rss/cevre.rss",
      "kaynak": "Cumhuriyet", "kategori": "Haber", "genel": True, "hedef": "haberler", "dil": "tr"},
 ]
@@ -313,12 +315,6 @@ WEB_KAYNAKLARI = [
     {"url": "https://www.csb.gov.tr/duyurular",  "kaynak": "Çevre Bakanlığı", "kategori": "Resmi",
      "secici": ".duyuru-item a, .news-item a, h3 a, h4 a, .list-item a, li a",
      "ozet_secici": ".duyuru-ozet, .news-excerpt, p",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.mapeg.gov.tr/Duyurular","kaynak": "MAPEG (Maden)",   "kategori": "Resmi / Maden",
-     "secici": ".news-list a, h4 a, li a, td a", "ozet_secici": ".news-detail, p",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": False},
-    {"url": "https://www.epdk.gov.tr/Detay/Duyurular", "kaynak": "EPDK (Enerji)", "kategori": "Resmi / Enerji",
-     "secici": ".announcement-list a, .title a, h3 a, h4 a, li a", "ozet_secici": ".description-text, p",
      "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
     {"url": "https://www.gazetepencere.com",     "kaynak": "Gazete Pencere",  "kategori": "Haber",
      "secici": ".news-title a, h3 a, h2 a, .card-title a, article a", "ozet_secici": ".news-excerpt, p",
@@ -681,9 +677,12 @@ def tarih_normalize(tarih_str) -> Optional[str]:
         return None
     try:
         if hasattr(tarih_str, "tm_year"):
-            return datetime(*tarih_str[:6], tzinfo=timezone.utc).isoformat()
+            # RSS time.struct_time → Türkiye saatine çevir
+            dt = datetime(*tarih_str[:6], tzinfo=timezone.utc).astimezone(TR_TZ)
+            return dt.isoformat()
         from email.utils import parsedate_to_datetime
-        return parsedate_to_datetime(str(tarih_str)).isoformat()
+        dt = parsedate_to_datetime(str(tarih_str)).astimezone(TR_TZ)
+        return dt.isoformat()
     except Exception:
         return str(tarih_str)
 
@@ -817,7 +816,7 @@ def web_tara(kaynaklar: list) -> dict:
                     "baslik":      baslik,
                     "ozet":        ozet,
                     "url":         link,
-                    "tarih":       datetime.now(timezone.utc).isoformat(),
+                    "tarih":       datetime.now(TR_TZ).isoformat(),
                     "kaynak":      kaynak["kaynak"],
                     "kategori":    kaynak["kategori"],
                     "kaynak_turu": "web",
@@ -862,11 +861,18 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
     gorulen_idler:     set = set()
     gorulen_urller:    set = set()
     gorulen_basliklar: set = set()
+    # baslik → alfanumerik_id haritasi: sayisal ID gelince alfanumerigi siler
+    baslik_to_id: dict = {}
     for kol in ("haberler", "raporlar", "makaleler", "uluslararasi", "ekosistem"):
         for h in eski.get(kol, []):
-            gorulen_idler.add(h.get("id", ""))
-            if h.get("url"):    gorulen_urller.add(url_normalize(h["url"]))
-            if h.get("baslik"): gorulen_basliklar.add(baslik_normalize(h["baslik"]))
+            h_id  = str(h.get("id", ""))
+            h_bas = baslik_normalize(h.get("baslik", ""))
+            gorulen_idler.add(h_id)
+            if h.get("url"):  gorulen_urller.add(url_normalize(h["url"]))
+            if h_bas:
+                gorulen_basliklar.add(h_bas)
+                if not h_id.isdigit():
+                    baslik_to_id[h_bas] = h_id
 
     log.info("\n-- RSS: Haberler --")
     rss_haber = rss_tara(RSS_KAYNAKLARI)
@@ -892,22 +898,42 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
     def filtrele_yeni(kaynaklar: list) -> list:
         yeni = []
         for h in kaynaklar:
-            h_id  = h["id"]
+            h_id  = str(h["id"])
             h_url = url_normalize(h.get("url", ""))
             h_bas = baslik_normalize(h.get("baslik", ""))
-            # Google News URL'leri değiştiği için ID ile değil baslik+kaynak ile kontrol et
-            kaynak_str = h.get("kaynak", "").lower().strip()
-            h_stabil = f"{h_bas}|{kaynak_str}" if h_bas else None
+
             if h_id in gorulen_idler:
                 continue
             if h_url and h_url in gorulen_urller and "news.google.com" not in h_url:
                 continue
+
+            # Ayni baslik zaten var mi?
             if h_bas and h_bas in gorulen_basliklar:
+                # Mevcut alfanumerik ID'li, yeni sayisal ID'liyse → alfanumerigi sil
+                eski_id = baslik_to_id.get(h_bas)
+                if eski_id and h_id.isdigit() and not eski_id.isdigit():
+                    # Eski alfanumerik kaydi tum koleksiyonlardan temizle
+                    for kol_adi in ("haberler", "raporlar", "makaleler", "uluslararasi", "ekosistem"):
+                        eski.get(kol_adi, [])[:] = [
+                            x for x in eski.get(kol_adi, [])
+                            if str(x.get("id", "")) != eski_id
+                        ]
+                    gorulen_idler.discard(eski_id)
+                    gorulen_idler.add(h_id)
+                    if h_url: gorulen_urller.add(h_url)
+                    baslik_to_id[h_bas] = h_id
+                    log.info(f"  [dedup] alfanumerik {eski_id} -> sayisal {h_id}: {h.get('baslik','')[:60]}")
+                    yeni.append(h)
+                # Her iki ID de ayni tipte → gercek duplicate, atla
                 continue
+
             yeni.append(h)
             gorulen_idler.add(h_id)
             if h_url: gorulen_urller.add(h_url)
-            if h_bas: gorulen_basliklar.add(h_bas)
+            if h_bas:
+                gorulen_basliklar.add(h_bas)
+                if not h_id.isdigit():
+                    baslik_to_id[h_bas] = h_id
         return yeni
 
     def birlestir_kaynak(*dicts):
@@ -935,7 +961,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
 
     cikti = {
         "meta": {
-            "guncelleme":       datetime.now(timezone.utc).isoformat(),
+            "guncelleme":       datetime.now(TR_TZ).isoformat(),
             "toplam_haber":     len(koleksiyonlar["haberler"]),
             "toplam_rapor":     len(koleksiyonlar["raporlar"]),
             "toplam_makale":    len(koleksiyonlar["makaleler"]),
