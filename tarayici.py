@@ -1154,7 +1154,7 @@ def web_tara(kaynaklar: list) -> dict:
 #  ANA FONKSİYON
 # ══════════════════════════════════════════════════════════════════
 
-def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
+def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
     log.info("=" * 55)
     log.info("  ekoloji-izleme.com — Haber Tarayici v4")
     log.info("=" * 55)
@@ -1330,8 +1330,8 @@ def tara(cikti_dosyasi="haberler.json", max_haber=500, max_diger=200):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cikti", default="haberler.json")
-    parser.add_argument("--max-haber", type=int, default=500)
-    parser.add_argument("--max-diger", type=int, default=200)
+    parser.add_argument("--max-haber", type=int, default=2000)
+    parser.add_argument("--max-diger", type=int, default=1000)
     parser.add_argument("--surekli", action="store_true")
     parser.add_argument("--aralik", type=int, default=180)
     args = parser.parse_args()
