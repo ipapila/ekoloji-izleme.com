@@ -307,7 +307,10 @@ def ihlaller_guncelle(yeni_ihlaller: list) -> int:
 
     birlesik = eklenecek + mevcut
     birlesik.sort(key=lambda x: x.get("tarih") or "1970", reverse=True)
-    birlesik = birlesik[:MAX_KAYIT["ihlaller"]]
+    from datetime import datetime, timedelta as _td
+_sinir_i = (datetime.now() - _td(days=180)).strftime("%Y-%m-%d")
+birlesik = [x for x in birlesik if (x.get("tarih") or "9999") >= _sinir_i or not x.get("tarih")]
+birlesik = birlesik[:MAX_KAYIT["ihlaller"]]
 
     cikti = {
         "meta": {
@@ -401,6 +404,18 @@ def haberler_senkronize(kaynak: dict) -> int:
                     m.get("kategori", "") in ["Hukuki Yorum", "Yorum / Değerlendirme", "Köşe / Görüş"]
                 )
             ]
+        from datetime import datetime as _dt, timedelta as _td
+        _sinir_h = (_dt.now() - _td(days=180)).strftime("%Y-%m-%d")
+        if kaynak_adi not in ("raporlar", "makaleler"):
+            liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
+        from datetime import datetime as _dt, timedelta as _td
+        _sinir_h = (_dt.now() - _td(days=180)).strftime("%Y-%m-%d")
+        if kaynak_adi not in ("raporlar", "makaleler"):
+            liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
+        from datetime import datetime as _dt, timedelta as _td
+        _sinir_h = (_dt.now() - _td(days=180)).strftime("%Y-%m-%d")
+        if kaynak_adi not in ("raporlar", "makaleler"):
+            liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
         liste = liste[:MAX_KAYIT.get(hedef_anahtar, 300)]
         cikti = {
             "meta": {
