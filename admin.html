@@ -967,8 +967,8 @@ function boot(){
 }
 
 function _fpCfg(){return{locale:"tr",dateFormat:"Y-m-d",allowInput:true,disableMobile:false,monthSelectorType:"static",prevArrow:"‹",nextArrow:"›"};}
-function _fpInit(){document.querySelectorAll('input[type="date"]').forEach(el=>{if(!el._flatpickr)flatpickr(el,_fpCfg());});}
-function _fpEditInit(){setTimeout(()=>{const el=document.querySelector('#editModal input[type="date"]');if(el&&!el._flatpickr)flatpickr(el,_fpCfg());},60);}
+function _fpInit(){if(typeof flatpickr==="undefined")return;document.querySelectorAll('input[type="date"]').forEach(el=>{if(!el._flatpickr)flatpickr(el,_fpCfg());});}
+function _fpEditInit(){if(typeof flatpickr==="undefined")return;setTimeout(()=>{const el=document.querySelector('#editModal input[type="date"]');if(el&&!el._flatpickr)flatpickr(el,_fpCfg());},60);}
 
 document.addEventListener("DOMContentLoaded",()=>{
   const importModal=document.getElementById("importModal"),importDrop=document.getElementById("importDropZone"),importFileInp=document.getElementById("importFileInput");
