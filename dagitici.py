@@ -324,6 +324,59 @@ def ihlaller_guncelle(yeni_ihlaller: list) -> int:
 
 # ─── HABERLER.JSON SENKRONIZASYONU ────────────────────────────────────
 
+
+
+# ─── AYLIK ARŞİV ──────────────────────────────────────────────────────
+
+def arsiv_yaz(kaynak: dict):
+    """
+    Her koleksiyonun geçen aya ait kayıtlarını arsiv/ klasörüne yazar.
+    Mevcut aydaki kayıtlara dokunmaz. Dosya zaten varsa üzerine yazmaz.
+    """
+    from datetime import date
+    bugun = date.today()
+    gecen_ay = (bugun.replace(day=1) - timedelta(days=1))
+    ay_str = gecen_ay.strftime("%Y-%m")
+
+    arsiv_dir = Path("arsiv")
+    arsiv_dir.mkdir(exist_ok=True)
+
+    KOLEKSIYONLAR = {
+        "haberler":     "haberler",
+        "raporlar":     "raporlar",
+        "makaleler":    "makaleler",
+        "uluslararasi": "kuresel",
+        "ekosistem":    "ekosistem",
+    }
+
+    for kaynak_adi, dosya_adi in KOLEKSIYONLAR.items():
+        arsiv_dosya = arsiv_dir / f"{dosya_adi}-{ay_str}.json"
+        if arsiv_dosya.exists():
+            continue
+
+        liste = kaynak.get(kaynak_adi, [])
+        ay_kayitlar = [
+            item for item in liste
+            if item.get("tarih", "")[:7] == ay_str
+        ]
+
+        if not ay_kayitlar:
+            continue
+
+        cikti = {
+            "meta": {
+                "arsiv_ay": ay_str,
+                "koleksiyon": dosya_adi,
+                "toplam": len(ay_kayitlar),
+                "olusturulma": datetime.now(timezone.utc).isoformat(),
+            },
+            dosya_adi: ay_kayitlar,
+        }
+        arsiv_dosya.write_text(
+            json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        print(f"  ✓ Arşiv: {arsiv_dosya.name} ({len(ay_kayitlar)} kayıt)")
+
 def haberler_senkronize(kaynak: dict) -> int:
     """
     haberler.json içindeki raporlar/makaleler/uluslararasi/ekosistem
@@ -458,6 +511,12 @@ def dagit(gonder_github=False):
     print(f"  ✓ haberler.json: meta güncellendi + _haber_kat atandı")
 
     # 3. haberler.json koleksiyonlarını ayrı dosyalara senkronize et
+    # Aylık arşiv yaz (her ayın 1inde önceki ayı arşivler)
+    from datetime import date
+    if date.today().day == 1:
+        print("\nAylık arşiv yazılıyor…")
+        arsiv_yaz(kaynak)
+
     print("\nKoleksiyonlar senkronize ediliyor…")
     haberler_senkronize(kaynak)
 
