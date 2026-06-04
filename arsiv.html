@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arşiv — ekoloji-izleme.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.arsiv-wrap{max-width:1100px;margin:0 auto;padding:90px 40px 80px;}
+.ay-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;margin-bottom:48px;}
+.ay-kart{background:var(--forest);padding:28px 32px;border-left:3px solid var(--accent);cursor:pointer;transition:all .2s;position:relative;}
+.ay-kart:hover{background:var(--deep);border-left-color:var(--bright);padding-left:38px;}
+.ay-kart.aktif{background:var(--deep);border-left-color:var(--bright);}
+.ay-etiket{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.ay-baslik{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--cream);line-height:1;}
+.ay-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;}
+.ay-meta span{display:flex;align-items:center;gap:4px;}
+.koleksiyon-bant{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.kol-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:1px solid rgba(45,158,107,.3);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer;transition:all .2s;}
+.kol-btn:hover{color:var(--bright);border-color:rgba(45,158,107,.6);}
+.kol-btn.aktif{background:rgba(45,158,107,.15);color:var(--bright);border-color:rgba(45,158,107,.6);}
+.haber-liste{display:flex;flex-direction:column;gap:2px;}
+.haber-satir{background:var(--forest);padding:20px 28px;display:flex;align-items:flex-start;gap:20px;cursor:pointer;transition:all .2s;border-left:2px solid transparent;}
+.haber-satir:hover{background:var(--deep);border-left-color:var(--accent);}
+.haber-tarih{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;min-width:80px;padding-top:3px;}
+.haber-icerik{flex:1;}
+.haber-baslik{font-size:15px;color:var(--cream);line-height:1.4;margin-bottom:5px;}
+.haber-kaynak{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:.06em;}
+.haber-ozet{font-size:13px;color:var(--muted);line-height:1.6;margin-top:6px;}
+.yukleniyor{text-align:center;padding:60px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em;}
+.bos-durum{text-align:center;padding:60px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;}
+.modal-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-icerik{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:640px;width:100%;padding:36px;position:relative;max-height:85vh;overflow-y:auto;}
+.modal-kapat{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;}
+.modal-etiket{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.modal-baslik{font-family:'Crimson Pro',serif;font-size:22px;font-weight:400;color:var(--cream);line-height:1.4;margin:0 0 16px;}
+.modal-ozet{font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;}
+.modal-link{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-decoration:none;border-radius:4px;text-transform:uppercase;}
+.modal-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(122,158,138,.6);margin-bottom:16px;}
+.toplam-bant{background:var(--forest);border:1px solid rgba(45,158,107,.15);border-radius:4px;padding:16px 24px;margin-bottom:32px;display:flex;gap:32px;flex-wrap:wrap;}
+.toplam-item{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;}
+.toplam-item strong{color:var(--bright);font-size:18px;font-family:'Bebas Neue',sans-serif;display:block;line-height:1;}
+.arama-wrap{margin-bottom:24px;}
+.arama-input{width:100%;padding:12px 16px;background:var(--forest);border:1px solid rgba(45,158,107,.2);border-radius:4px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;letter-spacing:.04em;}
+.arama-input:focus{border-color:rgba(45,158,107,.5);}
+.arama-input::placeholder{color:var(--muted);}
+.sayfa-nav{display:flex;justify-content:center;gap:8px;margin-top:24px;flex-wrap:wrap;}
+.sayfa-btn{font-family:'JetBrains Mono',monospace;font-size:10px;padding:6px 14px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;border-radius:2px;}
+.sayfa-btn:hover,.sayfa-btn.aktif{background:rgba(45,158,107,.15);color:var(--bright);border-color:rgba(45,158,107,.5);}
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+<div id="tickerInner" style="display:none;"></div>
+<script src="nav.js"></script>
+
+<div class="page-header">
+  <div class="section-tag">Geçmiş Veriler</div>
+  <h1 class="page-title">ARŞİV</h1>
+  <p class="page-subtitle">Geçmiş aylara ait haber, rapor, makale ve ekosistem kayıtları. Her ay otomatik olarak arşivlenir.</p>
+</div>
+
+<div class="arsiv-wrap">
+
+  <!-- Özet istatistik -->
+  <div class="toplam-bant" id="toplamBant" style="display:none;"></div>
+
+  <!-- Ay seçici -->
+  <div id="aySecici" class="ay-grid"></div>
+
+  <!-- Koleksiyon filtreleri -->
+  <div id="kolBant" class="koleksiyon-bant" style="display:none;">
+    <button class="kol-btn aktif" data-kol="haberler" onclick="kolSec(this,'haberler')">Haberler</button>
+    <button class="kol-btn" data-kol="raporlar" onclick="kolSec(this,'raporlar')">Raporlar</button>
+    <button class="kol-btn" data-kol="makaleler" onclick="kolSec(this,'makaleler')">Makaleler</button>
+    <button class="kol-btn" data-kol="kuresel" onclick="kolSec(this,'kuresel')">Küresel</button>
+    <button class="kol-btn" data-kol="ekosistem" onclick="kolSec(this,'ekosistem')">Ekosistem</button>
+  </div>
+
+  <!-- Arama -->
+  <div class="arama-wrap" id="aramaWrap" style="display:none;">
+    <input class="arama-input" id="aramaInput" type="text" placeholder="Başlık, kaynak veya içerik ara…" oninput="aramaYap()">
+  </div>
+
+  <!-- Haber listesi -->
+  <div id="haberListe"></div>
+
+  <!-- Sayfalama -->
+  <div class="sayfa-nav" id="sayfaNav"></div>
+
+</div>
+
+<script>
+const ARSIV_DOSYALAR = {
+  haberler:  "haberler",
+  raporlar:  "raporlar",
+  makaleler: "makaleler",
+  kuresel:   "kuresel",
+  ekosistem: "ekosistem",
+};
+
+const SAYFA_BOYUT = 30;
+let _seciliAy = null;
+let _seciliKol = "haberler";
+let _tumVeri = [];
+let _filtreliVeri = [];
+let _sayfaNo = 0;
+
+// ── Ay listesini oluştur ─────────────────────────────────────────────
+async function aylarıYukle() {
+  const secici = document.getElementById("aySecici");
+  secici.innerHTML = '<div class="yukleniyor">Arşiv taranıyor…</div>';
+
+  // arsiv/ klasöründe hangi dosyalar var? Her koleksiyon × muhtemel aylar kontrol
+  const bugun = new Date();
+  const aylar = new Map(); // "2026-05" → {haberler:N, raporlar:N, ...}
+
+  const kontrol = [];
+  for (let i = 1; i <= 24; i++) {
+    const d = new Date(bugun.getFullYear(), bugun.getMonth() - i, 1);
+    const ay = d.toISOString().slice(0, 7);
+    aylar.set(ay, {});
+    for (const kol of Object.keys(ARSIV_DOSYALAR)) {
+      kontrol.push({ ay, kol, dosya: `arsiv/${ARSIV_DOSYALAR[kol]}-${ay}.json` });
+    }
+  }
+
+  const sonuclar = await Promise.allSettled(
+    kontrol.map(k =>
+      fetch(k.dosya + "?v=" + Date.now(), { method: "HEAD" })
+        .then(r => ({ ...k, var: r.ok }))
+        .catch(() => ({ ...k, var: false }))
+    )
+  );
+
+  const bulunanlar = new Map();
+  for (const s of sonuclar) {
+    if (s.status === "fulfilled" && s.value.var) {
+      const { ay, kol } = s.value;
+      if (!bulunanlar.has(ay)) bulunanlar.set(ay, new Set());
+      bulunanlar.get(ay).add(kol);
+    }
+  }
+
+  if (bulunanlar.size === 0) {
+    secici.innerHTML = '<div class="bos-durum">Henüz arşiv dosyası yok.<br>Her ayın başında önceki ay otomatik arşivlenir.</div>';
+    return;
+  }
+
+  secici.innerHTML = "";
+  const sirali = [...bulunanlar.entries()].sort((a, b) => b[0].localeCompare(a[0]));
+
+  for (const [ay, koller] of sirali) {
+    const [yil, ayNo] = ay.split("-");
+    const ayAdi = new Date(+yil, +ayNo - 1, 1).toLocaleDateString("tr-TR", { month: "long", year: "numeric" });
+
+    const kart = document.createElement("div");
+    kart.className = "ay-kart";
+    kart.innerHTML = `
+      <div class="ay-etiket">ARŞİV</div>
+      <div class="ay-baslik">${ayAdi.toUpperCase()}</div>
+      <div class="ay-meta">
+        ${[...koller].map(k => `<span>● ${k}</span>`).join("")}
+      </div>`;
+    kart.onclick = () => aySec(ay, kart, [...koller]);
+    secici.appendChild(kart);
+  }
+}
+
+// ── Ay seç ───────────────────────────────────────────────────────────
+function aySec(ay, kartEl, mevcutKoller) {
+  document.querySelectorAll(".ay-kart").forEach(k => k.classList.remove("aktif"));
+  kartEl.classList.add("aktif");
+  _seciliAy = ay;
+  _sayfaNo = 0;
+
+  // Koleksiyon bantını göster
+  const kolBant = document.getElementById("kolBant");
+  kolBant.style.display = "flex";
+  document.querySelectorAll(".kol-btn").forEach(btn => {
+    const kol = btn.dataset.kol;
+    btn.style.opacity = mevcutKoller.includes(kol) ? "1" : "0.3";
+    btn.style.pointerEvents = mevcutKoller.includes(kol) ? "auto" : "none";
+  });
+
+  // Varsayılan koleksiyon
+  if (!mevcutKoller.includes(_seciliKol)) {
+    _seciliKol = mevcutKoller[0];
+  }
+  document.querySelectorAll(".kol-btn").forEach(b => b.classList.toggle("aktif", b.dataset.kol === _seciliKol));
+
+  document.getElementById("aramaWrap").style.display = "block";
+  document.getElementById("aramaInput").value = "";
+  veriYukle();
+}
+
+// ── Koleksiyon seç ──────────────────────────────────────────────────
+function kolSec(btn, kol) {
+  _seciliKol = kol;
+  _sayfaNo = 0;
+  document.querySelectorAll(".kol-btn").forEach(b => b.classList.remove("aktif"));
+  btn.classList.add("aktif");
+  document.getElementById("aramaInput").value = "";
+  veriYukle();
+}
+
+// ── Veri yükle ───────────────────────────────────────────────────────
+async function veriYukle() {
+  const liste = document.getElementById("haberListe");
+  liste.innerHTML = '<div class="yukleniyor">Yükleniyor…</div>';
+  document.getElementById("sayfaNav").innerHTML = "";
+  document.getElementById("toplamBant").style.display = "none";
+
+  const dosya = `arsiv/${ARSIV_DOSYALAR[_seciliKol]}-${_seciliAy}.json?v=${Date.now()}`;
+  try {
+    const r = await fetch(dosya);
+    if (!r.ok) throw new Error("Bulunamadı");
+    const veri = await r.json();
+    _tumVeri = veri[_seciliKol] || veri[Object.keys(veri).find(k => k !== "meta")] || [];
+    _filtreliVeri = [..._tumVeri];
+    toplamGuncelle();
+    sayfaRender();
+  } catch {
+    liste.innerHTML = '<div class="bos-durum">Bu ay için kayıt bulunamadı.</div>';
+  }
+}
+
+// ── Özet bant ────────────────────────────────────────────────────────
+function toplamGuncelle() {
+  const bant = document.getElementById("toplamBant");
+  bant.style.display = "flex";
+  bant.innerHTML = `
+    <div class="toplam-item"><strong>${_tumVeri.length}</strong>Toplam Kayıt</div>
+    <div class="toplam-item"><strong>${_filtreliVeri.length}</strong>Gösterilen</div>
+    <div class="toplam-item"><strong>${[...new Set(_tumVeri.map(h => h.kaynak).filter(Boolean))].length}</strong>Farklı Kaynak</div>
+  `;
+}
+
+// ── Arama ────────────────────────────────────────────────────────────
+function aramaYap() {
+  const q = document.getElementById("aramaInput").value.toLowerCase().trim();
+  _filtreliVeri = q
+    ? _tumVeri.filter(h =>
+        (h.baslik || "").toLowerCase().includes(q) ||
+        (h.kaynak || "").toLowerCase().includes(q) ||
+        (h.ozet || "").toLowerCase().includes(q)
+      )
+    : [..._tumVeri];
+  _sayfaNo = 0;
+  toplamGuncelle();
+  sayfaRender();
+}
+
+// ── Sayfa render ─────────────────────────────────────────────────────
+function sayfaRender() {
+  const liste = document.getElementById("haberListe");
+  const nav = document.getElementById("sayfaNav");
+
+  if (_filtreliVeri.length === 0) {
+    liste.innerHTML = '<div class="bos-durum">Sonuç bulunamadı.</div>';
+    nav.innerHTML = "";
+    return;
+  }
+
+  const toplamSayfa = Math.ceil(_filtreliVeri.length / SAYFA_BOYUT);
+  const sayfa = _filtreliVeri.slice(_sayfaNo * SAYFA_BOYUT, (_sayfaNo + 1) * SAYFA_BOYUT);
+
+  liste.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+
+  sayfa.forEach((h, i) => {
+    const div = document.createElement("div");
+    div.className = "haber-satir";
+    const tarih = h.tarih ? h.tarih.slice(0, 10) : "—";
+    div.innerHTML = `
+      <div class="haber-tarih">${tarih}</div>
+      <div class="haber-icerik">
+        <div class="haber-baslik">${h.baslik || "—"}</div>
+        <div class="haber-kaynak">${h.kaynak || ""}</div>
+        ${h.ozet ? `<div class="haber-ozet">${h.ozet.slice(0, 120)}${h.ozet.length > 120 ? "…" : ""}</div>` : ""}
+      </div>`;
+    div.onclick = () => modalAc(h);
+    fragment.appendChild(div);
+  });
+  liste.appendChild(fragment);
+
+  // Sayfalama
+  nav.innerHTML = "";
+  if (toplamSayfa > 1) {
+    const onceki = document.createElement("button");
+    onceki.className = "sayfa-btn";
+    onceki.textContent = "← Önceki";
+    onceki.disabled = _sayfaNo === 0;
+    onceki.onclick = () => { _sayfaNo--; sayfaRender(); window.scrollTo(0, 400); };
+    nav.appendChild(onceki);
+
+    for (let i = 0; i < toplamSayfa; i++) {
+      if (i > 1 && i < toplamSayfa - 1 && Math.abs(i - _sayfaNo) > 2) continue;
+      const btn = document.createElement("button");
+      btn.className = "sayfa-btn" + (i === _sayfaNo ? " aktif" : "");
+      btn.textContent = i + 1;
+      btn.onclick = ((pg) => () => { _sayfaNo = pg; sayfaRender(); window.scrollTo(0, 400); })(i);
+      nav.appendChild(btn);
+    }
+
+    const sonraki = document.createElement("button");
+    sonraki.className = "sayfa-btn";
+    sonraki.textContent = "Sonraki →";
+    sonraki.disabled = _sayfaNo >= toplamSayfa - 1;
+    sonraki.onclick = () => { _sayfaNo++; sayfaRender(); window.scrollTo(0, 400); };
+    nav.appendChild(sonraki);
+  }
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────
+function modalAc(h) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+
+  const kutu = document.createElement("div");
+  kutu.className = "modal-icerik";
+
+  const kapat = document.createElement("button");
+  kapat.className = "modal-kapat";
+  kapat.textContent = "✕";
+  kapat.onclick = () => overlay.remove();
+
+  const etiket = document.createElement("div");
+  etiket.className = "modal-etiket";
+  etiket.textContent = (h.kaynak || "") + (h.tarih ? " · " + h.tarih.slice(0, 10) : "");
+
+  const baslik = document.createElement("h3");
+  baslik.className = "modal-baslik";
+  baslik.textContent = h.baslik || "";
+
+  const ozet = document.createElement("p");
+  ozet.className = "modal-ozet";
+  ozet.textContent = h.ozet || "";
+
+  kutu.appendChild(kapat);
+  kutu.appendChild(etiket);
+  kutu.appendChild(baslik);
+  if (h.ozet) kutu.appendChild(ozet);
+
+  if (h.url) {
+    const link = document.createElement("a");
+    link.className = "modal-link";
+    link.href = h.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Kaynağa Git ↗";
+    kutu.appendChild(link);
+  }
+
+  overlay.appendChild(kutu);
+  overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+// ── Başlat ───────────────────────────────────────────────────────────
+aylarıYukle();
+</script>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">ekoloji-izleme<b>.com</b>
+        <p>Türkiye'deki ekolojik ihlalleri, çevre haberlerini ve direniş ağını izleyen bağımsız platform.</p>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>İçerik</h4>
+      <ul>
+        <li><a href="ihlaller.html">İhlaller</a></li>
+        <li><a href="haberler.html">Haberler</a></li>
+        <li><a href="raporlar.html">Raporlar</a></li>
+        <li><a href="makaleler.html">Makaleler</a></li>
+        <li><a href="kuresel.html">Küresel</a></li>
+        <li><a href="arsiv.html">Arşiv</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="harita.html">Harita</a></li>
+        <li><a href="ekosistem.html">Ekosistem</a></li>
+        <li><a href="direnis.html">Direniş Ağı</a></li>
+        <li><a href="rapor.html">Günlük Rapor</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 ekoloji-izleme.com — Bağımsız çevre izleme platformu</p>
+  </div>
+</footer>
+</body>
+</html>
