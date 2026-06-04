@@ -7,29 +7,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-.arsiv-wrap{max-width:1100px;margin:0 auto;padding:90px 40px 80px;}
-.ay-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;margin-bottom:48px;}
-.ay-kart{background:var(--forest);padding:28px 32px;border-left:3px solid var(--accent);cursor:pointer;transition:all .2s;position:relative;}
-.ay-kart:hover{background:var(--deep);border-left-color:var(--bright);padding-left:38px;}
-.ay-kart.aktif{background:var(--deep);border-left-color:var(--bright);}
-.ay-etiket{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
-.ay-baslik{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--cream);line-height:1;}
-.ay-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;}
-.ay-meta span{display:flex;align-items:center;gap:4px;}
-.koleksiyon-bant{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
-.kol-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:1px solid rgba(45,158,107,.3);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer;transition:all .2s;}
-.kol-btn:hover{color:var(--bright);border-color:rgba(45,158,107,.6);}
-.kol-btn.aktif{background:rgba(45,158,107,.15);color:var(--bright);border-color:rgba(45,158,107,.6);}
+.arsiv-wrap{max-width:1200px;margin:0 auto;padding:90px 40px 80px;}
+.arsiv-layout{display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:start;}
+/* ── Sidebar ── */
+.arsiv-sidebar{position:sticky;top:90px;}
+.sidebar-baslik{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(45,158,107,.15);}
+.ay-liste{display:flex;flex-direction:column;gap:2px;max-height:70vh;overflow-y:auto;padding-right:4px;}
+.ay-liste::-webkit-scrollbar{width:3px;}
+.ay-liste::-webkit-scrollbar-track{background:transparent;}
+.ay-liste::-webkit-scrollbar-thumb{background:rgba(45,158,107,.3);border-radius:2px;}
+.ay-item{font-family:'JetBrains Mono',monospace;font-size:11px;padding:10px 14px;cursor:pointer;color:var(--muted);border-left:2px solid transparent;transition:all .15s;display:flex;justify-content:space-between;align-items:center;}
+.ay-item:hover{color:var(--cream);background:rgba(45,158,107,.06);border-left-color:rgba(45,158,107,.4);}
+.ay-item.aktif{color:var(--bright);background:rgba(45,158,107,.1);border-left-color:var(--bright);}
+.ay-item-sayi{font-size:9px;opacity:.6;}
+/* ── İçerik ── */
+.arsiv-icerik{}
+.icerik-header{margin-bottom:24px;}
+.secili-ay-baslik{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--cream);line-height:1;margin-bottom:8px;}
+.koleksiyon-bant{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.kol-btn{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer;transition:all .2s;}
+.kol-btn:hover{color:var(--bright);border-color:rgba(45,158,107,.5);}
+.kol-btn.aktif{background:rgba(45,158,107,.15);color:var(--bright);border-color:rgba(45,158,107,.5);}
+.kol-btn:disabled{opacity:.3;pointer-events:none;}
+.toplam-bant{background:var(--forest);border:1px solid rgba(45,158,107,.12);border-radius:4px;padding:12px 20px;margin-bottom:20px;display:flex;gap:28px;flex-wrap:wrap;}
+.toplam-item{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.06em;}
+.toplam-item strong{color:var(--bright);font-size:16px;font-family:'Bebas Neue',sans-serif;display:block;line-height:1.1;}
+.arama-wrap{margin-bottom:16px;}
+.arama-input{width:100%;padding:10px 14px;background:var(--forest);border:1px solid rgba(45,158,107,.2);border-radius:4px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;letter-spacing:.04em;box-sizing:border-box;}
+.arama-input:focus{border-color:rgba(45,158,107,.5);}
+.arama-input::placeholder{color:var(--muted);}
 .haber-liste{display:flex;flex-direction:column;gap:2px;}
-.haber-satir{background:var(--forest);padding:20px 28px;display:flex;align-items:flex-start;gap:20px;cursor:pointer;transition:all .2s;border-left:2px solid transparent;}
+.haber-satir{background:var(--forest);padding:18px 24px;display:flex;align-items:flex-start;gap:18px;cursor:pointer;transition:all .2s;border-left:2px solid transparent;}
 .haber-satir:hover{background:var(--deep);border-left-color:var(--accent);}
-.haber-tarih{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;min-width:80px;padding-top:3px;}
+.haber-tarih{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);white-space:nowrap;min-width:72px;padding-top:3px;}
 .haber-icerik{flex:1;}
-.haber-baslik{font-size:15px;color:var(--cream);line-height:1.4;margin-bottom:5px;}
+.haber-baslik{font-size:14px;color:var(--cream);line-height:1.4;margin-bottom:4px;}
 .haber-kaynak{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:.06em;}
-.haber-ozet{font-size:13px;color:var(--muted);line-height:1.6;margin-top:6px;}
+.haber-ozet{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:5px;}
 .yukleniyor{text-align:center;padding:60px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em;}
 .bos-durum{text-align:center;padding:60px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;}
+.baslangic-mesaj{text-align:center;padding:80px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;border:1px dashed rgba(45,158,107,.2);border-radius:4px;}
+.sayfa-nav{display:flex;justify-content:center;gap:6px;margin-top:20px;flex-wrap:wrap;}
+.sayfa-btn{font-family:'JetBrains Mono',monospace;font-size:10px;padding:6px 12px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;border-radius:2px;}
+.sayfa-btn:hover,.sayfa-btn.aktif{background:rgba(45,158,107,.15);color:var(--bright);border-color:rgba(45,158,107,.5);}
+.sayfa-btn:disabled{opacity:.3;cursor:default;}
+/* Modal */
 .modal-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
 .modal-icerik{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:640px;width:100%;padding:36px;position:relative;max-height:85vh;overflow-y:auto;}
 .modal-kapat{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;}
@@ -37,17 +59,13 @@
 .modal-baslik{font-family:'Crimson Pro',serif;font-size:22px;font-weight:400;color:var(--cream);line-height:1.4;margin:0 0 16px;}
 .modal-ozet{font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;}
 .modal-link{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--accent);color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-decoration:none;border-radius:4px;text-transform:uppercase;}
-.modal-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(122,158,138,.6);margin-bottom:16px;}
-.toplam-bant{background:var(--forest);border:1px solid rgba(45,158,107,.15);border-radius:4px;padding:16px 24px;margin-bottom:32px;display:flex;gap:32px;flex-wrap:wrap;}
-.toplam-item{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;}
-.toplam-item strong{color:var(--bright);font-size:18px;font-family:'Bebas Neue',sans-serif;display:block;line-height:1;}
-.arama-wrap{margin-bottom:24px;}
-.arama-input{width:100%;padding:12px 16px;background:var(--forest);border:1px solid rgba(45,158,107,.2);border-radius:4px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;letter-spacing:.04em;}
-.arama-input:focus{border-color:rgba(45,158,107,.5);}
-.arama-input::placeholder{color:var(--muted);}
-.sayfa-nav{display:flex;justify-content:center;gap:8px;margin-top:24px;flex-wrap:wrap;}
-.sayfa-btn{font-family:'JetBrains Mono',monospace;font-size:10px;padding:6px 14px;border:1px solid rgba(45,158,107,.25);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;border-radius:2px;}
-.sayfa-btn:hover,.sayfa-btn.aktif{background:rgba(45,158,107,.15);color:var(--bright);border-color:rgba(45,158,107,.5);}
+@media(max-width:768px){
+  .arsiv-layout{grid-template-columns:1fr;}
+  .arsiv-sidebar{position:static;}
+  .ay-liste{max-height:200px;flex-direction:row;flex-wrap:wrap;gap:4px;}
+  .ay-item{border-left:none;border-bottom:2px solid transparent;padding:6px 10px;font-size:10px;}
+  .ay-item.aktif{border-bottom-color:var(--bright);}
+}
 </style>
 </head>
 <body>
@@ -58,37 +76,52 @@
 <div class="page-header">
   <div class="section-tag">Geçmiş Veriler</div>
   <h1 class="page-title">ARŞİV</h1>
-  <p class="page-subtitle">Geçmiş aylara ait haber, rapor, makale ve ekosistem kayıtları. Her ay otomatik olarak arşivlenir.</p>
+  <p class="page-subtitle">Geçmiş aylara ait haber, rapor, makale ve ekosistem kayıtları.</p>
 </div>
 
 <div class="arsiv-wrap">
+  <div class="arsiv-layout">
 
-  <!-- Özet istatistik -->
-  <div class="toplam-bant" id="toplamBant" style="display:none;"></div>
+    <!-- SOL SIDEBAR: Ay listesi -->
+    <div class="arsiv-sidebar">
+      <div class="sidebar-baslik">Aylar</div>
+      <div id="ayListe" class="ay-liste">
+        <div class="yukleniyor">Taranıyor…</div>
+      </div>
+    </div>
 
-  <!-- Ay seçici -->
-  <div id="aySecici" class="ay-grid"></div>
+    <!-- SAĞ İÇERİK -->
+    <div class="arsiv-icerik">
 
-  <!-- Koleksiyon filtreleri -->
-  <div id="kolBant" class="koleksiyon-bant" style="display:none;">
-    <button class="kol-btn aktif" data-kol="haberler" onclick="kolSec(this,'haberler')">Haberler</button>
-    <button class="kol-btn" data-kol="raporlar" onclick="kolSec(this,'raporlar')">Raporlar</button>
-    <button class="kol-btn" data-kol="makaleler" onclick="kolSec(this,'makaleler')">Makaleler</button>
-    <button class="kol-btn" data-kol="kuresel" onclick="kolSec(this,'kuresel')">Küresel</button>
-    <button class="kol-btn" data-kol="ekosistem" onclick="kolSec(this,'ekosistem')">Ekosistem</button>
+      <!-- Seçili ay başlığı -->
+      <div class="icerik-header" id="icericHeader" style="display:none;">
+        <div class="secili-ay-baslik" id="seciliAyBaslik"></div>
+        <div class="koleksiyon-bant" id="kolBant">
+          <button class="kol-btn aktif" data-kol="haberler" onclick="kolSec(this,'haberler')">Haberler</button>
+          <button class="kol-btn" data-kol="raporlar" onclick="kolSec(this,'raporlar')">Raporlar</button>
+          <button class="kol-btn" data-kol="makaleler" onclick="kolSec(this,'makaleler')">Makaleler</button>
+          <button class="kol-btn" data-kol="kuresel" onclick="kolSec(this,'kuresel')">Küresel</button>
+          <button class="kol-btn" data-kol="ekosistem" onclick="kolSec(this,'ekosistem')">Ekosistem</button>
+        </div>
+        <div class="toplam-bant" id="toplamBant"></div>
+        <div class="arama-wrap">
+          <input class="arama-input" id="aramaInput" type="text" placeholder="Başlık, kaynak veya içerik ara…" oninput="aramaYap()">
+        </div>
+      </div>
+
+      <!-- Başlangıç mesajı -->
+      <div class="baslangic-mesaj" id="baslangicMesaj">
+        ← Soldaki listeden bir ay seçin
+      </div>
+
+      <!-- Haber listesi -->
+      <div id="haberListe"></div>
+
+      <!-- Sayfalama -->
+      <div class="sayfa-nav" id="sayfaNav"></div>
+
+    </div>
   </div>
-
-  <!-- Arama -->
-  <div class="arama-wrap" id="aramaWrap" style="display:none;">
-    <input class="arama-input" id="aramaInput" type="text" placeholder="Başlık, kaynak veya içerik ara…" oninput="aramaYap()">
-  </div>
-
-  <!-- Haber listesi -->
-  <div id="haberListe"></div>
-
-  <!-- Sayfalama -->
-  <div class="sayfa-nav" id="sayfaNav"></div>
-
 </div>
 
 <script>
@@ -106,21 +139,18 @@ let _seciliKol = "haberler";
 let _tumVeri = [];
 let _filtreliVeri = [];
 let _sayfaNo = 0;
+let _mevcutKoller = [];
 
 // ── Ay listesini oluştur ─────────────────────────────────────────────
 async function aylarıYukle() {
-  const secici = document.getElementById("aySecici");
-  secici.innerHTML = '<div class="yukleniyor">Arşiv taranıyor…</div>';
+  const liste = document.getElementById("ayListe");
+  liste.innerHTML = '<div class="yukleniyor">Taranıyor…</div>';
 
-  // arsiv/ klasöründe hangi dosyalar var? Her koleksiyon × muhtemel aylar kontrol
   const bugun = new Date();
-  const aylar = new Map(); // "2026-05" → {haberler:N, raporlar:N, ...}
-
   const kontrol = [];
-  for (let i = 1; i <= 24; i++) {
+  for (let i = 1; i <= 36; i++) {
     const d = new Date(bugun.getFullYear(), bugun.getMonth() - i, 1);
     const ay = d.toISOString().slice(0, 7);
-    aylar.set(ay, {});
     for (const kol of Object.keys(ARSIV_DOSYALAR)) {
       kontrol.push({ ay, kol, dosya: `arsiv/${ARSIV_DOSYALAR[kol]}-${ay}.json` });
     }
@@ -144,44 +174,47 @@ async function aylarıYukle() {
   }
 
   if (bulunanlar.size === 0) {
-    secici.innerHTML = '<div class="bos-durum">Henüz arşiv dosyası yok.<br>Her ayın başında önceki ay otomatik arşivlenir.</div>';
+    liste.innerHTML = '<div class="bos-durum">Henüz arşiv yok.</div>';
     return;
   }
 
-  secici.innerHTML = "";
+  liste.innerHTML = "";
   const sirali = [...bulunanlar.entries()].sort((a, b) => b[0].localeCompare(a[0]));
 
   for (const [ay, koller] of sirali) {
     const [yil, ayNo] = ay.split("-");
     const ayAdi = new Date(+yil, +ayNo - 1, 1).toLocaleDateString("tr-TR", { month: "long", year: "numeric" });
 
-    const kart = document.createElement("div");
-    kart.className = "ay-kart";
-    kart.innerHTML = `
-      <div class="ay-etiket">ARŞİV</div>
-      <div class="ay-baslik">${ayAdi.toUpperCase()}</div>
-      <div class="ay-meta">
-        ${[...koller].map(k => `<span>● ${k}</span>`).join("")}
-      </div>`;
-    kart.onclick = () => aySec(ay, kart, [...koller]);
-    secici.appendChild(kart);
+    const item = document.createElement("div");
+    item.className = "ay-item";
+    item.dataset.ay = ay;
+    item.innerHTML = `<span>${ayAdi}</span><span class="ay-item-sayi">${koller.size} kol.</span>`;
+    item.onclick = () => aySec(ay, item, [...koller]);
+    liste.appendChild(item);
   }
 }
 
 // ── Ay seç ───────────────────────────────────────────────────────────
-function aySec(ay, kartEl, mevcutKoller) {
-  document.querySelectorAll(".ay-kart").forEach(k => k.classList.remove("aktif"));
-  kartEl.classList.add("aktif");
+function aySec(ay, itemEl, mevcutKoller) {
+  document.querySelectorAll(".ay-item").forEach(k => k.classList.remove("aktif"));
+  itemEl.classList.add("aktif");
   _seciliAy = ay;
   _sayfaNo = 0;
+  _mevcutKoller = mevcutKoller;
 
-  // Koleksiyon bantını göster
-  const kolBant = document.getElementById("kolBant");
-  kolBant.style.display = "flex";
+  // Başlık
+  const [yil, ayNo] = ay.split("-");
+  const ayAdi = new Date(+yil, +ayNo - 1, 1).toLocaleDateString("tr-TR", { month: "long", year: "numeric" });
+  document.getElementById("seciliAyBaslik").textContent = ayAdi.toUpperCase();
+  document.getElementById("icericHeader").style.display = "block";
+  document.getElementById("baslangicMesaj").style.display = "none";
+
+  // Koleksiyon butonları
   document.querySelectorAll(".kol-btn").forEach(btn => {
     const kol = btn.dataset.kol;
-    btn.style.opacity = mevcutKoller.includes(kol) ? "1" : "0.3";
-    btn.style.pointerEvents = mevcutKoller.includes(kol) ? "auto" : "none";
+    const mevcut = mevcutKoller.includes(kol);
+    btn.disabled = !mevcut;
+    btn.style.opacity = mevcut ? "1" : "0.3";
   });
 
   // Varsayılan koleksiyon
@@ -190,7 +223,6 @@ function aySec(ay, kartEl, mevcutKoller) {
   }
   document.querySelectorAll(".kol-btn").forEach(b => b.classList.toggle("aktif", b.dataset.kol === _seciliKol));
 
-  document.getElementById("aramaWrap").style.display = "block";
   document.getElementById("aramaInput").value = "";
   veriYukle();
 }
@@ -210,14 +242,14 @@ async function veriYukle() {
   const liste = document.getElementById("haberListe");
   liste.innerHTML = '<div class="yukleniyor">Yükleniyor…</div>';
   document.getElementById("sayfaNav").innerHTML = "";
-  document.getElementById("toplamBant").style.display = "none";
+  document.getElementById("toplamBant").innerHTML = "";
 
   const dosya = `arsiv/${ARSIV_DOSYALAR[_seciliKol]}-${_seciliAy}.json?v=${Date.now()}`;
   try {
     const r = await fetch(dosya);
     if (!r.ok) throw new Error("Bulunamadı");
     const veri = await r.json();
-    _tumVeri = veri[_seciliKol] || veri[Object.keys(veri).find(k => k !== "meta")] || [];
+    _tumVeri = veri[_seciliKol] || veri[Object.keys(veri).find(k => k !== "meta" && k !== "_meta")] || [];
     _filtreliVeri = [..._tumVeri];
     toplamGuncelle();
     sayfaRender();
@@ -229,11 +261,11 @@ async function veriYukle() {
 // ── Özet bant ────────────────────────────────────────────────────────
 function toplamGuncelle() {
   const bant = document.getElementById("toplamBant");
-  bant.style.display = "flex";
+  const kaynakSayisi = [...new Set(_tumVeri.map(h => h.kaynak).filter(Boolean))].length;
   bant.innerHTML = `
-    <div class="toplam-item"><strong>${_tumVeri.length}</strong>Toplam Kayıt</div>
+    <div class="toplam-item"><strong>${_tumVeri.length}</strong>Toplam</div>
     <div class="toplam-item"><strong>${_filtreliVeri.length}</strong>Gösterilen</div>
-    <div class="toplam-item"><strong>${[...new Set(_tumVeri.map(h => h.kaynak).filter(Boolean))].length}</strong>Farklı Kaynak</div>
+    <div class="toplam-item"><strong>${kaynakSayisi}</strong>Kaynak</div>
   `;
 }
 
@@ -269,7 +301,7 @@ function sayfaRender() {
   liste.innerHTML = "";
   const fragment = document.createDocumentFragment();
 
-  sayfa.forEach((h, i) => {
+  sayfa.forEach(h => {
     const div = document.createElement("div");
     div.className = "haber-satir";
     const tarih = h.tarih ? h.tarih.slice(0, 10) : "—";
@@ -334,14 +366,16 @@ function modalAc(h) {
   baslik.className = "modal-baslik";
   baslik.textContent = h.baslik || "";
 
-  const ozet = document.createElement("p");
-  ozet.className = "modal-ozet";
-  ozet.textContent = h.ozet || "";
-
   kutu.appendChild(kapat);
   kutu.appendChild(etiket);
   kutu.appendChild(baslik);
-  if (h.ozet) kutu.appendChild(ozet);
+
+  if (h.ozet) {
+    const ozet = document.createElement("p");
+    ozet.className = "modal-ozet";
+    ozet.textContent = h.ozet;
+    kutu.appendChild(ozet);
+  }
 
   if (h.url) {
     const link = document.createElement("a");
