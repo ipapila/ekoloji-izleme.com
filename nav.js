@@ -155,6 +155,8 @@
         <a href="haberler.html?hkat=Hukuki+S%C3%BCre%C3%A7ler"><span class="dot"></span>Hukuki Süreçler</a>
         <a href="haberler.html?hkat=N%C3%B6betler+ve+G%C3%B6zalt%C4%B1lar"><span class="dot"></span>Nöbetler & Gözaltılar</a>
         <a href="haberler.html?hkat=STK+%26+Kampanyalar"><span class="dot"></span>STK & Kampanyalar</a>
+        <hr>
+        <a href="arsiv.html"><span class="dot"></span>Arşiv</a>
       </div>
     </li>
 
