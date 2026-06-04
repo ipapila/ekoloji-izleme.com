@@ -101,7 +101,7 @@ HABERLER_DOSYA  = Path("haberler.json")
 IHLALLER_DOSYA  = Path("ihlaller.json")
 
 MAX_KAYIT = {
-    "ihlaller":  500,
+    "ihlaller":  1000,
     "raporlar":  300,
     "makaleler": 300,
     "kuresel":   300,
@@ -129,9 +129,9 @@ KURALLAR = [
         "yangın sorumlu", "orman yangını ihmal",
     ]),
     ("raporlar", [
-        "rapor yayımlandı", "araştırma raporu", "izleme raporu",
         "dava açıldı", "mahkeme kararı", "yürütmeyi durdurma",
         "iptal davası", "itiraz edildi", "temyiz",
+        "rapor yayımlandı", "araştırma raporu", "izleme raporu",
         "bilirkişi", "teknik rapor", "etki değerlendirme",
         "meclis sorusu", "soru önergesi", "meclis araştırma",
         "sayıştay", "ombudsman", "kamu denetçisi",
@@ -181,7 +181,16 @@ KURALLAR = [
     ]),
 ]
 
+
+# Kalici istisna listesi - bu ID ler hic bir zaman ihlallere gitmez
+ISTISNA_IDLER = {
+    '5f43b78b49ba',  # Esra Isik davasi
+    '57d8101fa98b',  # CHP Meclis haberi
+}
+
 def kural_siniflandir(item: dict) -> str:
+    if item.get("id") in ISTISNA_IDLER:
+        return "haberler"
     metin = (
         (item.get("baslik") or "") + " " +
         (item.get("ozet") or "") + " " +
@@ -194,10 +203,12 @@ def kural_siniflandir(item: dict) -> str:
     if kaynak_turu == "harita":
         return "ihlaller"
 
-    if kategori in ["çevre ihlali", "hed / res / baraj", "kamulaştırma", "çed kararları", "orman / maden"]:
+    if kategori in ["çevre ihlali", "hed / res / baraj", "kamulaştırma", "çed kararları", "orman / maden", "resmi / maden", "resmi i̇hale / maden", "resmi ihale / maden", "resmi / enerji", "resmi gazete çevre"]:
         return "ihlaller"
     if kategori in ["stk"]:
         return "raporlar"
+    if kategori in ["haber", "genel haber", "gündem"]:
+        return "haberler"
     if kategori in ["iklim"]:
         if any(k in metin for k in ["küresel", "dünya", "cop ", "ipcc", "ab ", "avrupa"]):
             return "kuresel"
@@ -393,7 +404,7 @@ def dagit(gonder_github=False):
     tum_items    = haberler + harita_kayit
 
     # Son 48 saatin yeni öğeleri
-    sinir = datetime.now(timezone.utc) - timedelta(hours=48)
+    sinir = datetime.now(timezone.utc) - timedelta(days=365)
     yeni_items = []
     for h in tum_items:
         tarih_str = h.get("tarih") or ""
