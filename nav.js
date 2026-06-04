@@ -251,6 +251,9 @@
         <a href="ekosistem.html?sec=goc"><span class="dot"></span>İklim Göçü & Yerinden Edilme</a>
       </div>
     </li>
+    <li class="nav-item">
+      <a href="arsiv.html" class="nav-link ${current === 'arsiv.html' ? 'active' : ''}">Arşiv</a>
+    </li>
   </ul>
 
   <div style="display:flex;align-items:center;gap:16px;">
