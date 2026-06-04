@@ -75,8 +75,6 @@
 .kol-ulus{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);color:#c084fc;}
 @media(max-width:700px){.stats-row{grid-template-columns:repeat(2,1fr);}.tag-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<style>
 .flatpickr-calendar{background:var(--deep,#0d2318)!important;border:1px solid rgba(45,158,107,.3)!important;border-radius:6px!important;box-shadow:0 12px 40px rgba(0,0,0,.5)!important;font-family:'JetBrains Mono',monospace!important;}
 .flatpickr-months{background:var(--forest,#112c1c)!important;border-radius:6px 6px 0 0;}
 .flatpickr-month,.flatpickr-current-month,.flatpickr-monthDropdown-months,.numInputWrapper span,.flatpickr-current-month .numInputWrapper input{color:#f0f5f2!important;background:transparent!important;}
@@ -967,8 +965,8 @@ function boot(){
 }
 
 function _fpCfg(){return{locale:"tr",dateFormat:"Y-m-d",allowInput:true,disableMobile:false,monthSelectorType:"static",prevArrow:"‹",nextArrow:"›"};}
-function _fpInit(){if(typeof flatpickr==="undefined")return;document.querySelectorAll('input[type="date"]').forEach(el=>{if(!el._flatpickr)flatpickr(el,_fpCfg());});}
-function _fpEditInit(){if(typeof flatpickr==="undefined")return;setTimeout(()=>{const el=document.querySelector('#editModal input[type="date"]');if(el&&!el._flatpickr)flatpickr(el,_fpCfg());},60);}
+function _fpInit(){document.querySelectorAll('input[type="date"]').forEach(el=>{if(!el._flatpickr)flatpickr(el,_fpCfg());});}
+function _fpEditInit(){setTimeout(()=>{const el=document.querySelector('#editModal input[type="date"]');if(el&&!el._flatpickr)flatpickr(el,_fpCfg());},60);}
 
 document.addEventListener("DOMContentLoaded",()=>{
   const importModal=document.getElementById("importModal"),importDrop=document.getElementById("importDropZone"),importFileInp=document.getElementById("importFileInput");
@@ -1011,7 +1009,5 @@ async function veriYaz(){
   }catch(e){setSyncDurum("error",e.message.slice(0,40));toast("⚠ "+e.message);}
 }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/tr.js"></script>
 </body>
 </html>
