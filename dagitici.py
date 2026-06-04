@@ -101,12 +101,12 @@ HABERLER_DOSYA  = Path("haberler.json")
 IHLALLER_DOSYA  = Path("ihlaller.json")
 
 MAX_KAYIT = {
-    "ihlaller":  1000,
-    "raporlar":  300,
-    "makaleler": 300,
-    "kuresel":   300,
-    "ekosistem": 300,
-    "haberler":  500,
+    "ihlaller":  5000,
+    "raporlar":  2000,
+    "makaleler": 2000,
+    "kuresel":   2000,
+    "ekosistem": 2000,
+    "haberler":  5000,
 }
 
 # ─── KURAL TABANLI SINIFLANDIRICI ─────────────────────────────────────
