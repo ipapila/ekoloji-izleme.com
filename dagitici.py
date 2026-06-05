@@ -290,6 +290,38 @@ def claude_siniflandir(belirsizler: list) -> dict:
     return sonuclar
 
 
+# ─── ÇİFT (DUPLICATE) ÖNLEME ─────────────────────────────────────────
+
+def _sayisal_mi(deger) -> bool:
+    """ID sayısal mı? (admin-panel kaynaklı = sayısal, scraper = alfanümerik)"""
+    return str(deger).isdigit()
+
+def baslik_tekille(liste: list) -> list:
+    """
+    Aynı başlığa sahip kayıtları teke indirir.
+    Çakışmada sayısal ID'li (admin kaynaklı) kayıt korunur; ikisi de
+    aynı türse listede önce gelen (daha yeni) korunur. Sıra bozulmaz.
+    """
+    gorulen = {}          # normalize başlık -> temiz listedeki index
+    temiz = []
+    for x in liste:
+        k = (x.get("baslik") or "").strip().lower()
+        if not k:
+            temiz.append(x)          # başlıksız kayıtları olduğu gibi bırak
+            continue
+        if k in gorulen:
+            idx = gorulen[k]
+            eski = temiz[idx]
+            # Yeni gelen sayısal ID'li ve eski değilse, yeniyi tut
+            if _sayisal_mi(x.get("id")) and not _sayisal_mi(eski.get("id")):
+                temiz[idx] = x
+            # aksi halde yeniyi at (hiçbir şey yapma)
+        else:
+            gorulen[k] = len(temiz)
+            temiz.append(x)
+    return temiz
+
+
 # ─── İHLALLER DOSYA YÖNETİMİ ─────────────────────────────────────────
 
 def ihlaller_guncelle(yeni_ihlaller: list) -> int:
@@ -306,6 +338,13 @@ def ihlaller_guncelle(yeni_ihlaller: list) -> int:
     eklenecek = [i for i in yeni_ihlaller if i.get("id", "") not in mevcut_idler]
 
     birlesik = eklenecek + mevcut
+    # Başlık bazlı çift-önleme: aynı başlıklı kayıtları teke indir
+    # (ID farklı olsa bile; sayısal/admin ID'li olan korunur)
+    _onceki = len(birlesik)
+    birlesik = baslik_tekille(birlesik)
+    _silinen_cift = _onceki - len(birlesik)
+    if _silinen_cift:
+        print(f"  ⓘ ihlaller: {_silinen_cift} başlık-çifti tekilleştirildi")
     birlesik.sort(key=lambda x: x.get("tarih") or "1970", reverse=True)
     from datetime import datetime, timedelta
     _sinir_i = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
@@ -410,6 +449,12 @@ def haberler_senkronize(kaynak: dict) -> int:
         _sinir_h = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
         if kaynak_adi not in ("raporlar", "makaleler"):
             liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
+
+        # Başlık bazlı çift-önleme (her koleksiyon için)
+        _onceki = len(liste)
+        liste = baslik_tekille(liste)
+        if _onceki - len(liste):
+            print(f"  ⓘ {hedef_anahtar}: {_onceki - len(liste)} başlık-çifti tekilleştirildi")
 
         # En yeni önce sıralansın
         liste = sorted(liste, key=lambda x: x.get("tarih") or "", reverse=True)
