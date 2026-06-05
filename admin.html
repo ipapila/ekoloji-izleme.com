@@ -923,6 +923,7 @@ function dupTemizle(){
     toplamSilinen+=silIdler.size;
     if(_veri[kol])_veri[kol]=_veri[kol].filter(x=>!silIdler.has(String(x.id)));
     SITE.set(kol,SITE.getList(kol).filter(x=>!silIdler.has(String(x.id))));
+    silIdler.forEach(id=>silEkle(kol,id));
     tabloRender(kol);
   });
   document.getElementById("dupModal").style.display="none";
@@ -961,27 +962,41 @@ async function veriYaz(){
   async function ghOku(dosya){const r=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/${dosya}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});if(!r.ok)throw new Error(`${dosya} okunamadı (HTTP ${r.status})`);return r.json();}
   async function ghYaz(dosya,icerik,sha){const content=btoa(unescape(encodeURIComponent(JSON.stringify(icerik,null,2))));const r=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/${dosya}`,{method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({message:`admin: ${dosya} güncellendi`,content,sha})});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(`${dosya}: HTTP ${r.status} — ${e.message||""}`);}  }
   async function ghYazVeyaOlustur(dosya,icerik){try{const m=await ghOku(dosya);await ghYaz(dosya,icerik,m.sha);}catch(e){if(String(e).includes("okunamadı")){const content=btoa(unescape(encodeURIComponent(JSON.stringify(icerik,null,2))));await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/${dosya}`,{method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({message:`admin: ${dosya} oluşturuldu`,content})});}else throw e;}}
+  // Bir GitHub dosyasını okuyup içeriğini + sha'sını döndürür (yoksa boş döner).
+  async function ghOkuVeri(dosya,anahtar){
+    try{
+      const m=await ghOku(dosya);
+      let veri=[];
+      try{const _b=Uint8Array.from(atob(m.content.replace(/\n/g,"")),c=>c.charCodeAt(0));const _d=JSON.parse(new TextDecoder("utf-8").decode(_b));veri=_d[anahtar]||(Array.isArray(_d)?_d:[]);}catch{veri=[];}
+      return {veri,sha:m.sha};
+    }catch(e){return {veri:[],sha:null};}
+  }
+  // Yerel (localStorage) kayıtları uzak (GitHub) kayıtlarla birleştirir, silinenleri çıkarır.
+  function birlestir(col,uzak){
+    const sil=silGetir(col);
+    const yerel=SITE.getList(col).filter(x=>!sil.has(String(x.id)));
+    const yerelIds=new Set(yerel.map(x=>String(x.id)));
+    const uzakTemiz=(uzak||[]).filter(x=>!sil.has(String(x.id)) && !yerelIds.has(String(x.id)));
+    return [...yerel,...uzakTemiz];
+  }
+  // Bir koleksiyonu kendi dosyasından okuyup, birleştirip, aynı dosyaya yazar.
+  async function senkronizeEt(dosya,anahtar,col){
+    const {veri:uzak,sha}=await ghOkuVeri(dosya,anahtar);
+    const birlesik=birlestir(col,uzak);
+    const govde={[anahtar]:birlesik,_meta:{guncelleme:new Date().toISOString(),toplam:birlesik.length}};
+    if(sha)await ghYaz(dosya,govde,sha);
+    else await ghYazVeyaOlustur(dosya,govde);
+    return birlesik.length;
+  }
   try{
-    const dataMeta=await ghOku("data.json");let mevcut;
-    try{const _b=Uint8Array.from(atob(dataMeta.content.replace(/\n/g,"")),c=>c.charCodeAt(0));mevcut=JSON.parse(new TextDecoder("utf-8").decode(_b));}catch{try{const _r=atob(dataMeta.content.replace(/\n/g,""));mevcut=JSON.parse(decodeURIComponent(_r.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{mevcut={};}}
-    if(typeof mevcut!=="object"||!mevcut)mevcut={};
-    const _silI=silGetir("ihlaller"),_lI=SITE.getList("ihlaller").filter(x=>!_silI.has(String(x.id)));const _sI=(mevcut.ihlaller||[]).filter(x=>!_silI.has(String(x.id)));const _lIIds=new Set(_lI.map(x=>String(x.id)));mevcut.ihlaller=[..._lI,..._sI.filter(x=>!_lIIds.has(String(x.id)))];
-    const _silEk=silGetir("ekosistem"),_lEk=SITE.getList("ekosistem").filter(x=>!_silEk.has(String(x.id)));const _sEk=(mevcut.ekosistem||[]).filter(x=>!_silEk.has(String(x.id)));const _lEkIds=new Set(_lEk.map(x=>String(x.id)));mevcut.ekosistem=[..._lEk,..._sEk.filter(x=>!_lEkIds.has(String(x.id)))];
-    const _silDr=silGetir("direnis"),_lDr=SITE.getList("direnis").filter(x=>!_silDr.has(String(x.id)));const _sDr=(mevcut.direnis||[]).filter(x=>!_silDr.has(String(x.id)));const _lDrIds=new Set(_lDr.map(x=>String(x.id)));mevcut.direnis=[..._lDr,..._sDr.filter(x=>!_lDrIds.has(String(x.id)))];
-    mevcut.raporlar=SITE.getList("raporlar").filter(x=>!silGetir("raporlar").has(String(x.id)));mevcut.makaleler=SITE.getList("makaleler").filter(x=>!silGetir("makaleler").has(String(x.id)));mevcut.uluslararasi=SITE.getList("uluslararasi").filter(x=>!silGetir("uluslararasi").has(String(x.id)));
-    mevcut._meta={...(mevcut._meta||{}),guncelleme:new Date().toISOString(),ihlal_sayisi:mevcut.ihlaller.length,rapor_sayisi:mevcut.raporlar.length,makale_sayisi:mevcut.makaleler.length,ulus_sayisi:mevcut.uluslararasi.length};
-    await ghYaz("data.json",mevcut,dataMeta.sha);
-    try{const m=await ghOku("ihlaller.json");await ghYaz("ihlaller.json",{ihlaller:mevcut.ihlaller,_meta:{guncelleme:new Date().toISOString(),toplam:mevcut.ihlaller.length}},m.sha);}catch(e){console.warn("ihlaller.json:",e);}
-    try{const m=await ghOku("haberler.json");const _lH=SITE.getList("haberler");let _sH=[];try{const _b=Uint8Array.from(atob(m.content.replace(/\n/g,"")),c=>c.charCodeAt(0));const _d=JSON.parse(new TextDecoder("utf-8").decode(_b));_sH=(_d.haberler||[]);}catch{}const _lHIds=new Set(_lH.map(x=>String(x.id)));const haberler=[..._lH,..._sH.filter(x=>!_lHIds.has(String(x.id)))];await ghYaz("haberler.json",{haberler,_meta:{guncelleme:new Date().toISOString(),toplam:haberler.length}},m.sha);}catch(e){console.warn("haberler.json:",e);}
-    await ghYazVeyaOlustur("raporlar.json",{raporlar:mevcut.raporlar,_meta:{guncelleme:new Date().toISOString(),toplam:mevcut.raporlar.length}});
-    await ghYazVeyaOlustur("makaleler.json",{makaleler:mevcut.makaleler,_meta:{guncelleme:new Date().toISOString(),toplam:mevcut.makaleler.length}});
-    await ghYazVeyaOlustur("kuresel.json",{kuresel:mevcut.uluslararasi,_meta:{guncelleme:new Date().toISOString(),toplam:mevcut.uluslararasi.length}});
-    await ghYazVeyaOlustur("ekosistem.json",{ekosistem:mevcut.ekosistem,_meta:{guncelleme:new Date().toISOString(),toplam:mevcut.ekosistem.length}});
-    await ghYazVeyaOlustur("direnis.json",{direnis:mevcut.direnis,_meta:{guncelleme:new Date().toISOString(),toplam:mevcut.direnis.length}});
+    await senkronizeEt("ihlaller.json","ihlaller","ihlaller");
+    await senkronizeEt("haberler.json","haberler","haberler");
+    await senkronizeEt("raporlar.json","raporlar","raporlar");
+    await senkronizeEt("makaleler.json","makaleler","makaleler");
+    await senkronizeEt("kuresel.json","kuresel","uluslararasi");
+    await senkronizeEt("ekosistem.json","ekosistem","ekosistem");
+    await senkronizeEt("direnis.json","direnis","direnis");
     setSyncDurum("synced");toast("✓ Tüm dosyalar güncellendi.");
-    const _fu=localStorage.getItem("ekoloji_flex_url")||"",_fs=localStorage.getItem("ekoloji_flex_secret")||"";
-    if(_fu&&_fs){fetch(_fu.split("?")[0]+"?dosya=data.json",{method:"POST",headers:{"X-Webhook-Secret":_fs,"Content-Type":"application/json"},body:JSON.stringify(mevcut,null,2)}).catch(()=>{});}
-    fetch(`https://api.github.com/repos/${ow}/${rn}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}}).then(r=>r.json()).then(d=>{const br=d.default_branch||"main";const wf=localStorage.getItem("ekoloji_gh_workflow")||"update_data.yml";fetch(`https://api.github.com/repos/${ow}/${rn}/actions/workflows/${wf}/dispatches`,{method:"POST",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({ref:br})});}).catch(()=>{});
   }catch(e){setSyncDurum("error",e.message.slice(0,40));toast("⚠ "+e.message);}
 }
 </script>
