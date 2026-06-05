@@ -395,27 +395,25 @@ def haberler_senkronize(kaynak: dict) -> int:
     for kaynak_adi, (hedef_dosya, hedef_anahtar) in ESLESME.items():
         liste = kaynak.get(kaynak_adi, [])
 
-        # makaleler: Google News kaynaklı yorum/haber kategorilerini çıkar
+        # makaleler: yalnızca başlığı/özeti olmayan içeriksiz kayıtları ele.
+        # (Eski filtre "Google News + Hukuki Yorum/Değerlendirme/Köşe" kategorilerini
+        #  topluca eliyordu; bu kategoriler aslında geçerli makale türleri olduğu için
+        #  60 değerli makale kayboluyordu. Artık kategoriye değil içeriğe bakılıyor.)
         if kaynak_adi == "makaleler":
             liste = [
                 m for m in liste
-                if not (
-                    m.get("kaynak", "") == "Google News" and
-                    m.get("kategori", "") in ["Hukuki Yorum", "Yorum / Değerlendirme", "Köşe / Görüş"]
-                )
+                if (m.get("baslik") or "").strip()
+                and len((m.get("ozet") or "").strip()) >= 20
             ]
-        from datetime import datetime as _dt, timedelta as _td
-        _sinir_h = (_dt.now() - _td(days=180)).strftime("%Y-%m-%d")
+
+        # 180 günlük tarih sınırı: raporlar ve makaleler muaf (arşiv değeri taşır).
+        _sinir_h = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
         if kaynak_adi not in ("raporlar", "makaleler"):
             liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
-        from datetime import datetime as _dt, timedelta as _td
-        _sinir_h = (_dt.now() - _td(days=180)).strftime("%Y-%m-%d")
-        if kaynak_adi not in ("raporlar", "makaleler"):
-            liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
-        from datetime import datetime as _dt, timedelta as _td
-        _sinir_h = (_dt.now() - _td(days=180)).strftime("%Y-%m-%d")
-        if kaynak_adi not in ("raporlar", "makaleler"):
-            liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
+
+        # En yeni önce sıralansın
+        liste = sorted(liste, key=lambda x: x.get("tarih") or "", reverse=True)
+
         liste = liste[:MAX_KAYIT.get(hedef_anahtar, 300)]
         cikti = {
             "meta": {
