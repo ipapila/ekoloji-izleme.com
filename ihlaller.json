@@ -1,6 +1,72 @@
 {
   "ihlaller": [
     {
+      "id": 1,
+      "tarih": "2025-05-15",
+      "baslik": "Akbelen Ormanlarında İzinsiz Ağaç Kesimine Devam",
+      "konum": "Muğla",
+      "kategori": "Maden",
+      "siddet": "kritik",
+      "aciklama": "İktidar destekli maden şirketi ÇED kararına rağmen kesimi sürdürüyor.",
+      "kaynak": "Bianet",
+      "kaynak_url": "https://bianet.org/haber/akbelen"
+    },
+    {
+      "id": 2,
+      "tarih": "2025-05-14",
+      "baslik": "Gediz Havzası'nda Tekstil Fabrikası Atık Deşarjı",
+      "konum": "Kütahya",
+      "kategori": "Su Kirliliği",
+      "siddet": "orta",
+      "aciklama": "Çevre izin belgesi olmayan fabrikanın atıkları Gediz Nehri'ne karıştı.",
+      "kaynak": "Gazete Duvar",
+      "kaynak_url": "https://www.gazeteduvar.com.tr/cevre"
+    },
+    {
+      "id": 3,
+      "tarih": "2025-05-13",
+      "baslik": "Karadeniz Kıyısında Balık Çiftliği Kaçak İnşaat",
+      "konum": "Trabzon",
+      "kategori": "Kıyı",
+      "siddet": "kritik",
+      "aciklama": "Kıyı koruma bandı içine izinsiz kafes kurulumu tespit edildi.",
+      "kaynak": "Yerel Kaynak",
+      "kaynak_url": ""
+    },
+    {
+      "id": 4,
+      "tarih": "2025-05-12",
+      "baslik": "Tuz Gölü Çevresinde Sanayi Bölgesi Yayılımı",
+      "konum": "Ankara/Konya",
+      "kategori": "Tarım Arazisi",
+      "siddet": "takipte",
+      "aciklama": "DKMPGM onaylı sit alanına yakın bölgede ruhsatsız yapılaşma.",
+      "kaynak": "MAPEG",
+      "kaynak_url": "https://mapeg.gov.tr"
+    },
+    {
+      "id": 5,
+      "tarih": "2025-05-11",
+      "baslik": "Hasankeyf Havzası'nda 3 Yeni HES Lisansı",
+      "konum": "Batman/Siirt",
+      "kategori": "Su Hakkı",
+      "siddet": "kritik",
+      "aciklama": "Resmî Gazete'de yayımlanan kararname ile 3 HES projesine lisans verildi.",
+      "kaynak": "Resmî Gazete",
+      "kaynak_url": "https://www.resmigazete.gov.tr"
+    },
+    {
+      "id": 6,
+      "tarih": "2025-05-10",
+      "baslik": "Kazdağları'nda Maden Arama Ruhsatı Yenilendi",
+      "konum": "Balıkesir",
+      "kategori": "Orman",
+      "siddet": "orta",
+      "aciklama": "Kazdağları eteklerinde altın arama sahası genişletildi.",
+      "kaynak": "MAPEG",
+      "kaynak_url": "https://mapeg.gov.tr"
+    },
+    {
       "id": 21012,
       "baslik": "Akbelen Ormanı – Linyit Maden Acele Kamulaştırması (Danıştay Durdurdu)",
       "konum": "Muğla, Milas",
@@ -879,72 +945,6 @@
       "kaynak": "",
       "lat": null,
       "lng": null
-    },
-    {
-      "id": 1,
-      "tarih": "2025-05-15",
-      "baslik": "Akbelen Ormanlarında İzinsiz Ağaç Kesimine Devam",
-      "konum": "Muğla",
-      "kategori": "Maden",
-      "siddet": "kritik",
-      "aciklama": "İktidar destekli maden şirketi ÇED kararına rağmen kesimi sürdürüyor.",
-      "kaynak": "Bianet",
-      "kaynak_url": "https://bianet.org/haber/akbelen"
-    },
-    {
-      "id": 2,
-      "tarih": "2025-05-14",
-      "baslik": "Gediz Havzası'nda Tekstil Fabrikası Atık Deşarjı",
-      "konum": "Kütahya",
-      "kategori": "Su Kirliliği",
-      "siddet": "orta",
-      "aciklama": "Çevre izin belgesi olmayan fabrikanın atıkları Gediz Nehri'ne karıştı.",
-      "kaynak": "Gazete Duvar",
-      "kaynak_url": "https://www.gazeteduvar.com.tr/cevre"
-    },
-    {
-      "id": 3,
-      "tarih": "2025-05-13",
-      "baslik": "Karadeniz Kıyısında Balık Çiftliği Kaçak İnşaat",
-      "konum": "Trabzon",
-      "kategori": "Kıyı",
-      "siddet": "kritik",
-      "aciklama": "Kıyı koruma bandı içine izinsiz kafes kurulumu tespit edildi.",
-      "kaynak": "Yerel Kaynak",
-      "kaynak_url": ""
-    },
-    {
-      "id": 4,
-      "tarih": "2025-05-12",
-      "baslik": "Tuz Gölü Çevresinde Sanayi Bölgesi Yayılımı",
-      "konum": "Ankara/Konya",
-      "kategori": "Tarım Arazisi",
-      "siddet": "takipte",
-      "aciklama": "DKMPGM onaylı sit alanına yakın bölgede ruhsatsız yapılaşma.",
-      "kaynak": "MAPEG",
-      "kaynak_url": "https://mapeg.gov.tr"
-    },
-    {
-      "id": 5,
-      "tarih": "2025-05-11",
-      "baslik": "Hasankeyf Havzası'nda 3 Yeni HES Lisansı",
-      "konum": "Batman/Siirt",
-      "kategori": "Su Hakkı",
-      "siddet": "kritik",
-      "aciklama": "Resmî Gazete'de yayımlanan kararname ile 3 HES projesine lisans verildi.",
-      "kaynak": "Resmî Gazete",
-      "kaynak_url": "https://www.resmigazete.gov.tr"
-    },
-    {
-      "id": 6,
-      "tarih": "2025-05-10",
-      "baslik": "Kazdağları'nda Maden Arama Ruhsatı Yenilendi",
-      "konum": "Balıkesir",
-      "kategori": "Orman",
-      "siddet": "orta",
-      "aciklama": "Kazdağları eteklerinde altın arama sahası genişletildi.",
-      "kaynak": "MAPEG",
-      "kaynak_url": "https://mapeg.gov.tr"
     },
     {
       "id": 20656,
@@ -5650,7 +5650,7 @@
     }
   ],
   "_meta": {
-    "guncelleme": "2026-06-05T04:43:10.914Z",
+    "guncelleme": "2026-06-05T04:44:06.168Z",
     "toplam": 463
   }
 }
