@@ -707,41 +707,29 @@ function _direnisRender(d){document.getElementById("direnisTbody").innerHTML=d.l
 function addDirenis(){const b=document.getElementById("dr-baslik").value.trim();if(!b){toast("⚠ Ad/Başlık zorunludur.");return;}const y={id:SITE.nextId("direnis"),baslik:b,tip:document.getElementById("dr-tip").value,etiketler:getChecked("dr"),bolge:document.getElementById("dr-bolge").value.trim(),tarih:document.getElementById("dr-tarih").value||today(),kaynak:document.getElementById("dr-kaynak").value.trim(),web:document.getElementById("dr-web").value.trim(),url:document.getElementById("dr-url").value.trim(),email:document.getElementById("dr-email").value.trim(),instagram:document.getElementById("dr-instagram").value.trim(),twitter:document.getElementById("dr-twitter").value.trim(),aciklama:document.getElementById("dr-aciklama").value.trim(),foto_url:document.getElementById("dr-foto-url")?.value.trim()||""};SITE.upsert("direnis",y);["dr-baslik","dr-bolge","dr-kaynak","dr-web","dr-url","dr-email","dr-instagram","dr-twitter","dr-aciklama","dr-foto-url"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});document.getElementById("dr-tarih").value=today();const p=document.getElementById("dr-foto-onizleme");if(p)p.style.display="none";_veri.direnis.unshift(y);tabloRender("direnis");updateStats();resetChecked("dr");toast("✓ Direniş kaydı eklendi.");veriYaz();}
 
 function tumVeriYukle(){
-  const sI=silGetir("ihlaller"),sH=silGetir("haberler"),sR=silGetir("raporlar"),sM=silGetir("makaleler"),sU=silGetir("uluslararasi");
+  const sI=silGetir("ihlaller"),sR=silGetir("raporlar"),sM=silGetir("makaleler"),sU=silGetir("uluslararasi"),sEk=silGetir("ekosistem"),sDr=silGetir("direnis");
   const lI=SITE.getList("ihlaller").filter(x=>!sI.has(String(x.id)));
-  const lH=SITE.getList("haberler").filter(x=>!sH.has(String(x.id)));
   const lR=SITE.getList("raporlar").filter(x=>!sR.has(String(x.id)));
   const lM=SITE.getList("makaleler").filter(x=>!sM.has(String(x.id)));
   const lU=SITE.getList("uluslararasi").filter(x=>!sU.has(String(x.id)));
-  fetch("data.json?v="+Date.now()).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text();}).then(txt=>{if(!txt||!txt.trim())throw new Error("data.json boş");let d;try{d=JSON.parse(txt);}catch(e){throw new Error("data.json geçersiz JSON: "+e.message);}return d;}).then(d=>{
-    const ji=(d.ihlaller||[]).filter(x=>!sI.has(String(x.id))),iiDs=new Set(lI.map(x=>String(x.id)));
-    _veri.ihlaller=[...lI,...ji.filter(x=>!iiDs.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
-    const sr=(d.raporlar||[]).filter(x=>!sR.has(String(x.id)));const srIds=new Set(lR.map(x=>String(x.id)));
-    _veri.raporlar=[...lR,...sr.filter(x=>!srIds.has(String(x.id)))].sort((a,b)=>(b.yil||0)>(a.yil||0)?-1:1);
-    fetch("raporlar.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(rd=>{
-      const rj=(rd.raporlar||[]).filter(x=>!sR.has(String(x.id)));
-      const mevIds=new Set(_veri.raporlar.map(x=>String(x.id)));
-      _veri.raporlar=[..._veri.raporlar,...rj.filter(x=>!mevIds.has(String(x.id)))].sort((a,b)=>(b.yil||0)>(a.yil||0)?-1:1);
-      tabloRender("raporlar");updateStats();
-    }).catch(()=>{});
-    const sm=(d.makaleler||[]).filter(x=>!sM.has(String(x.id)));const smIds=new Set(lM.map(x=>String(x.id)));
-    _veri.makaleler=[...lM,...sm.filter(x=>!smIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
-    const su=(d.uluslararasi||[]).filter(x=>!sU.has(String(x.id)));const suIds=new Set(lU.map(x=>String(x.id)));
-    _veri.uluslararasi=[...lU,...su.filter(x=>!suIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
-    const sEk=silGetir("ekosistem");const lEk=SITE.getList("ekosistem").filter(x=>!sEk.has(String(x.id)));
-    const sek=(d.ekosistem||[]).filter(x=>!sEk.has(String(x.id)));const sekIds=new Set(lEk.map(x=>String(x.id)));
-    _veri.ekosistem=[...lEk,...sek.filter(x=>!sekIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
-    const sDr=silGetir("direnis");const lDr=SITE.getList("direnis").filter(x=>!sDr.has(String(x.id)));
-    const sdr=(d.direnis||[]).filter(x=>!sDr.has(String(x.id)));const sdrIds=new Set(lDr.map(x=>String(x.id)));
-    _veri.direnis=[...lDr,...sdr.filter(x=>!sdrIds.has(String(x.id)))].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
-    if(lR.length)_veri.raporlar=[...lR,...(_veri.raporlar||[]).filter(x=>!new Set(lR.map(x=>String(x.id))).has(String(x.id)))].sort((a,b)=>(b.yil||0)>(a.yil||0)?-1:1);
-    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");tabloRender("ekosistem");tabloRender("direnis");
-  }).catch(()=>{
-    _veri.ihlaller=lI;_veri.raporlar=lR;_veri.makaleler=lM;_veri.uluslararasi=lU;
-    _veri.ekosistem=SITE.getList("ekosistem").filter(x=>!silGetir("ekosistem").has(String(x.id)));
-    _veri.direnis=SITE.getList("direnis").filter(x=>!silGetir("direnis").has(String(x.id)));
-    tabloRender("ihlaller");tabloRender("raporlar");tabloRender("makaleler");tabloRender("uluslararasi");tabloRender("ekosistem");tabloRender("direnis");
-  });
+  const lEk=SITE.getList("ekosistem").filter(x=>!sEk.has(String(x.id)));
+  const lDr=SITE.getList("direnis").filter(x=>!sDr.has(String(x.id)));
+  // Her koleksiyon kendi öz dosyasından okunur. Yerel (localStorage) kayıtlar öne eklenir.
+  function _yukle(dosya,anahtar,col,yerel,silSet,sortFn){
+    fetch(dosya+"?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject(new Error("HTTP "+r.status))).then(d=>{
+      const uzak=(d[anahtar]||(Array.isArray(d)?d:[])).filter(x=>!silSet.has(String(x.id)));
+      const yerelIds=new Set(yerel.map(x=>String(x.id)));
+      _veri[col]=[...yerel,...uzak.filter(x=>!yerelIds.has(String(x.id)))].sort(sortFn);
+    }).catch(()=>{_veri[col]=yerel;}).finally(()=>{tabloRender(col);updateStats();});
+  }
+  const sTarih=(a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1;
+  const sYil=(a,b)=>(b.yil||0)>(a.yil||0)?-1:1;
+  _yukle("ihlaller.json","ihlaller","ihlaller",lI,sI,sTarih);
+  _yukle("raporlar.json","raporlar","raporlar",lR,sR,sYil);
+  _yukle("makaleler.json","makaleler","makaleler",lM,sM,sTarih);
+  _yukle("kuresel.json","kuresel","uluslararasi",lU,sU,sTarih);
+  _yukle("ekosistem.json","ekosistem","ekosistem",lEk,sEk,sTarih);
+  _yukle("direnis.json","direnis","direnis",lDr,sDr,sTarih);
   fetch("haberler.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
     const j=(d.haberler||(Array.isArray(d)?d:[]));
     _veri.haberler=[...j].sort((a,b)=>(b.tarih||'')>(a.tarih||'')?1:-1);
@@ -839,13 +827,17 @@ async function otomatikYenile(log){
   await new Promise(r=>setTimeout(r,3000));
   log('<span class="spinner"></span>Yeni kayıtlar alınıyor…');
   try{
-    const r=await fetch('./data.json?v='+Date.now());
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const data=await r.json();
     const iiDs=new Set(SITE.getList("ihlaller").map(i=>String(i.id)));
     const hiDs=new Set(SITE.getList("haberler").map(i=>String(i.id)));
-    const yi=(data.ihlaller||[]).filter(i=>!iiDs.has(String(i.id)));
-    const yh=(data.haberler||[]).filter(i=>!hiDs.has(String(i.id)));
+    let yi=[],yh=[];
+    try{
+      const ri=await fetch('./ihlaller.json?v='+Date.now());
+      if(ri.ok){const di=await ri.json();yi=(di.ihlaller||[]).filter(i=>!iiDs.has(String(i.id)));}
+    }catch(e){log('<span class="warn">ihlaller.json: '+e.message+'</span>');}
+    try{
+      const rh=await fetch('./haberler.json?v='+Date.now());
+      if(rh.ok){const dh=await rh.json();yh=(dh.haberler||[]).filter(i=>!hiDs.has(String(i.id)));}
+    }catch(e){log('<span class="warn">haberler.json: '+e.message+'</span>');}
     _bulunanlar=[...yi.map(i=>({...i,tip:'ihlal'})),...yh.map(i=>({...i,tip:'haber'}))];
     if(!_bulunanlar.length){log('<span class="ok">✓ Yeni kayıt yok.</span>');return;}
     log(`<span class="ok">✓ ${yi.length} ihlal + ${yh.length} haber.</span>`);
