@@ -113,9 +113,8 @@ input.flatpickr-input:read-only{cursor:pointer!important;}
     </div>
     <div style="display:flex;align-items:center;gap:9px;margin-bottom:16px;">
       <input type="checkbox" id="hatirla" style="accent-color:var(--bright);width:14px;height:14px;cursor:pointer;">
-      <label for="hatirla" st<div style="display:flex;gap:8px;margin-bottom:14px;">
-      <button class="btn btn-primary" style="flex:1;" onclick="yapiTarama('actions')">⚡ GitHub Actions ile Tara</button>
-  </div>
+      <label for="hatirla" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);cursor:pointer;letter-spacing:.06em;">Beni hatırla (bu tarayıcıda kalıcı)</label>
+    </div>
     <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">Giriş Yap →</button>
     <div class="error-msg" id="loginErr" style="display:none;">Yanlış şifre.</div>
   </div>
@@ -645,7 +644,6 @@ input.flatpickr-input:read-only{cursor:pointer!important;}
       </div>
       <div style="display:flex;gap:8px;margin-bottom:14px;">
         <button class="btn btn-primary" style="flex:1;" onclick="yapiTarama('actions')">⚡ GitHub Actions ile Tara</button>
-        <button class="btn btn-outline" style="flex:1;" onclick="yapiTarama('reload')">🔄 data.json Yenile</button>
       </div>
       <div class="tarama-log" id="taramaLog">Hazır.</div>
       <div id="bulunanlar"></div>
@@ -833,15 +831,10 @@ function ghAyarKaydet(){const repo=document.getElementById("ghRepo").value.trim(
 function ghAyarAl(){const token=localStorage.getItem(GH_TOKEN_KEY)||"";if(token&&[...token].some(c=>c.charCodeAt(0)>127)){localStorage.removeItem(GH_TOKEN_KEY);return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token:""};} return{repo:localStorage.getItem(GH_REPO_KEY)||GH_DEFAULTS.repo,token};}
 function aciTaramaModal(){_bulunanlar=[];document.getElementById("bulunanlar").innerHTML='';document.getElementById("taramaLog").innerHTML='Hazır.';document.getElementById("importBtn").disabled=true;document.getElementById("seciliSayi").textContent='0';document.getElementById("taramaModal").classList.add("open");const{repo,token}=ghAyarAl();document.getElementById("ghRepo").value=repo;if(token){document.getElementById("ghToken").value="••••••••••••••••";document.getElementById("ghAyarDurum").innerHTML='<span style="color:var(--bright);">✓ Bağlantı mevcut</span>';}document.getElementById("ghWorkflow").value=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;const _furl=localStorage.getItem("ekoloji_flex_url")||"";if(document.getElementById("flexUrl"))document.getElementById("flexUrl").value=_furl;if(document.getElementById("flexSecret")&&localStorage.getItem("ekoloji_flex_secret"))document.getElementById("flexSecret").value="••••••••";}
 function kapat(){document.getElementById("taramaModal").classList.remove("open");}
-async function yapiTarama(mod){const logEl=document.getElementById("taramaLog");logEl.innerHTML="";function log(msg){logEl.innerHTML+=msg+"\n";logEl.scrollTop=logEl.scrollHeight;}if(mod==="reload"){log('<span class="spinner"></span>Veriler yukleniyor...');try{const iiDs=new Set(SITE.getList("ihlaller").map(i=>String(i.id)));const hiDs=new Set(SITE.getList("haberler").map(i=>String(i.id)));_bulunanlar=[];try{const rh=await fetch("./haberler.json?v="+Date.now());if(rh.ok){const dh=await rh.json();const yh=(dh.haberler||[]).filter(i=>!hiDs.has(String(i.id))).map(i=>({...i,tip:"haber"}));_bulunanlar.push(...yh);log('<span class="ok">haberler.json: '+yh.length+' yeni haber</span>');}}catch(e){log('<span class="warn">haberler.json: '+e.message+'</span>');}try{const ri=await fetch("./ihlaller.json?v="+Date.now());if(ri.ok){const di=await ri.json();const yi=(di.ihlaller||[]).filter(i=>!iiDs.has(String(i.id))).map(i=>({...i,tip:"ihlal"}));_bulunanlar.push(...yi);log('<span class="ok">ihlaller.json: '+yi.length+' yeni ihlal</span>');}}catch(e){log('<span class="warn">ihlaller.json: '+e.message+'</span>');}if(!_bulunanlar.length){log('<span class="ok">Yeni kayit yok.</span>');return;}log('<span class="ok">Toplam '+_bulunanlar.length+' yeni kayit.</span>');renderBulunanlar();document.getElementById("importBtn").disabled=false;}catch(e){log('<span class="warn">'+e.message+'</span>');}return;}const ri=document.getElementById("ghRepo").value.trim(),ti=document.getElementById("ghToken").value.trim();const{repo:sr,token:st}=ghAyarAl();const repo=ri||sr,token=(ti&&!ti.startsWith("•"))?ti:st;if(!repo||!token){log('<span class="warn">× Repo ve token gerekli.</span>');return;}localStorage.setItem(GH_REPO_KEY,repo);localStorage.setItem(GH_TOKEN_KEY,token);const[owner,repoName]=repo.split("/");if(!owner||!repoName){log('<span class="warn">× Repo formati hatali.</span>');return;}log('<span class="spinner"></span>GitHub Actions tetikleniyor: <strong>'+owner+"/"+repoName+'</strong>');try{const rr=await fetch("https://api.github.com/repos/"+owner+"/"+repoName,{headers:{"Authorization":"Bearer "+token,"Accept":"application/vnd.github+json"}});if(!rr.ok)throw new Error("HTTP "+rr.status);const rd=await rr.json(),branch=rd.default_branch||"main";log("Repo bulundu. Branch: <strong>"+branch+"</strong>");const wf=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;const dr=await fetch("https://api.github.com/repos/"+owner+"/"+repoName+"/actions/workflows/"+wf+"/dispatches",{method:"POST",headers:{"Authorization":"Bearer "+token,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},body:JSON.stringify({ref:branch})});if(dr.status===401)throw new Error("Token gecersiz.");if(dr.status===403)throw new Error("Token workflow yetkisi eksik.");if(!dr.ok)throw new Error("GitHub API: HTTP "+dr.status);log('<span class="ok">✓ Workflow tetiklendi...</span>');await new Promise(r=>setTimeout(r,4000));const run=await sonRunBul(owner,repoName,token,log);if(run)await runDurumIzle(owner,repoName,run.id,run.url,token,log);}catch(e){log('<span class="warn">× '+e.message+'</span>');}}
+async function yapiTarama(mod){const logEl=document.getElementById("taramaLog");logEl.innerHTML="";function log(msg){logEl.innerHTML+=msg+"\n";logEl.scrollTop=logEl.scrollHeight;}const ri=document.getElementById("ghRepo").value.trim(),ti=document.getElementById("ghToken").value.trim();const{repo:sr,token:st}=ghAyarAl();const repo=ri||sr,token=(ti&&!ti.startsWith("•"))?ti:st;if(!repo||!token){log('<span class="warn">× Repo ve token gerekli.</span>');return;}localStorage.setItem(GH_REPO_KEY,repo);localStorage.setItem(GH_TOKEN_KEY,token);const[owner,repoName]=repo.split("/");if(!owner||!repoName){log('<span class="warn">× Repo formati hatali.</span>');return;}log('<span class="spinner"></span>GitHub Actions tetikleniyor: <strong>'+owner+"/"+repoName+'</strong>');try{const rr=await fetch("https://api.github.com/repos/"+owner+"/"+repoName,{headers:{"Authorization":"Bearer "+token,"Accept":"application/vnd.github+json"}});if(!rr.ok)throw new Error("HTTP "+rr.status);const rd=await rr.json(),branch=rd.default_branch||"main";log("Repo bulundu. Branch: <strong>"+branch+"</strong>");const wf=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;const dr=await fetch("https://api.github.com/repos/"+owner+"/"+repoName+"/actions/workflows/"+wf+"/dispatches",{method:"POST",headers:{"Authorization":"Bearer "+token,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},body:JSON.stringify({ref:branch})});if(dr.status===401)throw new Error("Token gecersiz.");if(dr.status===403)throw new Error("Token workflow yetkisi eksik.");if(!dr.ok)throw new Error("GitHub API: HTTP "+dr.status);log('<span class="ok">✓ Workflow tetiklendi...</span>');await new Promise(r=>setTimeout(r,4000));const run=await sonRunBul(owner,repoName,token,log);if(run)await runDurumIzle(owner,repoName,run.id,run.url,token,log);}catch(e){log('<span class="warn">× '+e.message+'</span>');}}
 async function sonRunBul(owner,repo,token,log){const wf=localStorage.getItem(GH_WORKFLOW_KEY)||GH_DEFAULTS.workflow;try{const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=3`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});const data=await r.json(),run=data.workflow_runs?.[0];if(!run){log('<span class="warn">Run bulunamadı.</span>');return null;}log(`Run #${run.run_number} → <a href="${run.html_url}" target="_blank" style="color:var(--bright);">GitHub'da takip et ↗</a>`);return{id:run.id,url:run.html_url};}catch(e){log(`<span class="warn">Run sorgulanamadı: ${e.message}</span>`);return null;}}
 async function runDurumIzle(owner,repo,runId,runUrl,token,log){for(let i=0;i<50;i++){await new Promise(r=>setTimeout(r,8000));try{const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});const run=await r.json();if(run.status==="completed"){if(run.conclusion==="success"){log('<span class="ok">✓ Tamamlandı!</span>');await otomatikYenile(log);}else log(`<span class="warn">✗ Workflow ${run.conclusion}.</span>`);return;}log(`<span class="spinner"></span>Devam ediyor… (${(i+1)*8}sn)`);}catch(e){log(`<span class="warn">Durum sorgulanamadı: ${e.message}</span>`);}}const _rl=runUrl?`<a href="${runUrl}" target="_blank" style="color:var(--bright);">GitHub'da kontrol et ↗</a>`:"GitHub Actions sayfasını kontrol edin";log(`<span class="warn">⚠ İzleme süresi doldu (~7dk) — ${_rl}</span>`);}
 
-/* ══════════════════════════════════════════════════════
-   DÜZELTME 1: otomatikYenile
-   yr/ym/yk/yek tanımsız değişkenler kaldırıldı.
-   data.json'dan ihlal + haber okunuyor.
-══════════════════════════════════════════════════════ */
 async function otomatikYenile(log){
   await new Promise(r=>setTimeout(r,3000));
   log('<span class="spinner"></span>Yeni kayıtlar alınıyor…');
@@ -929,15 +922,6 @@ function dupTara(){
   }
 }
 
-/* ══════════════════════════════════════════════════════
-   DÜZELTME 2: dupTemizle
-   silEkle() çağrısı kaldırıldı.
-   Duplicate ID'ler artık kalıcı silinen listesine
-   eklenmiyor — sadece mevcut oturum verisinden
-   ve localStorage'dan temizleniyor.
-   Bu sayede orijinal kayıt bir sonraki yüklemede
-   kaybolmuyor.
-══════════════════════════════════════════════════════ */
 function dupTemizle(){
   const kollar=Object.keys(_dupSilList);
   if(!kollar.length)return;
