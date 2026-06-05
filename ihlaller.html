@@ -435,14 +435,30 @@ document.getElementById("searchBox").addEventListener("input", filter);
 const silinen = _adminMod.getSilinen("ihlaller");
 const urlKat  = new URLSearchParams(location.search).get("kat");
 
+// Başlık normalize: çift tespiti için (boşluk + küçük harf)
+function _bnorm(s){ return (s||"").trim().toLowerCase(); }
+
 function mergeWithLocal(jsonIhlaller) {
+  // Sunucudaki ihlaller.json önceliklidir.
+  const sunucu = jsonIhlaller;
+  const sunucuIds   = new Set(sunucu.map(x => String(x.id)));
+  const sunucuBasliklar = new Set(sunucu.map(x => _bnorm(x.baslik)));
+
+  // Yerel (localStorage) kayıtlar: yalnızca sunucuda HENÜZ OLMAYANLAR eklenir.
+  // Hem ID hem başlık kontrolü yapılır; böylece aynı başlığa sahip
+  // (ama ID'si farklı) eski yerel kopyalar tekrar gösterilmez.
   const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
     .filter(x => !silinen.has(String(x.id)));
   const defIhlaller = (local.length === 0 && typeof SITE !== "undefined" && SITE.defaults && SITE.defaults.ihlaller)
     ? SITE.defaults.ihlaller.filter(x => !silinen.has(String(x.id))) : [];
   const allLocal = local.length > 0 ? local : defIhlaller;
-  const localIds = new Set(allLocal.map(x => String(x.id)));
-  return [...allLocal, ...jsonIhlaller.filter(x => !localIds.has(String(x.id)))]
+
+  const yerelEklenecek = allLocal.filter(x =>
+    !sunucuIds.has(String(x.id)) &&
+    !sunucuBasliklar.has(_bnorm(x.baslik))
+  );
+
+  return [...sunucu, ...yerelEklenecek]
     .sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));
 }
 
