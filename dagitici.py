@@ -307,7 +307,8 @@ def ihlaller_guncelle(yeni_ihlaller: list) -> int:
 
     birlesik = eklenecek + mevcut
     birlesik.sort(key=lambda x: x.get("tarih") or "1970", reverse=True)
-    _sinir_i = (datetime.now() - _td(days=180)).strftime("%Y-%m-%d")
+    from datetime import datetime, timedelta
+    _sinir_i = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
     birlesik = [x for x in birlesik if (x.get("tarih") or "9999") >= _sinir_i or not x.get("tarih")]
     birlesik = birlesik[:MAX_KAYIT["ihlaller"]]
 
