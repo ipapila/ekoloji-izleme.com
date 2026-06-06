@@ -150,12 +150,6 @@
         <a href="haberler.html?hkat=Su+ve+K%C4%B1y%C4%B1"><span class="dot"></span>Su & Kıyı</a>
         <a href="haberler.html?hkat=Yaban+Hayat%C4%B1"><span class="dot"></span>Yaban Hayatı</a>
         <hr>
-        <div class="dropdown-label">Eylem & Toplum</div>
-        <a href="haberler.html?hkat=Direni%C5%9F+ve+Eylemler"><span class="dot"></span>Direniş & Eylemler</a>
-        <a href="haberler.html?hkat=Hukuki+S%C3%BCre%C3%A7ler"><span class="dot"></span>Hukuki Süreçler</a>
-        <a href="haberler.html?hkat=N%C3%B6betler+ve+G%C3%B6zalt%C4%B1lar"><span class="dot"></span>Nöbetler & Gözaltılar</a>
-        <a href="haberler.html?hkat=STK+%26+Kampanyalar"><span class="dot"></span>STK & Kampanyalar</a>
-        <hr>
         <a href="arsiv.html"><span class="dot"></span>Arşiv</a>
       </div>
     </li>
@@ -173,12 +167,6 @@
         <a href="raporlar.html?hkat=Orman+ve+Do%C4%9Fa"><span class="dot"></span>Orman & Doğa</a>
         <a href="raporlar.html?hkat=Su+ve+K%C4%B1y%C4%B1"><span class="dot"></span>Su & Kıyı</a>
         <a href="raporlar.html?hkat=Yaban+Hayat%C4%B1"><span class="dot"></span>Yaban Hayatı</a>
-        <hr>
-        <div class="dropdown-label">Eylem & Toplum</div>
-        <a href="raporlar.html?hkat=Direni%C5%9F+ve+Eylemler"><span class="dot"></span>Direniş & Eylemler</a>
-        <a href="raporlar.html?hkat=Hukuki+S%C3%BCre%C3%A7ler"><span class="dot"></span>Hukuki Süreçler</a>
-        <a href="raporlar.html?hkat=N%C3%B6betler+ve+G%C3%B6zalt%C4%B1lar"><span class="dot"></span>Nöbetler & Gözaltılar</a>
-        <a href="raporlar.html?hkat=STK+%26+Kampanyalar"><span class="dot"></span>STK & Kampanyalar</a>
       </div>
     </li>
 
@@ -250,6 +238,9 @@
         <a href="ekosistem.html?sec=kentsel"><span class="dot"></span>Kentsel Çevre</a>
         <a href="ekosistem.html?sec=goc"><span class="dot"></span>İklim Göçü & Yerinden Edilme</a>
       </div>
+    </li>
+    <li class="nav-item">
+      <a href="direnis-agi.html" class="nav-link ${current === 'direnis-agi.html' ? 'active' : ''}">Direniş Ağı</a>
     </li>
     <li class="nav-item">
       <a href="arsiv.html" class="nav-link ${current === 'arsiv.html' ? 'active' : ''}">Arşiv</a>
