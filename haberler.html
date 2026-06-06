@@ -275,7 +275,7 @@
       <div class="import-drop" id="importDrop">
         <b>📂 Dosya sürükle veya tıkla</b>
         <p>haberler.json, data.json veya GeoJSON dosyası</p>
-        <input type="file" id="importFile" accept=".json,.geojson" style="display:none;">
+        <input type="file" id="importFile" style="display:none;">
       </div>
       <div class="import-log" id="importLog">Dosya bekleniyor…</div>
       <div class="edit-actions">
@@ -757,34 +757,50 @@ function yukle(zorlaHkat) {
     });
 }
 
-function dosyaOku(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const parsed = JSON.parse(e.target.result);
-      const log = document.getElementById("importLog");
-      importData = null;
-      let liste = [];
-      if (Array.isArray(parsed)) liste=parsed;
-      else if (parsed.haberler) liste=parsed.haberler;
-      else if (parsed.features) liste=parsed.features.map(f=>f.properties||f).filter(Boolean);
-      else if (parsed.ihlaller) liste=parsed.ihlaller;
-      if (!liste.length) { if(log) log.textContent="⚠ Tanınan kayıt bulunamadı."; return; }
-      liste = liste.map((h,i)=>({
-        id:h.id||("imp_"+Date.now()+"_"+i),baslik:h.baslik||h.name||h.ad||h.title||"",
-        kaynak:h.kaynak||h.source||"",kategori:h.kategori||h.etiket||h.tip||"Haber",
-        etiket:h.etiket||h.kategori||h.tip||"Haber",tarih:h.tarih||h.eklenme||new Date().toISOString().slice(0,10),
-        url:h.url||h.kaynak_link||"",ozet:h.ozet||h.aciklama||"",icerik_tipi:h.icerik_tipi||"haber",
-        dil:h.dil||"tr",_koleksiyon:"haberler",
-      })).filter(h=>h.baslik);
-      importData = liste;
-      if(log) {
-        log.textContent=`✓ ${liste.length} kayıt algılandı.\n\nİlk 3 örnek:\n`+
-          liste.slice(0,3).map(h=>`• ${h.baslik.slice(0,60)}`).join("\n");
-      }
-      const impUygulaBtn = document.getElementById("importUygula");
-      if (impUygulaBtn) impUygulaBtn.disabled=false;
-    } catch(err) { const log = document.getElementById("importLog"); if(log) log.textContent="❌ JSON parse hatası: "+err.message; }
+function dosyaOku(file){
+  if(!file) return;
+  const log=document.getElementById("importLog");
+  const reader=new FileReader();
+  reader.onerror=()=>{ if(log) log.textContent="❌ Dosya okunamadı: "+((reader.error&&reader.error.message)||"bilinmeyen hata"); };
+  reader.onload=e=>{
+    try{
+      const parsed=JSON.parse(e.target.result);
+      importData=null;
+      let liste=[];
+      if(Array.isArray(parsed)) liste=parsed;
+      else if(parsed.features) liste=parsed.features.map(f=>{
+        const p=Object.assign({}, f.properties||{});
+        if(f.geometry&&Array.isArray(f.geometry.coordinates)){ p._lng=f.geometry.coordinates[0]; p._lat=f.geometry.coordinates[1]; }
+        return p;
+      }).filter(Boolean);
+      else if(parsed.haberler) liste=parsed.haberler;
+      else if(parsed.raporlar) liste=parsed.raporlar;
+      else if(parsed.ihlaller) liste=parsed.ihlaller;
+      else if(parsed.direnis)  liste=parsed.direnis;
+      if(!liste.length){ if(log) log.textContent="⚠ Tanınan kayıt bulunamadı. Beklenen: JSON dizi, GeoJSON FeatureCollection veya haberler/raporlar/ihlaller/direnis anahtarı."; return; }
+      const ham=liste.length;
+      liste=liste.map((h,i)=>{
+        const konum=h.konum||[h.ilce,h.il].filter(Boolean).join(", ")||h.bolge||"";
+        return {
+          id:h.id||("imp_"+Date.now()+"_"+i),
+          baslik:h.baslik||h.ad||h.name||h.title||"",
+          kaynak:h.kaynak||h.source||h.belge_no||"",
+          kategori:h.kategori||h.tip||h.etiket||"Haber",
+          etiket:h.etiket||h.kategori||h.tip||"Haber",
+          tarih:h.tarih||h.eklenme||h.yayim_tarihi||new Date().toISOString().slice(0,10),
+          url:h.url||h.kaynak_link||h.link||"",
+          ozet:h.ozet||h.aciklama||h.alt_kategori||"",
+          icerik_tipi:h.icerik_tipi||"haber",
+          dil:h.dil||"tr",
+          konum,
+          _koleksiyon:"haberler",
+        };
+      }).filter(h=>h.baslik);
+      if(!liste.length){ if(log) log.textContent="⚠ "+ham+" kayıt okundu ama hiçbirinde başlık alanı yok (baslik / ad / name / title). İçe aktarılamadı."; return; }
+      importData=liste;
+      if(log) log.textContent="✓ "+liste.length+" kayıt algılandı"+(liste.length<ham?" ("+(ham-liste.length)+" başlıksız atlandı)":"")+".\n\nİlk 3 örnek:\n"+liste.slice(0,3).map(h=>"• "+h.baslik.slice(0,60)).join("\n");
+      const u=document.getElementById("importUygula"); if(u) u.disabled=false;
+    }catch(err){ if(log) log.textContent="❌ JSON parse hatası: "+err.message; }
   };
   reader.readAsText(file);
 }
@@ -822,17 +838,27 @@ safeListen("editModal","click",function(e){if(e.target===this)this.style.display
 safeListen("importClose","click",()=>{ const m=document.getElementById("importModal"); if(m) m.style.display="none"; });
 safeListen("importIptal","click",()=>{ const m=document.getElementById("importModal"); if(m) m.style.display="none"; });
 safeListen("importUygula","click",importUygula);
-safeListen("importDrop","click",()=>{ const f=document.getElementById("importFile"); if(f) f.click(); });
-
-const impFile = document.getElementById("importFile");
-if(impFile) impFile.addEventListener("change", e=>{if(e.target.files[0])dosyaOku(e.target.files[0]);});
-
-const impDrop = document.getElementById("importDrop");
-if(impDrop) {
-  impDrop.addEventListener("dragover",e=>{e.preventDefault();e.currentTarget.classList.add("dragover");});
-  impDrop.addEventListener("dragleave",e=>{e.currentTarget.classList.remove("dragover");});
-  impDrop.addEventListener("drop",e=>{e.preventDefault();e.currentTarget.classList.remove("dragover");if(e.dataTransfer.files[0])dosyaOku(e.dataTransfer.files[0]);});
+function importDosyaAl(file){
+  const log=document.getElementById("importLog");
+  if(!file){ if(log) log.textContent="⚠ Dosya alınamadı."; return; }
+  if(log) log.textContent="📄 "+file.name+" ("+(file.size/1024).toFixed(1)+" KB) okunuyor…";
+  dosyaOku(file);
 }
+(function(){
+  const drop=document.getElementById("importDrop");
+  const inp=document.getElementById("importFile");
+  if(drop) drop.addEventListener("click",()=>{ if(inp) inp.click(); });
+  if(inp) inp.addEventListener("change",e=>{ const f=e.target.files&&e.target.files[0]; importDosyaAl(f); e.target.value=""; });
+  if(drop){
+    drop.addEventListener("dragover",e=>{ e.preventDefault(); if(e.dataTransfer) e.dataTransfer.dropEffect="copy"; drop.classList.add("dragover"); });
+    drop.addEventListener("dragleave",()=>drop.classList.remove("dragover"));
+    drop.addEventListener("drop",e=>{ e.preventDefault(); drop.classList.remove("dragover"); importDosyaAl(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]); });
+  }
+  ["dragover","drop"].forEach(ev=>window.addEventListener(ev,e=>{
+    const m=document.getElementById("importModal");
+    if(m && m.style.display!=="none" && e.target && !e.target.closest("#importDrop")) e.preventDefault();
+  }));
+})();
 
 document.addEventListener("keydown", e=>{
   if(e.key==="Escape") ["detailModal","editModal","importModal"].forEach(id=>{
