@@ -780,11 +780,11 @@ function dosyaOku(file){
       if(!liste.length){ if(log) log.textContent="⚠ Tanınan kayıt bulunamadı. Beklenen: JSON dizi, GeoJSON FeatureCollection veya haberler/raporlar/ihlaller/direnis anahtarı."; return; }
       const ham=liste.length;
       liste=liste.map((h,i)=>{
-        const konum=h.konum||[h.ilce,h.il].filter(Boolean).join(", ")||h.bolge||"";
+        const konum=h.konum||h.tahmini_konum||[h.ilce,h.il].filter(Boolean).join(", ")||h.bolge||"";
         return {
           id:h.id||("imp_"+Date.now()+"_"+i),
-          baslik:h.baslik||h.ad||h.name||h.title||"",
-          kaynak:h.kaynak||h.source||h.belge_no||"",
+          baslik:h.baslik||h.ad||h.name||h.title||h.proje_adi||h.adi||"",
+          kaynak:h.kaynak||h.source||h.kamulastiran_kurum||h.belge_no||"",
           kategori:h.kategori||h.tip||h.etiket||"Haber",
           etiket:h.etiket||h.kategori||h.tip||"Haber",
           tarih:h.tarih||h.eklenme||h.yayim_tarihi||new Date().toISOString().slice(0,10),
