@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LTTD3L198S"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-LTTD3L198S");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raporlar & Analiz — ekoloji-izleme.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-header{background:var(--forest);padding:100px 80px 60px;border-bottom:1px solid rgba(45,158,107,.15);}
+.page-header-inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
+.page-header h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
+.page-header h1 span{color:var(--bright);}
+.search-wrap{display:flex;gap:8px;align-items:center;}
+.search-box{font-family:"JetBrains Mono",monospace;font-size:11px;padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:220px;}
+.search-box:focus{border-color:var(--accent);}
+.tur-chip{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.07em;padding:5px 11px;border-radius:2px;border:1px solid rgba(34,197,94,.2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.tur-chip:hover,.tur-chip.aktif{background:rgba(34,197,94,.1);border-color:#22c55e;color:#22c55e;}
+.ozet-bar{background:var(--dark);padding:10px 80px;border-bottom:1px solid rgba(45,158,107,.07);display:flex;gap:24px;align-items:center;flex-wrap:wrap;}
+.ozet-stat{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;}
+.ozet-stat b{color:#22c55e;font-weight:600;}
+.scan-bar{background:var(--dark);padding:14px 80px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(45,158,107,.1);flex-wrap:wrap;}
+.scan-status{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);flex:1;}
+.btn-tara,.btn-import,.btn-dup{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all .2s;}
+.btn-tara{background:#22c55e;color:var(--dark);border:none;}
+.btn-tara:hover{background:#4ade80;}
+.btn-tara:disabled{opacity:.5;cursor:not-allowed;}
+.btn-import{background:transparent;color:#22c55e;border:1px solid rgba(34,197,94,.35);}
+.btn-import:hover{background:rgba(34,197,94,.1);}
+.btn-dup{background:transparent;color:var(--muted);border:1px solid rgba(45,158,107,.2);}
+.btn-dup:hover{color:var(--warn);border-color:rgba(232,92,42,.4);}
+.content{background:var(--dark);padding:40px 80px 60px;min-height:60vh;}
+.content-layout{display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:start;}
+.kat-sidebar{position:sticky;top:80px;}
+.kat-sidebar-title{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 0 10px;border-bottom:1px solid rgba(45,158,107,.1);margin-bottom:8px;}
+.kat-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid transparent;margin-bottom:2px;}
+.kat-item:hover{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.12);}
+.kat-item.aktif-kat{background:rgba(34,197,94,.09);border-color:rgba(34,197,94,.25);}
+.kat-item.aktif-kat .kat-ad{color:#4ade80;}
+.kat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.kat-ad{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);flex:1;line-height:1.3;}
+.kat-sayi{font-family:"JetBrains Mono",monospace;font-size:8px;color:var(--muted);opacity:.5;flex-shrink:0;}
+.kat-item.aktif-kat .kat-sayi{opacity:.9;}
+.kat-tumü{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid rgba(34,197,94,.15);background:rgba(34,197,94,.05);margin-bottom:10px;}
+.kat-tumü:hover{background:rgba(34,197,94,.1);}
+.kat-tumü.aktif-kat{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.3);}
+.kat-tumü span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:#4ade80;flex:1;}
+.kat-tumü b{font-family:"JetBrains Mono",monospace;font-size:8px;color:#22c55e;}
+.kat-separator{font-family:"JetBrains Mono",monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.45;padding:10px 12px 5px;margin-top:4px;}
+.kat-item-gunluk{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid rgba(232,121,249,.15);background:rgba(232,121,249,.04);margin-bottom:10px;}
+.kat-item-gunluk:hover{background:rgba(232,121,249,.1);border-color:rgba(232,121,249,.3);}
+.kat-item-gunluk.aktif-kat{background:rgba(232,121,249,.12);border-color:rgba(232,121,249,.4);}
+.kat-item-gunluk span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:#e879f9;flex:1;}
+.kat-item-gunluk b{font-family:"JetBrains Mono",monospace;font-size:8px;color:#d946ef;}
+.kat-item-gunluk.aktif-kat span{color:#f0abfc;}
+.rapor-grid{display:flex;flex-direction:column;gap:2px;}
+.rapor-kart{background:var(--forest);padding:22px 28px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;cursor:pointer;border-left:3px solid transparent;transition:all .2s;}
+.rapor-kart:hover{background:var(--deep);padding-left:34px;border-left-color:#22c55e;}
+.rapor-kart.rapor-kart-gunluk:hover{border-left-color:#e879f9;}
+.rapor-kart h3{font-size:16px;font-weight:400;color:var(--cream);line-height:1.5;margin-bottom:7px;}
+.rapor-kart-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.rapor-kart-meta span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);}
+.rapor-kart-meta a{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:#22c55e;text-decoration:none;}
+.rapor-kart-meta a:hover{color:#4ade80;}
+.badge{font-family:"JetBrains Mono",monospace;font-size:8.5px;padding:3px 8px;border-radius:2px;white-space:nowrap;height:fit-content;}
+.badge-rapor{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);}
+.badge-kat{background:rgba(45,158,107,.07);color:var(--accent);border:1px solid rgba(45,158,107,.15);font-size:7.5px;}
+.badge-gunluk{background:rgba(232,121,249,.12);color:#e879f9;border:1px solid rgba(232,121,249,.25);}
+.admin-btn-group{display:flex;gap:5px;flex-shrink:0;}
+.admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:"JetBrains Mono",monospace;font-size:8.5px;cursor:pointer;}
+.admin-sil-btn:hover{background:rgba(232,92,42,.25);}
+.admin-duzenle-btn{padding:3px 10px;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.3);border-radius:2px;font-family:"JetBrains Mono",monospace;font-size:8.5px;cursor:pointer;}
+.admin-duzenle-btn:hover{background:rgba(34,197,94,.2);}
+.empty{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);text-align:center;padding:60px 0;}
+.rapor-kart-ozet{font-family:"Crimson Pro",serif;font-size:14px;color:rgba(240,245,242,.55);line-height:1.55;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-box{background:var(--deep);border:1px solid rgba(34,197,94,.2);border-radius:8px;max-width:700px;width:100%;max-height:88vh;overflow-y:auto;}
+.modal-header{padding:24px 32px 12px;display:flex;justify-content:space-between;align-items:start;gap:12px;position:sticky;top:0;background:var(--deep);z-index:1;border-bottom:1px solid rgba(34,197,94,.1);}
+.modal-body{padding:20px 32px 32px;}
+.modal-title{font-family:"Crimson Pro",serif;font-size:26px;font-weight:400;color:var(--cream);line-height:1.35;margin:8px 0 16px;}
+.modal-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);}
+.modal-ozet{font-size:15px;font-weight:300;color:var(--cream);line-height:1.75;margin-bottom:24px;}
+.modal-kaynak-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:#22c55e;color:var(--dark);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;}
+.modal-kaynak-btn:hover{background:#4ade80;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;}
+.modal-close:hover{color:var(--cream);}
+.gunluk-rapor-bolum{margin-bottom:28px;}
+.gunluk-rapor-bolum-baslik{font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#e879f9;opacity:.8;margin-bottom:10px;}
+.gunluk-rapor-metin{font-family:"Crimson Pro",serif;font-size:16px;font-weight:300;color:var(--cream);line-height:1.8;}
+.gunluk-rapor-istatistik{display:flex;gap:20px;padding:16px 20px;background:rgba(232,121,249,.05);border:1px solid rgba(232,121,249,.15);border-radius:4px;margin-bottom:24px;flex-wrap:wrap;}
+.gunluk-rapor-istatistik-item{text-align:center;}
+.gunluk-rapor-istatistik-n{font-family:"Bebas Neue",sans-serif;font-size:32px;color:#e879f9;line-height:1;}
+.gunluk-rapor-istatistik-l{font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.gunluk-rapor-kategoriler{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}
+.gunluk-rapor-kategori-chip{font-family:"JetBrains Mono",monospace;font-size:8px;padding:3px 8px;border-radius:2px;background:rgba(232,121,249,.1);border:1px solid rgba(232,121,249,.2);color:#f0abfc;}
+.edit-field{margin-bottom:14px;}
+.edit-field label{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#22c55e;display:block;margin-bottom:5px;}
+.edit-field input,.edit-field textarea,.edit-field select{width:100%;box-sizing:border-box;background:var(--forest);border:1px solid rgba(34,197,94,.2);border-radius:3px;padding:9px 12px;color:var(--cream);font-family:"JetBrains Mono",monospace;font-size:11px;outline:none;}
+.edit-field input:focus,.edit-field textarea:focus{border-color:#22c55e;}
+.edit-field textarea{resize:vertical;line-height:1.6;}
+.edit-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+.btn-kaydet{padding:10px 22px;background:#22c55e;color:var(--dark);border:none;border-radius:3px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
+.btn-kaydet:hover{background:#4ade80;}
+.btn-iptal{padding:10px 18px;background:transparent;color:var(--muted);border:1px solid rgba(34,197,94,.2);border-radius:3px;font-family:"JetBrains Mono",monospace;font-size:10px;cursor:pointer;}
+.btn-iptal:hover{color:var(--cream);}
+.import-drop{border:2px dashed rgba(34,197,94,.3);border-radius:6px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;}
+.import-drop:hover,.import-drop.dragover{border-color:#22c55e;background:rgba(34,197,94,.05);}
+.import-drop p{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);margin:0;}
+.import-drop b{color:#4ade80;display:block;font-size:14px;margin-bottom:8px;}
+.import-log{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.3);padding:12px;border-radius:3px;min-height:40px;white-space:pre-wrap;}
+@media(max-width:900px){
+  .page-header{padding:80px 28px 40px;}.page-header-inner{grid-template-columns:1fr;}
+  .ozet-bar,.scan-bar{padding:14px 28px;}
+  .content{padding:24px 16px 40px;}
+  .content-layout{grid-template-columns:1fr;}
+  .kat-sidebar{position:static;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+  .kat-sidebar-title,.kat-separator{display:none;}
+  .kat-tumü,.kat-item-gunluk{margin-bottom:0;}
+  .kat-item{padding:6px 10px;}
+  .kat-sayi{display:none;}
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+.flatpickr-calendar{background:var(--deep,#0d2318)!important;border:1px solid rgba(45,158,107,.3)!important;border-radius:6px!important;box-shadow:0 12px 40px rgba(0,0,0,.5)!important;font-family:'JetBrains Mono',monospace!important;}
+.flatpickr-months{background:var(--forest,#112c1c)!important;border-radius:6px 6px 0 0;}
+.flatpickr-month,.flatpickr-current-month,.flatpickr-monthDropdown-months,.numInputWrapper span,.flatpickr-current-month .numInputWrapper input{color:#f0f5f2!important;background:transparent!important;}
+.flatpickr-monthDropdown-months{border:none!important;}
+.flatpickr-monthDropdown-months option{background:var(--deep,#0d2318)!important;}
+.flatpickr-prev-month,.flatpickr-next-month{color:rgba(122,158,138,.7)!important;fill:rgba(122,158,138,.7)!important;}
+.flatpickr-prev-month:hover,.flatpickr-next-month:hover{color:#3ec882!important;fill:#3ec882!important;background:rgba(45,158,107,.1)!important;}
+.flatpickr-weekday{color:rgba(45,158,107,.6)!important;font-size:9px!important;letter-spacing:.08em;}
+.flatpickr-day{color:rgba(240,245,242,.75)!important;border-radius:3px!important;font-size:11px!important;}
+.flatpickr-day:hover,.flatpickr-day:focus{background:rgba(45,158,107,.18)!important;border-color:rgba(45,158,107,.35)!important;color:#f0f5f2!important;}
+.flatpickr-day.today{border-color:rgba(45,158,107,.5)!important;color:#3ec882!important;}
+.flatpickr-day.today:hover{background:rgba(45,158,107,.18)!important;}
+.flatpickr-day.selected,.flatpickr-day.selected:hover{background:var(--accent,#2d9e6b)!important;border-color:var(--accent,#2d9e6b)!important;color:var(--dark,#070f0a)!important;font-weight:600!important;}
+.flatpickr-day.flatpickr-disabled,.flatpickr-day.prevMonthDay,.flatpickr-day.nextMonthDay{color:rgba(122,158,138,.25)!important;}
+.numInputWrapper:hover,.numInputWrapper span:hover{background:rgba(45,158,107,.08)!important;}
+.numInputWrapper span{border-color:rgba(45,158,107,.2)!important;}
+input.flatpickr-input{cursor:pointer!important;}
+</style>
+</head>
+<body>
+<script src="site-data.js"></script>
+<div id="nav-root"></div>
+<script src="nav.js"></script>
+<div class="page-header">
+  <div class="page-header-inner">
+    <div>
+      <div class="section-tag">Araştırma & Analiz</div>
+      <h1>RAPORLAR &amp; <span>ANALİZ</span></h1>
+    </div>
+    <div class="search-wrap">
+      <input class="search-box" id="searchBox" placeholder="Rapor ara…" oninput="filtrele()">
+      <button class="tur-chip" data-tur="STK Raporu">STK</button>
+      <button class="tur-chip" data-tur="İklim Raporu">İklim</button>
+      <button class="tur-chip" data-tur="Akademik">Akademik</button>
+      <button class="tur-chip" data-tur="Politika">Politika</button>
+    </div>
+  </div>
+</div>
+<div class="ozet-bar" id="ozetBar">
+  <span class="ozet-stat"><b id="osToplamSayi">…</b> rapor</span>
+  <span class="ozet-stat" id="osGuncelleme"></span>
+</div>
+<div class="scan-bar">
+  <div class="scan-status" id="scanStatus">Yükleniyor…</div>
+  <div id="adminAlan" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"></div>
+</div>
+<div class="content">
+  <div class="content-layout">
+    <aside class="kat-sidebar" id="katSidebar">
+      <div class="kat-sidebar-title">Konu & Eylem Kategorileri</div>
+      <div class="kat-item-gunluk" data-hkat="__gunluk" onclick="setHkat(this)">
+        <span>📋 Günlük Raporlar</span><b id="ks_gunluk">…</b>
+      </div>
+      <div class="kat-tumü aktif-kat" data-hkat="" onclick="setHkat(this)">
+        <span>Tüm Raporlar</span><b id="ks_toplam">…</b>
+      </div>
+      <div class="kat-separator">Konu</div>
+      <div class="kat-item" data-hkat="İklim ve Afet" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#60a5fa;"></div><span class="kat-ad">İklim ve Afet</span><span class="kat-sayi" id="ks_iklim">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Maden ve Enerji" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#f97316;"></div><span class="kat-ad">Maden ve Enerji</span><span class="kat-sayi" id="ks_maden">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Orman ve Doğa" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:var(--accent);"></div><span class="kat-ad">Orman ve Doğa</span><span class="kat-sayi" id="ks_orman">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Su ve Kıyı" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#38bdf8;"></div><span class="kat-ad">Su ve Kıyı</span><span class="kat-sayi" id="ks_su">…</span>
+      </div>
+      <div class="kat-item" data-hkat="Yaban Hayatı" onclick="setHkat(this)">
+        <div class="kat-dot" style="background:#a3e635;"></div><span class="kat-ad">Yaban Hayatı</span><span class="kat-sayi" id="ks_yaban">…</span>
+      </div>
+      <div class="kat-separator">Diğer</div>
+      <div class="kat-item" data-hkat="__kategorisiz" onclick="setHkat(this)" style="opacity:.7;">
+        <div class="kat-dot" style="background:#475569;"></div><span class="kat-ad">Kategorisiz</span><span class="kat-sayi" id="ks_kategorisiz">…</span>
+      </div>
+    </aside>
+    <div>
+      <div class="rapor-grid" id="raporGrid"><div class="empty">Raporlar yükleniyor…</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="detailModal" class="modal-bg" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div id="mBadgeRow" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+      <button class="modal-close" id="detailClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="mTitle"></h2>
+      <div class="modal-meta" id="mMeta"></div>
+      <div id="mEtiketler" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;"></div>
+      <div class="modal-ozet" id="mOzet"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+        <a id="mLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;"></a>
+        <a id="mPdf" href="#" target="_blank" rel="noopener noreferrer" class="modal-kaynak-btn" style="display:none;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#4ade80;"></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="gunlukModal" class="modal-bg" style="display:none;">
+  <div class="modal-box" style="border-color:rgba(232,121,249,.25);max-width:740px;">
+    <div class="modal-header" style="border-color:rgba(232,121,249,.15);">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+        <span class="badge badge-gunluk">📋 Günlük Rapor</span>
+        <span id="gm_tarih" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);"></span>
+      </div>
+      <button class="modal-close" id="gunlukClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="gm_baslik" style="font-size:28px;margin-bottom:20px;"></h2>
+      <div class="gunluk-rapor-istatistik" id="gm_istatistik" style="display:none;">
+        <div class="gunluk-rapor-istatistik-item"><div class="gunluk-rapor-istatistik-n" id="gm_haber_n">—</div><div class="gunluk-rapor-istatistik-l">Haber</div></div>
+        <div class="gunluk-rapor-istatistik-item"><div class="gunluk-rapor-istatistik-n" id="gm_ihlal_n">—</div><div class="gunluk-rapor-istatistik-l">İhlal</div></div>
+        <div style="flex:1;"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Öne Çıkan Konular</div><div class="gunluk-rapor-kategoriler" id="gm_kategoriler"></div></div>
+      </div>
+      <div class="gunluk-rapor-bolum" id="gm_giris_wrap"><div class="gunluk-rapor-bolum-baslik">Bugün Ne Oldu</div><div class="gunluk-rapor-metin" id="gm_giris"></div></div>
+      <div class="gunluk-rapor-bolum" id="gm_yorum_wrap"><div class="gunluk-rapor-bolum-baslik">Bütünleşik Yorum</div><div class="gunluk-rapor-metin" id="gm_yorum"></div></div>
+      <div class="gunluk-rapor-bolum" id="gm_bakia_wrap"><div class="gunluk-rapor-bolum-baslik">Yarına Bakış</div><div class="gunluk-rapor-metin" id="gm_bakia"></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-bg" style="display:none;">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-header">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#22c55e;">Raporu Düzenle</span>
+      <button class="modal-close" id="editClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="edit-field"><label>Başlık</label><input id="edit_baslik" type="text"></div>
+      <div class="edit-field"><label>Kaynak / Kurum</label><input id="edit_kaynak" type="text"></div>
+      <div class="edit-field"><label>Kategori</label>
+        <select id="edit_kategori">
+          <option>STK Raporu</option><option>İklim Raporu</option><option>Akademik Analiz</option>
+          <option>Politika Analizi</option><option>Enerji Politikası</option><option>ÇED Analizi</option>
+          <option>Alan Araştırması</option><option>Veri & İstatistik</option><option>Hukuki Analiz</option><option>İzleme Raporu</option>
+        </select>
+      </div>
+      <div class="edit-field"><label>Tarih</label><input id="edit_tarih" type="date"></div>
+      <div class="edit-field"><label>URL</label><input id="edit_url" type="url"></div>
+      <div class="edit-field"><label>Özet</label><textarea id="edit_ozet" rows="5"></textarea></div>
+      <div class="edit-actions">
+        <button class="btn-iptal" id="editIptal">İptal</button>
+        <button class="btn-kaydet" id="editKaydet">✓ Kaydet</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="importModal" class="modal-bg" style="display:none;">
+  <div class="modal-box" style="max-width:500px;">
+    <div class="modal-header">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#22c55e;">JSON İçe Aktar</span>
+      <button class="modal-close" id="importClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="import-drop" id="importDrop">
+        <b>📂 Dosya sürükle veya tıkla</b>
+        <p>raporlar.json okunur</p>
+        <input type="file" id="importFile" style="display:none;">
+      </div>
+      <div class="import-log" id="importLog">Dosya bekleniyor…</div>
+      <div class="edit-actions">
+        <button class="btn-iptal" id="importIptal">Kapat</button>
+        <button class="btn-kaydet" id="importUygula" disabled>✓ İçe Aktar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const HABERLER_URL="./raporlar.json";
+const GUNLUK_ARSIV_URL="./gunluk-raporlar.json";
+const KAT_ID_MAP={"İklim ve Afet":"ks_iklim","Maden ve Enerji":"ks_maden","Orman ve Doğa":"ks_orman","Su ve Kıyı":"ks_su","Yaban Hayatı":"ks_yaban","Direniş ve Eylemler":"ks_direnis","Hukuki Süreçler":"ks_hukuk","Nöbetler ve Gözaltılar":"ks_nobet","STK & Kampanyalar":"ks_stk","__kategorisiz":"ks_kategorisiz"};
+const _adminMod={
+  getSilinen(){try{return new Set(JSON.parse(localStorage.getItem("ekoloji_rapor_silinen")||"[]").map(String));}catch{return new Set();}},
+  sil(id,onSuccess){if(!confirm("Bu raporu silmek istiyor musunuz?"))return;const sid=String(id);if(typeof SITE!=="undefined")SITE.set("raporlar",SITE.getList("raporlar").filter(x=>String(x.id)!==sid));const s=this.getSilinen();s.add(sid);localStorage.setItem("ekoloji_rapor_silinen",JSON.stringify([...s]));if(onSuccess)onSuccess(sid);}
+};
+let tumRaporlar=[],gunlukRaporlar=[],aktifHaberKat="",aktifTurKat="",duzenleId=null,importData=null,gunlukYuklendi=false;
+
+function haberKatTespit(h){
+  if(h.haber_kategorisi)return h.haber_kategorisi;
+  const _M={"İ":"i","Ş":"ş","Ğ":"ğ","Ü":"ü","Ö":"ö","Ç":"ç"};
+  const _n=s=>(s||"").replace(/[İŞĞÜÖÇ]/g,c=>_M[c]||c).toLowerCase();
+  const eylem=_n(h.eylem),kat=_n(h.kategori||h.etiket);
+  const metin=_n([h.baslik,h.ozet,h.kategori,h.etiket,...(Array.isArray(h.etiketler)?h.etiketler:[h.etiketler])].filter(Boolean).join(" "));
+  const _D={"iklim":"İklim ve Afet","iklim olayları":"İklim ve Afet","iklim raporu":"İklim ve Afet","hes / res / baraj":"Maden ve Enerji","orman / maden":"Maden ve Enerji","enerji politikası":"Maden ve Enerji","kamulaştırma":"Hukuki Süreçler","çed kararları":"Hukuki Süreçler","stk":"STK & Kampanyalar","stk raporu":"STK & Kampanyalar","yaban hayatı":"Yaban Hayatı","alan araştırması":"Orman ve Doğa"};
+  if(_D[kat])return _D[kat];
+  if(metin.includes("nöbet")||metin.includes("gözaltı"))return"Nöbetler ve Gözaltılar";
+  if(eylem.includes("direniş")||metin.includes("direniş")||metin.includes("protesto"))return"Direniş ve Eylemler";
+  if(eylem.includes("stk")||metin.includes("greenpeace")||metin.includes("wwf"))return"STK & Kampanyalar";
+  if(eylem.includes("hukuk")||metin.includes("mahkeme"))return"Hukuki Süreçler";
+  if(metin.includes("iklim")||metin.includes("yangın")||metin.includes("kuraklık"))return"İklim ve Afet";
+  if(metin.includes("yaban hayat")||metin.includes("nesli tehlike"))return"Yaban Hayatı";
+  if(metin.includes("sulak alan")||metin.includes("deniz kirliliği")||metin.includes("kıyı"))return"Su ve Kıyı";
+  if(metin.includes("maden")||metin.includes("hes")||metin.includes("termik")||metin.includes("baraj"))return"Maden ve Enerji";
+  if(metin.includes("orman")||metin.includes("ağaç")||metin.includes("habitat"))return"Orman ve Doğa";
+  return"";
+}
+
+function gunlukArsivYukle(callback){
+  if(gunlukYuklendi){callback();return;}
+  fetch(GUNLUK_ARSIV_URL+"?t="+Date.now()).then(r=>r.ok?r.json():Promise.reject(r.status)).then(data=>{
+    gunlukRaporlar=Array.isArray(data)?data:(data.raporlar||[]);gunlukYuklendi=true;
+    const el=document.getElementById("ks_gunluk");if(el)el.textContent=gunlukRaporlar.length;callback();
+  }).catch(()=>{gunlukRaporlar=[];gunlukYuklendi=true;callback();});
+}
+
+function renderGunluk(liste){
+  const grid=document.getElementById("raporGrid");
+  if(!liste.length){grid.innerHTML='<div class="empty">Henüz günlük rapor arşivlenmemiş.</div>';return;}
+  const q=document.getElementById("searchBox").value.toLowerCase();
+  const filtreli=q?liste.filter(h=>(h.baslik+" "+(h.giris||"")).toLowerCase().includes(q)):liste;
+  document.getElementById("scanStatus").textContent=filtreli.length+" günlük rapor";
+  document.getElementById("osToplamSayi").textContent=filtreli.length;
+  grid.innerHTML=filtreli.map(h=>{
+    const tarih=h.tarih?new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):"";
+    const vo=h.veri_ozet||{};
+    const istatStr=(vo.haber_sayisi!=null||vo.ihlal_sayisi!=null)?`<span>📰 ${vo.haber_sayisi||0} haber · ⚠ ${vo.ihlal_sayisi||0} ihlal</span>`:"";
+    return`<div class="rapor-kart rapor-kart-gunluk" onclick="acGunlukModal('${h.id}')"><div><h3>${h.baslik||"Günlük Rapor"}</h3><div class="rapor-kart-meta">${tarih?`<span>📅 ${tarih}</span>`:""}${istatStr}</div>${h.giris?`<div class="rapor-kart-ozet">${h.giris}</div>`:""}</div><div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0;"><span class="badge badge-gunluk">Günlük Rapor</span></div></div>`;
+  }).join("");
+}
+
+function acGunlukModal(id){
+  const h=gunlukRaporlar.find(x=>x.id===id);if(!h)return;
+  const tarih=h.tarih?new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):"";
+  document.getElementById("gm_baslik").textContent=h.baslik||"Günlük Rapor";
+  document.getElementById("gm_tarih").textContent=tarih;
+  const vo=h.veri_ozet||{};
+  if(vo.haber_sayisi!=null||vo.ihlal_sayisi!=null){
+    document.getElementById("gm_istatistik").style.display="flex";
+    document.getElementById("gm_haber_n").textContent=vo.haber_sayisi??"—";
+    document.getElementById("gm_ihlal_n").textContent=vo.ihlal_sayisi??"—";
+    document.getElementById("gm_kategoriler").innerHTML=(vo.one_cikan_kategoriler||[]).map(k=>`<span class="gunluk-rapor-kategori-chip">${k}</span>`).join("")||"—";
+  }else{document.getElementById("gm_istatistik").style.display="none";}
+  const setMetin=(id,wrapId,metin)=>{document.getElementById(id).textContent=metin||"";document.getElementById(wrapId).style.display=metin?"block":"none";};
+  setMetin("gm_giris","gm_giris_wrap",h.giris);setMetin("gm_yorum","gm_yorum_wrap",h.yorum);setMetin("gm_bakia","gm_bakia_wrap",h.bakia);
+  document.getElementById("gunlukModal").style.display="flex";
+}
+
+function acModal(id){
+  const h=tumRaporlar.find(x=>String(x.id)===String(id));if(!h)return;
+  const tarih=h.tarih?new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):"";
+  const webUrl=h.url||h.kaynak_url||"";
+  const pdfUrl=h.pdf_url||h.dosya||"";
+  const webDomain=webUrl?(()=>{try{return new URL(webUrl).hostname.replace("www.","");}catch(e){return webUrl.slice(0,30);}})():"";
+  const isPdf=u=>u&&/\.(pdf)(\?|$)/i.test(u);
+  const isDoc=u=>u&&/\.(doc|docx|xls|xlsx|ppt|pptx)(\?|$)/i.test(u);
+  const isHtml=u=>u&&/\.(html|htm)(\?|$)/i.test(u);
+
+  const badgeRow=document.getElementById("mBadgeRow");
+  badgeRow.innerHTML="";
+  const rb=document.createElement("span");rb.className="badge badge-rapor";rb.textContent="Rapor & Analiz";badgeRow.appendChild(rb);
+  const hkat=h._haber_kat||"";
+  if(hkat){const kb=document.createElement("span");kb.className="badge badge-kat";kb.textContent=hkat;badgeRow.appendChild(kb);}
+  if(h.kategori){const s=document.createElement("span");s.className="badge badge-rapor";s.style.background="rgba(34,197,94,.06)";s.textContent=h.kategori.slice(0,22);badgeRow.appendChild(s);}
+
+  document.getElementById("mTitle").textContent=h.baslik;
+  document.getElementById("mMeta").innerHTML=(h.kaynak?`<span>🏛 ${h.kaynak}</span>`:"")+(tarih?`<span>📅 ${tarih}</span>`:"")+( webDomain?`<span>🔗 ${webDomain}</span>`:"");
+
+  const et=document.getElementById("mEtiketler");
+  const etiketler=Array.isArray(h.etiketler)?h.etiketler:[];
+  if(etiketler.length){et.style.display="flex";et.innerHTML=etiketler.map(e=>`<span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 8px;border-radius:2px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#4ade80;">${e}</span>`).join("");}
+  else{et.style.display="none";}
+
+  document.getElementById("mOzet").textContent=h.ozet||"Özet yok. Kaynağa gidin.";
+
+  const SVG=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+  const DL=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+
+  const link=document.getElementById("mLink");
+  if(webUrl){link.href=webUrl;link.innerHTML=`${SVG} Rapora Git — ${webDomain}`;link.style.display="inline-flex";}
+  else{link.style.display="none";}
+
+  const mpdf=document.getElementById("mPdf");
+  if(pdfUrl){
+    mpdf.href=pdfUrl;
+    if(isPdf(pdfUrl)){mpdf.innerHTML=`${DL} PDF İndir`;}
+    else if(isDoc(pdfUrl)){mpdf.innerHTML=`${DL} Dosyayı İndir`;}
+    else if(isHtml(pdfUrl)){mpdf.innerHTML=`${SVG} HTML Raporu Oku`;}
+    else{mpdf.innerHTML=`${SVG} Dosyayı Aç`;}
+    mpdf.style.display="inline-flex";
+  }else{mpdf.style.display="none";}
+
+  if(!webUrl&&!pdfUrl){link.style.display="inline-flex";link.href="#";link.style.pointerEvents="none";link.style.opacity=".4";link.innerHTML="Kaynak URL girilmemiş";}
+  document.getElementById("detailModal").style.display="flex";
+}
+
+function acDuzenle(id,event){
+  event.stopPropagation();
+  const h=tumRaporlar.find(x=>String(x.id)===String(id));if(!h)return;
+  duzenleId=id;
+  document.getElementById("edit_baslik").value=h.baslik||"";
+  document.getElementById("edit_kaynak").value=h.kaynak||"";
+  document.getElementById("edit_kategori").value=h.kategori||h.etiket||"STK Raporu";
+  document.getElementById("edit_tarih").value=h.tarih?h.tarih.slice(0,10):"";
+  document.getElementById("edit_url").value=h.url||"";
+  document.getElementById("edit_ozet").value=h.ozet||"";
+  document.getElementById("editModal").style.display="flex";
+  setTimeout(()=>{document.querySelectorAll('#editModal input[type="date"]').forEach(el=>{if(el._flatpickr)el._flatpickr.setDate(el.value,false);else flatpickr(el,_fpCfg());});},60);
+}
+
+function duzenleKaydet(){
+  if(!duzenleId)return;
+  const idx=tumRaporlar.findIndex(x=>String(x.id)===String(duzenleId));if(idx===-1)return;
+  tumRaporlar[idx]={...tumRaporlar[idx],baslik:document.getElementById("edit_baslik").value.trim(),kaynak:document.getElementById("edit_kaynak").value.trim(),kategori:document.getElementById("edit_kategori").value,etiket:document.getElementById("edit_kategori").value,tarih:document.getElementById("edit_tarih").value,url:document.getElementById("edit_url").value.trim(),ozet:document.getElementById("edit_ozet").value.trim()};
+  tumRaporlar[idx]._haber_kat=haberKatTespit(tumRaporlar[idx]);
+  if(typeof SITE!=="undefined")SITE.set("raporlar",tumRaporlar);
+  document.getElementById("editModal").style.display="none";
+  filtrele();guncelleSidebarSayac();gosterBildirim("✓ Rapor güncellendi.");
+}
+
+function render(liste){
+  const grid=document.getElementById("raporGrid");
+  if(!liste.length){grid.innerHTML='<div class="empty">Bu kategoride rapor bulunamadı.</div>';return;}
+  const adminMod=typeof SITE!=="undefined"&&SITE.isAdmin();
+  grid.innerHTML=liste.map(h=>{
+    const tarih=h.tarih?new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}):"";
+    const domain=h.url?(()=>{try{return new URL(h.url).hostname.replace("www.","");}catch(e){return"";}})():"";
+    const hkat=h._haber_kat||"";
+    const hkatBadge=hkat?`<span class="badge badge-kat">${hkat}</span>`:"";
+    const katBadge=h.kategori?`<span class="badge badge-rapor" style="font-size:7.5px;background:rgba(34,197,94,.06);">${h.kategori.slice(0,20)}</span>`:"";
+    const adminBtnler=adminMod?`<div class="admin-btn-group" onclick="event.stopPropagation()"><button class="admin-duzenle-btn" onclick="acDuzenle('${h.id}',event)">DÜZENLE</button><button class="admin-sil-btn" onclick="raporSil('${h.id}')">SİL</button></div>`:"";
+    return`<div class="rapor-kart" onclick="acModal('${h.id}')"><div><h3>${h.baslik}</h3><div class="rapor-kart-meta"><span>🏛 ${h.kaynak||""}</span>${tarih?`<span>📅 ${tarih}</span>`:""}${domain?`<a href="${h.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${domain}</a>`:""}</div></div><div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;"><span class="badge badge-rapor">Rapor</span>${hkatBadge}${katBadge}${adminBtnler}</div></div>`;
+  }).join("");
+}
+
+function raporSil(id){_adminMod.sil(id,sid=>{tumRaporlar=tumRaporlar.filter(h=>String(h.id)!==sid);filtrele();guncelleSidebarSayac();});}
+
+function filtrele(){
+  if(aktifHaberKat==="__gunluk"){renderGunluk(gunlukRaporlar);return;}
+  const q=document.getElementById("searchBox").value.toLowerCase();
+  render(tumRaporlar.filter(h=>{
+    if(aktifTurKat&&!(h.kategori||h.etiket||"").toLowerCase().includes(aktifTurKat.toLowerCase()))return false;
+    if(aktifHaberKat==="__kategorisiz"){if(h._haber_kat&&h._haber_kat!=="")return false;}
+    else if(aktifHaberKat){if(h._haber_kat!==aktifHaberKat)return false;}
+    if(q&&!(h.baslik+" "+(h.ozet||"")+" "+(h.kaynak||"")).toLowerCase().includes(q))return false;
+    return true;
+  }));
+}
+
+function guncelleSidebarSayac(){
+  const sayac={};let toplam=0;
+  tumRaporlar.forEach(h=>{const k=h._haber_kat||"";if(k)sayac[k]=(sayac[k]||0)+1;toplam++;});
+  sayac["__kategorisiz"]=tumRaporlar.filter(h=>!h._haber_kat||h._haber_kat==="").length;
+  document.getElementById("ks_toplam").textContent=toplam;
+  document.getElementById("osToplamSayi").textContent=toplam;
+  Object.entries(KAT_ID_MAP).forEach(([kat,elId])=>{const el=document.getElementById(elId);if(el)el.textContent=sayac[kat]||"0";});
+}
+
+function setHkat(el){
+  aktifHaberKat=el.dataset.hkat||"";
+  document.querySelectorAll(".kat-item,.kat-tumü,.kat-item-gunluk").forEach(e=>e.classList.remove("aktif-kat"));
+  el.classList.add("aktif-kat");
+  const u=new URL(location.href);
+  if(aktifHaberKat)u.searchParams.set("hkat",aktifHaberKat);else u.searchParams.delete("hkat");
+  history.replaceState({},"",u.toString());
+  if(aktifHaberKat==="__gunluk"){gunlukArsivYukle(()=>{document.getElementById("osToplamSayi").textContent=gunlukRaporlar.length;document.getElementById("scanStatus").textContent=gunlukRaporlar.length+" günlük rapor";renderGunluk(gunlukRaporlar);});}
+  else{filtrele();}
+}
+
+const _fpCfg=()=>({locale:"tr",dateFormat:"Y-m-d",allowInput:true,disableMobile:false,monthSelectorType:"static",prevArrow:"‹",nextArrow:"›"});
+function _fpInitAll(){document.querySelectorAll('input[type="date"]').forEach(el=>{if(!el._flatpickr)flatpickr(el,_fpCfg());});}
+
+function yukle(){
+  const localRaporlar=typeof SITE!=="undefined"?SITE.getList("raporlar"):[];
+  const silinen=_adminMod.getSilinen();
+  fetch(HABERLER_URL+"?t="+Date.now()).then(r=>r.ok?r.json():Promise.reject(r.status)).then(data=>{
+    const meta=data.meta?.guncelleme||data._meta?.guncelleme;
+    if(meta){document.getElementById("osGuncelleme").innerHTML=`Son güncelleme: <b>${new Date(meta).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</b>`;}
+    isleRaporlar(data.raporlar||[],localRaporlar,silinen,meta);
+  }).catch(err=>{
+    console.warn("raporlar.json yüklenemedi:",err);
+    isleRaporlar([],localRaporlar,silinen,null);
+    document.getElementById("scanStatus").textContent="Rapor dosyası yüklenemedi — yerel veriler gösteriliyor";
+  });
+  fetch(GUNLUK_ARSIV_URL+"?t="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(data=>{
+    gunlukRaporlar=Array.isArray(data)?data:(data.raporlar||[]);gunlukYuklendi=true;
+    const el=document.getElementById("ks_gunluk");if(el)el.textContent=gunlukRaporlar.length;
+  }).catch(()=>{const el=document.getElementById("ks_gunluk");if(el)el.textContent="0";});
+}
+
+function isleRaporlar(uzakListe,yerelListe,silinen,meta){
+  const map=new Map();
+  [...uzakListe,...yerelListe].forEach(h=>{
+    if(silinen.has(String(h.id)))return;
+    const key=(h.url||h.baslik||String(h.id)).toLowerCase();
+    if(!map.has(key)){if(!h.kategori&&h.etiket)h.kategori=h.etiket;h._haber_kat=haberKatTespit(h);map.set(key,h);}
+  });
+  tumRaporlar=Array.from(map.values()).sort((a,b)=>new Date(b.tarih||0)-new Date(a.tarih||0));
+  const params=new URLSearchParams(location.search);
+  const hkat=params.get("hkat");
+  if(hkat){
+    aktifHaberKat=hkat;
+    document.querySelectorAll(".kat-item,.kat-tumü,.kat-item-gunluk").forEach(el=>{el.classList.toggle("aktif-kat",(el.dataset.hkat||"")===hkat);});
+    if(hkat==="__gunluk"){gunlukArsivYukle(()=>renderGunluk(gunlukRaporlar));guncelleSidebarSayac();return;}
+  }
+  filtrele();guncelleSidebarSayac();
+  document.getElementById("scanStatus").textContent=`${tumRaporlar.length} rapor`+(meta?" · "+new Date(meta).toLocaleString("tr-TR"):"");
+}
+
+function dosyaOku(file){
+  if(!file) return;
+  const log=document.getElementById("importLog");
+  const reader=new FileReader();
+  reader.onerror=()=>{ if(log) log.textContent="❌ Dosya okunamadı: "+((reader.error&&reader.error.message)||"bilinmeyen hata"); };
+  reader.onload=e=>{
+    try{
+      const parsed=JSON.parse(e.target.result);
+      importData=null;
+      let liste=[];
+      if(Array.isArray(parsed)) liste=parsed;
+      else if(parsed.features) liste=parsed.features.map(f=>{
+        const p=Object.assign({}, f.properties||{});
+        if(f.geometry&&Array.isArray(f.geometry.coordinates)){ p._lng=f.geometry.coordinates[0]; p._lat=f.geometry.coordinates[1]; }
+        return p;
+      }).filter(Boolean);
+      else if(parsed.haberler) liste=parsed.haberler;
+      else if(parsed.raporlar) liste=parsed.raporlar;
+      else if(parsed.ihlaller) liste=parsed.ihlaller;
+      else if(parsed.direnis)  liste=parsed.direnis;
+      if(!liste.length){ if(log) log.textContent="⚠ Tanınan kayıt bulunamadı. Beklenen: JSON dizi, GeoJSON FeatureCollection veya haberler/raporlar/ihlaller/direnis anahtarı."; return; }
+      const ham=liste.length;
+      liste=liste.map((h,i)=>{
+        const konum=h.konum||h.tahmini_konum||[h.ilce,h.il].filter(Boolean).join(", ")||h.bolge||"";
+        return {
+          id:h.id||("rimp_"+Date.now()+"_"+i),
+          baslik:h.baslik||h.ad||h.name||h.title||h.proje_adi||h.adi||"",
+          kaynak:h.kaynak||h.source||h.kamulastiran_kurum||h.belge_no||"",
+          kategori:h.kategori||h.tip||h.etiket||"STK Raporu",
+          etiket:h.etiket||h.kategori||h.tip||"STK Raporu",
+          tarih:h.tarih||h.eklenme||h.yayim_tarihi||new Date().toISOString().slice(0,10),
+          url:h.url||h.kaynak_link||h.link||"",
+          ozet:h.ozet||h.aciklama||h.alt_kategori||"",
+          icerik_tipi:h.icerik_tipi||"rapor",
+          dil:h.dil||"tr",
+          konum,
+        };
+      }).filter(h=>h.baslik);
+      if(!liste.length){ if(log) log.textContent="⚠ "+ham+" kayıt okundu ama hiçbirinde başlık alanı yok (baslik / ad / name / title). İçe aktarılamadı."; return; }
+      importData=liste;
+      if(log) log.textContent="✓ "+liste.length+" kayıt algılandı"+(liste.length<ham?" ("+(ham-liste.length)+" başlıksız atlandı)":"")+".\n\nİlk 3 örnek:\n"+liste.slice(0,3).map(h=>"• "+h.baslik.slice(0,60)).join("\n");
+      const u=document.getElementById("importUygula"); if(u) u.disabled=false;
+    }catch(err){ if(log) log.textContent="❌ JSON parse hatası: "+err.message; }
+  };
+  reader.readAsText(file);
+}
+
+function importUygula(){
+  if(!importData)return;
+  const mevcutUrller=new Set(tumRaporlar.map(h=>(h.url||"").toLowerCase()));
+  const yeniler=importData.filter(h=>!mevcutUrller.has((h.url||"").toLowerCase()));
+  tumRaporlar=[...yeniler.map(h=>({...h,_haber_kat:haberKatTespit(h)})),...tumRaporlar];
+  if(typeof SITE!=="undefined")SITE.set("raporlar",tumRaporlar);
+  document.getElementById("importModal").style.display="none";
+  filtrele();guncelleSidebarSayac();gosterBildirim(`✓ ${yeniler.length} rapor eklendi.`);
+}
+
+function gosterBildirim(mesaj){
+  const b=document.createElement("div");b.textContent=mesaj;
+  b.style.cssText="position:fixed;bottom:24px;right:24px;z-index:99999;background:#22c55e;color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:11px;padding:12px 20px;border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.4);";
+  document.body.appendChild(b);setTimeout(()=>{b.style.opacity="0";b.style.transition="opacity .4s";setTimeout(()=>b.remove(),400);},3000);
+}
+
+function dupTemizleVeKaydet(){
+  const gorulen=new Map();const temiz=[];
+  for(const h of tumRaporlar){const k=(h.url||h.baslik||"").trim().toLowerCase();if(!k||gorulen.has(k))continue;gorulen.set(k,true);temiz.push(h);}
+  const s=tumRaporlar.length-temiz.length;tumRaporlar=temiz;
+  if(typeof SITE!=="undefined")SITE.set("raporlar",tumRaporlar);
+  filtrele();guncelleSidebarSayac();gosterBildirim(s>0?`✓ ${s} duplicate temizlendi.`:"Duplicate bulunamadı.");
+}
+
+document.getElementById("detailClose").addEventListener("click",()=>document.getElementById("detailModal").style.display="none");
+document.getElementById("detailModal").addEventListener("click",function(e){if(e.target===this)this.style.display="none";});
+document.getElementById("gunlukClose").addEventListener("click",()=>document.getElementById("gunlukModal").style.display="none");
+document.getElementById("gunlukModal").addEventListener("click",function(e){if(e.target===this)this.style.display="none";});
+document.getElementById("editClose").addEventListener("click",()=>document.getElementById("editModal").style.display="none");
+document.getElementById("editIptal").addEventListener("click",()=>document.getElementById("editModal").style.display="none");
+document.getElementById("editKaydet").addEventListener("click",duzenleKaydet);
+document.getElementById("editModal").addEventListener("click",function(e){if(e.target===this)this.style.display="none";});
+document.getElementById("importClose").addEventListener("click",()=>document.getElementById("importModal").style.display="none");
+document.getElementById("importIptal").addEventListener("click",()=>document.getElementById("importModal").style.display="none");
+document.getElementById("importUygula").addEventListener("click",importUygula);
+function importDosyaAl(file){
+  const log=document.getElementById("importLog");
+  if(!file){ if(log) log.textContent="⚠ Dosya alınamadı."; return; }
+  if(log) log.textContent="📄 "+file.name+" ("+(file.size/1024).toFixed(1)+" KB) okunuyor…";
+  dosyaOku(file);
+}
+(function(){
+  const drop=document.getElementById("importDrop");
+  const inp=document.getElementById("importFile");
+  if(drop) drop.addEventListener("click",()=>{ if(inp) inp.click(); });
+  if(inp) inp.addEventListener("change",e=>{ const f=e.target.files&&e.target.files[0]; importDosyaAl(f); e.target.value=""; });
+  if(drop){
+    drop.addEventListener("dragover",e=>{ e.preventDefault(); if(e.dataTransfer) e.dataTransfer.dropEffect="copy"; drop.classList.add("dragover"); });
+    drop.addEventListener("dragleave",()=>drop.classList.remove("dragover"));
+    drop.addEventListener("drop",e=>{ e.preventDefault(); drop.classList.remove("dragover"); importDosyaAl(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]); });
+  }
+  ["dragover","drop"].forEach(ev=>window.addEventListener(ev,e=>{
+    const m=document.getElementById("importModal");
+    if(m && m.style.display!=="none" && e.target && !e.target.closest("#importDrop")) e.preventDefault();
+  }));
+})();
+document.addEventListener("keydown",e=>{if(e.key==="Escape")["detailModal","editModal","importModal","gunlukModal"].forEach(id=>document.getElementById(id).style.display="none");});
+
+document.querySelectorAll(".tur-chip[data-tur]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    if(aktifTurKat===btn.dataset.tur){aktifTurKat="";document.querySelectorAll(".tur-chip").forEach(b=>b.classList.remove("aktif"));}
+    else{aktifTurKat=btn.dataset.tur;document.querySelectorAll(".tur-chip").forEach(b=>b.classList.remove("aktif"));btn.classList.add("aktif");}
+    filtrele();
+  });
+});
+
+if(typeof SITE!=="undefined"&&SITE.isAdmin()){
+  const alan=document.getElementById("adminAlan");
+  const btnY=document.createElement("button");btnY.className="btn-tara";btnY.innerHTML="↻ Yenile";
+  btnY.onclick=()=>{btnY.disabled=true;btnY.innerHTML="↻ Yükleniyor…";yukle();setTimeout(()=>{btnY.disabled=false;btnY.innerHTML="↻ Yenile";},2000);};
+  alan.appendChild(btnY);
+  const btnD=document.createElement("button");btnD.className="btn-dup";btnD.innerHTML="⊗ Duplicate Temizle";
+  btnD.onclick=dupTemizleVeKaydet;alan.appendChild(btnD);
+  const btnI=document.createElement("button");btnI.className="btn-import";btnI.innerHTML="⬆ İçe Aktar";
+  btnI.onclick=()=>{importData=null;document.getElementById("importLog").textContent="Dosya bekleniyor…";document.getElementById("importUygula").disabled=true;document.getElementById("importModal").style.display="flex";};
+  alan.appendChild(btnI);
+}
+
+yukle();
+document.addEventListener("DOMContentLoaded",()=>setTimeout(_fpInitAll,200));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/tr.js"></script>
+</body>
+</html>
