@@ -1,9 +1,13 @@
 {
-  "meta": {
-    "guncelleme": "2026-06-06T13:46:25.947532+00:00",
-    "toplam": 253
-  },
   "raporlar": [
+    {
+      "id": 1,
+      "yil": 2025,
+      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
+      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
+      "dosya": "",
+      "etiket": "Maden"
+    },
     {
       "id": "aa3075b3c59b",
       "baslik": "MSKÜ, TÜBİTAK ARDEB performansında Türkiye'nin en iyi ilk 50 üniversitesi arasında - Pembe Pusula",
@@ -4846,5 +4850,9 @@
       ],
       "haber_kategorisi": "STK & Kampanyalar"
     }
-  ]
+  ],
+  "_meta": {
+    "guncelleme": "2026-06-06T14:07:15.058Z",
+    "toplam": 254
+  }
 }
