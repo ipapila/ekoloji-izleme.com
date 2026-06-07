@@ -1,9 +1,13 @@
 {
-  "meta": {
-    "guncelleme": "2026-06-07T08:39:08.575686+00:00",
-    "toplam": 170
-  },
   "raporlar": [
+    {
+      "id": 1,
+      "yil": 2025,
+      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
+      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
+      "dosya": "",
+      "etiket": "Maden"
+    },
     {
       "id": "ff8a8eada877",
       "baslik": "MARMARA DENİZİ'NİN GELECEĞİ KOCAELİ'DE ŞEKİLLENİYOR - Analiz Gazetesi",
@@ -3255,5 +3259,9 @@
       ],
       "haber_kategorisi": "STK & Kampanyalar"
     }
-  ]
+  ],
+  "_meta": {
+    "guncelleme": "2026-06-07T08:40:33.427Z",
+    "toplam": 171
+  }
 }
