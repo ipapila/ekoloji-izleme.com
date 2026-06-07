@@ -1,9 +1,13 @@
 {
-  "meta": {
-    "guncelleme": "2026-06-07T04:00:04.984021+00:00",
-    "toplam": 151
-  },
   "raporlar": [
+    {
+      "id": 1,
+      "yil": 2025,
+      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
+      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
+      "dosya": "",
+      "etiket": "Maden"
+    },
     {
       "id": "77f7e80845c5",
       "baslik": "İklim krizinin eşiğinde Türkiye’de çevre ve COP31 fırsatı - Anadolu Ajansı",
@@ -2892,5 +2896,9 @@
       ],
       "haber_kategorisi": "STK & Kampanyalar"
     }
-  ]
+  ],
+  "_meta": {
+    "guncelleme": "2026-06-07T04:06:59.531Z",
+    "toplam": 152
+  }
 }
