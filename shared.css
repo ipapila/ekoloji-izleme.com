@@ -117,10 +117,11 @@ footer{background:var(--dark);padding:60px 80px 36px;border-top:1px solid rgba(4
 .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid rgba(45,158,107,.08);}
 .footer-bottom p{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(122,158,138,.5);letter-spacing:.05em;}
 
-@media(max-width:900px){
-  nav{padding:0 24px;} .hamburger{display:flex;}
+/* NAV: 1024px ve altı (landscape telefonlar dâhil) → hamburger + dikey kaydırılabilir menü */
+@media(max-width:1024px){
+  nav{padding:0 24px;} .nav-menu{display:none;} .hamburger{display:flex;}
   .nav-menu{
-    display:none; position:fixed; top:72px; left:0; right:0;
+    position:fixed; top:72px; left:0; right:0; z-index:1001;
     flex-direction:column; align-items:stretch; gap:2px;
     background:rgba(10,15,13,.98); backdrop-filter:blur(16px);
     max-height:calc(100vh - 72px); overflow-y:auto; -webkit-overflow-scrolling:touch;
@@ -136,6 +137,8 @@ footer{background:var(--dark);padding:60px 80px 36px;border-top:1px solid rgba(4
   }
   .nav-menu .dropdown a{font-size:14px;padding:9px 12px;}
   .nav-menu .nav-item:hover .nav-link svg{transform:none;}
+}
+@media(max-width:900px){
   .page-header{padding:110px 28px 44px;} .content-area{padding:40px 24px;}
   .form-row{grid-template-columns:1fr;} .footer-grid{grid-template-columns:1fr 1fr;}
   footer{padding:44px 28px 28px;}
