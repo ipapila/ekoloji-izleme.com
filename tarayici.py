@@ -27,6 +27,7 @@ from urllib.parse import urljoin
 import feedparser
 import requests
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ══════════════════════════════════════════════════════════════════
 #  HABER KAYNAKLARI  →  hedef: "haberler"
@@ -1000,7 +1001,7 @@ def tarih_normalize(tarih_str) -> Optional[str]:
         return str(tarih_str)
 
 
-def fetch(url: str, timeout: int = 15, ssl_dogrulama: bool = True) -> Optional[requests.Response]:
+def fetch(url: str, timeout: int = 8, ssl_dogrulama: bool = True) -> Optional[requests.Response]:
     verify = ssl_dogrulama and not any(h in url for h in SSL_NO_VERIFY_HOSTS)
     if not verify:
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -1028,126 +1029,152 @@ def fetch(url: str, timeout: int = 15, ssl_dogrulama: bool = True) -> Optional[r
 #  RSS TARAMA
 # ══════════════════════════════════════════════════════════════════
 
+def _rss_tek_kaynak(kaynak: dict) -> tuple:
+    """Tek bir RSS kaynağını tarar, (hedef, kayit_listesi) döndürür."""
+    genel  = kaynak.get("genel", False)
+    hedef  = kaynak.get("hedef", "haberler")
+    dil    = kaynak.get("dil", "tr")
+    kayitlar = []
+    log.info(f"RSS: {kaynak['kaynak']} [{hedef}|{dil}|genel={genel}]")
+    try:
+        feed = feedparser.parse(kaynak["url"])
+        if feed.bozo and not feed.entries:
+            return hedef, kayitlar
+        kabul = reddedilen = 0
+        for entry in feed.entries[:25]:
+            baslik = entry.get("title", "").strip()
+            link   = entry.get("link", "")
+            ozet   = BeautifulSoup(entry.get("summary", ""), "lxml").get_text(" ", strip=True)
+            tarih  = tarih_normalize(
+                entry.get("published_parsed") or entry.get("updated_parsed"))
+            if not baslik or not link:
+                continue
+            puan = ekoloji_puani(baslik, ozet, genel, hedef)
+            esik = 4 if genel else 1
+            if puan < esik:
+                reddedilen += 1
+                continue
+            _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
+            kayit = {
+                "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
+                "baslik":      baslik,
+                "ozet":        ozet[:300] if ozet else "",
+                "url":         link,
+                "tarih":       tarih,
+                "kaynak":      kaynak["kaynak"],
+                "kategori":    kaynak["kategori"],
+                "kaynak_turu": "rss",
+                "icerik_tipi": icerik_tipi_tespit(baslik, ozet, hedef, kaynak["kaynak"]),
+                "dil":         dil,
+                "eylem":       _hm.get("eylem"),
+                "etiketler":   list(_hm.get("etiketler", [])),
+                "_puan":       puan,
+            }
+            if "bolum" in kaynak:
+                kayit["bolum"] = kaynak["bolum"]
+            kayit = zenginlestir(kayit)
+            kayitlar.append(kayit)
+            kabul += 1
+        log.info(f"  -> {kaynak['kaynak']}: {kabul} kabul / {reddedilen} reddedildi")
+    except Exception as e:
+        log.warning(f"  RSS hatasi [{kaynak['kaynak']}]: {e}")
+    return hedef, kayitlar
+
+
 def rss_tara(kaynaklar: list) -> dict:
     sonuc: dict = {}
-    for kaynak in kaynaklar:
-        genel  = kaynak.get("genel", False)
-        hedef  = kaynak.get("hedef", "haberler")
-        dil    = kaynak.get("dil", "tr")
-        log.info(f"RSS: {kaynak['kaynak']} [{hedef}|{dil}|genel={genel}]")
-        try:
-            feed = feedparser.parse(kaynak["url"])
-            if feed.bozo and not feed.entries:
-                continue
-            kabul = reddedilen = 0
-            for entry in feed.entries[:25]:
-                baslik = entry.get("title", "").strip()
-                link   = entry.get("link", "")
-                ozet   = BeautifulSoup(entry.get("summary", ""), "lxml").get_text(" ", strip=True)
-                tarih  = tarih_normalize(
-                    entry.get("published_parsed") or entry.get("updated_parsed"))
-                if not baslik or not link:
-                    continue
-                puan = ekoloji_puani(baslik, ozet, genel, hedef)
-                esik = 4 if genel else 1
-                if puan < esik:
-                    reddedilen += 1
-                    continue
-                _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
-                kayit = {
-                    "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
-                    "baslik":      baslik,
-                    "ozet":        ozet[:300] if ozet else "",
-                    "url":         link,
-                    "tarih":       tarih,
-                    "kaynak":      kaynak["kaynak"],
-                    "kategori":    kaynak["kategori"],
-                    "kaynak_turu": "rss",
-                    "icerik_tipi": icerik_tipi_tespit(baslik, ozet, hedef, kaynak["kaynak"]),
-                    "dil":         dil,
-                    "eylem":       _hm.get("eylem"),
-                    "etiketler":   list(_hm.get("etiketler", [])),
-                    "_puan":       puan,
-                }
-                if "bolum" in kaynak:
-                    kayit["bolum"] = kaynak["bolum"]
-                kayit = zenginlestir(kayit)
-                sonuc.setdefault(hedef, []).append(kayit)
-                kabul += 1
-            log.info(f"  -> {kabul} kabul / {reddedilen} reddedildi")
-            time.sleep(0.8)
-        except Exception as e:
-            log.warning(f"  RSS hatasi: {e}")
+    with ThreadPoolExecutor(max_workers=12) as ex:
+        futures = {ex.submit(_rss_tek_kaynak, k): k for k in kaynaklar}
+        for fut in as_completed(futures):
+            try:
+                hedef, kayitlar = fut.result()
+                for kayit in kayitlar:
+                    sonuc.setdefault(hedef, []).append(kayit)
+            except Exception as e:
+                log.warning(f"  RSS thread hatasi: {e}")
     return sonuc
 
 # ══════════════════════════════════════════════════════════════════
 #  WEB SCRAPING
 # ══════════════════════════════════════════════════════════════════
 
+def _web_tek_kaynak(kaynak: dict) -> tuple:
+    """Tek bir web kaynağını tarar, (hedef, kayit_listesi) döndürür."""
+    genel         = kaynak.get("genel", False)
+    hedef         = kaynak.get("hedef", "haberler")
+    dil           = kaynak.get("dil", "tr")
+    ssl_dogrulama = kaynak.get("ssl_dogrulama", True)
+    kayitlar = []
+    log.info(f"Web: {kaynak['kaynak']} [{hedef}|{dil}|genel={genel}]")
+    r = fetch(kaynak["url"], ssl_dogrulama=ssl_dogrulama)
+    if not r:
+        return hedef, kayitlar
+    try:
+        soup    = BeautifulSoup(r.text, "lxml")
+        kabul = reddedilen = 0
+        linkler = soup.select(kaynak["secici"])[:20]
+        if not linkler:
+            linkler = soup.select(FALLBACK_SELECTOR)[:20]
+            if linkler:
+                log.info(f"  {kaynak['kaynak']}: fallback selector kullanildi")
+        for a in linkler:
+            baslik = a.get_text(" ", strip=True)
+            if not baslik or len(baslik) < 10:
+                continue
+            href = a.get("href", "")
+            if not href:
+                continue
+            link = urljoin(kaynak["url"], href)
+            ozet = ""
+            if kaynak.get("ozet_secici"):
+                parent = a.find_parent(["article", "div", "li"])
+                if parent:
+                    el = parent.select_one(kaynak["ozet_secici"])
+                    if el:
+                        ozet = el.get_text(" ", strip=True)[:300]
+            puan = ekoloji_puani(baslik, ozet, genel, hedef)
+            esik = 4 if genel else 1
+            if puan < esik:
+                reddedilen += 1
+                continue
+            _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
+            kayit = {
+                "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
+                "baslik":      baslik,
+                "ozet":        ozet,
+                "url":         link,
+                "tarih":       datetime.now(TR_TZ).isoformat(),
+                "kaynak":      kaynak["kaynak"],
+                "kategori":    kaynak["kategori"],
+                "kaynak_turu": "web",
+                "icerik_tipi": icerik_tipi_tespit(baslik, ozet, hedef, kaynak["kaynak"]),
+                "dil":         dil,
+                "eylem":       _hm.get("eylem"),
+                "etiketler":   list(_hm.get("etiketler", [])),
+                "_puan":       puan,
+            }
+            if "bolum" in kaynak:
+                kayit["bolum"] = kaynak["bolum"]
+            kayit = zenginlestir(kayit)
+            kayitlar.append(kayit)
+            kabul += 1
+        log.info(f"  -> {kaynak['kaynak']}: {kabul} kabul / {reddedilen} reddedildi")
+    except Exception as e:
+        log.warning(f"  Scrape hatasi [{kaynak['kaynak']}]: {e}")
+    return hedef, kayitlar
+
+
 def web_tara(kaynaklar: list) -> dict:
     sonuc: dict = {}
-    for kaynak in kaynaklar:
-        genel         = kaynak.get("genel", False)
-        hedef         = kaynak.get("hedef", "haberler")
-        dil           = kaynak.get("dil", "tr")
-        ssl_dogrulama = kaynak.get("ssl_dogrulama", True)
-        log.info(f"Web: {kaynak['kaynak']} [{hedef}|{dil}|genel={genel}]")
-        r = fetch(kaynak["url"], ssl_dogrulama=ssl_dogrulama)
-        if not r:
-            continue
-        try:
-            soup    = BeautifulSoup(r.text, "lxml")
-            kabul = reddedilen = 0
-            linkler = soup.select(kaynak["secici"])[:20]
-            if not linkler:
-                linkler = soup.select(FALLBACK_SELECTOR)[:20]
-                if linkler:
-                    log.info("  fallback selector kullanildi")
-            for a in linkler:
-                baslik = a.get_text(" ", strip=True)
-                if not baslik or len(baslik) < 10:
-                    continue
-                href = a.get("href", "")
-                if not href:
-                    continue
-                link = urljoin(kaynak["url"], href)
-                ozet = ""
-                if kaynak.get("ozet_secici"):
-                    parent = a.find_parent(["article", "div", "li"])
-                    if parent:
-                        el = parent.select_one(kaynak["ozet_secici"])
-                        if el:
-                            ozet = el.get_text(" ", strip=True)[:300]
-                puan = ekoloji_puani(baslik, ozet, genel, hedef)
-                esik = 4 if genel else 1
-                if puan < esik:
-                    reddedilen += 1
-                    continue
-                _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
-                kayit = {
-                    "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
-                    "baslik":      baslik,
-                    "ozet":        ozet,
-                    "url":         link,
-                    "tarih":       datetime.now(TR_TZ).isoformat(),
-                    "kaynak":      kaynak["kaynak"],
-                    "kategori":    kaynak["kategori"],
-                    "kaynak_turu": "web",
-                    "icerik_tipi": icerik_tipi_tespit(baslik, ozet, hedef, kaynak["kaynak"]),
-                    "dil":         dil,
-                    "eylem":       _hm.get("eylem"),
-                    "etiketler":   list(_hm.get("etiketler", [])),
-                    "_puan":       puan,
-                }
-                if "bolum" in kaynak:
-                    kayit["bolum"] = kaynak["bolum"]
-                kayit = zenginlestir(kayit)
-                sonuc.setdefault(hedef, []).append(kayit)
-                kabul += 1
-            log.info(f"  -> {kabul} kabul / {reddedilen} reddedildi")
-        except Exception as e:
-            log.warning(f"  Scrape hatasi: {e}")
-        time.sleep(1.2)
+    with ThreadPoolExecutor(max_workers=6) as ex:
+        futures = {ex.submit(_web_tek_kaynak, k): k for k in kaynaklar}
+        for fut in as_completed(futures):
+            try:
+                hedef, kayitlar = fut.result()
+                for kayit in kayitlar:
+                    sonuc.setdefault(hedef, []).append(kayit)
+            except Exception as e:
+                log.warning(f"  Web thread hatasi: {e}")
     return sonuc
 
 # ══════════════════════════════════════════════════════════════════
