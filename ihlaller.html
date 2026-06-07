@@ -147,6 +147,38 @@
         <span class="kat-sayi" id="sk-Jeotermal">…</span>
       </div>
 
+      <div class="kat-separator">Altyapı & Ulaşım</div>
+      <div class="kat-item" data-skat="Enerji İletim" onclick="setSidebarKat(this)">
+        <div class="kat-dot" style="background:#f59e0b;"></div>
+        <span class="kat-ad">Enerji İletim</span>
+        <span class="kat-sayi" id="sk-EnerjiIletim">…</span>
+      </div>
+      <div class="kat-item" data-skat="Doğal Gaz" onclick="setSidebarKat(this)">
+        <div class="kat-dot" style="background:#fb923c;"></div>
+        <span class="kat-ad">Doğal Gaz</span>
+        <span class="kat-sayi" id="sk-DogalGaz">…</span>
+      </div>
+      <div class="kat-item" data-skat="Karayolu" onclick="setSidebarKat(this)">
+        <div class="kat-dot" style="background:#94a3b8;"></div>
+        <span class="kat-ad">Karayolu</span>
+        <span class="kat-sayi" id="sk-Karayolu">…</span>
+      </div>
+      <div class="kat-item" data-skat="Demiryolu" onclick="setSidebarKat(this)">
+        <div class="kat-dot" style="background:#64748b;"></div>
+        <span class="kat-ad">Demiryolu & Raylı</span>
+        <span class="kat-sayi" id="sk-Demiryolu">…</span>
+      </div>
+      <div class="kat-item" data-skat="Sanayi" onclick="setSidebarKat(this)">
+        <div class="kat-dot" style="background:#a78bfa;"></div>
+        <span class="kat-ad">Sanayi & OSB</span>
+        <span class="kat-sayi" id="sk-Sanayi">…</span>
+      </div>
+      <div class="kat-item" data-skat="Konut" onclick="setSidebarKat(this)">
+        <div class="kat-dot" style="background:#f472b6;"></div>
+        <span class="kat-ad">Konut & Kentsel</span>
+        <span class="kat-sayi" id="sk-Konut">…</span>
+      </div>
+
       <div class="kat-separator">Koruma Alanları</div>
       <div class="kat-item" data-skat="Milli Park" onclick="setSidebarKat(this)">
         <div class="kat-dot" style="background:#2d9e6b;"></div>
@@ -292,6 +324,12 @@ const SK_EL = {
   "İnsan Hakları":"sk-Insan",
   "Köylü":        "sk-Koylu",
   "Tarım":        "sk-Tarim",
+  "Enerji İletim":"sk-EnerjiIletim",
+  "Doğal Gaz":    "sk-DogalGaz",
+  "Karayolu":     "sk-Karayolu",
+  "Demiryolu":    "sk-Demiryolu",
+  "Sanayi":       "sk-Sanayi",
+  "Konut":        "sk-Konut",
 };
 
 function _n(s){ return (s||"").toLowerCase(); }
@@ -319,6 +357,12 @@ function katEslestir(item){
   if(hay.includes("insan hakkı")||hay.includes("i̇nsan hakkı"))                                       sonuc.push("İnsan Hakları");
   if(hay.includes("köylü")||hay.includes("çiftçi")||hay.includes("köy halkı"))                       sonuc.push("Köylü");
   if(hay.includes("tarım arazi")||hay.includes("zeytinlik")||hay.includes("bağ bahçe"))               sonuc.push("Tarım");
+  if(hay.includes("letim hatt")||hay.includes("trafo"))                                                sonuc.push("Enerji İletim");
+  if(hay.includes("doğal gaz")||hay.includes("gaz boru")||hay.includes("botaş"))                          sonuc.push("Doğal Gaz");
+  if(hay.includes("karayolu")||hay.includes("otoyol")||hay.includes("çevre yolu")||hay.includes("köprü")||hay.includes("viyadük")) sonuc.push("Karayolu");
+  if(hay.includes("demiryolu")||hay.includes("raylı")||hay.includes("hızlı tren")||hay.includes("metro")||hay.includes("tramvay")) sonuc.push("Demiryolu");
+  if(hay.includes("sanayi")||hay.includes("osb"))                                                       sonuc.push("Sanayi");
+  if(hay.includes("konut")||hay.includes("toki")||hay.includes("kentsel dön"))                          sonuc.push("Konut");
   return sonuc;
 }
 

@@ -485,6 +485,8 @@ Promise.allSettled([
     const veri = habRes.value;
     const haberler = veri.haberler || (Array.isArray(veri)?veri:[]);
     haberlerdenEkle(haberler);
+    /* raporlar koleksiyonundaki hukuki/eylem içerikleri de aynı kategorilere kat */
+    if(Array.isArray(veri.raporlar)) haberlerdenEkle(veri.raporlar);
   }
   const serverIds = new Set();
   if(datRes.status==="fulfilled" && datRes.value){
