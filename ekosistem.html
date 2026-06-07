@@ -11,26 +11,40 @@
 .page-header{background:var(--forest);padding:100px 80px 60px;border-bottom:1px solid rgba(45,158,107,.15);}
 .page-header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);color:var(--white);line-height:.9;margin-top:12px;}
 .page-header h1 span{color:var(--bright);}
-.content{background:var(--dark);padding:50px 80px;min-height:60vh;}
 
-.grup-baslik{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(45,158,107,.55);margin:48px 0 16px;padding-bottom:10px;border-bottom:1px solid rgba(45,158,107,.1);}
-.grup-baslik:first-of-type{margin-top:0;}
+/* CONTENT + LAYOUT (haberler / ihlaller ile aynı desen) */
+.content{background:var(--dark);padding:40px 80px 60px;min-height:60vh;}
+.content-layout{display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:start;}
 
-.bolum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:8px;}
-.bolum-kart{background:var(--forest);border:1px solid rgba(45,158,107,.12);border-radius:6px;padding:24px 26px;cursor:pointer;transition:all .25s;text-decoration:none;display:block;position:relative;overflow:hidden;}
-.bolum-kart::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:bottom;transition:transform .25s;}
-.bolum-kart:hover{border-color:rgba(45,158,107,.3);background:var(--deep);transform:translateY(-2px);}
-.bolum-kart:hover::after{transform:scaleY(1);}
-.bolum-kart h3{font-family:'Crimson Pro',serif;font-size:19px;font-weight:400;color:var(--cream);margin-bottom:8px;line-height:1.3;}
-.bolum-kart .count{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;}
-.bolum-kart .arrow{position:absolute;bottom:18px;right:20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(45,158,107,.35);transition:color .2s;}
-.bolum-kart:hover .arrow{color:var(--accent);}
+/* SOL SIDEBAR */
+.kat-sidebar{position:sticky;top:80px;}
+.kat-sidebar-title{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 0 10px;border-bottom:1px solid rgba(45,158,107,.1);margin-bottom:8px;}
+.kat-tumü{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid rgba(45,158,107,.15);background:rgba(45,158,107,.05);margin-bottom:10px;}
+.kat-tumü:hover{background:rgba(45,158,107,.12);}
+.kat-tumü.aktif-kat{background:rgba(45,158,107,.15);border-color:rgba(45,158,107,.3);}
+.kat-tumü span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--bright);flex:1;}
+.kat-tumü b{font-family:"JetBrains Mono",monospace;font-size:8px;color:var(--accent);}
+.kat-separator{font-family:"JetBrains Mono",monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.45;padding:12px 12px 5px;margin-top:4px;}
+.kat-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid transparent;margin-bottom:2px;}
+.kat-item:hover{background:rgba(45,158,107,.07);border-color:rgba(45,158,107,.12);}
+.kat-item.aktif-kat{background:rgba(45,158,107,.1);border-color:rgba(45,158,107,.25);}
+.kat-item.aktif-kat .kat-ad{color:var(--bright);}
+.kat-ikon{width:18px;font-size:12px;text-align:center;flex-shrink:0;line-height:1;}
+.kat-ad{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted);flex:1;line-height:1.3;}
+.kat-sayi{font-family:"JetBrains Mono",monospace;font-size:8px;color:var(--muted);opacity:.5;flex-shrink:0;}
+.kat-item.aktif-kat .kat-sayi{opacity:.9;}
 
-.bolum-header{display:flex;align-items:center;gap:14px;margin-bottom:32px;}
-.bolum-header a{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-decoration:none;letter-spacing:.08em;border:1px solid rgba(45,158,107,.2);padding:5px 12px;border-radius:2px;transition:all .2s;}
-.bolum-header a:hover{color:var(--bright);border-color:rgba(45,158,107,.4);}
-.bolum-header h2{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--cream);}
+/* SAĞ ANA ALAN */
+.liste-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px;}
+.liste-baslik{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--cream);line-height:1;}
+.search-box{padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:100%;box-sizing:border-box;margin-bottom:14px;}
+.search-box:focus{border-color:var(--accent);}
+.count-bar{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:16px;}
+.count-bar b{color:var(--bright);}
+.admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
+.admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
 
+/* KAYIT LİSTESİ */
 .kayit-list{display:flex;flex-direction:column;gap:2px;}
 .kayit-row{background:var(--forest);border-left:3px solid rgba(45,158,107,.4);padding:20px 26px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;transition:all .2s;cursor:pointer;}
 .kayit-row:hover{background:var(--deep);border-left-color:var(--accent);padding-left:32px;}
@@ -41,9 +55,8 @@
 .admin-sil-btn{padding:3px 10px;background:rgba(232,92,42,.12);color:#e85c2a;border:1px solid rgba(232,92,42,.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;cursor:pointer;}
 .admin-sil-btn:hover{background:rgba(232,92,42,.25);}
 .empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:40px 0;letter-spacing:.05em;opacity:.6;}
-.admin-ekle-btn{padding:8px 16px;background:rgba(45,158,107,.12);color:var(--accent);border:1px solid rgba(45,158,107,.25);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;margin-bottom:24px;}
-.admin-ekle-btn:hover{background:rgba(45,158,107,.22);}
 
+/* MODAL */
 .modal-bg{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
 .modal-bg.open{display:flex;}
 .modal-box{background:var(--deep);border:1px solid rgba(45,158,107,.25);border-radius:8px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;}
@@ -58,11 +71,18 @@
 .modal-btn.outline{background:transparent;color:var(--cream);border:1px solid rgba(240,245,242,.2);}
 .modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
 
-.search-box{padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:260px;margin-bottom:20px;}
-.count-bar{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:16px;}
-.count-bar b{color:var(--bright);}
-
-@media(max-width:900px){.page-header{padding:80px 28px 40px;}.content{padding:30px 28px;}.bolum-grid{grid-template-columns:1fr;}}
+/* MOBİL: sidebar yatay şeride dönüşür (haberler/ihlaller ile aynı) */
+@media(max-width:900px){
+  .page-header{padding:80px 28px 40px;}
+  .content{padding:24px 16px 40px;}
+  .content-layout{grid-template-columns:1fr;}
+  .kat-sidebar{position:static;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+  .kat-sidebar-title,.kat-separator{display:none;}
+  .kat-tumü{margin-bottom:0;}
+  .kat-item{padding:6px 10px;}
+  .kat-sayi{display:none;}
+  .liste-baslik{font-size:26px;}
+}
 </style>
 </head>
 <body>
@@ -72,12 +92,22 @@
 
 <div class="page-header">
   <div class="section-tag">Canlı & Topluluk İzleme</div>
-  <h1>EKOSİSTEM <span>&</span><br>TOPLULUKLAR</h1>
+  <h1>EKOSİSTEM <span>&</span> TOPLULUKLAR</h1>
   <p class="page-subtitle" style="font-size:15px;color:var(--muted);margin-top:16px;font-weight:300;max-width:560px;">İnsan dışı canlılar, topluluklar ve çevre adaleti ekseninde belgeli izleme.</p>
 </div>
 
-<div class="content" id="mainContent">
-  <div class="empty">Yükleniyor…</div>
+<div class="content">
+  <div class="content-layout">
+
+    <aside class="kat-sidebar" id="katSidebar">
+      <div class="kat-sidebar-title">Bölümler yükleniyor…</div>
+    </aside>
+
+    <div id="ekoMain">
+      <div class="empty">Yükleniyor…</div>
+    </div>
+
+  </div>
 </div>
 
 <!-- Modal -->
@@ -121,7 +151,106 @@ const GRUPLAR = ["İnsan Dışı Canlılar", "İnsan Toplulukları", "Çevre Ada
 
 let tumEkosistem = [];
 let aktifSec = new URLSearchParams(location.search).get("sec") || "";
-let gorunenKayitlar = [];
+let arama = "";
+
+/* ═══ SIDEBAR ════════════════════════════════════════════════════ */
+function buildSidebar() {
+  let html = `<div class="kat-sidebar-title">Bölüm Kategorileri</div>
+    <div class="kat-tumü" data-sec="" onclick="setSec('')">
+      <span>Tüm İçerik</span><b id="ks_toplam">…</b>
+    </div>`;
+  GRUPLAR.forEach(grup => {
+    html += `<div class="kat-separator">${grup}</div>`;
+    Object.entries(BOLUMLER).filter(([,b]) => b.grup === grup).forEach(([sec, b]) => {
+      html += `<div class="kat-item" data-sec="${sec}" onclick="setSec('${sec}')">
+        <span class="kat-ikon">${b.icon}</span>
+        <span class="kat-ad">${b.ad}</span>
+        <span class="kat-sayi" id="ks_${sec}">…</span>
+      </div>`;
+    });
+  });
+  document.getElementById("katSidebar").innerHTML = html;
+  senkronSidebar();
+}
+
+function guncelleSayac() {
+  const t = document.getElementById("ks_toplam");
+  if (t) t.textContent = tumEkosistem.length;
+  Object.keys(BOLUMLER).forEach(sec => {
+    const el = document.getElementById("ks_" + sec);
+    if (el) el.textContent = tumEkosistem.filter(k => k.bolum === sec).length;
+  });
+}
+
+function senkronSidebar() {
+  document.querySelectorAll("#katSidebar .kat-item, #katSidebar .kat-tumü")
+    .forEach(el => el.classList.toggle("aktif-kat", (el.dataset.sec || "") === aktifSec));
+}
+
+function setSec(sec) {
+  aktifSec = sec;
+  const url = sec ? location.pathname + "?sec=" + sec : location.pathname;
+  history.pushState({}, "", url);
+  arama = "";
+  senkronSidebar();
+  renderShell();
+}
+
+/* ═══ AKTİF KAYITLAR ═════════════════════════════════════════════ */
+function aktifKayitlar() {
+  let liste = aktifSec ? tumEkosistem.filter(k => k.bolum === aktifSec) : tumEkosistem;
+  if (arama) {
+    const q = arama.toLowerCase();
+    liste = liste.filter(k => ((k.baslik||"") + (k.ozet||"") + (k.kaynak||"") + (k.konum||"")).toLowerCase().includes(q));
+  }
+  return liste;
+}
+
+/* ═══ RENDER: ana alan kabuğu ════════════════════════════════════ */
+function renderShell() {
+  const admin = typeof SITE !== "undefined" && SITE.isAdmin();
+  const b = aktifSec && BOLUMLER[aktifSec];
+  const baslik = b ? b.icon + " " + b.ad : "Tüm İçerik";
+  document.getElementById("ekoMain").innerHTML = `
+    <div class="liste-head">
+      <h2 class="liste-baslik">${baslik}</h2>
+      ${admin ? `<a class="admin-ekle-btn" href="admin.html#ekosistem">+ Kayıt Ekle</a>` : ""}
+    </div>
+    <input class="search-box" id="aramaKutu" placeholder="Ara…">
+    <div class="count-bar" id="ekoCount"></div>
+    <div class="kayit-list" id="kayitList"></div>`;
+  const kutu = document.getElementById("aramaKutu");
+  kutu.value = arama;
+  kutu.addEventListener("input", e => { arama = e.target.value; renderKayitlar(); });
+  renderKayitlar();
+}
+
+/* ═══ RENDER: kayıt listesi (arama bunu çağırır) ════════════════ */
+function renderKayitlar() {
+  const admin = typeof SITE !== "undefined" && SITE.isAdmin();
+  const liste = aktifKayitlar();
+  const cnt = document.getElementById("ekoCount");
+  const ozel = liste.filter(k => !k._kaynak_kol).length;
+  const diger = liste.filter(k => k._kaynak_kol).length;
+  if (cnt) cnt.innerHTML = (ozel > 0 && diger > 0)
+    ? `<b>${liste.length}</b> kayıt <span style="opacity:.5">(${ozel} ekosistem + ${diger} diğer kaynak)</span>`
+    : `<b>${liste.length}</b> kayıt`;
+  const el = document.getElementById("kayitList");
+  if (!liste.length) { el.innerHTML = '<div class="empty">Bu bölümde henüz kayıt yok.</div>'; return; }
+  const kolAd = {haberler:"haber",raporlar:"rapor",makaleler:"makale",uluslararasi:"uluslararası"};
+  el.innerHTML = liste.map(k => `
+    <div class="kayit-row" onclick="acModal('${k.id}')">
+      <div>
+        <h4>${k.baslik || ""}</h4>
+        <div class="meta">${k.kaynak||""}${k.konum?" · "+k.konum:""}${k._kaynak_kol?` <span style="opacity:.5;font-size:8.5px;">(${kolAd[k._kaynak_kol]||k._kaynak_kol})</span>`:""}</div>
+        ${k.ozet ? `<div class="ozet">${k.ozet.slice(0,180)}${k.ozet.length>180?"…":""}</div>` : ""}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <span class="tarih">${k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}) : ""}</span>
+        ${admin ? `<button class="admin-sil-btn" onclick="event.stopPropagation();kayitSilEkosistem('${k.id}')">SİL</button>` : ""}
+      </div>
+    </div>`).join("");
+}
 
 /* ═══ MODAL ══════════════════════════════════════════════════════ */
 function acModal(id) {
@@ -145,6 +274,7 @@ function acModal(id) {
   document.getElementById("detailModal").classList.add("open");
 }
 function kapatModal() { document.getElementById("detailModal").classList.remove("open"); }
+document.addEventListener("keydown", e => { if (e.key === "Escape") kapatModal(); });
 
 /* ═══ SİLME ══════════════════════════════════════════════════════ */
 function getSilinen() {
@@ -158,86 +288,8 @@ function kayitSilEkosistem(id) {
   const s = getSilinen(); s.add(sid);
   localStorage.setItem("ekoloji_ekosistem_silinen", JSON.stringify([...s]));
   tumEkosistem = tumEkosistem.filter(x => String(x.id) !== sid);
-  renderSayfa();
-}
-
-/* ═══ RENDER: tek bölüm ══════════════════════════════════════════ */
-function renderBolum(sec) {
-  const bolum = BOLUMLER[sec];
-  const kayitlar = tumEkosistem.filter(k => k.bolum === sec);
-  const admin = typeof SITE !== "undefined" && SITE.isAdmin();
-  document.getElementById("mainContent").innerHTML = `
-    <div class="bolum-header">
-      <a href="ekosistem.html">← Tüm Bölümler</a>
-      <h2>${bolum ? bolum.icon + " " + bolum.ad : sec}</h2>
-    </div>
-    ${admin ? `<a class="admin-ekle-btn" href="admin.html#ekosistem">+ Kayıt Ekle →</a>` : ""}
-    <input class="search-box" id="secSearchBox" placeholder="Ara…">
-    <div class="count-bar" id="secCount"></div>
-    <div class="kayit-list" id="secList"></div>`;
-  gorunenKayitlar = kayitlar;
-  renderKayitlar(kayitlar, admin);
-  const ozel = kayitlar.filter(k => !k._kaynak_kol).length;
-  const diger = kayitlar.filter(k =>  k._kaynak_kol).length;
-  document.getElementById("secCount").innerHTML = (ozel > 0 && diger > 0)
-    ? `<b>${kayitlar.length}</b> kayıt <span style="opacity:.5">(${ozel} ekosistem + ${diger} diğer)</span>`
-    : `<b>${kayitlar.length}</b> kayıt`;
-  document.getElementById("secSearchBox").addEventListener("input", () => secFiltrele(sec));
-}
-
-function secFiltrele(sec) {
-  const q = (document.getElementById("secSearchBox")?.value || "").toLowerCase();
-  const kayitlar = tumEkosistem.filter(k =>
-    k.bolum === sec &&
-    (!q || (k.baslik + (k.ozet||"") + (k.kaynak||"")).toLowerCase().includes(q))
-  );
-  gorunenKayitlar = kayitlar;
-  renderKayitlar(kayitlar, typeof SITE !== "undefined" && SITE.isAdmin());
-  document.getElementById("secCount").innerHTML = `<b>${kayitlar.length}</b> kayıt`;
-}
-
-function renderKayitlar(liste, admin) {
-  const el = document.getElementById("secList");
-  if (!liste.length) { el.innerHTML = '<div class="empty">Bu bölümde henüz kayıt yok.</div>'; return; }
-  const kolAd = {haberler:"haber",raporlar:"rapor",makaleler:"makale",uluslararasi:"uluslararası"};
-  el.innerHTML = liste.map((k,i) => `
-    <div class="kayit-row" onclick="acModal('${k.id}')">
-      <div>
-        <h4>${k.baslik}</h4>
-        <div class="meta">${k.kaynak||""}${k.konum?" · "+k.konum:""}${k._kaynak_kol?` <span style="opacity:.5;font-size:8.5px;">(${kolAd[k._kaynak_kol]||k._kaynak_kol})</span>`:""}</div>
-        ${k.ozet ? `<div class="ozet">${k.ozet.slice(0,180)}${k.ozet.length>180?"…":""}</div>` : ""}
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
-        <span class="tarih">${k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}) : ""}</span>
-        ${admin ? `<button class="admin-sil-btn" onclick="event.stopPropagation();kayitSilEkosistem('${k.id}')">SİL</button>` : ""}
-      </div>
-    </div>`).join("");
-}
-
-/* ═══ RENDER: tüm bölümler ═══════════════════════════════════════ */
-function renderTum() {
-  const admin = typeof SITE !== "undefined" && SITE.isAdmin();
-  let html = admin ? `<a class="admin-ekle-btn" href="admin.html#ekosistem">+ Ekosistem Kaydı Ekle →</a>` : "";
-  GRUPLAR.forEach(grup => {
-    const bolumlar = Object.entries(BOLUMLER).filter(([,b]) => b.grup === grup);
-    html += `<div class="grup-baslik">${grup}</div><div class="bolum-grid">`;
-    bolumlar.forEach(([sec, bolum]) => {
-      const count = tumEkosistem.filter(k => k.bolum === sec).length;
-      html += `<a class="bolum-kart" href="ekosistem.html?sec=${sec}">
-        <h3>${bolum.icon} ${bolum.ad}</h3>
-        <div class="count">${count > 0 ? count + " kayıt" : "Henüz kayıt yok"}</div>
-        <span class="arrow">→</span>
-      </a>`;
-    });
-    html += `</div>`;
-  });
-  document.getElementById("mainContent").innerHTML = html;
-}
-
-/* ═══ ANA RENDER ═════════════════════════════════════════════════ */
-function renderSayfa() {
-  if (aktifSec && BOLUMLER[aktifSec]) renderBolum(aktifSec);
-  else renderTum();
+  guncelleSayac();
+  renderKayitlar();
 }
 
 /* ═══ ETİKET → BÖLÜM HARİTASI ═══════════════════════════════════ */
@@ -297,6 +349,8 @@ const silinen = getSilinen();
 const lsData  = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
   .filter(k => !silinen.has(String(k.id)));
 
+function renderSayfa() { guncelleSayac(); renderShell(); }
+
 function haberlerdenEkle(habData) {
   const ekstra = digerKaynaklardan(habData);
   const lsIds  = new Set(lsData.map(k => String(k.id)));
@@ -308,6 +362,9 @@ function haberlerdenEkle(habData) {
   renderSayfa();
 }
 
+// sidebar'ı hemen kur (sayaçlar veri gelince dolacak)
+buildSidebar();
+
 // 1) ekosistem.json → 2) haberler.json'dan etiketlileri ekle
 fetch(EKOSISTEM_URL + "?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
@@ -315,13 +372,11 @@ fetch(EKOSISTEM_URL + "?v=" + Date.now())
     const sunucu = (data.ekosistem || []).filter(k => !silinen.has(String(k.id)));
     const lsIds  = new Set(lsData.map(k => String(k.id)));
     tumEkosistem = [...lsData, ...sunucu.filter(k => !lsIds.has(String(k.id)))];
-    // haberler.json'dan da etiketli kayıtları çek
     return fetch(HABERLER_URL_EKO + "?v=" + Date.now())
       .then(r => r.ok ? r.json() : {})
       .then(habData => haberlerdenEkle(habData));
   })
   .catch(() => {
-    // ekosistem.json yoksa doğrudan haberler.json'a git
     fetch(HABERLER_URL_EKO + "?v=" + Date.now())
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(habData => haberlerdenEkle(habData))
@@ -330,7 +385,9 @@ fetch(EKOSISTEM_URL + "?v=" + Date.now())
 
 window.addEventListener("popstate", () => {
   aktifSec = new URLSearchParams(location.search).get("sec") || "";
-  renderSayfa();
+  arama = "";
+  senkronSidebar();
+  renderShell();
 });
 </script>
 </body>
