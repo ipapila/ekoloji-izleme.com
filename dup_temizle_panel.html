@@ -34,7 +34,14 @@ h1 { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--white)
 <script src="site-data.js"></script>
 
 <h1>Duplicate Temizleyici</h1>
-<p class="sub">ihlaller.json + localStorage — birleşik duplicate analiz ve temizleme</p>
+<p class="sub" id="altBaslik">birleşik duplicate analiz ve temizleme</p>
+
+<!-- KOLEKSİYON SEÇ -->
+<div class="kart">
+  <h2>Koleksiyon Seç</h2>
+  <p>Hangi koleksiyonda duplicate taranacak?</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;" id="kolSecici"></div>
+</div>
 
 <!-- ADIM 1: Analiz -->
 <div class="kart">
@@ -57,7 +64,32 @@ h1 { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--white)
 </div>
 
 <script>
-const SILINEN_KEY = "ekoloji_ihlal_silinen";
+const KOLEKSIYONLAR = {
+  ihlaller:  { ad:"İhlaller",    dosya:"ihlaller.json",  anahtar:"ihlaller",  silinenKey:"ekoloji_ihlal_silinen",     siteList:"ihlaller",  donus:"ihlaller.html",    donusAd:"İhlaller sayfası" },
+  ekosistem: { ad:"Ekosistem",   dosya:"ekosistem.json", anahtar:"ekosistem", silinenKey:"ekoloji_ekosistem_silinen", siteList:"ekosistem", donus:"ekosistem.html",   donusAd:"Ekosistem sayfası" },
+  direnis:   { ad:"Direniş Ağı", dosya:"direnis.json",   anahtar:"direnis",   silinenKey:"ekoloji_direnis_silinen",   siteList:"direnis",   donus:"direnis-agi.html", donusAd:"Direniş Ağı sayfası" },
+};
+let aktifKol = "ihlaller";
+function kol() { return KOLEKSIYONLAR[aktifKol]; }
+
+function kolSecici() {
+  document.getElementById("kolSecici").innerHTML =
+    Object.entries(KOLEKSIYONLAR).map(([k,c]) =>
+      `<button class="btn ${k===aktifKol?'btn-primary':'btn-warn'}" onclick="kolSec('${k}')">${c.ad}</button>`
+    ).join("");
+  document.getElementById("altBaslik").textContent =
+    `${kol().dosya} + localStorage — birleşik duplicate analiz ve temizleme`;
+}
+function kolSec(k) {
+  if (!KOLEKSIYONLAR[k]) return;
+  aktifKol = k;
+  _dupGruplar = []; _temizKayitlar = [];
+  const la = document.getElementById("logAnaliz");
+  la.textContent = ""; la.classList.remove("acik");
+  document.getElementById("dupListe").innerHTML = "";
+  document.getElementById("kartTemizle").style.display = "none";
+  kolSecici();
+}
 
 function log(elId, mesaj, append = true) {
   const el = document.getElementById(elId);
@@ -81,18 +113,19 @@ function anahtar(item) {
 
 function veriYukle() {
   return new Promise((resolve) => {
+    const C = kol();
     const silinen = (() => {
-      try { return new Set(JSON.parse(localStorage.getItem(SILINEN_KEY) || "[]").map(String)); }
+      try { return new Set(JSON.parse(localStorage.getItem(C.silinenKey) || "[]").map(String)); }
       catch { return new Set(); }
     })();
 
-    const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
+    const local = (typeof SITE !== "undefined" ? SITE.getList(C.siteList) : [])
       .filter(x => !silinen.has(String(x.id)));
 
-    fetch("ihlaller.json?v=" + Date.now())
+    fetch(C.dosya + "?v=" + Date.now())
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(d => {
-        const json = (Array.isArray(d) ? d : (d.ihlaller || []))
+        const json = (Array.isArray(d) ? d : (d[C.anahtar] || []))
           .filter(x => !silinen.has(String(x.id)));
         const localIds = new Set(local.map(x => String(x.id)));
         const birlesik = [...local, ...json.filter(x => !localIds.has(String(x.id)))];
@@ -191,24 +224,28 @@ function temizle() {
     });
   });
 
-  localStorage.setItem(SILINEN_KEY, JSON.stringify([...silSet]));
+  const C = kol();
+  localStorage.setItem(C.silinenKey, JSON.stringify([...silSet]));
   log("logTemizle", `✓ ${eklenen} kayıt silindi olarak işaretlendi.`, false);
   log("logTemizle", `  localStorage güncellendi: ${silSet.size} toplam silinmiş kayıt.`);
-  log("logTemizle", `\n→ Sayfayı yenile veya ihlaller.html'i aç, temizlenmiş listeyi göreceksin.`);
+  log("logTemizle", `\n→ Sayfayı yenile veya ${C.donus}'i aç, temizlenmiş listeyi göreceksin.`);
 
   // İsteğe bağlı: SITE.set ile de güncelle
   if (typeof SITE !== "undefined") {
-    SITE.set("ihlaller", _temizKayitlar);
-    log("logTemizle", `  SITE.ihlaller güncellendi: ${_temizKayitlar.length} kayıt.`);
+    SITE.set(C.siteList, _temizKayitlar);
+    log("logTemizle", `  SITE.${C.siteList} güncellendi: ${_temizKayitlar.length} kayıt.`);
   }
 
   document.getElementById("kartTemizle").innerHTML +=
     `<div style="margin-top:14px;padding:12px 16px;background:rgba(45,158,107,.08);border:1px solid rgba(45,158,107,.2);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">
-      ✓ Temizleme tamamlandı. <a href="ihlaller.html" style="color:var(--accent);">İhlaller sayfasına dön →</a>
+      ✓ Temizleme tamamlandı. <a href="${C.donus}" style="color:var(--accent);">${C.donusAd}na dön →</a>
     </div>`;
 
   btnT.disabled = false;
 }
+
+// Seçiciyi başlat
+kolSecici();
 </script>
 </body>
 </html>
