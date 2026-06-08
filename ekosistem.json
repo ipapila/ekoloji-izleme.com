@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "guncelleme": "2026-06-08T10:55:59.105029+00:00",
+    "toplam": 30
+  },
   "ekosistem": [
     {
       "id": "d03a5e036ed5",
@@ -37,6 +41,24 @@
       "haber_kategorisi": "Yaban Hayatı"
     },
     {
+      "id": "97a18c7a2185",
+      "baslik": "TEMA’dan Keşan’da biyolojik çeşitlilik alarmı - MEDYA KEŞAN",
+      "ozet": "TEMA’dan Keşan’da biyolojik çeşitlilik alarmı MEDYA KEŞAN",
+      "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE0tTmN6R2RLbUNja0t0aHpwWld6SVluRmVPdFJyOTI1SXZZeTdZbUFZZ2lLMDY0Z1R2b1c3eFNOZS00WlZzVy1sWGRiV1VHZVI2UWpCbW1SNmhnYS12NTJTaWVMWFN6RU1WNkE2WmtXenY1Q1VGV2RTcXcwdmRoZ9IBgwFBVV95cUxQOVlpakdFdUZQeXp4Ri10MjV4Y2ZHS2M0NEZCOU9sTlNQaGkzc1cyRXhrQjR3Y3Vxc1NmTEZObTBnWUx1aURkU1N1cG5MSW9QM19zYkZmbF9SaERDRGMyRWRJNzE1QWpQdEp5SmpQOFRSa3VLMEYzREhpVDBCVDVvbnhsTQ?oc=5",
+      "tarih": "2026-06-07T16:22:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Nesli Tehlike Türler",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Nesli Tehlike Altında Türler"
+      ],
+      "bolum": "turler",
+      "haber_kategorisi": "Yaban Hayatı"
+    },
+    {
       "id": "78b477c850be",
       "baslik": "Doğa tutkunu genç fotokopanlarla yaban hayatının izini sürüyor - NTV Haber",
       "ozet": "Doğa tutkunu genç fotokopanlarla yaban hayatının izini sürüyor NTV Haber",
@@ -71,6 +93,24 @@
       ],
       "bolum": "kadinlar",
       "haber_kategorisi": ""
+    },
+    {
+      "id": "26e569f9cf58",
+      "baslik": "Bursa'da ormanın sessiz misafiri kameraya yansıdı - Bursada Bugün",
+      "ozet": "Bursa'da ormanın sessiz misafiri kameraya yansıdı Bursada Bugün",
+      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWN2cnlScGVVbUxTY0NfLW94UkpoZnAwUDN4d0pBODNJZTVfdkExOHd6d3ZtS1pGNFJwVE1wZGdnNmZYd3ZlS2wwYzBIVnAzaGhWazlrbnF0bkV0a2V3MVVTTTUtc2NkM3lSNXFNcjVheTBaZ3BHNmV0cmRPeG16MGNSeTZaOURGRmlpam5hUTYxYm12Tm9ZN2lWbkFqQdIBoAFBVV95cUxObU5JSTBGblh1OHFRSmdtOHUzYU5MRklEeUp4RXdTYUtVeC10aXBJVHgtZFRsNWcyQ21hS1BjTm13anFBTjh3NFhZa0VKT2Y1OERJVC1WX3lrMVZXeXNzOGEzSGFMOVBIOGo2SEdPMkVteVQtN1Z1NzlvTUlIZTFNejVScmtRWG9ZVVR0QXlWckVNRDhvdmxBb1RpUk1fRXNW?oc=5",
+      "tarih": "2026-05-20T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yaban Hayatı",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yaban Hayatı İzleme"
+      ],
+      "bolum": "yaban",
+      "haber_kategorisi": "Yaban Hayatı"
     },
     {
       "id": "ca7980528ce1",
@@ -506,9 +546,5 @@
       "bolum": "goc",
       "haber_kategorisi": "İklim ve Afet"
     }
-  ],
-  "_meta": {
-    "guncelleme": "2026-06-08T10:49:49.819Z",
-    "toplam": 28
-  }
+  ]
 }
