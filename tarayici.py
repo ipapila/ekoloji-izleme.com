@@ -396,6 +396,105 @@ RSS_KAYNAKLARI = [
         "hedef": "haberler",
         "dil": "tr"
     },
+    # ══════════════════════════════════════════════════════════════
+    #  YENİ KAYNAKLAR (2026-06 — GeoJSON derlemelerinden)
+    #  Sinop/Boyabat · Mezopotamya Ekoloji · LGBTİ+ İklim Adaleti
+    # ══════════════════════════════════════════════════════════════
+    # ── Sinop / Boyabat (Cengiz bakır madeni + nükleer karşıtı) ──
+    {
+        "url": "https://news.google.com/rss/search?q=site:haberkolektif.com+(çevre+OR+ekoloji+OR+maden+OR+nükleer+OR+orman+OR+ÇED+OR+bakır)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Haber Kolektif",
+        "kategori": "Çevre / Gündem",
+        "genel": False,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:boyabatsesi.com+(çevre+OR+maden+OR+ÇED+OR+orman+OR+bakır+OR+kamulaştırma)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Boyabat Sesi",
+        "kategori": "Çevre / Gündem",
+        "genel": False,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    # ── Mezopotamya Ekoloji Hareketi ve Kürdistan/Güneydoğu basını ──
+    {
+        "url": "https://news.google.com/rss/search?q=site:mezopotamyaekoloji.org&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Mezopotamya Ekoloji Hareketi",
+        "kategori": "STK",
+        "genel": False,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:amedhaber.net+(çevre+OR+ekoloji+OR+maden+OR+HES+OR+JES+OR+orman+OR+Hevsel+OR+Dicle+OR+kamulaştırma)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Amed Haber",
+        "kategori": "Gündem / Ekoloji",
+        "genel": True,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:kisadalga.net+(çevre+OR+ekoloji+OR+maden+OR+JES+OR+HES+OR+orman+OR+ÇED+OR+kamulaştırma)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Kısa Dalga",
+        "kategori": "Gündem / Çevre",
+        "genel": True,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:politikahaber.com+(çevre+OR+ekoloji+OR+maden+OR+JES+OR+HES+OR+orman+OR+kamulaştırma+OR+ÇED)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Politika Haber",
+        "kategori": "Gündem / Çevre",
+        "genel": True,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:anarsisthaberler.net+(çevre+OR+ekoloji+OR+maden+OR+orman+OR+iklim+OR+ağaç)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Anarşist Haberler",
+        "kategori": "Gündem / Ekoloji",
+        "genel": True,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    # ── LGBTİ+ / İklim Adaleti & Queer Ekoloji ──
+    {
+        "url": "https://news.google.com/rss/search?q=site:kaosgl.org+(ekoloji+OR+iklim+OR+çevre+OR+queer+ekoloji)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Kaos GL",
+        "kategori": "İklim",
+        "genel": False,
+        "bolum": "lgbti",
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:17mayis.org+(iklim+OR+ekoloji+OR+çevre)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "17 Mayıs Derneği",
+        "kategori": "İklim",
+        "genel": False,
+        "bolum": "lgbti",
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:iklimadaletikoalisyonu.org&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "İklim Adaleti Koalisyonu",
+        "kategori": "İklim",
+        "genel": False,
+        "bolum": "lgbti",
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=site:coalitionrainbow.org+(iklim+OR+ekoloji+OR+çevre+OR+climate+OR+ecology)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Coalition Rainbow",
+        "kategori": "İklim",
+        "genel": False,
+        "bolum": "lgbti",
+        "hedef": "haberler",
+        "dil": "tr"
+    },
 ]
 
 # ══════════════════════════════════════════════════════════════════
