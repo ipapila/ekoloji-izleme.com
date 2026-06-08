@@ -73,11 +73,24 @@ const SITE = {
   },
 
   bulkImport(collection, items) {
-    const list      = this.getList(collection);
-    const mevcutIds = new Set(list.map(x => String(x.id)));
-    const yeniler   = items.filter(x => !mevcutIds.has(String(x.id)));
-    this.set(collection, [...yeniler, ...list]);
-    return yeniler.length;
+    if (!Array.isArray(items)) return 0;
+    const list    = this.getList(collection);
+    const adminMi = (typeof this.isAdmin === "function") && this.isAdmin();
+    if (adminMi) {
+      // Admin: yerel öncelikli — yalnızca yeni ID'leri ekle.
+      // (Henüz sunucuya senkron olmamış yerel düzenlemeler ezilmesin.)
+      const mevcutIds = new Set(list.map(x => String(x.id)));
+      const yeniler   = items.filter(x => !mevcutIds.has(String(x.id)));
+      this.set(collection, [...yeniler, ...list]);
+      return yeniler.length;
+    }
+    // Ziyaretçi: sunucu kaynak-of-truth — sunucudaki kayıtlar mevcut yerel
+    // kopyaların ÜZERİNE yazılır (düzenlemeler yansısın). Yerelde olup sunucuda
+    // olmayan kalıntılar korunur; silme, sayfanın kendi 'silinen' filtresiyle yönetilir.
+    const sunucuIds    = new Set(items.map(x => String(x.id)));
+    const yereldeKalan = list.filter(x => !sunucuIds.has(String(x.id)));
+    this.set(collection, [...items, ...yereldeKalan]);
+    return items.length;
   },
 
   // GÜVENLİK GÜNCELLEMELERİ:
