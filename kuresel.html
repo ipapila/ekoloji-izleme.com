@@ -333,6 +333,14 @@ async function veriYukle() {
     }
 
     try {
+      const r0 = await fetch('kuresel.json?v=' + ts);
+      if (r0.ok) {
+        const data0 = await r0.json();
+        ekle(data0.kuresel);
+      }
+    } catch(e) { console.warn('kuresel.json:', e); }
+
+    try {
       const r = await fetch('haberler.json?v=' + ts);
       if (r.ok) {
         const data = await r.json();
