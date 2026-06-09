@@ -1008,6 +1008,7 @@ EKOSISTEM_ANAHTAR = {
     "Çiftçi & Köylü Sorunları":     ["çiftçi", "köylü", "tarım", "köy"],
     "Balıkçı Toplulukları":          ["balıkçı", "balıkçılık"],
     "Kadınlar & Ekoloji":            ["kadın"],
+    "LGBTİ+ & Çevre":                ["queer ekoloji", "lgbti+ ekoloj", "lgbti ekoloj", "gökkuşağı ekoloji", "queer climate"],
 }
 
 
