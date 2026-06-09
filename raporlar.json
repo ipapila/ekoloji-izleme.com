@@ -1,9 +1,29 @@
 {
-  "meta": {
-    "guncelleme": "2026-06-09T14:52:12.565863+00:00",
-    "toplam": 172
-  },
   "raporlar": [
+    {
+      "id": 25,
+      "baslik": "Gediz Havzasında Kümülatif Ekolojik Risk_ Ağırlıklı Bir Mekânsal Değerlendirme",
+      "tarih": "2026-06-09",
+      "yil": 2026,
+      "yazar": "ekoloji-izleme.com",
+      "tur": "Alan Araştırması",
+      "etiketler": [
+        "Ekolojik İhlal",
+        "Atık & Kirlilik",
+        "Toprak Kirliliği"
+      ],
+      "ozet": "Gediz Havzası, Batı Anadolu'nun en üretken tarım ovalarından birini beslerken aynı zamanda Türkiye'nin yoğun deri, tekstil ve jeotermal sanayi kümelerine ev sahipliği yapmaktadır. Bu çalışma, havzadaki yirmi kirletici odağı türlerine göre sınıflandırarak her birine geri dönüşsüzlük ve aciliyet eksenli bir risk ağırlığı (1–10) atamış ve bu ağırlıkları QGIS or-tamında mekânsal olarak haritalandırmıştır. Bulgular, havzanın 157 puanlık toplam göreli risk yükünün yaklaşık %83'ünün dört kirletici sınıftan (sanayi, madencilik, noktasal deşarj, jeotermal) kaynaklandığını ve kirliliğin Uşak, Manisa–Turgutlu–Salihli ve Alaşehir–Kula eksenlerinde mekânsal olarak kümelendiğini göstermektedir. Kümülatif yük, Ramsar statüsündeki Gediz Deltası'nda birikmektedir. Çalışma, göreli önceliklendirmeye dayalı bu yaklaşımın saha temelli su kalitesi ölçümleriyle kalibre edilmesi gerektiğini vurgulayarak alt-havza ölçeğinde farklılaştırılmış müdahale önerileri sunmaktadır.",
+      "dosya": "https://ekoloji-izleme.com/dosya/Gediz_Havzas_nda_K_m_latif_Ekolojik_Risk_A_rl_kl_Bir_Mek_nsal_De_erlendirme.pdf",
+      "foto_url": ""
+    },
+    {
+      "id": 1,
+      "yil": 2025,
+      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
+      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
+      "dosya": "",
+      "etiket": "Maden"
+    },
     {
       "id": "c58cb3164690",
       "baslik": "Greenpeace destekçisi ol - greenpeace.org",
@@ -3294,5 +3314,9 @@
       ],
       "haber_kategorisi": "STK & Kampanyalar"
     }
-  ]
+  ],
+  "_meta": {
+    "guncelleme": "2026-06-09T16:22:08.239Z",
+    "toplam": 174
+  }
 }
