@@ -482,7 +482,6 @@ RSS_KAYNAKLARI = [
         "kaynak": "İklim Adaleti Koalisyonu",
         "kategori": "İklim",
         "genel": False,
-        "bolum": "lgbti",
         "hedef": "haberler",
         "dil": "tr"
     },
@@ -1012,6 +1011,41 @@ EKOSISTEM_ANAHTAR = {
 }
 
 
+
+# ══════════════════════════════════════════════════════════════════
+#  İÇERİK-BAZLI BÖLÜM DOĞRULAMA
+#  Gevşek RSS sorgulu kimlik/toplum bölümleri kaynak "bolum" atasa bile
+#  içerik o konuyu doğrulamıyorsa bölüm DÜŞÜRÜLÜR — kayıt kaynağına değil,
+#  İÇERİĞİNE göre sınıflandırılır. Doğa/konu-odaklı bölümler (turler, yaban,
+#  bitki, su-canlilari, hayvan-haklari, genclik, goc, kentsel, esitsizlik,
+#  savas, savas-teknoloji, yerli, balikci) burada YOK; kaynağa güvenmeye
+#  devam eder. Yeni bir bölüm kirlenirse buraya anahtar kelimeleriyle ekle.
+# ══════════════════════════════════════════════════════════════════
+BOLUM_DOGRULA_ANAHTAR = {
+    "lgbti":    ["lgbti", "lgbtİ", "lgbtq", "queer", "kuir", "eşcinsel",
+                 "gökkuşağı", "trans birey", "onur yürüyüş", "onur haftası",
+                 "pride", "biseksüel", "interseks", "gey hareket"],
+    "kadinlar": ["kadın", "kadınlar", "feminist", "feminizm", "ekofeminist",
+                 "ekofeminizm", "kadın kooperatif", "kadın emek", "anneler"],
+    "ciftci":   ["çiftçi", "köylü", "köy ", "tarım", "tarımsal", "ekin",
+                 "hasat", "mera", "tohum", "fındık üretic", "çay üretic",
+                 "buğday", "besici", "hayvancılık", "süt üretic", "küçük üretici"],
+}
+
+def bolum_dogrula(kaynak_bolum, baslik, ozet):
+    """Kaynaktan gelen bolum'u içeriğe göre doğrular.
+       doğrulama gerektirmeyen bölüm -> aynen koru
+       gerektiren + içerik doğruluyor -> koru
+       gerektiren + içerik doğrulamıyor -> None (bölümsüz, genel akışta kalır)"""
+    if not kaynak_bolum:
+        return None
+    anahtarlar = BOLUM_DOGRULA_ANAHTAR.get(kaynak_bolum)
+    if anahtarlar is None:
+        return kaynak_bolum
+    metin = (str(baslik or "") + " " + str(ozet or "")).lower()
+    return kaynak_bolum if any(k in metin for k in anahtarlar) else None
+
+
 def zenginlestir(kayit: dict) -> dict:
     metin  = (kayit.get("baslik", "") + " " + kayit.get("ozet", "")).lower()
     eylem  = kayit.get("eylem")
@@ -1170,8 +1204,9 @@ def _rss_tek_kaynak(kaynak: dict) -> tuple:
                 "etiketler":   list(_hm.get("etiketler", [])),
                 "_puan":       puan,
             }
-            if "bolum" in kaynak:
-                kayit["bolum"] = kaynak["bolum"]
+            _b = bolum_dogrula(kaynak.get("bolum"), kayit.get("baslik"), kayit.get("ozet"))
+            if _b:
+                kayit["bolum"] = _b
             kayit = zenginlestir(kayit)
             kayitlar.append(kayit)
             kabul += 1
@@ -1253,8 +1288,9 @@ def _web_tek_kaynak(kaynak: dict) -> tuple:
                 "etiketler":   list(_hm.get("etiketler", [])),
                 "_puan":       puan,
             }
-            if "bolum" in kaynak:
-                kayit["bolum"] = kaynak["bolum"]
+            _b = bolum_dogrula(kaynak.get("bolum"), kayit.get("baslik"), kayit.get("ozet"))
+            if _b:
+                kayit["bolum"] = _b
             kayit = zenginlestir(kayit)
             kayitlar.append(kayit)
             kabul += 1
@@ -1399,20 +1435,27 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
         koleksiyonlar[kol] = birles[:limit]
         log.info(f"  {kol:15s}: +{len(yeni):3d} yeni -> toplam {len(koleksiyonlar[kol])}")
 
-    # ── Kaynak-bazlı bölüm yeniden-atama (her tarama) ─────────────
-    # bolum etiketlenmeden önce taranıp dedup nedeniyle donmuş eski kayıtları
-    # da kapsar; LGBTİ+ kaynaklarından gelen öğelere bolum="lgbti" garantiler.
-    LGBTI_KAYNAKLAR = {
-        "Kaos GL", "17 Mayıs Derneği",
-        "İklim Adaleti Koalisyonu", "Coalition Rainbow",
-    }
-    _yeniden = 0
+    # ── İçerik-bazlı bölüm doğrulama (her tarama; eski kirli kayıtları da temizler)
+    #  Kayıtlar KAYNAĞA değil İÇERİĞE göre sınıflandırılır:
+    #   1) Doğrulama gerektiren bölümdeyse (lgbti/kadinlar/ciftci) ve içerik
+    #      o konuyu doğrulamıyorsa bölüm DÜŞÜRÜLÜR (genel akışta kalır).
+    #   2) LGBTİ+ ÖRGÜTÜ kaynağından gelip içeriği gerçekten queer/LGBTİ+
+    #      ekoloji olan kayda lgbti garantilenir.
+    #  İklim Adaleti Koalisyonu bir LGBTİ+ örgütü DEĞİLDİR; listede yok.
+    LGBTI_KAYNAKLAR = {"Kaos GL", "17 Mayıs Derneği", "Coalition Rainbow"}
+    _eklendi = _dusuruldu = 0
     for kol in ("haberler", "ekosistem"):
         for h in koleksiyonlar.get(kol, []):
-            if (h.get("kaynak") or "").strip() in LGBTI_KAYNAKLAR and h.get("bolum") != "lgbti":
-                h["bolum"] = "lgbti"; _yeniden += 1
-    if _yeniden:
-        log.info(f"  [bolum] LGBTİ+ kaynak: {_yeniden} kayıt yeniden etiketlendi (lgbti)")
+            metin = ((h.get("baslik") or "") + " " + (h.get("ozet") or "")).lower()
+            bol = h.get("bolum")
+            if bol in BOLUM_DOGRULA_ANAHTAR:
+                if not any(k in metin for k in BOLUM_DOGRULA_ANAHTAR[bol]):
+                    h["bolum"] = None; _dusuruldu += 1; continue
+            if (h.get("kaynak") or "").strip() in LGBTI_KAYNAKLAR:
+                if any(k in metin for k in BOLUM_DOGRULA_ANAHTAR["lgbti"]) and h.get("bolum") != "lgbti":
+                    h["bolum"] = "lgbti"; _eklendi += 1
+    if _eklendi or _dusuruldu:
+        log.info(f"  [bolum] içerik-doğrulama: +{_eklendi} eklendi / -{_dusuruldu} düşürüldü")
 
     cikti = {
         "meta": {
