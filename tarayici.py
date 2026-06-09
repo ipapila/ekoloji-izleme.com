@@ -1399,6 +1399,21 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
         koleksiyonlar[kol] = birles[:limit]
         log.info(f"  {kol:15s}: +{len(yeni):3d} yeni -> toplam {len(koleksiyonlar[kol])}")
 
+    # ── Kaynak-bazlı bölüm yeniden-atama (her tarama) ─────────────
+    # bolum etiketlenmeden önce taranıp dedup nedeniyle donmuş eski kayıtları
+    # da kapsar; LGBTİ+ kaynaklarından gelen öğelere bolum="lgbti" garantiler.
+    LGBTI_KAYNAKLAR = {
+        "Kaos GL", "17 Mayıs Derneği",
+        "İklim Adaleti Koalisyonu", "Coalition Rainbow",
+    }
+    _yeniden = 0
+    for kol in ("haberler", "ekosistem"):
+        for h in koleksiyonlar.get(kol, []):
+            if (h.get("kaynak") or "").strip() in LGBTI_KAYNAKLAR and h.get("bolum") != "lgbti":
+                h["bolum"] = "lgbti"; _yeniden += 1
+    if _yeniden:
+        log.info(f"  [bolum] LGBTİ+ kaynak: {_yeniden} kayıt yeniden etiketlendi (lgbti)")
+
     cikti = {
         "meta": {
             "guncelleme":       datetime.now(TR_TZ).isoformat(),
