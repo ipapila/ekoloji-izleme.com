@@ -370,54 +370,87 @@ def ihlaller_guncelle(yeni_ihlaller: list) -> int:
 
 # ─── AYLIK ARŞİV ──────────────────────────────────────────────────────
 
-def arsiv_yaz(kaynak: dict):
+def arsiv_yaz():
     """
-    Her koleksiyonun geçen aya ait kayıtlarını arsiv/ klasörüne yazar.
-    Mevcut aydaki kayıtlara dokunmaz. Dosya zaten varsa üzerine yazmaz.
+    Kalıcı katalog arşivi. Her çalıştırmada (günlük cron) kanonik koleksiyon
+    dosyalarından (ekosistem.json, haberler.json, …) geçmiş aylara ait kayıtları
+    arsiv/ altına yazar.
+
+    Tasarım ilkeleri:
+      • Kanonik dosyalardan okur (haberler.json'un 'ekosistem' anahtarı boş olsa
+        bile her koleksiyon kendi dosyasından beslenir).
+      • Yalnızca TAMAMLANMIŞ geçmiş aylar arşivlenir (içinde bulunulan ay hariç).
+      • BİRLEŞTİRİR (id bazlı union): mevcut arşivdeki kayıtlar asla silinmez;
+        180g filtresi canlı dosyadan bir kaydı budamış olsa bile arşivde kalır.
+      • Idempotent: değişiklik yoksa dosyaya dokunmaz.
+    Değişen/yeni arşiv dosyalarının listesini döndürür (GitHub'a göndermek için).
     """
     from datetime import date
-    bugun = date.today()
-    gecen_ay = (bugun.replace(day=1) - timedelta(days=1))
-    ay_str = gecen_ay.strftime("%Y-%m")
+    bu_ay = date.today().strftime("%Y-%m")
 
     arsiv_dir = Path("arsiv")
     arsiv_dir.mkdir(exist_ok=True)
 
-    KOLEKSIYONLAR = {
-        "haberler":     "haberler",
-        "raporlar":     "raporlar",
-        "makaleler":    "makaleler",
-        "uluslararasi": "kuresel",
-        "ekosistem":    "ekosistem",
+    # arşiv_prefix : (kanonik_dosya, json_anahtarı)  — prefix'ler arsiv.html ile birebir
+    KAYNAK = {
+        "haberler":  ("haberler.json",  "haberler"),
+        "raporlar":  ("raporlar.json",  "raporlar"),
+        "makaleler": ("makaleler.json", "makaleler"),
+        "kuresel":   ("kuresel.json",   "kuresel"),
+        "ekosistem": ("ekosistem.json", "ekosistem"),
     }
 
-    for kaynak_adi, dosya_adi in KOLEKSIYONLAR.items():
-        arsiv_dosya = arsiv_dir / f"{dosya_adi}-{ay_str}.json"
-        if arsiv_dosya.exists():
+    degisen = []
+    for prefix, (dosya, anahtar) in KAYNAK.items():
+        p = Path(dosya)
+        if not p.exists():
+            continue
+        try:
+            d = json.loads(p.read_text(encoding="utf-8"))
+            kayitlar = d.get(anahtar, []) if isinstance(d, dict) else (d if isinstance(d, list) else [])
+        except Exception as e:
+            print(f"  ⚠ Arşiv: {dosya} okunamadı: {e}")
             continue
 
-        liste = kaynak.get(kaynak_adi, [])
-        ay_kayitlar = [
-            item for item in liste
-            if item.get("tarih", "")[:7] == ay_str
-        ]
+        # Geçmiş aylara göre grupla
+        aylar = defaultdict(list)
+        for it in kayitlar:
+            ay = (it.get("tarih") or "")[:7]
+            if len(ay) == 7 and ay < bu_ay:        # sadece tamamlanmış geçmiş aylar
+                aylar[ay].append(it)
 
-        if not ay_kayitlar:
-            continue
+        for ay, ay_kayit in aylar.items():
+            arsiv_dosya = arsiv_dir / f"{prefix}-{ay}.json"
+            mevcut = []
+            if arsiv_dosya.exists():
+                try:
+                    _e = json.loads(arsiv_dosya.read_text(encoding="utf-8"))
+                    mevcut = _e.get(prefix, []) if isinstance(_e, dict) else (_e if isinstance(_e, list) else [])
+                except Exception:
+                    mevcut = []
+            mevcut_idler = {str(x.get("id")) for x in mevcut}
+            eklenecek = [x for x in ay_kayit if str(x.get("id")) not in mevcut_idler]
+            if not eklenecek:
+                continue                            # değişiklik yok → dokunma
 
-        cikti = {
-            "meta": {
-                "arsiv_ay": ay_str,
-                "koleksiyon": dosya_adi,
-                "toplam": len(ay_kayitlar),
-                "olusturulma": datetime.now(timezone.utc).isoformat(),
-            },
-            dosya_adi: ay_kayitlar,
-        }
-        arsiv_dosya.write_text(
-            json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-        print(f"  ✓ Arşiv: {arsiv_dosya.name} ({len(ay_kayitlar)} kayıt)")
+            birlesik = mevcut + eklenecek
+            birlesik = sorted(birlesik, key=lambda x: x.get("tarih") or "", reverse=True)
+            cikti = {
+                "meta": {
+                    "arsiv_ay": ay,
+                    "koleksiyon": prefix,
+                    "toplam": len(birlesik),
+                    "olusturulma": datetime.now(timezone.utc).isoformat(),
+                },
+                prefix: birlesik,
+            }
+            arsiv_dosya.write_text(
+                json.dumps(cikti, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            degisen.append(arsiv_dosya)
+            print(f"  ✓ Arşiv: {arsiv_dosya.name} (+{len(eklenecek)} → {len(birlesik)} kayıt)")
+
+    return degisen
 
 def haberler_senkronize(kaynak: dict) -> int:
     """
@@ -445,10 +478,27 @@ def haberler_senkronize(kaynak: dict) -> int:
                 and len((m.get("ozet") or "").strip()) >= 20
             ]
 
-        # 180 günlük tarih sınırı: raporlar ve makaleler muaf (arşiv değeri taşır).
+        # 180 günlük tarih sınırı: raporlar, makaleler ve ekosistem muaf.
+        # ekosistem referans/arşiv niteliğindedir; içeriği tarihiyle eskidiğinde
+        # KAYBOLMAMALI (su-canlıları/gençlik gibi seyrek bölümler aksi halde sıfırlanır).
         _sinir_h = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
-        if kaynak_adi not in ("raporlar", "makaleler"):
+        if kaynak_adi not in ("raporlar", "makaleler", "ekosistem"):
             liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
+
+        # ekosistem: mevcut dosyayı oku ve KORU. dagitici aksi halde ekosistem.json'u
+        # sıfırdan yazıp ELLE GİRİLEN kayıtları (ve birikmiş eski tarama kayıtlarını) siler.
+        # Yeni tarama + listede olmayan mevcut kayıtlar (manuel girişler dahil) birleştirilir.
+        if kaynak_adi == "ekosistem":
+            try:
+                _eski = json.loads(Path(hedef_dosya).read_text(encoding="utf-8"))
+                _eski_liste = _eski.get(hedef_anahtar, []) if isinstance(_eski, dict) else (_eski if isinstance(_eski, list) else [])
+            except Exception:
+                _eski_liste = []
+            _yeni_idler = {str(x.get("id")) for x in liste}
+            _korunan = [x for x in _eski_liste if str(x.get("id")) not in _yeni_idler]
+            if _korunan:
+                print(f"  ⓘ {hedef_anahtar}: {len(_korunan)} mevcut kayıt korundu (manuel girişler dahil)")
+            liste = liste + _korunan
 
         # Başlık bazlı çift-önleme (her koleksiyon için)
         _onceki = len(liste)
@@ -477,25 +527,28 @@ def haberler_senkronize(kaynak: dict) -> int:
 
 # ─── GITHUB'A YÜKLE ───────────────────────────────────────────────────
 
-def github_yaz(dosya_yolu: Path):
+def github_yaz(dosya_yolu: Path, repo_yol: str = None):
     if not GITHUB_TOKEN:
         return
-    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{dosya_yolu.name}"
+    # repo_yol verilmezse dosya adı kök dizine yazılır; arsiv/ gibi alt dizinler için
+    # repo_yol="arsiv/haberler-2026-01.json" biçiminde geçilir.
+    yol = repo_yol or dosya_yolu.name
+    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{yol}"
     headers = {"Authorization": f"Bearer {GITHUB_TOKEN}", "Content-Type": "application/json"}
     r = requests.get(url, headers=headers, timeout=15)
     sha = r.json().get("sha") if r.status_code == 200 else None
     icerik = base64.b64encode(dosya_yolu.read_bytes()).decode()
     payload = {
-        "message": f"dagitici: {dosya_yolu.name} guncellendi {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
+        "message": f"dagitici: {yol} guncellendi {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
         "content": icerik,
     }
     if sha:
         payload["sha"] = sha
     r = requests.put(url, headers=headers, json=payload, timeout=30)
     if r.status_code in (200, 201):
-        print(f"    → GitHub: {dosya_yolu.name} yüklendi")
+        print(f"    → GitHub: {yol} yüklendi")
     else:
-        print(f"    → GitHub hatası ({r.status_code}): {dosya_yolu.name}")
+        print(f"    → GitHub hatası ({r.status_code}): {yol}")
 
 
 # ─── ANA AKIŞ ─────────────────────────────────────────────────────────
@@ -569,14 +622,14 @@ def dagit(gonder_github=False):
     print(f"  ✓ haberler.json: meta güncellendi + _haber_kat atandı")
 
     # 3. haberler.json koleksiyonlarını ayrı dosyalara senkronize et
-    # Aylık arşiv yaz (her ayın 1inde önceki ayı arşivler)
-    from datetime import date
-    if date.today().day == 1:
-        print("\nAylık arşiv yazılıyor…")
-        arsiv_yaz(kaynak)
-
     print("\nKoleksiyonlar senkronize ediliyor…")
     haberler_senkronize(kaynak)
+
+    # 3b. Kalıcı katalog arşivi — HER çalıştırmada, güncel kanonik dosyalardan.
+    # (180g filtresi canlı dosyadan budasa da arşiv kaydı korunur.)
+    print("\nArşiv güncelleniyor…")
+    arsiv_degisen = arsiv_yaz()
+    print(f"  ✓ Arşiv: {len(arsiv_degisen)} dosya güncellendi/eklendi")
 
     # 4. Alt-kategori dosyaları yaz
     print("  Alt-kategori dosyaları yazılıyor…")
@@ -610,6 +663,13 @@ def dagit(gonder_github=False):
             if dosya.exists():
                 github_yaz(dosya)
                 time.sleep(0.3)
+
+        # Değişen arşiv dosyaları (arsiv/ alt dizini)
+        for dosya in arsiv_degisen:
+            github_yaz(dosya, repo_yol=f"arsiv/{dosya.name}")
+            time.sleep(0.3)
+        if arsiv_degisen:
+            print(f"  ✓ {len(arsiv_degisen)} arşiv dosyası GitHub'a gönderildi")
 
     print(f"\n✓ Dağıtım tamamlandı — {toplam_yeni} yeni ihlal dağıtıldı")
 
