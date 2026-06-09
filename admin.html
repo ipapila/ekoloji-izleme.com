@@ -602,6 +602,8 @@ input.flatpickr-input:read-only{cursor:pointer!important;}
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dup-raporlar" style="accent-color:var(--bright);"> Raporlar</label>
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dup-makaleler" style="accent-color:var(--bright);"> Makaleler</label>
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dup-uluslararasi" style="accent-color:var(--bright);"> Uluslararası</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dup-ekosistem" style="accent-color:var(--bright);"> Ekosistem</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dup-direnis" style="accent-color:var(--bright);"> Direniş Ağı</label>
           </div>
         </div>
         <div>
@@ -870,13 +872,13 @@ function _importUygula(){if(!_importVeri)return;const{ihlaller,haberler}=_import
 
 let _dupSilList={};
 function aciDupModal(){_dupSilList={};document.getElementById("dupSonuc").textContent='Tara butonuna tıklayın.';document.getElementById("dupListe").style.display="none";document.getElementById("dupListe").innerHTML="";document.getElementById("dupTemizleBtn").disabled=true;document.getElementById("dupModal").style.display="flex";}
-function _dupAnahtar(item,kriter){if(kriter==="id")return String(item.id||"");if(kriter==="baslik")return(item.baslik||"").trim().toLowerCase();return(item.baslik||"").trim().toLowerCase()+"|"+(item.konum||item.il||"").trim().toLowerCase();}
+function _dupAnahtar(item,kriter){if(kriter==="id")return String(item.id||"");const b=(item.baslik||item.ad||"").trim().toLowerCase();if(kriter==="baslik")return b;return b+"|"+(item.konum||item.bolge||item.il||"").trim().toLowerCase();}
 /* Sayısal ID mi yoksa alfanümerik mi? Sayısal olanı koru. */
 function _idOnceligi(id){return/^\d+$/.test(String(id))?1:0;}
 
 function dupTara(){
   const kriter=document.querySelector('input[name="dup-kriter"]:checked').value;
-  const kollar=["ihlaller","haberler","raporlar","makaleler","uluslararasi"].filter(k=>document.getElementById("dup-"+k)?.checked);
+  const kollar=["ihlaller","haberler","raporlar","makaleler","uluslararasi","ekosistem","direnis"].filter(k=>document.getElementById("dup-"+k)?.checked);
   if(!kollar.length){document.getElementById("dupSonuc").textContent="⚠ En az bir koleksiyon seçin.";return;}
   _dupSilList={};let toplamDup=0,html="";
   kollar.forEach(kol=>{
@@ -909,7 +911,7 @@ function dupTara(){
       dupIdler.slice(0,20).forEach(id=>{
         const item=liste.find(x=>String(x.id)===id);if(!item)return;
         const etiket=_idOnceligi(id)?'SİLİNECEK':'ALFANÜMERİK — SİLİNECEK';
-        html+=`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(45,158,107,.05);"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">${id}</span><div style="flex:1;font-size:13px;">${item.baslik||'—'}</div><span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(232,92,42,.15);color:var(--warn);">${etiket}</span></div>`;
+        html+=`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(45,158,107,.05);"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">${id}</span><div style="flex:1;font-size:13px;">${item.baslik||item.ad||'—'}</div><span style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(232,92,42,.15);color:var(--warn);">${etiket}</span></div>`;
       });
       if(dupIdler.length>20)html+=`<div style="font-size:9px;color:var(--muted);padding:8px 0;">…ve ${dupIdler.length-20} daha</div>`;
       html+=`</div>`;
