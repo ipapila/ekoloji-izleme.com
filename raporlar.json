@@ -1,9 +1,13 @@
 {
-  "meta": {
-    "guncelleme": "2026-06-09T03:31:47.203107+00:00",
-    "toplam": 168
-  },
   "raporlar": [
+    {
+      "id": 1,
+      "yil": 2025,
+      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
+      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
+      "dosya": "",
+      "etiket": "Maden"
+    },
     {
       "id": "c58cb3164690",
       "baslik": "Greenpeace destekçisi ol - greenpeace.org",
@@ -3217,5 +3221,9 @@
       ],
       "haber_kategorisi": "STK & Kampanyalar"
     }
-  ]
+  ],
+  "_meta": {
+    "guncelleme": "2026-06-09T03:32:26.336Z",
+    "toplam": 169
+  }
 }
