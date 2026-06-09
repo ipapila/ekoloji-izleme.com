@@ -1,29 +1,9 @@
 {
+  "meta": {
+    "guncelleme": "2026-06-09T20:08:02.328565+00:00",
+    "toplam": 143
+  },
   "raporlar": [
-    {
-      "id": 25,
-      "baslik": "Gediz Havzasında Kümülatif Ekolojik Risk_ Ağırlıklı Bir Mekânsal Değerlendirme",
-      "tarih": "2026-06-09",
-      "yil": 2026,
-      "yazar": "ekoloji-izleme.com",
-      "tur": "Alan Araştırması",
-      "etiketler": [
-        "Ekolojik İhlal",
-        "Atık & Kirlilik",
-        "Toprak Kirliliği"
-      ],
-      "ozet": "Gediz Havzası, Batı Anadolu'nun en üretken tarım ovalarından birini beslerken aynı zamanda Türkiye'nin yoğun deri, tekstil ve jeotermal sanayi kümelerine ev sahipliği yapmaktadır. Bu çalışma, havzadaki yirmi kirletici odağı türlerine göre sınıflandırarak her birine geri dönüşsüzlük ve aciliyet eksenli bir risk ağırlığı (1–10) atamış ve bu ağırlıkları QGIS or-tamında mekânsal olarak haritalandırmıştır. Bulgular, havzanın 157 puanlık toplam göreli risk yükünün yaklaşık %83'ünün dört kirletici sınıftan (sanayi, madencilik, noktasal deşarj, jeotermal) kaynaklandığını ve kirliliğin Uşak, Manisa–Turgutlu–Salihli ve Alaşehir–Kula eksenlerinde mekânsal olarak kümelendiğini göstermektedir. Kümülatif yük, Ramsar statüsündeki Gediz Deltası'nda birikmektedir. Çalışma, göreli önceliklendirmeye dayalı bu yaklaşımın saha temelli su kalitesi ölçümleriyle kalibre edilmesi gerektiğini vurgulayarak alt-havza ölçeğinde farklılaştırılmış müdahale önerileri sunmaktadır.",
-      "dosya": "https://ekoloji-izleme.com/dosya/Gediz_Havzas_nda_K_m_latif_Ekolojik_Risk_A_rl_kl_Bir_Mek_nsal_De_erlendirme.pdf",
-      "foto_url": ""
-    },
-    {
-      "id": 1,
-      "yil": 2025,
-      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
-      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
-      "dosya": "",
-      "etiket": "Maden"
-    },
     {
       "id": "c58cb3164690",
       "baslik": "Greenpeace destekçisi ol - greenpeace.org",
@@ -48,7 +28,7 @@
       "baslik": "MARMARA DENİZİ'NİN GELECEĞİ KOCAELİ'DE ŞEKİLLENİYOR - Analiz Gazetesi",
       "ozet": "MARMARA DENİZİ'NİN GELECEĞİ KOCAELİ'DE ŞEKİLLENİYOR Analiz Gazetesi",
       "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOVk0xUE1NWnlYUU1LZ0R4ZnpYUGdjQnRrVWFTZGt2Z3p0MnViM1p3djZ5Y3NZdWg4OW50NTREMk9pOGVaRzgyMm5makJXb0FHR1dpMjlRY0NlRkRsZ1VtT0FMaHk2NHVxb284dDh5bHd4NE12M0tBbllMUGdmY3J1Q29oMTB1RVZWVVBKSW13ejhTWDN1ZWc?oc=5",
-      "tarih": "2026-06-06T13:54:22+03:00",
+      "tarih": "2026-06-06T14:44:22+03:00",
       "kaynak": "Google News",
       "kategori": "Akademik Analiz",
       "kaynak_turu": "rss",
@@ -120,6 +100,25 @@
       "haber_kategorisi": "Maden ve Enerji"
     },
     {
+      "id": "e860236728f6",
+      "baslik": "Greenpeace Türkiye’den yeni rapor: Türkiye’de Kömürün Gizli Maliyeti - greenpeace.org",
+      "ozet": "Greenpeace Türkiye’den yeni rapor: Türkiye’de Kömürün Gizli Maliyeti greenpeace.org",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPYkZIS1pQSjhaZ2dnSjNzcGZHOThlNG04aFdqR0Y1NmlSUDZYNTJFdEUtdUx5dE8yMjhPM1JkYkZjblNxZkZ4NEFwRzBSN2p4a3M2WU9ZejZjanhwbWlQX2gtdFcybnFYUkNTcnRLSVNaNkptZ0RCc0lIYzNtTUZkVlpRRVpUTlZ5UWtMOENQd3RpQlU4TEpsYlBHb1JMc3AzTkhaeE1JLUtSWEE?oc=5",
+      "tarih": "2026-05-25T10:00:00+03:00",
+      "kaynak": "Greenpeace TR",
+      "kategori": "STK Raporu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": "STK & Kampanya",
+      "etiketler": [
+        "STK & Kampanya",
+        "Rapor",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "STK & Kampanyalar"
+    },
+    {
       "id": "ddd879bccb36",
       "baslik": "Rapor: Bebek gıdası ambalajlarında binlerce mikroplastik tespit edildi - greenpeace.org",
       "ozet": "Rapor: Bebek gıdası ambalajlarında binlerce mikroplastik tespit edildi greenpeace.org",
@@ -158,25 +157,6 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "6aee846b85e2",
-      "baslik": "İhale Dergisi | İhale Haberleri | İhale Sonuçları | İhale Bülteni - Yatırımlar Dergisi",
-      "ozet": "İhale Dergisi | İhale Haberleri | İhale Sonuçları | İhale Bülteni Yatırımlar Dergisi",
-      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOeDlCMFhOZXNyMVI3eHZxaTR3QXRERG9oZ0dNcEh5VDRURnJGbVVpRzVjajZYdGV3aWRhSXlvMUltMGpWQ3cwd3ZPX1RzRm1aVVIwRFo4RmN0UkJUVzA5dmNFNXFwdVFIS3RyTjZrU0dKamJ5SWxhTzZEM3NLQW5CSC1ONEtNRk50LU5jeDRZcENaQWVTa3RDaHhMdVEwYUh6dmhxOVlTeF9qdmhUTTV6NmdMOURobk1ibnZxQkROMm1BYmM1SFhiQldn?oc=5",
-      "tarih": "2026-05-21T16:02:04+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "b043c2ca8eab",
       "baslik": "Milli Enerji ve Maden Politikası yol haritası oldu! Ankara'nın hamleleri Türkiye'yi dünyada önemli aktör yaptı - Sabah",
       "ozet": "Milli Enerji ve Maden Politikası yol haritası oldu! Ankara'nın hamleleri Türkiye'yi dünyada önemli aktör yaptı Sabah",
@@ -194,25 +174,6 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Maden ve Enerji"
-    },
-    {
-      "id": "e860236728f6",
-      "baslik": "Greenpeace Türkiye’den yeni rapor: Türkiye’de Kömürün Gizli Maliyeti - greenpeace.org",
-      "ozet": "Greenpeace Türkiye’den yeni rapor: Türkiye’de Kömürün Gizli Maliyeti greenpeace.org",
-      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNbEpuZHhsMlRlZXYzXzUzbjZHMC1fREdJbTdPWTM3S0xzdkVDam94RmppQXNmeEV5T1pLNERpbTFoMFFPS1lSQnpLc3o5RDBkcWd3a25pLWloQklYeDhtM19keWtzZkVCVERTQTYybm1TNUc4SzJmYXh5UHRuMVRoR2tRS1hkVi12U0ZfbVd0dEpyam00cWZ1dzh5QTRjR2Nmdjg5akloN2tnWjFzTy1ISUcwUk5NcDJq?oc=5",
-      "tarih": "2026-05-21T10:00:00+03:00",
-      "kaynak": "Greenpeace TR",
-      "kategori": "STK Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "STK & Kampanya",
-      "etiketler": [
-        "STK & Kampanya",
-        "Rapor",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "STK & Kampanyalar"
     },
     {
       "id": "bf5a4fc623e0",
@@ -328,25 +289,6 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Maden ve Enerji"
-    },
-    {
-      "id": "f81bd1213aff",
-      "baslik": "Avrupa'da iklim değişikliği ağırlaşıyor: Kıta fazla sıcak - DW",
-      "ozet": "Avrupa'da iklim değişikliği ağırlaşıyor: Kıta fazla sıcak DW",
-      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNdVVaa052bTNSM21SODJCZDdyWWUyeDRpSlJJc0dMNGJkcFZLYjlyU2NLQWN1bUFnbkFwSG00V1M4Y3VLaFp4RU1HNi16c3hyUDlUWEN2YXBoMmMtVjNobDhJZGFzbjF4c2NTUnlFbGVyLUwwdEJobE9qVHZRRWhPM2tIWFRLNURJQmo0LVpKamlGa0FJNk9qclBLSmg3dE9qT24yczBkZzlINUw5SERGbWM2eGZyUTJUR1J4YVUxVHByeDVXMkpWUHVlUkVGd9IBzgFBVV95cUxNbkNWSExkaER4N3RIRlpsLV9TVmp1Y0cxT2ZYSTBIdVBtNjNiRk5rQnpJd1VFdm9fYjM3T1FadHludUg3cjl2amQtWVJsZEJNTmZyZnJHRW9PSW51RDdBaWxhVm9CeGV1X2xndWlkc1h3Vm5mMnItNUFvVHdzdFZNbHBadjM3V0J6MVNWOVFLNE9oNmNPZjR0SGtuZWl6UW5POWllWFF4V1RYbG4tOGdNQXVQSWdpSVo0THIyXzF4NXRqcXFGYUxFb2NkSlh1QQ?oc=5",
-      "tarih": "2026-04-29T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "İklim Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "İklim Olayları",
-        "Rapor",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "İklim ve Afet"
     },
     {
       "id": "3d877da712f0",
@@ -465,25 +407,6 @@
       "haber_kategorisi": "Maden ve Enerji"
     },
     {
-      "id": "d900ac3cfc2b",
-      "baslik": "Yeşil dönüşümde bölgesel güç: Türkiye'nin yenilenebilir enerji atılımı - Ekonomi Dünya",
-      "ozet": "Yeşil dönüşümde bölgesel güç: Türkiye'nin yenilenebilir enerji atılımı Ekonomi Dünya",
-      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQSURKWEZhYVlRUEVuc0NtSVNHOFQyamdqUTZPNUZYWGJoa0podnhmbFlMMGRibkFubWFpZ2hSVnVQMVllWEd2T2pBMHMydmN3SktnemlPM1hBc3JjZExOa3Y2NHM4aGZ6ajN4RUxEZHA2eW50OS1OdEhWY0FQc2JlOURUV01OSGJDeWNJV3k1bGxKN0JrM3d6Z1dkM0VaVUZlOUd6VHJrQ3BQQQ?oc=5",
-      "tarih": "2026-04-16T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Enerji Politikası",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Analiz",
-        "Enerji",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Maden ve Enerji"
-    },
-    {
       "id": "6da0b8c30f4c",
       "baslik": "Kuşlar için Güvenli Göç Yolları - Doğa Derneği",
       "ozet": "Kuşlar için Güvenli Göç Yolları Doğa Derneği",
@@ -541,25 +464,6 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "1495eb81176f",
-      "baslik": "Ruhsat ve ÇED’lerle talan: Doğa kendisine açılan savaşa isyan ediyor - Politika Haber",
-      "ozet": "Ruhsat ve ÇED’lerle talan: Doğa kendisine açılan savaşa isyan ediyor Politika Haber",
-      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQSllrN0I1VzBrWTUtVXUtQmxvUTRZMEJPbF9IVDBDZExiYm9KZmZtWTg0c1Npc0xHeGdLVHc3aGFTUnN6TnBlSVNSdzZDUi1lbGR6SU9oZmRjeTEtX0FfYXJlcExCTm1zNFZKQ3FPSG02OHp0eFJoTmpBOWhNYnJIcDBZaDcxTHV5YjFaNS1RdTdlZEpscjN3NQ?oc=5",
-      "tarih": "2026-04-02T09:10:39+03:00",
-      "kaynak": "Google News",
-      "kategori": "Politika Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Analiz",
-        "Politika",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "269b2cb9d6d5",
       "baslik": "2025 Dünya Hava Kalitesi Raporu: Türkiye hava kirliliğinde 28 sıra yükseldi - Aktifhaber",
       "ozet": "2025 Dünya Hava Kalitesi Raporu: Türkiye hava kirliliğinde 28 sıra yükseldi Aktifhaber",
@@ -598,26 +502,6 @@
       "haber_kategorisi": ""
     },
     {
-      "id": "965f6607646e",
-      "baslik": "‘TEDMEM 2025 Eğitim Değerlendirme Raporu’ yayımlandı - DHA | Demirören Haber Ajansı",
-      "ozet": "‘TEDMEM 2025 Eğitim Değerlendirme Raporu’ yayımlandı DHA | Demirören Haber Ajansı",
-      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQZ3ZaZl80TURBVzFqSDVGYjFZc3pBUEJwSmI4TmtPdzl6UE5ITGllcVJHQ2txZnVuZHY0Ujc3VGNmU2ZaTkVQWDJrWWNfem1DdFhWTXJaWjF6VFJ1UjRCNFVBbVlPSzJST0JzZ3YxU0JQTnV0djJYTWZLWWRRUjFBYjZ1VkUyRHhYTDY4QXZpWTPSAZYBQVVfeXFMTXhsbXNaeC1VU3h4WEFuenBuSVpEYndOZlJsXzNlbzlWTG55bS15NHBwRHJHakRoYmFNaFhsZ2wyRHVaY1RDYkNmanhLYnFSUjZFZmlPUHJoS0NtREJrTW83aDZ2azBZRlBLU3lUZXFtdVpyUmVVdk02RFdTMHdldHFJeE9sS2FsWmhBaXp1NHdabVhWUy1R?oc=5",
-      "tarih": "2026-03-25T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "İklim Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "İklim Olayları",
-        "Rapor",
-        "Yaban Hayatı İzleme",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "İklim ve Afet"
-    },
-    {
       "id": "571f92d541f7",
       "baslik": "Uydu analiz raporu Türkiye'deki alanlara dikkat çekiyor: Devasa metan gazı sızıntıları hakkında neler biliniyor? - Gazete Oksijen",
       "ozet": "Uydu analiz raporu Türkiye'deki alanlara dikkat çekiyor: Devasa metan gazı sızıntıları hakkında neler biliniyor? Gazete Oksijen",
@@ -651,64 +535,6 @@
       "etiketler": [
         "ÇED Kararları",
         "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "8bc0d49121da",
-      "baslik": "Gelecek Varlık Yönetimi 2025 Sürdürülebilirlik Raporu’nu yayımladı - capital.com.tr",
-      "ozet": "Gelecek Varlık Yönetimi 2025 Sürdürülebilirlik Raporu’nu yayımladı capital.com.tr",
-      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOSW5leXRzekt1SVUwaFlrMldQVzYxb0dMb3hNTU80S2s0TTZvMnJjVVd2SEZCaUlScUxyUWphVERaaXM5ZllqLTZpU01uVXl0c3VDaVBTX0xvYURRODhhZXJhNURubC1weGp4ME1KY3BhTW1GVXVjMmxDUTJDQ0FmTVRPZHBXSW9Xcy1NYVJiaEV1WVB3TVRucEgxLTNldnpOSW5MRU1ubmNQMGhYZF9CUXNObGhGZzJlcFRHTDlpMU9Va2ZwNmItdk1n?oc=5",
-      "tarih": "2026-03-16T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "İklim Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "İklim Olayları",
-        "Rapor",
-        "Yaban Hayatı İzleme",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "İklim ve Afet"
-    },
-    {
-      "id": "f0da98012d55",
-      "baslik": "NİHAİ ÇED RAPORU - Ordu Büyükşehir Belediyesi",
-      "ozet": "NİHAİ ÇED RAPORU Ordu Büyükşehir Belediyesi",
-      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5sVHhYSG1iZm9hS21tUFROOWVRT2RBb29mRVNLWkJHVkRCX0ttT0dJNFNIQjZiVklDd09nM3k4WGNJVWpLeDViTk1HQnhlVkJCQ05jd2dqX1ZZX3ZXUUJV?oc=5",
-      "tarih": "2026-03-09T10:11:10+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "a2fa3e38b192",
-      "baslik": "Üç Ekoloji’ye Genosko Yorumu: Ekoloji ve Sanatın Yeni Politikası - Birikim Dergisi",
-      "ozet": "Üç Ekoloji’ye Genosko Yorumu: Ekoloji ve Sanatın Yeni Politikası Birikim Dergisi",
-      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxON1dmcE5ONzQzS1FDVk03U1RyNlh1WEVFQjNVZFlJQlI4MWJmVEdlMTRwajFlZkZYOFF1U2hsMTZ6TDhia1MzSGdCdWJ4ZHZNQjBUb0RvYWpHSldvNW0zYXE2MW02aEV2aUdadFhSUVVhUl9Sem9xRkJfb1pLc0lTLV9rUm9sSUlNbU84NXVQWi1fN2JqWmNnVXhtYUhVeElZSmJBOQ?oc=5",
-      "tarih": "2026-03-06T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Politika Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Analiz",
-        "Politika",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Hukuki Süreçler"
@@ -767,25 +593,6 @@
         "ÇED Kararları",
         "Analiz",
         "Çiftçi & Köylü Sorunları",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "aab05543d5e5",
-      "baslik": "Çimento fabrikaları: Kârlılık artarken yaşam yok oluyor - Evrensel",
-      "ozet": "Çimento fabrikaları: Kârlılık artarken yaşam yok oluyor Evrensel",
-      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQR2IyWmJfcHdST1ZXcGFzMnpHbUdxeE9BaTBHNGlueFp6YUdHNFNsVW5Ydmo2enNWNHp3VGJ2RWpfRGtHSzdva0l6RU13WU1NTzlqMWNRaTZfSFVQZnZpWER5bFYzN2w2a1U3VlM3OWM5bWVjMzZQaUtDamFTTzczbXpCUXF6aWFPWGZaeVd4RnhlRUx6Rmc?oc=5",
-      "tarih": "2026-01-31T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Hukuki Süreçler"
@@ -867,25 +674,6 @@
       "haber_kategorisi": "İklim ve Afet"
     },
     {
-      "id": "af3fd82e3677",
-      "baslik": "YEO Enerji Yatırımları’nın Topçu Depges GES ve elektrik depolama tesisi projesi ÇED inceleme değerlendirme süreci başladı Yazar ForInvest Haber - Investing.com Türkiye",
-      "ozet": "YEO Enerji Yatırımları’nın Topçu Depges GES ve elektrik depolama tesisi projesi ÇED inceleme değerlendirme süreci başladı Yazar ForInvest Haber Investing.com Türkiye",
-      "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxPNk1sSWJWS1RMUEMzTlB0NWVrTlNkRVBGWkpPZUVUYThrOFhDcGJLa1pEeXg4QnZ3LTN0UEtKbG9IYmt6ZDNJZE5OVENPX0FMeU4yVFdia0Yzd0lvTE9FdVduVWVUOUlKWlNNSXhXbDN0bUtpS2x0a0VPQU1KWXo3NklscHpCZzExVzFDZlY2NmRpTHc3ZHFPUmxCWUtIRFVqRmJCbkd5WXh3ZDdScWtjZUtCUllQQmhldjRoemVHbk10dDZkVWZMZnpxNzJQdnpuRGtFR2R6enM3LVBBUUpOOW5BZE14azY2TTh6SXNVb2ZoS1lnbG5z?oc=5",
-      "tarih": "2026-01-07T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "782cbb8d0403",
       "baslik": "İklim Ağı’ndan 2025 İklim Karnesi: Türkiye’nin 2025 karnesi kötü, umutlar COP31’e - greenpeace.org",
       "ozet": "İklim Ağı’ndan 2025 İklim Karnesi: Türkiye’nin 2025 karnesi kötü, umutlar COP31’e greenpeace.org",
@@ -903,6 +691,25 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "İklim ve Afet"
+    },
+    {
+      "id": "6aee846b85e2",
+      "baslik": "İhale Dergisi | İhale Haberleri | İhale Sonuçları | İhale Bülteni - Yatırımlar Dergisi",
+      "ozet": "İhale Dergisi | İhale Haberleri | İhale Sonuçları | İhale Bülteni Yatırımlar Dergisi",
+      "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPLWJpRVJUOXBjOG5IRTJXZjF3aGRneHRNNGY2N2JCMC1COEdSTWZaWHRVYVBZSnRmQ1N5WFVZT2pFT1QyRnMxbFVwMFRyYWM2LV9OM0FRcEUxbmNPZElFZWF3MU5YcUhYNlYzdGd6Y0hWdHhXaU5VVjI4Z0J3VnVLMjZhdXNPVWliQk5hQmFpTFVNYmR6dGRjZHY3V1p6eXpveFdKOWJVOVRXZi1rOWNzbXVUTHBCTGwxeUE1Z2g0bnVuWmRlRVg3c0VtOGFDUURWQVBxLXQ1VXhJQ3Z6Wmc?oc=5",
+      "tarih": "2026-01-02T11:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "ÇED Analizi",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "ÇED Kararları",
+        "Analiz",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "Hukuki Süreçler"
     },
     {
       "id": "a46a128799c0",
@@ -981,25 +788,6 @@
       "haber_kategorisi": "Hukuki Süreçler"
     },
     {
-      "id": "8d8bed684cd1",
-      "baslik": "OGGUSTO 2026 İş Dünyası Trendleri Raporu: Yeni Beceriler, Yeni Modeller, Yeni Liderlik - Oggusto",
-      "ozet": "OGGUSTO 2026 İş Dünyası Trendleri Raporu: Yeni Beceriler, Yeni Modeller, Yeni Liderlik Oggusto",
-      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9MMWRrX0FWeDA3UzI5RUk2YklFWjJXVk5Pc2pQYnFzYnZJTHRvVjRDWThkVDZnbEJmdFpfYTJpM254N3gtTzZsM0ZDSXZDa3NhVldla3dmZlNKZ3pVMXpqWlF0TEV4cjJvLWc?oc=5",
-      "tarih": "2025-12-12T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "İklim Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "İklim Olayları",
-        "Rapor",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "İklim ve Afet"
-    },
-    {
       "id": "136f34aa8fa2",
       "baslik": "Dünya Çevre Günü Ne Kadar Etkili? - Fokus+",
       "ozet": "Dünya Çevre Günü Ne Kadar Etkili? Fokus+",
@@ -1019,47 +807,9 @@
       "haber_kategorisi": ""
     },
     {
-      "id": "a3c5c3121628",
-      "baslik": "İklim Zirvesi COP31 Türkiye’de: Fırsatlar, sorumluluklar ve beklentiler - greenpeace.org",
-      "ozet": "İklim Zirvesi COP31 Türkiye’de: Fırsatlar, sorumluluklar ve beklentiler greenpeace.org",
-      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxONU44WVFaQ0t0MGdoWTJmWWU1cjFYR0N6dnRyRXI0U0QxUUtsS2Flb0t1UkpRa2pPYk0xR1JZM3I1WGI4NjdNNlBYMEpqd2RXeWNHTFFGVXVOLUZNOWNmNnRqemdLZmtLNzNqY0VmenBGT2FNR1laRURybFgtcTBQTlhB?oc=5",
-      "tarih": "2025-11-20T11:00:00+03:00",
-      "kaynak": "Greenpeace TR",
-      "kategori": "STK Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "STK & Kampanya",
-      "etiketler": [
-        "STK & Kampanya",
-        "Rapor",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
       "id": "16256ba3a1d9",
-      "baslik": "Küresel ısınma Türkiye'yi nasıl değiştirebilir? - dw.com",
-      "ozet": "Küresel ısınma Türkiye'yi nasıl değiştirebilir? dw.com",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNc1RwVmc1bk5vbTdvU0xKZVl4dXBjQXlGMmdmN2tiVnFnUXJFTGl4SHNYSXYtc29ZQ2xDRE5DdUQzYmR3ZnZScW03NVJRX2pWNWZnTi1VZnRMUnFQUVl1cUlNcUg4RWNtR2dNSjcxU1pJeFMxelRrUzduZmhNT2o1elh1ejBsRzMtbzd2c05sQk53WHJuemhGQnRvOG9wSzh1c3BjcmtvQWdSTUtpSnZrZEsxWdIBswFBVV95cUxPYlpBRDRzem1hMUFQZFJwb2h5VUJnMG1Sd0I2WGxxVGpPdERQUktXVXRRbGxyUDY0VnV3ZVpQemQtTXRrdklib1dMY1lSbmdhWjhfaVBMZUdCcU5HS3dfc3NocE9VSmlxaFNNa3V1RHhDM2V3MUFpUlhYSVkySmhzX2VJeEt0eTdkLXNiMmVlbTJsTC1zWmZkN3Q5TjBSV2ZQVG56TXRhRE0yVXM2NXZsQ3U2bw?oc=5",
-      "tarih": "2025-11-18T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "İklim Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "İklim Olayları",
-        "Rapor",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "İklim ve Afet"
-    },
-    {
-      "id": "2083be6d91ad",
-      "baslik": "Küresel ısınma Türkiye'yi nasıl değiştirebilir? - DW",
-      "ozet": "Küresel ısınma Türkiye'yi nasıl değiştirebilir? DW",
+      "baslik": "Küresel ısınma Türkiye'yi nasıl değiştirebilir? - DW.com",
+      "ozet": "Küresel ısınma Türkiye'yi nasıl değiştirebilir? DW.com",
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNc1RwVmc1bk5vbTdvU0xKZVl4dXBjQXlGMmdmN2tiVnFnUXJFTGl4SHNYSXYtc29ZQ2xDRE5DdUQzYmR3ZnZScW03NVJRX2pWNWZnTi1VZnRMUnFQUVl1cUlNcUg4RWNtR2dNSjcxU1pJeFMxelRrUzduZmhNT2o1elh1ejBsRzMtbzd2c05sQk53WHJuemhGQnRvOG9wSzh1c3BjcmtvQWdSTUtpSnZrZEsxWdIBswFBVV95cUxPYlpBRDRzem1hMUFQZFJwb2h5VUJnMG1Sd0I2WGxxVGpPdERQUktXVXRRbGxyUDY0VnV3ZVpQemQtTXRrdklib1dMY1lSbmdhWjhfaVBMZUdCcU5HS3dfc3NocE9VSmlxaFNNa3V1RHhDM2V3MUFpUlhYSVkySmhzX2VJeEt0eTdkLXNiMmVlbTJsTC1zWmZkN3Q5TjBSV2ZQVG56TXRhRE0yVXM2NXZsQ3U2bw?oc=5",
       "tarih": "2025-11-18T11:00:00+03:00",
       "kaynak": "Google News",
@@ -1133,25 +883,6 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Maden ve Enerji"
-    },
-    {
-      "id": "dad602713ae7",
-      "baslik": "PROF. DR. CAHİT TALAS SOSYAL POLİTİKA ÖDÜLÜ 2025 DEĞERLENDİRME SONUÇLARI BELLİ OLDU - mulkiye.org.tr",
-      "ozet": "PROF. DR. CAHİT TALAS SOSYAL POLİTİKA ÖDÜLÜ 2025 DEĞERLENDİRME SONUÇLARI BELLİ OLDU mulkiye.org.tr",
-      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNWnVlTWxJYTFJQ1B3V2ctYUNhYUprZlZ4bnExaVV5SEYybTFvdFprQ25GUzQ5akxyZk1xRHRqUF8zVUhaekNULWF6c1RNckU1M0ZzLTh3TnFpTUt0Y2NnT25PYzQybFFld0NhSTdtTG5kd0R3UGhRa1RndUdtd0ZHb1dVWGxmdURiMncyT01KenM1a01tZkctUVYyQzAtcDdqcDhqc24xVUo0cHdwVXBjZXRjeVFxcmZoX1I2WkFWXzdXMWlkMzlSTA?oc=5",
-      "tarih": "2025-10-20T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Politika Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Analiz",
-        "Politika",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
     },
     {
       "id": "859fea942768",
@@ -1420,20 +1151,20 @@
       "haber_kategorisi": "İklim ve Afet"
     },
     {
-      "id": "1e24abd7d538",
-      "baslik": "Rüzgar ve güneş enerjisi projeleri için yeni ÇED kriterleri - Independent Türkçe",
-      "ozet": "Rüzgar ve güneş enerjisi projeleri için yeni ÇED kriterleri Independent Türkçe",
-      "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE9Ja3JTb2R3MGx1ODlOTWFsbjBJTWhDcHljR1p1cFBESW0tNlhjTVhLa2g3X1V2N013VUlTckRnSEZoSGhabGtlWjhPTkI?oc=5",
-      "tarih": "2025-06-26T10:00:00+03:00",
+      "id": "84f038ac8f5e",
+      "baslik": "Ekolojik, ekonomik, kültür ve enerji politikası açısından değerlendirme: Zeytin ağaçları neden taşınamaz? - T24",
+      "ozet": "Ekolojik, ekonomik, kültür ve enerji politikası açısından değerlendirme: Zeytin ağaçları neden taşınamaz? T24",
+      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxPTERrQW1Wa1R0OUJQaEMxeV9tbXRYa3RTLUU2R1hKV1pKMUQxemZjQWNaUWxNVlFDVFgxRUt6OHlSNDc3UUV2RXI1cjlTcXZlZXZUdi1hSkh4b3NDbjQ1bEFWQnFEbXZWRnRvYnNOWFRSV0VhNWN1MlRxZ2htOS1VZG14YTFva3JNT04zOE4xNlJNaUJsX1BUaHhFM01oV0MzYnctUGhLc21ZMmNHaV8tNm04OXB6c2ZhaUZhRGxjejQ5MUIyODBKTVBiSDFVdDA?oc=5",
+      "tarih": "2025-06-25T10:00:00+03:00",
       "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
+      "kategori": "Politika Analizi",
       "kaynak_turu": "rss",
       "icerik_tipi": "rapor",
       "dil": "tr",
-      "eylem": "Hukuk & Dava",
+      "eylem": null,
       "etiketler": [
-        "ÇED Kararları",
         "Analiz",
+        "Politika",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Hukuki Süreçler"
@@ -1454,25 +1185,6 @@
         "ÇED Kararları",
         "Analiz",
         "Yaban Hayatı İzleme",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "84f038ac8f5e",
-      "baslik": "Ekolojik, ekonomik, kültür ve enerji politikası açısından değerlendirme: Zeytin ağaçları neden taşınamaz? - T24",
-      "ozet": "Ekolojik, ekonomik, kültür ve enerji politikası açısından değerlendirme: Zeytin ağaçları neden taşınamaz? T24",
-      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxPTERrQW1Wa1R0OUJQaEMxeV9tbXRYa3RTLUU2R1hKV1pKMUQxemZjQWNaUWxNVlFDVFgxRUt6OHlSNDc3UUV2RXI1cjlTcXZlZXZUdi1hSkh4b3NDbjQ1bEFWQnFEbXZWRnRvYnNOWFRSV0VhNWN1MlRxZ2htOS1VZG14YTFva3JNT04zOE4xNlJNaUJsX1BUaHhFM01oV0MzYnctUGhLc21ZMmNHaV8tNm04OXB6c2ZhaUZhRGxjejQ5MUIyODBKTVBiSDFVdDA?oc=5",
-      "tarih": "2025-06-25T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Politika Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Analiz",
-        "Politika",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Hukuki Süreçler"
@@ -1573,25 +1285,6 @@
       "haber_kategorisi": "Hukuki Süreçler"
     },
     {
-      "id": "5bdb998a9b13",
-      "baslik": "Cengiz Holding'in Cerattepe'deki \"ÇED olumlu\" raporu İDK'da görüşülecek - T24",
-      "ozet": "Cengiz Holding'in Cerattepe'deki \"ÇED olumlu\" raporu İDK'da görüşülecek T24",
-      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNTHA0bWlXOHlaLTdRcEVEdmVwamtzNExHN1VVWnJ2R3FYRGlpVVhZc19RMEx1Zm9Cc0JYaEI0Y2NacEpnbnBVUklIQ1VXWWFWa09TUUdtaUpBaTFyeEtKcnB3TTBqQk5Lc0k1S3U0WmdqajdYZ242Q3lkRmp5d1VYRVlmY3hnel9sQUlHSHNkT1M3UVFsSC16Q3g4VlgzVm1YR2c1Mw?oc=5",
-      "tarih": "2025-01-06T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "84843f1b0370",
       "baslik": "Dersim’de ‘ÇED Gerekli Değildir’ kararları ekosistemi tehdit ediyor - Bianet",
       "ozet": "Dersim’de ‘ÇED Gerekli Değildir’ kararları ekosistemi tehdit ediyor Bianet",
@@ -1606,26 +1299,6 @@
       "etiketler": [
         "ÇED Kararları",
         "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "95783106a280",
-      "baslik": "İliç kazasında ikinci bilirkişi raporu yayımlandı: ÇED ihlali yok - Odatv",
-      "ozet": "İliç kazasında ikinci bilirkişi raporu yayımlandı: ÇED ihlali yok Odatv",
-      "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE04MlQyVnQ3cmkxWmN4OExXT2lRWUYtNW1oeWZpeFBqVnZVc2lqSWZkOXBkUGE1NzBNRTdvNDhrS3hvV1Rzdm1NSGFqbmpPMjhuSVBTMkx3QjNTVTZ3RTRDQTVEMS1LUlNaZl93d2xZQTQ0NlFTeHlV?oc=5",
-      "tarih": "2024-11-24T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Yaban Hayatı İzleme",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Hukuki Süreçler"
@@ -1670,23 +1343,23 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "c3ee5e59de76",
-      "baslik": "Proje bitme aşamasındayken ÇED süreci başlatıldı - Sözcü Gazetesi",
-      "ozet": "Proje bitme aşamasındayken ÇED süreci başlatıldı Sözcü Gazetesi",
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQQUc2WWp0TTUwcVkzWDVWMXBsbEV2Wk1yanZNTEpDY3EyQ2F3QVctTm1tc0JPOHNtQUY5OThOOFp4NGVnbkw2SEhIM3h1MHhsNzlhUW1KTEhqZ2JGZzNyelprTGpPa1dzMFg1el9COHVNSlRFLUNFczBxai01b0ZUNkV2TnN6M3RqWDB1ZdIBjAFBVV95cUxQQUc2WWp0TTUwcVkzWDVWMXBsbEV2Wk1yanZNTEpDY3EyQ2F3QVctTm1tc0JPOHNtQUY5OThOOFp4NGVnbkw2SEhIM3h1MHhsNzlhUW1KTEhqZ2JGZzNyelprTGpPa1dzMFg1el9COHVNSlRFLUNFczBxai01b0ZUNkV2TnN6M3RqWDB1ZQ?oc=5",
-      "tarih": "2024-10-28T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
+      "id": "c15efae76fe8",
+      "baslik": "Doğa ve İklim STK'larından Açık Radyo için Açıklama - WWF-Türkiye",
+      "ozet": "Doğa ve İklim STK'larından Açık Radyo için Açıklama WWF-Türkiye",
+      "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNNW1OdG50Vm5jdnZ0OWhIbEVwS2toc2xHQzcwTDB4Q25fOTktOEZvY2RBZUV6QjJTU3NzVFBFNzE4RWN5Q29PQngwdVhURmREMjR3d29vbmNqR2kwY1ctUHdnVWVrc2J3MW9iaTFNX2RNaExOc2NCOHpHSkJxMlRXbjVoc3VkVms?oc=5",
+      "tarih": "2024-10-17T10:00:00+03:00",
+      "kaynak": "WWF Türkiye",
+      "kategori": "STK Raporu",
       "kaynak_turu": "rss",
       "icerik_tipi": "rapor",
       "dil": "tr",
-      "eylem": "Hukuk & Dava",
+      "eylem": "STK & Kampanya",
       "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
+        "STK & Kampanya",
+        "Rapor",
         "Rapor & Analiz"
       ],
-      "haber_kategorisi": "Hukuki Süreçler"
+      "haber_kategorisi": "STK & Kampanyalar"
     },
     {
       "id": "48c21d4c76cb",
@@ -1709,8 +1382,8 @@
     },
     {
       "id": "33f97e071e1d",
-      "baslik": "Uluslararası Gençlik Ekoloji Kampı: 8 ülke, 1 misyon! - unicef",
-      "ozet": "Uluslararası Gençlik Ekoloji Kampı: 8 ülke, 1 misyon! unicef",
+      "baslik": "Uluslararası Gençlik Ekoloji Kampı: 8 ülke, 1 misyon! - Unicef",
+      "ozet": "Uluslararası Gençlik Ekoloji Kampı: 8 ülke, 1 misyon! Unicef",
       "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQZHl6djZZLWNqQnkyMTlHYVAwWmROb0RUZzdWamxaVHMtd05KRDNSVERlVURQVllCNTFQYldoSHlqYVlkeDJTS3hDQnhzalB4aUJCYm42U2xXY182UzRyY2kzNC05TFNQV0RkQVBfdGVXR01yOXI3UE0tVkl4TXNqQ0hYeVZkdWlCRFk5Nnc1YjJjQWpTZ3dDRHVyZGdtdm5uSV9F?oc=5",
       "tarih": "2024-09-27T10:11:53+03:00",
       "kaynak": "Google News",
@@ -1742,25 +1415,6 @@
         "STK & Kampanya",
         "Rapor",
         "Yaban Hayatı İzleme",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
-      "id": "cca8e1c84a4a",
-      "baslik": "Eskişehir’de Kömürü ES Geç - greenpeace.org",
-      "ozet": "Eskişehir’de Kömürü ES Geç greenpeace.org",
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE80NXF1SGRzRnUzQXBjTDBhR3VwaGcxNXZmTmp6NTVqWmptVXNWX1diSlN3VEk5ZWdRZy1xWElHa1pxbU1jYmQ4N21XMkJGMURyRDVQU0lpaS1HZEI4?oc=5",
-      "tarih": "2024-08-01T19:03:11+03:00",
-      "kaynak": "Greenpeace TR",
-      "kategori": "STK Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "STK & Kampanya",
-      "etiketler": [
-        "STK & Kampanya",
-        "Rapor",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "STK & Kampanyalar"
@@ -1822,6 +1476,25 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "STK & Kampanyalar"
+    },
+    {
+      "id": "0d200b7c52bb",
+      "baslik": "2023 yılında 481 başvuruya sadece bir ‘ÇED olumsuz’ kararı verildi - Evrensel",
+      "ozet": "2023 yılında 481 başvuruya sadece bir ‘ÇED olumsuz’ kararı verildi Evrensel",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPUlRPcmdibHZ6bWJDSWNpZks4OWh3M2V2SXRBeTRVSmRzbkZqUTNIM2cxSl8zMEhMX1BDVW0yX2JSZUdDQVNtc0U1OXpEUHhVZlRLY0VqaXBMSWE3ZUpQXy13ak1DN044eG0xemUxQXpkbGJPWlgyRlA1MUU4NUZVemg4V3l6X3IxZTNyd0ZVVGJkUVpyQ3N3bDdtVVJ3ZExIOUZ1dQ?oc=5",
+      "tarih": "2024-02-15T17:49:11+03:00",
+      "kaynak": "Google News",
+      "kategori": "ÇED Analizi",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "ÇED Kararları",
+        "Analiz",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "Hukuki Süreçler"
     },
     {
       "id": "03b2d8613776",
@@ -1901,25 +1574,6 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "ea5963e502c1",
-      "baslik": "Ömür Çelikdönmez - Hazar havzasında politik ekoloji ve NATO - dikGAZETE.com",
-      "ozet": "Ömür Çelikdönmez - Hazar havzasında politik ekoloji ve NATO dikGAZETE.com",
-      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQcm9ySllnTXhiZzBMSEtVd2tpeno4ZGV2aUQzb1hFOXpNLUZYODVxbUY0NmtVUGFXUGx5OUJJbE00c1VoS0w2bVlNMVU5NVNKQjZ4cXdtMUpiR1k0aGdTRkR2NzNvZFBXdnZfaWlQYTBtbU44dmhlTmctQ21fMFZzWVRtMVlHYUdDRGl4YTVvVFo?oc=5",
-      "tarih": "2023-12-22T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Politika Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Analiz",
-        "Politika",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "6dd3d9dc2f83",
       "baslik": "Feminist Yaklaşımlar, “ekolojik kriz” gündemiyle yayında - Bianet",
       "ozet": "Feminist Yaklaşımlar, “ekolojik kriz” gündemiyle yayında Bianet",
@@ -1935,25 +1589,6 @@
         "Analiz",
         "Politika",
         "Yaban Hayatı İzleme",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "708f385460ed",
-      "baslik": "Sinop Nükleer Santrali için ÇED olumlu kararı verildi - Bianet",
-      "ozet": "Sinop Nükleer Santrali için ÇED olumlu kararı verildi Bianet",
-      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPSjBBaHUtWDVmMDhoc1JBUnhQM2hLaUZvNVROWU5vWVFXYUZkMXozOGI3RWR2WFRlNV9YR0VhUkNFTDRMTFBLYXFjUDRNVnpoYXJEVVpFclozcTlsZ2FTTTVDbVMyMTZ1WFowLTltNkhjTzhOTnljby1aSXA0djJpdWlNcHdGTFBKZTFMT3F3?oc=5",
-      "tarih": "2023-09-26T14:00:29+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "Hukuki Süreçler"
@@ -1976,44 +1611,6 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": ""
-    },
-    {
-      "id": "80ecb45be606",
-      "baslik": "Bakanlıktan Ağaoğlu'nun projesine ikinci kez 'ÇED olumlu' kararı - Gazete Duvar",
-      "ozet": "Bakanlıktan Ağaoğlu'nun projesine ikinci kez 'ÇED olumlu' kararı Gazete Duvar",
-      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxON2JFS2VJUlU5ZzVZeFlfMk1UUkxoYVhWUFliSFYzbWNLOTB2cXZDY2ZTUUFHY1lwVGpUX2lBN1JtQXNvZ1Foa19BeXlLQ01Ob0tPMVBjX0NBa2hBZUp2MVVpaEpudWdHbkdyN3dxUklUd0R4MVdYQkFibHEyVGR3a05pN2FyeXlsYjhrOGZJYlRmZkgxc09ZbEhLMjdpRU9iR0pRVzVEZTJUQdIBrwFBVV95cUxNR2VDLUJzeV85TFYxUFpNMWJZTkdGelJXa3QwbVJXT1EtLXBrcTBSME11Nkp4bFFLcHZGU1pCVjdXTUtyNnRDcUhxY28tUmlJUlJDQjRxd2Z4Z09VYXpFSHhKNnA1d0pxaVlxRTgtWHk1X0IzLWxaUUZ1bThGcG5XUEtZV3RWclBJbldrb0JtaVhuRFRyUFhGWEk0NDdoUGJNc0pLcy1oZk5rdEFUODNr?oc=5",
-      "tarih": "2023-05-18T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "7a37f3674afd",
-      "baslik": "ALİ AĞAOĞLU’NUN MİLAS’TAKİ PROJESİNE İKİNCİ KEZ “ÇED OLUMLU” KARARI - Anka",
-      "ozet": "ALİ AĞAOĞLU’NUN MİLAS’TAKİ PROJESİNE İKİNCİ KEZ “ÇED OLUMLU” KARARI Anka",
-      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPX0lhdXg3bElMcTZXZmdxby1rVzAtaWh3czZLb2RLNFNBc2ZhTjhvVGpjMTcyYTdpVlFwNkxyZVpaNXl6T1kxZ29QbzR2cVhTS2dmM1YtZXVxZEE0YTdzVERMdFFkX1hGcmotaVlqNGxzNFpzd3otVDVYbmJWamZHS3Zkd0huUmZYcDF2WjNGY3RubS1jR1lJYkpGR2lmakN1NE40WjZrQQ?oc=5",
-      "tarih": "2023-05-16T12:53:20+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
     },
     {
       "id": "a14cc971c22c",
@@ -2071,25 +1668,6 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
-      "id": "dc4f792c69b3",
-      "baslik": "Sinop NGS ÇED raporuna karşı açılan dava reddedildi - Bianet",
-      "ozet": "Sinop NGS ÇED raporuna karşı açılan dava reddedildi Bianet",
-      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQVzNnQ0ZjbEtXdTczaUd3S1RGcTlrbDlPMW9uVkx6d2dtVmlTVHRiM2tRTlpsaUJaWUl3MUt5amEtV1VjaEsxTUVGWWJrbzYzVGR0eXRzWUQ2dkZtY2pvMmhMNHNsVnNOWGFfcVVrWEM5Q2hEQWJMX3gteERwbk9oZTZkaWJoVVk3R2hr?oc=5",
-      "tarih": "2022-04-09T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
     },
     {
       "id": "15b3af7ca27b",
@@ -2225,6 +1803,25 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
+      "id": "6f7bd2b3d798",
+      "baslik": "Gidişatı Tersine Çevirmek için Vaktimiz Daralıyor - WWF-Türkiye",
+      "ozet": "Gidişatı Tersine Çevirmek için Vaktimiz Daralıyor WWF-Türkiye",
+      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5hbVBCaXBSMmd5X1JRT2ZRUUN4dkpXNENsRzN1MjgxbXBNYnA3S2p5LTJiTERXRnNuZjVPTDVfbEZqX0dEbzBlSWkxMWJPcXRoWXdBbDV6X25KT0RpcS01TkdFUkF1NEJvaWpYc09PTGhIRFdxQVJIOWREWEViU2c?oc=5",
+      "tarih": "2021-08-09T10:00:00+03:00",
+      "kaynak": "WWF Türkiye",
+      "kategori": "STK Raporu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": "STK & Kampanya",
+      "etiketler": [
+        "STK & Kampanya",
+        "Rapor",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "STK & Kampanyalar"
+    },
+    {
       "id": "27dfeecaa2b1",
       "baslik": "Zonguldak’ta Kömür Endüstrisinin Halk Sağlığı ve Çevre Üzerindeki Etkisinin Analizi - greenpeace.org",
       "ozet": "Zonguldak’ta Kömür Endüstrisinin Halk Sağlığı ve Çevre Üzerindeki Etkisinin Analizi greenpeace.org",
@@ -2239,25 +1836,6 @@
       "etiketler": [
         "Analiz",
         "Akademik",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
-      "id": "86ab9e283473",
-      "baslik": "Akdeniz'in En Az Üçte Biri Etkin Bir Şekilde Korunmalı - WWF-Türkiye",
-      "ozet": "Akdeniz'in En Az Üçte Biri Etkin Bir Şekilde Korunmalı WWF-Türkiye",
-      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPQ2dIMk54R1hRb2owa19NWWY3UGJJcmhxajkyRVNvUTdvTzQ4cGExX2Q0b0tCM0UyQjQySU1yNlpnWGUwOXEyTGRoTkU4Qk1vdVRPbndSZWlMc2p4ZkZHN05ZZjRDWW1mdEZlRjJFSlJEVXFMWE5oRHBpSGxheVJCY0dDMVdMT2hYZXc?oc=5",
-      "tarih": "2021-07-04T07:39:49+03:00",
-      "kaynak": "WWF Türkiye",
-      "kategori": "STK Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "STK & Kampanya",
-      "etiketler": [
-        "STK & Kampanya",
-        "Rapor",
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "STK & Kampanyalar"
@@ -2417,27 +1995,8 @@
     },
     {
       "id": "78fa2e8d6913",
-      "baslik": "TMMOB: Kanal İstanbul’un ÇED’inde tutarsızlık var - dw.com",
-      "ozet": "TMMOB: Kanal İstanbul’un ÇED’inde tutarsızlık var dw.com",
-      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOTHVaNnRnczVDLWQ3Z1RxWlJLUmZpblYzdDZTZHY1ZzJiWkdRcF83N0RwMFg0T015UDdUVzBtZm85S0RnT3AzTXJRZDg3VlVCMEE5MDdES3JCaGNxTld6a2k3RHZRakYzYi1jZ0hoWkkzYklCcmpQN2liZkNvcGFVanRTakpqcjZlR3lZVVpNRHh5STFFTDBlbU5pYkdiN2djd2fSAaIBQVVfeXFMTjJ1X2hVWndWV25lTzAta1RSaGxRd1lZeUZGQWRnRmdPOVZQb2plN0I1ZUhWVmtFS0xkSElpOW1xMU9YbDNWNWxEMGFnNlRIWFY2c202dnBHRWVJRkRRZlBkWThPY05uTFc2eWY3TTMwa2gzWXZOT3ZZMWVpVGZQajQ5TDh6WXF6Z0RnaWhJUVh3Nm12NFdwSVdiV19qZVRvZDVR?oc=5",
-      "tarih": "2020-12-01T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "6f2cee2a8742",
-      "baslik": "TMMOB: Kanal İstanbul’un ÇED’inde tutarsızlık var - DW",
-      "ozet": "TMMOB: Kanal İstanbul’un ÇED’inde tutarsızlık var DW",
+      "baslik": "TMMOB: Kanal İstanbul’un ÇED’inde tutarsızlık var - DW.com",
+      "ozet": "TMMOB: Kanal İstanbul’un ÇED’inde tutarsızlık var DW.com",
       "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOTHVaNnRnczVDLWQ3Z1RxWlJLUmZpblYzdDZTZHY1ZzJiWkdRcF83N0RwMFg0T015UDdUVzBtZm85S0RnT3AzTXJRZDg3VlVCMEE5MDdES3JCaGNxTld6a2k3RHZRakYzYi1jZ0hoWkkzYklCcmpQN2liZkNvcGFVanRTakpqcjZlR3lZVVpNRHh5STFFTDBlbU5pYkdiN2djd2fSAaIBQVVfeXFMTjJ1X2hVWndWV25lTzAta1RSaGxRd1lZeUZGQWRnRmdPOVZQb2plN0I1ZUhWVmtFS0xkSElpOW1xMU9YbDNWNWxEMGFnNlRIWFY2c202dnBHRWVJRkRRZlBkWThPY05uTFc2eWY3TTMwa2gzWXZOT3ZZMWVpVGZQajQ5TDh6WXF6Z0RnaWhJUVh3Nm12NFdwSVdiV19qZVRvZDVR?oc=5",
       "tarih": "2020-12-01T11:00:00+03:00",
       "kaynak": "Google News",
@@ -2587,6 +2146,25 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
+      "id": "708f385460ed",
+      "baslik": "Sinop Nükleer Santrali için ÇED olumlu kararı verildi - Bianet",
+      "ozet": "Sinop Nükleer Santrali için ÇED olumlu kararı verildi Bianet",
+      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPSjBBaHUtWDVmMDhoc1JBUnhQM2hLaUZvNVROWU5vWVFXYUZkMXozOGI3RWR2WFRlNV9YR0VhUkNFTDRMTFBLYXFjUDRNVnpoYXJEVVpFclozcTlsZ2FTTTVDbVMyMTZ1WFowLTltNkhjTzhOTnljby1aSXA0djJpdWlNcHdGTFBKZTFMT3F3?oc=5",
+      "tarih": "2020-09-14T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "ÇED Analizi",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "ÇED Kararları",
+        "Analiz",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "Hukuki Süreçler"
+    },
+    {
       "id": "30e908eb75bd",
       "baslik": "Hangi Balık? - WWF-Türkiye",
       "ozet": "Hangi Balık? WWF-Türkiye",
@@ -2644,63 +2222,6 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "f0f3972b9bdc",
-      "baslik": "Kanal İstanbul'un ÇED raporunda 200 akademisyen imzası - Anadolu Ajansı",
-      "ozet": "Kanal İstanbul'un ÇED raporunda 200 akademisyen imzası Anadolu Ajansı",
-      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPWDNmdU9oZWF3UGdZRjZwVm10S2VWMGhGc2pXbEpTcmJYQ0FrNGhlaVBYb3hkYk9zQ3o4MkRPVy1qYUtlZ3cxd3ItQXpQMVg1YmJwZWxacXNuNVdzYXNXVnJQQ0NLRXk4OGN2TFJzMmFMbUx1ZmFneWFMdW9Vdm8zNnpfVnpONE95Z1hVdVVNMEp4ZG90ZDlYX2V3?oc=5",
-      "tarih": "2019-12-25T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "e894f14f4d0f",
-      "baslik": "Kanal İstanbul ile ilgili son dakika gelişmesi! ÇED raporu kabul edildi - Sabah",
-      "ozet": "Kanal İstanbul ile ilgili son dakika gelişmesi! ÇED raporu kabul edildi Sabah",
-      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQbTh5R0xSTG9qR05QTTRCcEFwZVhLOXUxUWIya0dXSHhOaWpSVzJlSV92TzZfR21zeEMzbmkzTEJ0U2x1V084dEZqaWhzMzdyYURTa1h6U1FmU1ZjQzdTQXVJMHlIaGhXaHllcElWWEd0aTRxUFFIc3BENDFTMGs4UHI0RFBPMmJkT0w4T3FOVGNDcE1y0gGXAUFVX3lxTFBXT3R2UHZudW9kQUd3T3NYZ0xONHl4c1ZJY1czc0s2TG1KeGdBQW1HNWhVcnhYNTJGeUg5cXM0V19pdkFTRkdNQzFnWXJGcEotZHA4UlRiZ3VnejZKX2hrbGlwM0xtZnFCQ080QXhMODM4Slc3NzdTZkhFeHB4dUhmbXcyeldDaVJMa2d4R09BMTJHeURzNTg?oc=5",
-      "tarih": "2019-12-23T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
-      "id": "e8b5c95e93c2",
-      "baslik": "Kanal İstanbul ÇED raporu halkın görüşüne açıldı - Memurlar.Net",
-      "ozet": "Kanal İstanbul ÇED raporu halkın görüşüne açıldı Memurlar.Net",
-      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNTGZyVVJQZUZqSVNtUE8tNlI2dzZIMERVSGtxRGJtbWVWMUdpRFpwWVd5Y2VzMjlPeGlxT1dWR0RGVklRX09JRHZ5ZHhpY2pXOWhtVFJMeDFOalhvLS1nblZOQ0VzZklyQzdUYktDb2taTVpFY3U0RmIzblRQWWV2c0hVTXE0d1Nzb2labjZLcHhkU0lDc2fSAZ4BQVVfeXFMUFhXT3VPZWwwLTdaSjZqdUVCaWJwbTRPb1BRbUszSHFsZ2FORHh2U3h5TndCZTBKZTJTXzFJVW40WlZVc3dJeEJBdGs1ZHpteTRLckZpeURhWE9qcUlFQ1ZtQTZVQmhPZjFQRWlJSWlnR0lVN3BYS1VzRFdDQVd1T1R1anhiTi1mQlI2cmtiNW4wS3ZRanhpVTZUUHFxRWc?oc=5",
-      "tarih": "2019-12-23T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "43662a1db692",
       "baslik": "'Çılgın Projenin' ÇED raporuna son şekli verilecek - Anadolu Ajansı",
       "ozet": "'Çılgın Projenin' ÇED raporuna son şekli verilecek Anadolu Ajansı",
@@ -2720,49 +2241,11 @@
       "haber_kategorisi": "Hukuki Süreçler"
     },
     {
-      "id": "f3b56edc38a2",
-      "baslik": "\"Kaz Dağları'nda 347 bin ağaç kesildi\" - T24",
-      "ozet": "\"Kaz Dağları'nda 347 bin ağaç kesildi\" T24",
-      "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZQ0t3a3ZHQ3JMQjYyR2FBa2NCdXlpLXkweXprYWprd2FXMnlMRWdtaGx3dkJQX2twVzE1dWV6dXVZMjkzcXRrNDQydl8xRGhVU0RWTm1Ldk1PTW5fVnU0U3c4MEd4YlZYbWlneXBDQlJ1RWxzaksw?oc=5",
-      "tarih": "2019-11-07T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "33ea989954ae",
       "baslik": "Raporlar - greenpeace.org",
       "ozet": "Raporlar greenpeace.org",
       "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5pZ3JHNERQaWRIYnBvdVdvWV96OHlOMkVuc2RvNzNvVzdGMXBFY0pYdDFUSy1OTmx4UldIYVh3aDJrbW5QT2hDdjVuelI0OTEzQUhCVElR?oc=5",
       "tarih": "2019-10-01T17:57:57+03:00",
-      "kaynak": "Greenpeace TR",
-      "kategori": "STK Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "STK & Kampanya",
-      "etiketler": [
-        "STK & Kampanya",
-        "Rapor",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
-      "id": "75315d3c9ddd",
-      "baslik": "Keşfet - Greenpeace Türkiye - greenpeace.org",
-      "ozet": "Keşfet - Greenpeace Türkiye greenpeace.org",
-      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9heHV1NmtSMDVxQ2VuTjhmUzQ1V29tbHZNX0daVFlvbE9vdmtfajNUdWJjbEZkeU0yTXNwRms4UHRYN05fUmJaVVpvT2dGSXFDR3Bv?oc=5",
-      "tarih": "2019-10-01T17:56:18+03:00",
       "kaynak": "Greenpeace TR",
       "kategori": "STK Raporu",
       "kaynak_turu": "rss",
@@ -3009,25 +2492,6 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "c44ed7b770f9",
-      "baslik": "Bergama Kozak Yaylası'na Yapılması Planlanan Madene ÇED Olumlu Raporu Verildi - Bianet",
-      "ozet": "Bergama Kozak Yaylası'na Yapılması Planlanan Madene ÇED Olumlu Raporu Verildi Bianet",
-      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPa3NnVlkycFpLNEFaS2dLWFB4aVZwLXdLZzV5dW85MjlaTUNUdXhGVXlBMUJxcDU3bmVHQmpMSF9PdDktM010TXJHUzJLMUJEUDVhRDNzLWNUem9TS0JFLXpCblJkNnl2OExYa1R3a3BkYWw1UkNfOFJOWG56eDFnWlh1ellONTRROVVhS1RJYkt6bk9sbVNDZktNM0IyTzZ5YXU3VXhfdEJxVWQwd0E?oc=5",
-      "tarih": "2018-08-15T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "48d0c745fb3e",
       "baslik": "WWF, Akdeniz Plastik Raporu'nu yayımladı: Akdeniz'e en çok plastik Türkiye'den - WWF-Türkiye",
       "ozet": "WWF, Akdeniz Plastik Raporu'nu yayımladı: Akdeniz'e en çok plastik Türkiye'den WWF-Türkiye",
@@ -3143,25 +2607,6 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "094d787c37ff",
-      "baslik": "Afrika fil nüfusu 415 bine geriledi - WWF-Türkiye",
-      "ozet": "Afrika fil nüfusu 415 bine geriledi WWF-Türkiye",
-      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1jT3FMQ25ETWcwVWZZQ0JPUXM1NkZDa3B0WTlfdFg2Zkt1Q3ViNE5VQWZUN1VnSVhWMzltQmg4OHpxYUNONGJzRkJ6WFpzRW01QThjSlNteVkzdUFxaGRPdC1RSXhldkJxak5XQkdiS2NhZw?oc=5",
-      "tarih": "2016-09-26T10:00:00+03:00",
-      "kaynak": "WWF Türkiye",
-      "kategori": "STK Raporu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "STK & Kampanya",
-      "etiketler": [
-        "STK & Kampanya",
-        "Rapor",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
       "id": "18ab83d9f1de",
       "baslik": "Büyük Su Gaspı - greenpeace.org",
       "ozet": "Büyük Su Gaspı greenpeace.org",
@@ -3239,25 +2684,6 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
-      "id": "1462198f6cab",
-      "baslik": "Akkuyu NGS ÇED Raporu halkın görüşüne açıldı - Anadolu Ajansı",
-      "ozet": "Akkuyu NGS ÇED Raporu halkın görüşüne açıldı Anadolu Ajansı",
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRzlUN2hzYnhCeFM3U05hUFFYeVJVTDlYSG4zVlI3U1kwNGFaNmVYTU1mY0pXaUdaNHZWcnY0Y3pHRWtGMDZLV1lCUVIxdFo5TFNXM2wzLTZNTGVORkwyY0I1LTAyWW55clJKYVMtQVhFNlMyaVJKRWFKYTdqdG9na0M3czZnX0ZQenN1Nw?oc=5",
-      "tarih": "2014-10-24T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "ÇED Analizi",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "ÇED Kararları",
-        "Analiz",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler"
-    },
-    {
       "id": "38c75afd8890",
       "baslik": "TEMA Vakfı'ndan Açıklama - 1 Nisan 2014 - TEMA Vakfı",
       "ozet": "TEMA Vakfı'ndan Açıklama - 1 Nisan 2014 TEMA Vakfı",
@@ -3314,9 +2740,5 @@
       ],
       "haber_kategorisi": "STK & Kampanyalar"
     }
-  ],
-  "_meta": {
-    "guncelleme": "2026-06-09T16:25:18.447Z",
-    "toplam": 174
-  }
+  ]
 }
