@@ -977,14 +977,14 @@ async function veriYaz(){
   async function ghOku(dosya){const r=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/${dosya}`,{headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json"}});if(!r.ok)throw new Error(`${dosya} okunamadı (HTTP ${r.status})`);return r.json();}
   async function ghYaz(dosya,icerik,sha){const content=btoa(unescape(encodeURIComponent(JSON.stringify(icerik,null,2))));const r=await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/${dosya}`,{method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({message:`admin: ${dosya} güncellendi`,content,sha})});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(`${dosya}: HTTP ${r.status} — ${e.message||""}`);}  }
   async function ghYazVeyaOlustur(dosya,icerik){try{const m=await ghOku(dosya);await ghYaz(dosya,icerik,m.sha);}catch(e){if(String(e).includes("okunamadı")){const content=btoa(unescape(encodeURIComponent(JSON.stringify(icerik,null,2))));await fetch(`https://api.github.com/repos/${ow}/${rn}/contents/${dosya}`,{method:"PUT",headers:{"Authorization":`Bearer ${token}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({message:`admin: ${dosya} oluşturuldu`,content})});}else throw e;}}
-  // Bir GitHub dosyasını okuyup içeriğini + sha'sını döndürür (yoksa boş döner).
+  // Bir GitHub dosyasını okuyup içeriğini + sha'sını + TAM dokümanı döndürür (yoksa boş döner).
   async function ghOkuVeri(dosya,anahtar){
     try{
       const m=await ghOku(dosya);
-      let veri=[];
-      try{const _b=Uint8Array.from(atob(m.content.replace(/\n/g,"")),c=>c.charCodeAt(0));const _d=JSON.parse(new TextDecoder("utf-8").decode(_b));veri=_d[anahtar]||(Array.isArray(_d)?_d:[]);}catch{veri=[];}
-      return {veri,sha:m.sha};
-    }catch(e){return {veri:[],sha:null};}
+      let veri=[],tam={};
+      try{const _b=Uint8Array.from(atob(m.content.replace(/\n/g,"")),c=>c.charCodeAt(0));const _d=JSON.parse(new TextDecoder("utf-8").decode(_b));tam=(_d&&!Array.isArray(_d))?_d:{};veri=_d[anahtar]||(Array.isArray(_d)?_d:[]);}catch{veri=[];tam={};}
+      return {veri,sha:m.sha,tam};
+    }catch(e){return {veri:[],sha:null,tam:{}};}
   }
   // Yerel (localStorage) kayıtları uzak (GitHub) kayıtlarla birleştirir, silinenleri çıkarır.
   // NOT: haberler için silme özelliği kaldırıldı — eski ekoloji_haber_silinen
@@ -998,10 +998,14 @@ async function veriYaz(){
     return [...yerel,...uzakTemiz];
   }
   // Bir koleksiyonu kendi dosyasından okuyup, birleştirip, aynı dosyaya yazar.
+  // ÖNEMLİ: Tarayıcının ürettiği dosyalar BİRLEŞİK olabilir (örn. haberler.json
+  // içinde meta/raporlar/makaleler/uluslararasi/ekosistem anahtarları da taşır
+  // ve Son Haberler sayfası rapor/köşe çiplerini bunlardan okur). Bu yüzden
+  // SADECE ilgili anahtar değiştirilir, dosyadaki diğer tüm anahtarlar korunur.
   async function senkronizeEt(dosya,anahtar,col){
-    const {veri:uzak,sha}=await ghOkuVeri(dosya,anahtar);
+    const {veri:uzak,sha,tam}=await ghOkuVeri(dosya,anahtar);
     const birlesik=birlestir(col,uzak);
-    const govde={[anahtar]:birlesik,_meta:{guncelleme:new Date().toISOString(),toplam:birlesik.length}};
+    const govde={...tam,[anahtar]:birlesik,_meta:{guncelleme:new Date().toISOString(),toplam:birlesik.length}};
     if(sha)await ghYaz(dosya,govde,sha);
     else await ghYazVeyaOlustur(dosya,govde);
     return birlesik.length;
