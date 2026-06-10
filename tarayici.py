@@ -1032,13 +1032,27 @@ BOLUM_DOGRULA_ANAHTAR = {
                  "buğday", "besici", "hayvancılık", "süt üretic", "küçük üretici"],
 }
 
-def bolum_dogrula(kaynak_bolum, baslik, ozet):
+# Bölüme özgü GÜVENİLİR örgüt kaynakları: tarayıcı bu kaynaklardan zaten
+# yalnızca ekoloji/iklim içeriği çeker (RSS sorgu filtresi). Örgüt kimliği +
+# ekoloji filtresi bölümü kendiliğinden doğrular; içerikte ayrıca anahtar
+# kelime ARANMAZ (örn. Kaos GL'nin Akbelen haberi metinde "queer" geçmese de
+# LGBTİ+ & Çevre içeriğidir). İklim Adaleti Koalisyonu bir LGBTİ+ örgütü
+# DEĞİLDİR; buraya eklenmez — genel kaynaklar anahtar kelime doğrulamasına
+# tabidir, kirlenme koruması aynen sürer.
+BOLUM_GUVENILIR_KAYNAK = {
+    "lgbti": {"Kaos GL", "17 Mayıs Derneği", "Coalition Rainbow"},
+}
+
+def bolum_dogrula(kaynak_bolum, baslik, ozet, kaynak_adi=None):
     """Kaynaktan gelen bolum'u içeriğe göre doğrular.
+       güvenilir örgüt kaynağı -> aynen koru (kaynak+filtre doğrulamadır)
        doğrulama gerektirmeyen bölüm -> aynen koru
        gerektiren + içerik doğruluyor -> koru
        gerektiren + içerik doğrulamıyor -> None (bölümsüz, genel akışta kalır)"""
     if not kaynak_bolum:
         return None
+    if (kaynak_adi or "").strip() in BOLUM_GUVENILIR_KAYNAK.get(kaynak_bolum, ()):
+        return kaynak_bolum
     anahtarlar = BOLUM_DOGRULA_ANAHTAR.get(kaynak_bolum)
     if anahtarlar is None:
         return kaynak_bolum
@@ -1204,7 +1218,7 @@ def _rss_tek_kaynak(kaynak: dict) -> tuple:
                 "etiketler":   list(_hm.get("etiketler", [])),
                 "_puan":       puan,
             }
-            _b = bolum_dogrula(kaynak.get("bolum"), kayit.get("baslik"), kayit.get("ozet"))
+            _b = bolum_dogrula(kaynak.get("bolum"), kayit.get("baslik"), kayit.get("ozet"), kaynak["kaynak"])
             if _b:
                 kayit["bolum"] = _b
             kayit = zenginlestir(kayit)
@@ -1288,7 +1302,7 @@ def _web_tek_kaynak(kaynak: dict) -> tuple:
                 "etiketler":   list(_hm.get("etiketler", [])),
                 "_puan":       puan,
             }
-            _b = bolum_dogrula(kaynak.get("bolum"), kayit.get("baslik"), kayit.get("ozet"))
+            _b = bolum_dogrula(kaynak.get("bolum"), kayit.get("baslik"), kayit.get("ozet"), kaynak["kaynak"])
             if _b:
                 kayit["bolum"] = _b
             kayit = zenginlestir(kayit)
@@ -1437,23 +1451,25 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
 
     # ── İçerik-bazlı bölüm doğrulama (her tarama; eski kirli kayıtları da temizler)
     #  Kayıtlar KAYNAĞA değil İÇERİĞE göre sınıflandırılır:
-    #   1) Doğrulama gerektiren bölümdeyse (lgbti/kadinlar/ciftci) ve içerik
-    #      o konuyu doğrulamıyorsa bölüm DÜŞÜRÜLÜR (genel akışta kalır).
-    #   2) LGBTİ+ ÖRGÜTÜ kaynağından gelip içeriği gerçekten queer/LGBTİ+
-    #      ekoloji olan kayda lgbti garantilenir.
-    #  İklim Adaleti Koalisyonu bir LGBTİ+ örgütü DEĞİLDİR; listede yok.
-    LGBTI_KAYNAKLAR = {"Kaos GL", "17 Mayıs Derneği", "Coalition Rainbow"}
+    #   1) GÜVENİLİR örgüt kaynağından geliyorsa (BOLUM_GUVENILIR_KAYNAK)
+    #      bölüm koşulsuz garantilenir — kaynak+ekoloji filtresi doğrulamadır.
+    #   2) Diğer kaynaklarda, doğrulama gerektiren bölümdeyse (lgbti/kadinlar/
+    #      ciftci) ve içerik o konuyu doğrulamıyorsa bölüm DÜŞÜRÜLÜR.
+    #  İklim Adaleti Koalisyonu bir LGBTİ+ örgütü DEĞİLDİR; güvenilir listede yok.
     _eklendi = _dusuruldu = 0
     for kol in ("haberler", "ekosistem"):
         for h in koleksiyonlar.get(kol, []):
+            kay = (h.get("kaynak") or "").strip()
+            _garanti = next((b for b, kk in BOLUM_GUVENILIR_KAYNAK.items() if kay in kk), None)
+            if _garanti:
+                if h.get("bolum") != _garanti:
+                    h["bolum"] = _garanti; _eklendi += 1
+                continue
             metin = ((h.get("baslik") or "") + " " + (h.get("ozet") or "")).lower()
             bol = h.get("bolum")
             if bol in BOLUM_DOGRULA_ANAHTAR:
                 if not any(k in metin for k in BOLUM_DOGRULA_ANAHTAR[bol]):
-                    h["bolum"] = None; _dusuruldu += 1; continue
-            if (h.get("kaynak") or "").strip() in LGBTI_KAYNAKLAR:
-                if any(k in metin for k in BOLUM_DOGRULA_ANAHTAR["lgbti"]) and h.get("bolum") != "lgbti":
-                    h["bolum"] = "lgbti"; _eklendi += 1
+                    h["bolum"] = None; _dusuruldu += 1
     if _eklendi or _dusuruldu:
         log.info(f"  [bolum] içerik-doğrulama: +{_eklendi} eklendi / -{_dusuruldu} düşürüldü")
 

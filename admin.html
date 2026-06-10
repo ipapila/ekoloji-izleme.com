@@ -987,8 +987,11 @@ async function veriYaz(){
     }catch(e){return {veri:[],sha:null};}
   }
   // Yerel (localStorage) kayıtları uzak (GitHub) kayıtlarla birleştirir, silinenleri çıkarır.
+  // NOT: haberler için silme özelliği kaldırıldı — eski ekoloji_haber_silinen
+  // kara listesi tarayıcıdan gelen yeni kayıtları elediği için haberler'de
+  // silinen filtresi UYGULANMAZ (10 Haz 2026: 279 yeni haber bu yüzden silinmişti).
   function birlestir(col,uzak){
-    const sil=silGetir(col);
+    const sil=(col==="haberler")?new Set():silGetir(col);
     const yerel=SITE.getList(col).filter(x=>!sil.has(String(x.id)));
     const yerelIds=new Set(yerel.map(x=>String(x.id)));
     const uzakTemiz=(uzak||[]).filter(x=>!sil.has(String(x.id)) && !yerelIds.has(String(x.id)));

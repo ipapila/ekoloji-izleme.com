@@ -3,6 +3,12 @@
  */
 (function () {
   const SESSION_KEY = "ekoloji_admin_session";
+
+  // TEK SEFERLİK TEMİZLİK: haberler için silme özelliği kaldırıldı; eski
+  // dönemden kalan ekoloji_haber_silinen kara listesi (10k+ ID birikmişti)
+  // hem sayfa görünümlerini hem admin senkronunun birleştirme adımını
+  // zehirleyip tarayıcıdan gelen yeni haberleri eliyordu. Kalıcı olarak sil.
+  try { localStorage.removeItem("ekoloji_haber_silinen"); } catch {}
   
   // Güvenli oturum kontrolü
   const adminAktif = (function() {
