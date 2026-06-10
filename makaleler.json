@@ -7,7 +7,14 @@
       "tarih": "2026-06-10",
       "tur": "Analiz",
       "etiketler": [
-        "Ekolojik İhlal"
+        "Ekolojik İhlal",
+        "Biyoçeşitlilik",
+        "Tarım & Köy",
+        "Su Hakkı",
+        "Atık & Kirlilik",
+        "Hava Kirliliği",
+        "Deniz Kirliliği",
+        "Toprak Kirliliği"
       ],
       "ozet": "Bu çalışma, Büyük Menderes Havzası’nda (≈ 25.000 km²) ekolojik bütünlüğü tehdit eden baskı kaynaklarını mekânsal olarak haritalandırmakta ve dokuz kategoride tanımlanan 26 risk noktasını ağırlıklı yoğunluk analiziyle değerlendirmektedir. QGIS/PyQGIS ortamında üretilen vektör katmanları ve risk-ağırlıklı ısı haritası, kirlilik yükünün havza boyunca tekil noktalar hâlinde değil, akarsu ağı boyunca birbirini besleyen bir baskı koridoru hâlinde örgütlendiğini göstermektedir. Ortalama risk skoru 10 üzerinden 7,0; kritik eşik (≥ 8) üzerindeki kaynak sayısı 9’dur. Jeotermal enerji üretimi, tekstil-deri sanayii ve arıtma kapasitesi yetersiz kentsel deşarjlar en yüksek baskı sınıflarını oluşturmakta; bu baskıların coğrafi dağılımı ile bölgedeki gelir, mülkiyet ve emek ilişkileri arasında belirgin bir örtüşme gözlenmektedir.",
       "url": "",
@@ -2987,7 +2994,7 @@
     }
   ],
   "_meta": {
-    "guncelleme": "2026-06-10T11:33:41.973Z",
+    "guncelleme": "2026-06-10T11:35:23.631Z",
     "toplam": 159
   }
 }
