@@ -24,8 +24,14 @@
 .kat-tumü.aktif-kat{background:rgba(45,158,107,.15);border-color:rgba(45,158,107,.3);}
 .kat-tumü span{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--bright);flex:1;}
 .kat-tumü b{font-family:"JetBrains Mono",monospace;font-size:8px;color:var(--accent);}
-.kat-separator{font-family:"JetBrains Mono",monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.45;padding:12px 12px 5px;margin-top:4px;}
-.kat-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid transparent;margin-bottom:2px;}
+.kat-separator{font-family:"JetBrains Mono",monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.45;padding:12px 12px 5px;margin-top:4px;display:flex;align-items:center;gap:6px;}
+.kat-grup-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.grup-canlilar .kat-grup-dot,.kat-item.grup-canlilar::before{background:var(--leaf);}
+.grup-topluluklar .kat-grup-dot,.kat-item.grup-topluluklar::before{background:#d9b35c;}
+.grup-adalet .kat-grup-dot,.kat-item.grup-adalet::before{background:#c97b6b;}
+.kat-item{display:flex;align-items:center;gap:8px;padding:9px 12px 9px 10px;border-radius:3px;cursor:pointer;transition:all .2s;border:1px solid transparent;margin-bottom:2px;position:relative;}
+.kat-item::before{content:'';width:2px;align-self:stretch;border-radius:1px;opacity:.35;flex-shrink:0;transition:opacity .2s;}
+.kat-item:hover::before,.kat-item.aktif-kat::before{opacity:.9;}
 .kat-item:hover{background:rgba(45,158,107,.07);border-color:rgba(45,158,107,.12);}
 .kat-item.aktif-kat{background:rgba(45,158,107,.1);border-color:rgba(45,158,107,.25);}
 .kat-item.aktif-kat .kat-ad{color:var(--bright);}
@@ -159,10 +165,16 @@ function buildSidebar() {
     <div class="kat-tumü" data-sec="" onclick="setSec('')">
       <span>Tüm İçerik</span><b id="ks_toplam">…</b>
     </div>`;
+  const GRUP_SINIF = {
+    "İnsan Dışı Canlılar": "grup-canlilar",
+    "İnsan Toplulukları":  "grup-topluluklar",
+    "Çevre Adaleti":       "grup-adalet"
+  };
   GRUPLAR.forEach(grup => {
-    html += `<div class="kat-separator">${grup}</div>`;
+    const gs = GRUP_SINIF[grup] || "";
+    html += `<div class="kat-separator ${gs}"><span class="kat-grup-dot"></span>${grup}</div>`;
     Object.entries(BOLUMLER).filter(([,b]) => b.grup === grup).forEach(([sec, b]) => {
-      html += `<div class="kat-item" data-sec="${sec}" onclick="setSec('${sec}')">
+      html += `<div class="kat-item ${gs}" data-sec="${sec}" onclick="setSec('${sec}')">
         <span class="kat-ikon">${b.icon}</span>
         <span class="kat-ad">${b.ad}</span>
         <span class="kat-sayi" id="ks_${sec}">…</span>

@@ -267,7 +267,7 @@
 <script>
 const DIL_BAYRAK = { EN:'🇬🇧', DE:'🇩🇪', FR:'🇫🇷', ES:'🇪🇸', AR:'🇸🇦', EL:'🇬🇷', RU:'🇷🇺', KU:'🏳', Diğer:'🌐' };
 const DIL_AD    = { EN:'İngilizce', DE:'Almanca', FR:'Fransızca', ES:'İspanyolca', AR:'Arapça', EL:'Yunanca', RU:'Rusça', KU:'Kürtçe', Diğer:'Diğer' };
-const TR_DILLER = new Set(['tr', '']);
+
 
 const KATEGORI_TUR_MAP = {
   'rapor':'Rapor','stk raporu':'Rapor','iklim raporu':'Rapor',
@@ -305,12 +305,6 @@ function normalizeDil(item) {
   return (item.dil || 'tr').toUpperCase();
 }
 
-function isUluslararasi(h) {
-  const dil = (h.dil || 'tr').toLowerCase();
-  const kat = (h.kategori || h.etiket || '').toLowerCase();
-  return !TR_DILLER.has(dil) || kat.includes('uluslararas');
-}
-
 let tumVeri   = [];
 let seciliTur = '';
 let seciliDil = '';
@@ -339,23 +333,6 @@ async function veriYukle() {
         ekle(data0.kuresel);
       }
     } catch(e) { console.warn('kuresel.json:', e); }
-
-    try {
-      const r = await fetch('haberler.json?v=' + ts);
-      if (r.ok) {
-        const data = await r.json();
-        ekle(data.uluslararasi);
-        ekle((data.haberler || []).filter(isUluslararasi));
-      }
-    } catch(e) { console.warn('haberler.json:', e); }
-
-    try {
-      const r2 = await fetch('data.json?v=' + ts);
-      if (r2.ok) {
-        const txt = await r2.text();
-        if (txt && txt.trim()) ekle(JSON.parse(txt).uluslararasi);
-      }
-    } catch(e) { /* opsiyonel */ }
 
     if (typeof SITE !== 'undefined') ekle(SITE.getList('uluslararasi'));
 
