@@ -418,11 +418,42 @@ RSS_KAYNAKLARI = [
         "dil": "tr"
     },
     # ── Mezopotamya Ekoloji Hareketi ve Kürdistan/Güneydoğu basını ──
+    # NOT: mezopotamyaekoloji.org bir arşiv sitesi (son içerik 01/2025, öncesi 2019)
+    # — haber akışı üretmiyor. MEH'in güncel faaliyeti basına yansıyanlar
+    # üzerinden ve Mezopotamya Ajansı'nın Ekoloji kategorisinden izleniyor.
     {
-        "url": "https://news.google.com/rss/search?q=site:mezopotamyaekoloji.org&hl=tr&gl=TR&ceid=TR:tr",
-        "kaynak": "Mezopotamya Ekoloji Hareketi",
+        "url": "https://news.google.com/rss/search?q=%22Mezopotamya+Ekoloji%22&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Mezopotamya Ekoloji Hareketi (basın yansıması)",
         "kategori": "STK",
         "genel": False,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    # DİKKAT: MA alan adı erişim engelleri nedeniyle dönüyor (35→40→44...).
+    # Kayıtlar kesilirse güncel numarayı kontrol edip burayı güncelle.
+    {
+        "url": "https://news.google.com/rss/search?q=site:mezopotamyaajansi44.com+(ekoloji+OR+çevre+OR+maden+OR+HES+OR+baraj+OR+ÇED+OR+orman+OR+kamulaştırma)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Mezopotamya Ajansı",
+        "kategori": "Ekoloji",
+        "genel": True,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    # ── Bölgesel hedefli sorgular: Doğu/Güneydoğu (mevcut sorgu yalnızca
+    #    Diyarbakır/Şanlıurfa/Mardin'i kapsıyordu) ──
+    {
+        "url": "https://news.google.com/rss/search?q=(Van+OR+Hakkari+OR+Şırnak+OR+Batman+OR+Siirt+OR+Bitlis+OR+Muş)+(maden+OR+HES+OR+baraj+OR+ÇED+OR+orman+OR+ekoloji+OR+kamulaştırma)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Google News Bölgesel (Van-Hakkari-Botan)",
+        "kategori": "Bölgesel",
+        "genel": True,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": "https://news.google.com/rss/search?q=(Dersim+OR+Tunceli+OR+Munzur+OR+Bingöl+OR+Cudi+OR+Gabar+OR+Hevsel)+(maden+OR+HES+OR+baraj+OR+ÇED+OR+orman+OR+petrol+OR+ekoloji)&hl=tr&gl=TR&ceid=TR:tr",
+        "kaynak": "Google News Bölgesel (Dersim-Botan-Hevsel)",
+        "kategori": "Bölgesel",
+        "genel": True,
         "hedef": "haberler",
         "dil": "tr"
     },
