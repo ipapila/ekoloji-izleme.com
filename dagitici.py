@@ -452,6 +452,54 @@ def arsiv_yaz():
 
     return degisen
 
+def haberler_aylik_buda(kaynak: dict) -> list:
+    """
+    Canlı haberler.json'daki 'haberler' listesini MEVCUT AY + tarihsiz
+    kayıtlarla sınırlar (sayfa yalnızca güncel ayı gösterir).
+
+    GÜVENLİK: Geçmiş-ay kaydı YALNIZCA ilgili arsiv/haberler-YYYY-MM.json
+    dosyasında id'si doğrulanırsa budanır. Arşivde bulunamayan kayıt
+    canlıda KALIR — hiçbir kayıt arşivlenmeden silinemez.
+    Birleşik şemanın diğer anahtarlarına (raporlar/makaleler/…) dokunulmaz.
+    arsiv_yaz()'dan SONRA çağrılmalıdır.
+    """
+    bu_ay = datetime.now().strftime("%Y-%m")
+    liste = kaynak.get("haberler", [])
+    _onbellek = {}
+
+    def _arsiv_idleri(ay):
+        if ay not in _onbellek:
+            p = Path("arsiv") / f"haberler-{ay}.json"
+            idler = set()
+            if p.exists():
+                try:
+                    d = json.loads(p.read_text(encoding="utf-8"))
+                    kayitlar = d.get("haberler", []) if isinstance(d, dict) else (d if isinstance(d, list) else [])
+                    idler = {str(x.get("id")) for x in kayitlar}
+                except Exception as e:
+                    print(f"  ⚠ Budama: {p.name} okunamadı: {e}")
+            _onbellek[ay] = idler
+        return _onbellek[ay]
+
+    kalan, budanan, korunan = [], 0, 0
+    for h in liste:
+        ay = (h.get("tarih") or "")[:7]
+        if len(ay) == 7 and ay < bu_ay:
+            if str(h.get("id")) in _arsiv_idleri(ay):
+                budanan += 1
+                continue
+            korunan += 1  # arşivde yok → veri kaybını önlemek için canlıda tut
+        kalan.append(h)
+
+    if korunan:
+        print(f"  ⚠ Budama: {korunan} geçmiş-ay kaydı arşivde DOĞRULANAMADI, canlıda tutuldu")
+    kaynak["haberler"] = kalan
+    kaynak.setdefault("meta", {})["aylik_budama"] = datetime.now(timezone.utc).isoformat()
+    HABERLER_DOSYA.write_text(json.dumps(kaynak, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  ✓ haberler.json: {budanan} geçmiş-ay kaydı arşive devredildi → canlıda {len(kalan)} kayıt (ay: {bu_ay})")
+    return kalan
+
+
 def haberler_senkronize(kaynak: dict) -> int:
     """
     haberler.json içindeki raporlar/makaleler/uluslararasi/ekosistem
@@ -630,6 +678,11 @@ def dagit(gonder_github=False):
     print("\nArşiv güncelleniyor…")
     arsiv_degisen = arsiv_yaz()
     print(f"  ✓ Arşiv: {len(arsiv_degisen)} dosya güncellendi/eklendi")
+
+    # 3c. Canlı dosyayı mevcut ayla sınırla (arşiv doğrulamalı budama).
+    # Kategori dosyaları da budanmış listeden üretilecek.
+    print("\nAylık budama uygulanıyor…")
+    haberler_liste = haberler_aylik_buda(kaynak)
 
     # 4. Alt-kategori dosyaları yaz
     print("  Alt-kategori dosyaları yazılıyor…")
