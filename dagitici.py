@@ -346,9 +346,9 @@ def ihlaller_guncelle(yeni_ihlaller: list) -> int:
     if _silinen_cift:
         print(f"  ⓘ ihlaller: {_silinen_cift} başlık-çifti tekilleştirildi")
     birlesik.sort(key=lambda x: x.get("tarih") or "1970", reverse=True)
-    from datetime import datetime, timedelta
-    _sinir_i = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
-    birlesik = [x for x in birlesik if (x.get("tarih") or "9999") >= _sinir_i or not x.get("tarih")]
+    # 180g filtresi KALDIRILDI: ihlaller artık aylık arşive yazılıyor ve canlı
+    # dosya arşiv-doğrulamalı budamayla (ihlaller_aylik_buda) inceltiliyor.
+    # Eski filtre kayıtları arşivsiz siliyordu (2025-12 öncesi bu yüzden kayıp).
     birlesik = birlesik[:MAX_KAYIT["ihlaller"]]
 
     cikti = {
@@ -394,6 +394,7 @@ def arsiv_yaz():
     # arşiv_prefix : (kanonik_dosya, json_anahtarı)  — prefix'ler arsiv.html ile birebir
     KAYNAK = {
         "haberler":  ("haberler.json",  "haberler"),
+        "ihlaller":  ("ihlaller.json",  "ihlaller"),
         "raporlar":  ("raporlar.json",  "raporlar"),
         "makaleler": ("makaleler.json", "makaleler"),
         "kuresel":   ("kuresel.json",   "kuresel"),
@@ -451,6 +452,58 @@ def arsiv_yaz():
             print(f"  ✓ Arşiv: {arsiv_dosya.name} (+{len(eklenecek)} → {len(birlesik)} kayıt)")
 
     return degisen
+
+def ihlaller_aylik_buda() -> int:
+    """
+    ihlaller.json'u MEVCUT AY + tarihsiz kayıtlarla sınırlar.
+    Geçmiş-ay kaydı YALNIZCA arsiv/ihlaller-YYYY-MM.json içinde id'si
+    doğrulanırsa budanır; arşivde bulunamayan kayıt canlıda KALIR.
+    arsiv_yaz()'dan SONRA çağrılmalıdır.
+    """
+    if not IHLALLER_DOSYA.exists():
+        return 0
+    try:
+        veri = json.loads(IHLALLER_DOSYA.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"  ⚠ İhlal budama: dosya okunamadı: {e}")
+        return 0
+    liste = veri.get("ihlaller", [])
+    bu_ay = datetime.now().strftime("%Y-%m")
+    _onbellek = {}
+
+    def _arsiv_idleri(ay):
+        if ay not in _onbellek:
+            p = Path("arsiv") / f"ihlaller-{ay}.json"
+            idler = set()
+            if p.exists():
+                try:
+                    d = json.loads(p.read_text(encoding="utf-8"))
+                    kayitlar = d.get("ihlaller", []) if isinstance(d, dict) else (d if isinstance(d, list) else [])
+                    idler = {str(x.get("id")) for x in kayitlar}
+                except Exception as e:
+                    print(f"  ⚠ İhlal budama: {p.name} okunamadı: {e}")
+            _onbellek[ay] = idler
+        return _onbellek[ay]
+
+    kalan, budanan, korunan = [], 0, 0
+    for h in liste:
+        ay = (h.get("tarih") or "")[:7]
+        if len(ay) == 7 and ay < bu_ay:
+            if str(h.get("id")) in _arsiv_idleri(ay):
+                budanan += 1
+                continue
+            korunan += 1
+        kalan.append(h)
+
+    if korunan:
+        print(f"  ⚠ İhlal budama: {korunan} geçmiş-ay kaydı arşivde DOĞRULANAMADI, canlıda tutuldu")
+    veri["ihlaller"] = kalan
+    veri.setdefault("meta", {})["aylik_budama"] = datetime.now(timezone.utc).isoformat()
+    veri["meta"]["toplam"] = len(kalan)
+    IHLALLER_DOSYA.write_text(json.dumps(veri, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  ✓ ihlaller.json: {budanan} geçmiş-ay kaydı arşive devredildi → canlıda {len(kalan)} kayıt (ay: {bu_ay})")
+    return budanan
+
 
 def haberler_aylik_buda(kaynak: dict) -> list:
     """
@@ -683,6 +736,7 @@ def dagit(gonder_github=False):
     # Kategori dosyaları da budanmış listeden üretilecek.
     print("\nAylık budama uygulanıyor…")
     haberler_liste = haberler_aylik_buda(kaynak)
+    ihlaller_aylik_buda()
 
     # 4. Alt-kategori dosyaları yaz
     print("  Alt-kategori dosyaları yazılıyor…")

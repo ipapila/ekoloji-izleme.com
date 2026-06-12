@@ -116,10 +116,31 @@ async function jsondenAra(kol, id) {
   } catch { return null; }
 }
 
+// Canlı dosyada yoksa aylık arşivde ara (en yeniden eskiye, 36 ay).
+// Canlı dosyalar yalnızca mevcut ayı taşıdığından eski linkler buradan çözülür.
+async function arsivdenAra(kol, id) {
+  const prefix = { ihlaller: 'ihlaller', haberler: 'haberler', raporlar: 'raporlar', makaleler: 'makaleler' }[kol];
+  if (!prefix) return null;
+  const simdi = new Date();
+  for (let i = 1; i <= 36; i++) {
+    const d = new Date(simdi.getFullYear(), simdi.getMonth() - i, 1);
+    const ay = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    try {
+      const r = await fetch(`arsiv/${prefix}-${ay}.json`);
+      if (!r.ok) continue;
+      const veri = await r.json();
+      const liste = veri[prefix] || (Array.isArray(veri) ? veri : []);
+      const kayit = liste.find(x => String(x.id) === String(id));
+      if (kayit) return kayit;
+    } catch { /* ay dosyası yok, devam */ }
+  }
+  return null;
+}
+
 async function render() {
   const hash  = (location.hash || '').replace('#', '');
   const match = hash.match(/^(ihlal|haber|rapor|makale)-(.+)$/);
-  if (!match) { showHata('Geçersiz bağlantı', 'URL'de kayıt türü ve ID belirtilmedi.'); return; }
+  if (!match) { showHata('Geçersiz bağlantı', "URL'de kayıt türü ve ID belirtilmedi."); return; }
 
   const [, tur, id] = match;
   const kol = { ihlal: 'ihlaller', haber: 'haberler', rapor: 'raporlar', makale: 'makaleler' }[tur];
@@ -127,6 +148,7 @@ async function render() {
   // Önce localStorage, bulamazsa JSON dosyasından ara
   let kayit = (typeof SITE !== 'undefined' && SITE.getById) ? SITE.getById(kol, id) : null;
   if (!kayit) kayit = await jsondenAra(kol, id);
+  if (!kayit) kayit = await arsivdenAra(kol, id);
   if (!kayit) { showHata('Kayıt bulunamadı', `#${id} numaralı ${tur} mevcut değil veya henüz yüklenmemiş.`); return; }
 
   if (tur === 'ihlal')      renderIhlal(kayit);

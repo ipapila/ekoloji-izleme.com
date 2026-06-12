@@ -76,7 +76,7 @@
 <div class="page-header">
   <div class="section-tag">Geçmiş Veriler</div>
   <h1 class="page-title">ARŞİV</h1>
-  <p class="page-subtitle">Geçmiş aylara ait haber, rapor, makale ve ekosistem kayıtları.</p>
+  <p class="page-subtitle">Geçmiş aylara ait haber, ihlal, rapor, makale ve ekosistem kayıtları.</p>
 </div>
 
 <div class="arsiv-wrap">
@@ -98,6 +98,7 @@
         <div class="secili-ay-baslik" id="seciliAyBaslik"></div>
         <div class="koleksiyon-bant" id="kolBant">
           <button class="kol-btn aktif" data-kol="haberler" onclick="kolSec(this,'haberler')">Haberler</button>
+          <button class="kol-btn" data-kol="ihlaller" onclick="kolSec(this,'ihlaller')">İhlaller</button>
           <button class="kol-btn" data-kol="raporlar" onclick="kolSec(this,'raporlar')">Raporlar</button>
           <button class="kol-btn" data-kol="makaleler" onclick="kolSec(this,'makaleler')">Makaleler</button>
           <button class="kol-btn" data-kol="kuresel" onclick="kolSec(this,'kuresel')">Küresel</button>
@@ -127,6 +128,7 @@
 <script>
 const ARSIV_DOSYALAR = {
   haberler:  "haberler",
+  ihlaller:  "ihlaller",
   raporlar:  "raporlar",
   makaleler: "makaleler",
   kuresel:   "kuresel",
