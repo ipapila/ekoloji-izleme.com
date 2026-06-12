@@ -33,6 +33,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 #  HABER KAYNAKLARI  →  hedef: "haberler"
 # ══════════════════════════════════════════════════════════════════
 
+# ── Erişim engelleri nedeniyle DÖNEN alan adları ──
+# Bu kaynaklardan kayıt kesilirse önce güncel alan adını kontrol et
+# ve YALNIZCA aşağıdaki satırı güncelle:
+MA_DOMAIN        = "mezopotamyaajansi44.com"   # Mezopotamya Ajansı (35→40→44...)
+YENIYASAM_DOMAIN = "yeniyasamgazetesi9.com"    # Yeni Yaşam (4→6→9...)
+
 RSS_KAYNAKLARI = [
     {"url": "https://bianet.org/topic/cevre/feed/rss",
      "kaynak": "Bianet", "kategori": "Çevre İhlali", "genel": False, "hedef": "haberler", "dil": "tr"},
@@ -429,10 +435,17 @@ RSS_KAYNAKLARI = [
         "hedef": "haberler",
         "dil": "tr"
     },
-    # DİKKAT: MA alan adı erişim engelleri nedeniyle dönüyor (35→40→44...).
-    # Kayıtlar kesilirse güncel numarayı kontrol edip burayı güncelle.
+    # ── Yeni Yaşam (WordPress; Ekoloji kategorisinin kendi RSS'i) ──
     {
-        "url": "https://news.google.com/rss/search?q=site:mezopotamyaajansi44.com+(ekoloji+OR+çevre+OR+maden+OR+HES+OR+baraj+OR+ÇED+OR+orman+OR+kamulaştırma)&hl=tr&gl=TR&ceid=TR:tr",
+        "url": f"https://{YENIYASAM_DOMAIN}/kategori/ekoloji/feed/",
+        "kaynak": "Yeni Yaşam",
+        "kategori": "Ekoloji",
+        "genel": False,
+        "hedef": "haberler",
+        "dil": "tr"
+    },
+    {
+        "url": f"https://news.google.com/rss/search?q=site:{MA_DOMAIN}+(ekoloji+OR+çevre+OR+maden+OR+HES+OR+baraj+OR+ÇED+OR+orman+OR+kamulaştırma)&hl=tr&gl=TR&ceid=TR:tr",
         "kaynak": "Mezopotamya Ajansı",
         "kategori": "Ekoloji",
         "genel": True,
