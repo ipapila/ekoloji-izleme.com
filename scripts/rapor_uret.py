@@ -10,6 +10,7 @@ import json
 import os
 import requests
 from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 REPO_OWNER     = os.environ.get("GITHUB_REPO_OWNER", "ipapila")
@@ -21,7 +22,8 @@ HABERLER_URL   = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/ma
 DATA_URL       = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/ihlaller.json"
 ARSIV_URL      = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/gunluk-raporlar.json"
 SON_SAAT       = 72   # RSS yayın tarihleri gecikebilir, 72 saat pencere
-ARSIV_MAKS     = 365
+ARSIV_MAKS     = 1000
+TR_SAAT      = ZoneInfo("Europe/Istanbul")
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 MODEL      = "claude-haiku-4-5-20251001"
@@ -233,17 +235,20 @@ def _bos_rapor():
 # ─── 3. ARŞİV GÜNCELLE ────────────────────────────────────────────────
 
 def arsiv_girisi_olustur(rapor):
-    tarih_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    simdi     = datetime.now(TR_SAAT)
+    tarih_str = simdi.strftime("%Y-%m-%d")
+    saat_str  = simdi.strftime("%H:%M")
     uretildi  = rapor.get("uretildi", datetime.now(timezone.utc).isoformat())
     vo = rapor.get("veri_ozet", {})
     one_cikan = ", ".join(vo.get("one_cikan_kategoriler", [])[:3])
     return {
-        "id":          f"gunluk-{tarih_str}",
+        "id":          f"gunluk-{tarih_str}-{simdi.strftime('%H%M')}",
         "baslik":      rapor.get("baslik", "Günlük Rapor"),
         "kaynak":      "ekoloji-izleme.com",
         "kategori":    "Günlük Rapor",
         "etiket":      "Günlük Rapor",
         "tarih":       tarih_str,
+        "saat":        saat_str,
         "uretildi":    uretildi,
         "ozet":        rapor.get("giris", ""),
         "giris":       rapor.get("giris", ""),
@@ -270,9 +275,8 @@ def arsiv_guncelle(rapor):
         if uzak:
             mevcut = uzak if isinstance(uzak, list) else uzak.get("raporlar", [])
 
-    tarih_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    mevcut = [x for x in mevcut if x.get("id") != f"gunluk-{tarih_str}"]
     yeni_giris = arsiv_girisi_olustur(rapor)
+    mevcut = [x for x in mevcut if x.get("id") != yeni_giris["id"]]
     mevcut = [yeni_giris] + mevcut
     mevcut = mevcut[:ARSIV_MAKS]
 
