@@ -335,6 +335,11 @@ function gunlukArsivYukle(callback){
   }).catch(()=>{gunlukRaporlar=[];gunlukYuklendi=true;callback();});
 }
 
+function gunlukSaat(h){
+  if(h.saat)return h.saat;
+  if(h.uretildi){try{return new Date(h.uretildi).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/Istanbul"});}catch(e){}}
+  return "";
+}
 function renderGunluk(liste){
   const grid=document.getElementById("raporGrid");
   if(!liste.length){grid.innerHTML='<div class="empty">Henüz günlük rapor arşivlenmemiş.</div>';return;}
@@ -344,17 +349,19 @@ function renderGunluk(liste){
   document.getElementById("osToplamSayi").textContent=filtreli.length;
   grid.innerHTML=filtreli.map(h=>{
     const tarih=h.tarih?new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):"";
+    const saat=gunlukSaat(h);
     const vo=h.veri_ozet||{};
     const istatStr=(vo.haber_sayisi!=null||vo.ihlal_sayisi!=null)?`<span>📰 ${vo.haber_sayisi||0} haber · ⚠ ${vo.ihlal_sayisi||0} ihlal</span>`:"";
-    return`<div class="rapor-kart rapor-kart-gunluk" onclick="acGunlukModal('${h.id}')"><div><h3>${h.baslik||"Günlük Rapor"}</h3><div class="rapor-kart-meta">${tarih?`<span>📅 ${tarih}</span>`:""}${istatStr}</div>${h.giris?`<div class="rapor-kart-ozet">${h.giris}</div>`:""}</div><div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0;"><span class="badge badge-gunluk">Günlük Rapor</span></div></div>`;
+    return`<div class="rapor-kart rapor-kart-gunluk" onclick="acGunlukModal('${h.id}')"><div><h3>${h.baslik||"Günlük Rapor"}</h3><div class="rapor-kart-meta">${tarih?`<span>📅 ${tarih}${saat?" · 🕐 "+saat:""}</span>`:""}${istatStr}</div>${h.giris?`<div class="rapor-kart-ozet">${h.giris}</div>`:""}</div><div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0;"><span class="badge badge-gunluk">Günlük Rapor</span></div></div>`;
   }).join("");
 }
 
 function acGunlukModal(id){
   const h=gunlukRaporlar.find(x=>x.id===id);if(!h)return;
   const tarih=h.tarih?new Date(h.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):"";
+  const saat=gunlukSaat(h);
   document.getElementById("gm_baslik").textContent=h.baslik||"Günlük Rapor";
-  document.getElementById("gm_tarih").textContent=tarih;
+  document.getElementById("gm_tarih").textContent=tarih+(saat?" · "+saat:"");
   const vo=h.veri_ozet||{};
   if(vo.haber_sayisi!=null||vo.ihlal_sayisi!=null){
     document.getElementById("gm_istatistik").style.display="flex";
