@@ -21,7 +21,7 @@ ARSIV_YEREL    = Path("gunluk-raporlar.json")
 HABERLER_URL   = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/haberler.json"
 DATA_URL       = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/ihlaller.json"
 ARSIV_URL      = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/main/gunluk-raporlar.json"
-SON_SAAT       = 72   # RSS yayın tarihleri gecikebilir, 72 saat pencere
+SON_SAAT       = 24   # Günde tek rapor (17:00 TSİ), son 24 saatin verileri
 ARSIV_MAKS     = 1000
 TR_SAAT      = ZoneInfo("Europe/Istanbul")
 
@@ -242,7 +242,7 @@ def arsiv_girisi_olustur(rapor):
     vo = rapor.get("veri_ozet", {})
     one_cikan = ", ".join(vo.get("one_cikan_kategoriler", [])[:3])
     return {
-        "id":          f"gunluk-{tarih_str}-{simdi.strftime('%H%M')}",
+        "id":          f"gunluk-{tarih_str}",  # gün başına tek rapor; aynı gün tekrar çalışırsa üzerine yazar
         "baslik":      rapor.get("baslik", "Günlük Rapor"),
         "kaynak":      "ekoloji-izleme.com",
         "kategori":    "Günlük Rapor",
