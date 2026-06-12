@@ -295,9 +295,9 @@ input.flatpickr-input:read-only{cursor:pointer!important;}
         </div>
         <div class="form-group"><label class="form-label">Özet / İçerik</label><textarea class="form-control" id="r-ozet" rows="5" placeholder="Rapor hakkında açıklama"></textarea></div>
         <div class="form-group">
-          <label class="form-label">PDF Dosyası</label>
+          <label class="form-label">Belge <span style="color:var(--muted);font-size:9px;">(PDF / DOCX / HTML)</span></label>
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">📄 PDF Seç & Yükle<input type="file" id="r-pdf-dosya" accept=".pdf,.doc,.docx,.html,.htm" style="display:none;" onchange="pdfYukle(this)"></label>
+            <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--bright);">📄 Belge Seç & Yükle<input type="file" id="r-pdf-dosya" accept=".pdf,.doc,.docx,.html,.htm" style="display:none;" onchange="pdfYukle(this)"></label>
             <span id="r-pdf-durum" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);"></span>
           </div>
           <input class="form-control" id="r-dosya" placeholder="URL otomatik girer" style="margin-top:8px;">
@@ -821,7 +821,7 @@ function _medyaTabInit(){
 
 function onFotoSec(inputId,urlId,prevId){const f=document.getElementById(inputId)?.files?.[0];if(!f)return;const r=new FileReader();r.onload=e=>{const p=document.getElementById(prevId);if(p){p.style.display="block";p.querySelector("img").src=e.target.result;}};r.readAsDataURL(f);dosyaYukle(f,"ortam",url=>{const el=document.getElementById(urlId);if(el)el.value=url;});}
 function pdfYukle(input){const f=input?.files?.[0];if(!f)return;const d=document.getElementById("r-pdf-durum");if(d)d.textContent="⏳ Yükleniyor…";dosyaYukle(f,"dosya",url=>{const el=document.getElementById("r-dosya");if(el)el.value=url;if(d)d.textContent="✓ "+f.name;},err=>{if(d)d.textContent="⚠ "+err;});}
-function dosyaYukle(file,klasor,onOk,onErr){const fd=new FormData();fd.append("dosya",file);fd.append("klasor",klasor);const _us=sessionStorage.getItem("ekoloji_upload_secret")||localStorage.getItem("ekoloji_upload_secret")||prompt("Upload şifresi:");if(!_us)return;sessionStorage.setItem("ekoloji_upload_secret",_us);fd.append("secret",_us);fetch("upload.php",{method:"POST",body:fd}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(d.ok&&d.url)onOk(d.url);else(onErr||toast)("⚠ "+(d.hata||"bilinmeyen hata"));}).catch(()=>{(onErr||toast)("⚠ upload.php yok. URL'yi manuel girin.");});}
+function dosyaYukle(file,klasor,onOk,onErr){const fd=new FormData();fd.append("dosya",file);fd.append("klasor",klasor);const _us=sessionStorage.getItem("ekoloji_upload_secret")||localStorage.getItem("ekoloji_upload_secret")||prompt("Upload şifresi:");if(!_us)return;sessionStorage.setItem("ekoloji_upload_secret",_us);fd.append("secret",_us);fetch("upload.php",{method:"POST",body:fd}).then(async r=>{let d=null;try{d=await r.json();}catch(e){}if(r.ok&&d&&d.ok&&d.url){onOk(d.url);return;}if(r.status===401){sessionStorage.removeItem("ekoloji_upload_secret");localStorage.removeItem("ekoloji_upload_secret");}const msg=(d&&d.hata)?d.hata+" (HTTP "+r.status+")":(r.status===404?"upload.php bulunamadı (404)":"HTTP "+r.status+" — yanıt JSON değil");(onErr||toast)("⚠ "+msg);}).catch(err=>{(onErr||toast)("⚠ Ağ hatası: upload.php'ye ulaşılamadı");});}
 
 const GH_REPO_KEY="ekoloji_gh_repo",GH_TOKEN_KEY="ekoloji_gh_token",GH_WORKFLOW_KEY="ekoloji_gh_workflow";
 const GH_DEFAULTS={repo:"ipapila/ekoloji-izleme.com",workflow:"scraper.yml"};
