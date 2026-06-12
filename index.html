@@ -670,12 +670,18 @@ const _ihlalSilinen = (() => {
   catch { return new Set(); }
 })();
 
+// Canlı sayfa yalnızca MEVCUT AYI gösterir; geçmiş aylar arsiv.html'de.
+// Yereldeki (localStorage) eski kayıtlar sunucudan arşive devredilen veriyi
+// hortlatmasın diye yerel katkılar mevcut ay + tarihsizlerle sınırlanır.
+// localStorage'a DOKUNULMAZ — yalnızca görüntüleme filtresi.
+const _buAy = new Date().toISOString().slice(0,7);
+const _guncelAyda = h => { const ay = (h && h.tarih ? String(h.tarih) : "").slice(0,7); return ay.length !== 7 || ay >= _buAy; };
 function _ihlalMerge(jsonArr) {
   const local = (typeof SITE !== "undefined" ? SITE.getList("ihlaller") : [])
     .filter(x => !_ihlalSilinen.has(String(x.id)));
   const def = (!local.length && typeof SITE !== "undefined" && SITE.defaults?.ihlaller)
     ? SITE.defaults.ihlaller.filter(x => !_ihlalSilinen.has(String(x.id))) : [];
-  const base = local.length ? local : def;
+  const base = (local.length ? local : def).filter(_guncelAyda);
   const baseIds = new Set(base.map(x => String(x.id)));
   return [...base, ...jsonArr.filter(x => !baseIds.has(String(x.id)))]
     .sort((a, b) => new Date(b.tarih || 0) - new Date(a.tarih || 0));

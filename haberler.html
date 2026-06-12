@@ -652,6 +652,12 @@ function guncelleKolSayac() {
   safeSetText("kSayiMakale", say.makaleler);
 }
 
+// Canlı sayfa yalnızca MEVCUT AYI gösterir; geçmiş aylar arsiv.html'de.
+// Yereldeki (localStorage) eski kayıtlar sunucudan arşive devredilen veriyi
+// hortlatmasın diye yerel katkılar mevcut ay + tarihsizlerle sınırlanır.
+// localStorage'a DOKUNULMAZ — yalnızca görüntüleme filtresi.
+const _buAy = new Date().toISOString().slice(0,7);
+const _guncelAyda = h => { const ay = (h && h.tarih ? String(h.tarih) : "").slice(0,7); return ay.length !== 7 || ay >= _buAy; };
 function birlestir(data, localHaberler) {
   const silinen = _adminMod.getSilinen("haberler");
   const map = new Map();
@@ -665,7 +671,7 @@ function birlestir(data, localHaberler) {
   const defHIds = new Set(localHaberler.map(h=>String(h.id)));
   const extraDefs = [...defH.filter(h=>!defHIds.has(String(h.id))),
                      ...defR.filter(h=>!defHIds.has(String(h.id)))];
-  const tumLocal = [...localHaberler, ...extraDefs];
+  const tumLocal = [...localHaberler, ...extraDefs].filter(_guncelAyda);
   [...kollar.flatMap(k => k.liste.map(h => ({...h, _koleksiyon: k.kol}))),
    ...tumLocal.map(h => ({...h, _koleksiyon: h._koleksiyon||"haberler"}))
   ].forEach(h => {

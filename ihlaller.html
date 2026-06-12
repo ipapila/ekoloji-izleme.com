@@ -482,6 +482,12 @@ const urlKat  = new URLSearchParams(location.search).get("kat");
 // Başlık normalize: çift tespiti için (boşluk + küçük harf)
 function _bnorm(s){ return (s||"").trim().toLowerCase(); }
 
+// Canlı sayfa yalnızca MEVCUT AYI gösterir; geçmiş aylar arsiv.html'de.
+// Yereldeki (localStorage) eski kayıtlar sunucudan arşive devredilen veriyi
+// hortlatmasın diye yerel katkılar mevcut ay + tarihsizlerle sınırlanır.
+// localStorage'a DOKUNULMAZ — yalnızca görüntüleme filtresi.
+const _buAy = new Date().toISOString().slice(0,7);
+const _guncelAyda = h => { const ay = (h && h.tarih ? String(h.tarih) : "").slice(0,7); return ay.length !== 7 || ay >= _buAy; };
 function mergeWithLocal(jsonIhlaller) {
   // Sunucudaki ihlaller.json önceliklidir.
   const sunucu = jsonIhlaller;
@@ -498,6 +504,7 @@ function mergeWithLocal(jsonIhlaller) {
   const allLocal = local.length > 0 ? local : defIhlaller;
 
   const yerelEklenecek = allLocal.filter(x =>
+    _guncelAyda(x) &&
     !sunucuIds.has(String(x.id)) &&
     !sunucuBasliklar.has(_bnorm(x.baslik))
   );
