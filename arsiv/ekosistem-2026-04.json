@@ -2,10 +2,28 @@
   "meta": {
     "arsiv_ay": "2026-04",
     "koleksiyon": "ekosistem",
-    "toplam": 16,
-    "olusturulma": "2026-06-09T04:27:00.397960+00:00"
+    "toplam": 24,
+    "olusturulma": "2026-06-13T05:53:16.076678+00:00"
   },
   "ekosistem": [
+    {
+      "id": "91d4335265fe",
+      "baslik": "Yalova'dan Kuş Gözlem Görüntüleri: 4 Nadir Tür Doğal Yaşam Alanlarında Görüntülendi - HaberGo",
+      "ozet": "Yalova'dan Kuş Gözlem Görüntüleri: 4 Nadir Tür Doğal Yaşam Alanlarında Görüntülendi HaberGo",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPem1BVjFSLXowSnh0dGRKUFg0NEJSZlBpOTFJVnVPbklnX3BnUnc4MTRldWVsMkoxY3RETHVoT2NhYzBOR1g1SS03c1FfMXlJc1E5OGFBTnFsR2REaUFJX21MUllZZ25ZWG5leHNMZFpKRlBHZWNOQkZZblViX1pQX2U1c3hlUFNKNHZ0c0xHLTNHQ2FDME1xZE9xYWZ0NjMwdTRybHUydXFGWXJTb0g2dVhFQkw4Z3FhQnp5dFQxMTlERnc?oc=5",
+      "tarih": "2026-04-27T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yaban Hayatı",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yaban Hayatı İzleme"
+      ],
+      "bolum": "yaban",
+      "haber_kategorisi": "Yaban Hayatı"
+    },
     {
       "id": "8014ea853d8e",
       "baslik": "Kadıköy’de ekoloji mitingi: “Maden istemiyoruz”| Haberler - Gazete Kadıköy",
@@ -44,6 +62,23 @@
       "haber_kategorisi": "Yaban Hayatı"
     },
     {
+      "id": "457b5a5a565a",
+      "baslik": "Varto ve Karlıova’daki ekoloji mitinglerine çağrı - Politika Haber",
+      "ozet": "Varto ve Karlıova’daki ekoloji mitinglerine çağrı Politika Haber",
+      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNSGZ3M0E3QkxxOXRZbXI3cEhmUE9aNVozMUx4dWRJa1RLWjNfVVRmQUFicU00bU1PRnk5X2lJVlkzRk5NVG9haUl5d3RjQURQM01IM05RU1ZvTEVhNWNZemZrRENPeUg0SUxxNXpKemRCY2JXMUJWMTFPUC1oY21mWA?oc=5",
+      "tarih": "2026-04-23T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Kadınlar & Ekoloji",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": "Direniş & Eylem",
+      "etiketler": [
+        "Kadınlar & Ekoloji"
+      ],
+      "haber_kategorisi": "Direniş ve Eylemler"
+    },
+    {
       "id": "16f152e47e6e",
       "baslik": "Varto ve Karlıova’daki ekoloji mitinglerine çağrı - Politika Haber",
       "ozet": "Varto ve Karlıova’daki ekoloji mitinglerine çağrı Politika Haber",
@@ -65,6 +100,42 @@
       "id": "006e00b3461e",
       "baslik": "The Human and Environmental Costs of the War in Iran - americanprogress.org",
       "ozet": "The Human and Environmental Costs of the War in Iran americanprogress.org",
+      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOcGxKb3dZeTlCalBUdDN3bmNFN3c3aXVzeFBBdmRKV0dKX05QT2dCMHd3MXB6eXhJcDVNdzRCRmt4Z0hKSkltSmlrNXo5UHVIYTFhUFJaekFmcEEzb291ZzlWYk4yMjVfMFdLQnJPcWMtZ2MzY2xJdHNwVDFXOXVXbVhBQzZpRGxMcDVkTnpFQmt4MVBKU3R0YzBB?oc=5",
+      "tarih": "2026-04-20T10:00:00+03:00",
+      "kaynak": "Google News EN",
+      "kategori": "Savaş & Ekoloji",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Savaş & Ekoloji"
+      ],
+      "bolum": "savas",
+      "haber_kategorisi": ""
+    },
+    {
+      "id": "caca7f9eca7a",
+      "baslik": "Yozgat'ta Yaban Hayatı Gözlemi: Doğanın Dansı Kameralara Yakalandı - Balıkesir Gerçek Haber",
+      "ozet": "Yozgat'ta Yaban Hayatı Gözlemi: Doğanın Dansı Kameralara Yakalandı Balıkesir Gerçek Haber",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQdXZVcWdiQVlCa0hMZkN1VGtNZVczREpVdl9FTm5aOUxKQkhIb3VVVTh0UmtiSDltZUY1cnFmV3ZGeGcwSGdSTWRtRzdjT0ZtYUZiaWo4eDFJUG1VVldLZFVtLWpnSXFhS1ZkbTlyRkk0ZmRVTnJFYXBYcXhSMktYdktUYVNnN013ZURlOEpDaURDMVlXTkpVOC1QSGhRVE5iYWh6MnMtd01ETThhWWVlOEY4T3Q?oc=5",
+      "tarih": "2026-04-20T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yaban Hayatı",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yaban Hayatı İzleme"
+      ],
+      "bolum": "yaban",
+      "haber_kategorisi": "Yaban Hayatı"
+    },
+    {
+      "id": "3161bafb9b42",
+      "baslik": "The Human and Environmental Costs of the War in Iran - Center for American Progress",
+      "ozet": "The Human and Environmental Costs of the War in Iran Center for American Progress",
       "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOcGxKb3dZeTlCalBUdDN3bmNFN3c3aXVzeFBBdmRKV0dKX05QT2dCMHd3MXB6eXhJcDVNdzRCRmt4Z0hKSkltSmlrNXo5UHVIYTFhUFJaekFmcEEzb291ZzlWYk4yMjVfMFdLQnJPcWMtZ2MzY2xJdHNwVDFXOXVXbVhBQzZpRGxMcDVkTnpFQmt4MVBKU3R0YzBB?oc=5",
       "tarih": "2026-04-20T10:00:00+03:00",
       "kaynak": "Google News EN",
@@ -116,6 +187,42 @@
       "haber_kategorisi": ""
     },
     {
+      "id": "76e3eb4fe3bb",
+      "baslik": "Bozkırlar - Doğa Derneği",
+      "ozet": "Bozkırlar Doğa Derneği",
+      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTFBUQWxEUE13cTVDNENhZFlLOG5YbTBsTzZrX2VGcFN6cFFoeDlDRGlPWUkxQmNlMUdENkc1NFFZZlR1aGRSZmN4UGY3dHE4QkZlLVliSDd2UnNIZzFXaWFUTl8zLW5xNm5rMVZpRFlGdF9JTXc?oc=5",
+      "tarih": "2026-04-18T14:01:19+03:00",
+      "kaynak": "Doğa Derneği",
+      "kategori": "Nesli Tehlike Türler",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Nesli Tehlike Altında Türler"
+      ],
+      "bolum": "turler",
+      "haber_kategorisi": "Yaban Hayatı"
+    },
+    {
+      "id": "009401b3dd44",
+      "baslik": "Nesli Tehlike Altındaki Kuşlar Vurulmasın! - Doğa Derneği",
+      "ozet": "Nesli Tehlike Altındaki Kuşlar Vurulmasın! Doğa Derneği",
+      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOYTd2cnRmYnhuakMzMEcyZUV2QjkxaTNUeGdFWDlLZEFvS1RINWh1SUFXVDhkcWwzckx6UENDX1dZc2NUd0NoODMwZFdhZkZjb1lzSkxBWk4zV3lyNkJadGhkQ3lTUDYxSXVUUDZEaE8wQlJXS3pGdm5aZ0hlMzNsWVNMellDeWdL?oc=5",
+      "tarih": "2026-04-16T17:15:59+03:00",
+      "kaynak": "Doğa Derneği",
+      "kategori": "Nesli Tehlike Türler",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Nesli Tehlike Altında Türler"
+      ],
+      "bolum": "turler",
+      "haber_kategorisi": "Yaban Hayatı"
+    },
+    {
       "id": "979351652bd4",
       "baslik": "Nesli Tehlike Altındaki Kuşlar Vurulmasın! - Doğa Derneği",
       "ozet": "Nesli Tehlike Altındaki Kuşlar Vurulmasın! Doğa Derneği",
@@ -150,6 +257,24 @@
       ],
       "bolum": "turler",
       "haber_kategorisi": "Yaban Hayatı"
+    },
+    {
+      "id": "3cd47591b19a",
+      "baslik": "Akdeniz’de av yasağının başlayacağı tarih belli oldu - Yeni Şafak",
+      "ozet": "Akdeniz’de av yasağının başlayacağı tarih belli oldu Yeni Şafak",
+      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQLTIwOTdFWGIzLWJ6b2EyRWZVS2hheEZaNmhRQ0ZfSVFaMWFrZHU2NkpHdmNDX3NPZGdKdG1CVXZyUlZEWG0zbDVtTHZiX0lFbWk4cEw3ZWkwUjNjTHEtTWJ3TTNEeG9aYlZmWVd5a29taVgxZ2YwT3JoTTdLU0Rvb0E0Sm9SV0RRWmFlcVJfMlJsTklKeVHSAaABQVVfeXFMT0RCbm83NHlJblNYQjlkNVk4dG5ZZzZ6YXZpNTZlYndzUHlKb09jZlUta3IzUThTUUVFU2xVallveExfX2pfRkZsQmdKTWZsTmEtV3pTbEdsQVI3SFduY2xfcWxLODFDVVBPUEE3eTRDLU1SUkZySE1VbU9aRHFyd2FkVEkwZEhyOEtBZkVhdmViZnJnZXlscFktODFYNzdITg?oc=5",
+      "tarih": "2026-04-14T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Balıkçı Toplulukları",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Balıkçı Toplulukları"
+      ],
+      "bolum": "balikci",
+      "haber_kategorisi": "Su ve Kıyı"
     },
     {
       "id": "8cda9fd2aa44",
@@ -222,6 +347,23 @@
       ],
       "bolum": "savas",
       "haber_kategorisi": ""
+    },
+    {
+      "id": "892d763e6a01",
+      "baslik": "Muğla’dan Muş’a, Kırşehir’den Karadeniz’e mücadele sürüyor - Evrensel",
+      "ozet": "Muğla’dan Muş’a, Kırşehir’den Karadeniz’e mücadele sürüyor Evrensel",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPT2UzaVp6bVJ5NGNUZEJuVm9mSm1mLXA4ai02QmN2TVo5VUNhd0dPQmxpeXFZeGdKMGVPejFJV0Noejl5djBnZGNmV1VlQnBhb2dXYXpPYlBTLW0wMENpM0szY1ZrT3o4NGdYbDVEZEZyVk11NG1zcThiMWd0R0xla3NFYm9FdXFNOVpGa2o2WEV2U2N0VTNuWmNuTV8?oc=5",
+      "tarih": "2026-04-05T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Kadınlar & Ekoloji",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Kadınlar & Ekoloji"
+      ],
+      "haber_kategorisi": "İklim ve Afet"
     },
     {
       "id": "f0ad31646668",
