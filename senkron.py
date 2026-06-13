@@ -9,7 +9,7 @@ REPO  = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main"
 HEDEF = "/var/www/vhosts/ekoloji-izleme.com/httpdocs"
 
 # Veri dosyaları (içerik JSON olarak doğrulanır)
-VERI = ["makaleler.json","ihlaller.json","raporlar.json",
+VERI = ["makaleler.json","raporlar.json",
         "kuresel.json","ekosistem.json","direnis.json"]
 
 # Kod dosyaları (GitHub kaynak-of-truth; commit edince otomatik iner)
