@@ -66,5 +66,6 @@ jobs:
             haberler-iklim.json haberler-su.json haberler-yaban.json \
             haberler-stk.json haberler-orman.json haberler-direnis.json \
             haberler-hukuki.json 2>/dev/null || true
+          git add -f arsiv/ 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Oto-Veri: $(date +'%Y-%m-%d %H:%M UTC')"
           git push || true
