@@ -505,6 +505,64 @@ def ihlaller_aylik_buda() -> int:
     return budanan
 
 
+def koleksiyon_aylik_buda(dosya_adi: str, anahtar: str) -> int:
+    """
+    Genel koleksiyon budama: raporlar, makaleler, kuresel gibi dosyalar için.
+    Geçmiş-ay kaydı YALNIZCA arsiv/<anahtar>-YYYY-MM.json içinde id'si
+    doğrulanırsa budanır; arşivde bulunamayan kalır.
+    arsiv_yaz()'dan SONRA çağrılmalıdır.
+    """
+    p = Path(dosya_adi)
+    if not p.exists():
+        return 0
+    try:
+        veri = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"  ⚠ {dosya_adi} budama: okunamadı: {e}")
+        return 0
+
+    liste = veri.get(anahtar, []) if isinstance(veri, dict) else (veri if isinstance(veri, list) else [])
+    bu_ay = datetime.now().strftime("%Y-%m")
+    _onbellek = {}
+
+    def _arsiv_idleri(ay):
+        if ay not in _onbellek:
+            ap = Path("arsiv") / f"{anahtar}-{ay}.json"
+            idler = set()
+            if ap.exists():
+                try:
+                    d = json.loads(ap.read_text(encoding="utf-8"))
+                    kayitlar = d.get(anahtar, []) if isinstance(d, dict) else (d if isinstance(d, list) else [])
+                    idler = {str(x.get("id")) for x in kayitlar}
+                except Exception as e:
+                    print(f"  ⚠ {anahtar} budama: {ap.name} okunamadı: {e}")
+            _onbellek[ay] = idler
+        return _onbellek[ay]
+
+    kalan, budanan, korunan = [], 0, 0
+    for h in liste:
+        ay = (h.get("tarih") or "")[:7]
+        if len(ay) == 7 and ay < bu_ay:
+            if str(h.get("id")) in _arsiv_idleri(ay):
+                budanan += 1
+                continue
+            korunan += 1
+        kalan.append(h)
+
+    if korunan:
+        print(f"  ⚠ {anahtar} budama: {korunan} geçmiş-ay kaydı arşivde DOĞRULANAMADI, canlıda tutuldu")
+
+    if isinstance(veri, dict):
+        veri[anahtar] = kalan
+        veri.setdefault("meta", {})["aylik_budama"] = datetime.now(timezone.utc).isoformat()
+        p.write_text(json.dumps(veri, ensure_ascii=False, indent=2), encoding="utf-8")
+    else:
+        p.write_text(json.dumps(kalan, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    print(f"  ✓ {dosya_adi}: {budanan} geçmiş-ay kaydı devredildi → canlıda {len(kalan)} kayıt (ay: {bu_ay})")
+    return budanan
+
+
 def haberler_aylik_buda(kaynak: dict) -> list:
     """
     Canlı haberler.json'daki 'haberler' listesini MEVCUT AY + tarihsiz
@@ -737,6 +795,9 @@ def dagit(gonder_github=False):
     print("\nAylık budama uygulanıyor…")
     haberler_liste = haberler_aylik_buda(kaynak)
     ihlaller_aylik_buda()
+    koleksiyon_aylik_buda("raporlar.json",  "raporlar")
+    koleksiyon_aylik_buda("makaleler.json", "makaleler")
+    koleksiyon_aylik_buda("kuresel.json",   "kuresel")
 
     # 4. Alt-kategori dosyaları yaz
     print("  Alt-kategori dosyaları yazılıyor…")
