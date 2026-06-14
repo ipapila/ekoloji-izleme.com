@@ -2,8 +2,8 @@
   "meta": {
     "arsiv_ay": "2026-04",
     "koleksiyon": "haberler",
-    "toplam": 193,
-    "olusturulma": "2026-06-14T04:04:49.475912+00:00"
+    "toplam": 201,
+    "olusturulma": "2026-06-14T09:34:58.918495+00:00"
   },
   "haberler": [
     {
@@ -125,6 +125,22 @@
       "tarih": "2026-04-30T10:00:00+03:00",
       "kaynak": "Google News",
       "kategori": "Yerel / İzmir",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "İklim ve Afet",
+      "_haber_kat": "İklim ve Afet"
+    },
+    {
+      "id": "1ee445dd1034",
+      "baslik": "Kastamonu’da yangın sezonu öncesi tedbirler masada! - Açıksöz Gazetesi",
+      "ozet": "Kastamonu’da yangın sezonu öncesi tedbirler masada! Açıksöz Gazetesi",
+      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOVHpLLVUyby1mdm1KajNzeEM3SGxWYWEtQ0VFN2Fpa2lSZmZsWGlEcUlhdmZuTERkRGg3UVlDbmV6R1dSTHVEa2QxUmhPYnB0UTAzaDMtWEVCaVQ2VElZWVBmS2otOTEzQTNIaFVtMVZibFRuWFBqY2p6ZmNsakJhNGNWMUF2dllWR2g5N1RiX2VnVUQ2N3fSAZsBQVVfeXFMT1JZZ0NNZ01HZGNQY2VsNDdTT1ZWczhUZ3ZZZnNRM3dKdWNtNnE0Wjl6R2tidEs0TE9wdWxNSmhINzB3Q1p0b0t4YWhjMGVZTTN2emF2a1BMU3lyVThkRFU1NnFJN2c3emZ0MFJaNzFEREh3dkh1STFQNnZ5bUlaNUlwcElnTVg0djg2WEFXcWFGQW5LVDJhUlhTZTQ?oc=5",
+      "tarih": "2026-04-30T10:00:00+03:00",
+      "kaynak": "Açıksöz (Kastamonu)",
+      "kategori": "Yerel / Karadeniz",
       "kaynak_turu": "rss",
       "icerik_tipi": "haber",
       "dil": "tr",
@@ -376,6 +392,24 @@
       "_haber_kat": "Kategorisiz"
     },
     {
+      "id": "e897e19c5938",
+      "baslik": "DMM'den Maden şirketi sahibine Çankırı'da yeni maden ruhsatı verildiği iddiasını yanıt - Gündem Haberleri - Posta",
+      "ozet": "DMM'den Maden şirketi sahibine Çankırı'da yeni maden ruhsatı verildiği iddiasını yanıt - Gündem Haberleri Posta",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPSTEyYkJuTHprSGQ0eTlhSGtGaGE2MVhMbWxSeWtNVmJSbWl4dTRadUUwLUVKNTFLMFpBajVrUV84SmFtNVJSQ0xQWlo0LURnV0Y5dDNYTUUzU085N2RjSmFBX0xxTy1jMjVVSnZRQlpUbDVhMWl2QmN5YTBMS2k2bXFUdlFCQ05UTFh3bFJMYjdlTlkwS0RYYnZYd1FEZEtQVzlrN3FEQmttTmF5ejBWVGw0eVVxX0NOZ0NPYTVHVUFCUQ?oc=5",
+      "tarih": "2026-04-29T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Orta",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
       "id": "5bb4dd8346bf",
       "baslik": "Alevi örgütlerinden Amasya’da maden tepkisi: ‘Su havzaları ve kutsal mekânlar koruma altına alınmalı’ - İlke TV",
       "ozet": "Alevi örgütlerinden Amasya’da maden tepkisi: ‘Su havzaları ve kutsal mekânlar koruma altına alınmalı’ İlke TV",
@@ -434,6 +468,25 @@
         "Ekolojik İhlal"
       ],
       "haber_kategorisi": "Maden ve Enerji",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "9a6fd1d00481",
+      "baslik": "Çankırı Yapraklı’da Doğayı, Suyu ve Tarımı Tehdit Eden Maden Aramasına Hayır! - Apaçık Radyo",
+      "ozet": "Çankırı Yapraklı’da Doğayı, Suyu ve Tarımı Tehdit Eden Maden Aramasına Hayır! Apaçık Radyo",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPUnpBaHVWNEdwX080d2pQdXE1QXFZM3pzRnNPVDdtdUdJcmRmbnpqSjJYRjBBdXRJV1MwcFBtUlVvX1lxUEdBamFKYllZakluRHhTaW9OVEpRNGJ1SUc5SUs0MEtDLTZHQjl1aEE2ZURQRzA2c2tDMWtvcEFfSllUX0RER0pmSF92TmRSX2tjSTRFM1R2Y1pIdUpiSllZalBhcnkyM2U2UlVBMUtwRFdNRGRzanlZaDJHbXA1VQ?oc=5",
+      "tarih": "2026-04-28T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Orta",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yaban Hayatı İzleme",
+        "Çiftçi & Köylü Sorunları"
+      ],
+      "haber_kategorisi": "Yaban Hayatı",
       "_haber_kat": "Maden ve Enerji"
     },
     {
@@ -809,6 +862,38 @@
       "_haber_kat": "Kategorisiz"
     },
     {
+      "id": "a746421916c1",
+      "baslik": "Deva Partili Biçer: “Elazığ Maden’de İşçinin Alın Teri Gasp Edilemez” - Kanal23",
+      "ozet": "Deva Partili Biçer: “Elazığ Maden’de İşçinin Alın Teri Gasp Edilemez” Kanal23",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOcGZCeWlkb2NLclRKVk14aE03ZS1GdnI2V1YyTkRHTWZ6blRLNU16T05HZHd1eURPejgxX1QwUmg5ODh5cDVQeHJrOEhUVi02b3BqVjlzdGw2NUFIM0ZsM0xERTZLYTZETmstbkwtekd4S1U2aXpqYXp6bFZrZm5Sc2tjR0trMGRQUmU1NTBnenBsU3ZKZ2JBaHdSbWliMjBDRzVSemtTa0I2ZlI3NE1xT3lR?oc=5",
+      "tarih": "2026-04-25T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Doğu Anadolu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Maden ve Enerji",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "38044538b2b2",
+      "baslik": "Amasya Orman Bölge Müdürlüğü’nden Niksar’da Kritik Strateji Zirvesi - yesilniksar.com",
+      "ozet": "Amasya Orman Bölge Müdürlüğü’nden Niksar’da Kritik Strateji Zirvesi yesilniksar.com",
+      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPZHJsb29QSy1zNXlHUUl0a0FfQUpVYzh1UFJIMmdFSzdLajRHSUFGemtMNGJlZHlIYlFuVlFyTW9TWWttenBEN3BzWUxTYWxNZmhxaWp1NXQ5elk1MlhsT0JfbGkyWkNHSFRldnlqUlprVmROZ19tbHJBRHBZYWN4QllyNmdLaTV4Y0VaTGpobDB0a3dDSkRKUlRB0gGiAUFVX3lxTE9KVmlmSG1uc3JGQXZzLTNNalRaZmJDVHdmeFVBRVprUEtQaTIwRW5wcVU2dUljOGRjYlhrMVFoREZoMVF6NHlJRXMzQlhhSWR2VklRYU1JZExxWkxZSDhZcFVBazVpVmFQVHQ3MldTdEs5R3UtMHVFbjY1Ujhwa1NIM0stT3pnTlhpOXlMZk9nS3ZDdW1NUEl3TEo1ekp0bkZxdw?oc=5",
+      "tarih": "2026-04-25T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Orta",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Orman ve Doğa",
+      "_haber_kat": "Orman ve Doğa"
+    },
+    {
       "id": 16459,
       "baslik": "Kastamonu Orman Bölge'de 'yangınla mücadele' eğitimi verildi - Açıksöz Gazetesi",
       "kaynak": "Açıksöz (Kastamonu)",
@@ -1150,6 +1235,24 @@
         "Çiftçi & Köylü Sorunları"
       ],
       "haber_kategorisi": "Direniş ve Eylemler",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "249b8fc9c3ae",
+      "baslik": "Elazığ'ın Maden ilçesindeki Ayşe Çiftçi, rezerv alanda bulunan evinin yıkılacağı korkusuyla dışarı çıkmıyor - Anka",
+      "ozet": "Elazığ'ın Maden ilçesindeki Ayşe Çiftçi, rezerv alanda bulunan evinin yıkılacağı korkusuyla dışarı çıkmıyor Anka",
+      "url": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxNNXVhQU5ZVlR1NW4zT2puNnpBNW1HcllMaWVhNkFkVXdIejg1TW5NNURKVHRDb0NpSnZIMFRfeThNbnFCZkVkbzJ1d1pLa3RSSTlMTVpHa1pHS1kzRXJZd3FaYnlKZjF1aFhheVdEX1dmZzZWeVEzQTNuOWlpWGFjd1c3WTVZVmRrSDBjQ0lpdklybEttRGdPS3BlZ25wc1U0amFURGtHVmJweER4dUtmeGItTjNyQ2lqejh1ekw1cEdFSnNFWEMtZ1B3eEd6S2MtNkk3dlFIWDZ4SnpvOHNR?oc=5",
+      "tarih": "2026-04-21T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Doğu Anadolu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Çiftçi & Köylü Sorunları"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
       "_haber_kat": "Maden ve Enerji"
     },
     {
@@ -1506,6 +1609,22 @@
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOSS1mdU5jckozWEYwYklxYnRYWHIzNFhaUFZjQ0ZLSVZFVEdmTnpuOGlxMTJkUjBiSVZ0bnprUmU0TWFWb2VKZkk0SkRMQk15VXJ0T3dzM3Q5STNZR05yV1h3OE5oRDd1NnJ3R1pzbFFMY2VZQklrLTJEOGhBSklTZTc1QW9kVU4taDNvX0xLMzB2d0tCd29rWHdxZ0JFRGdlX3J3TzZvV3RpZ2FQYzJ5dmZCYw?oc=5"
     },
     {
+      "id": "a011bb524a5a",
+      "baslik": "Çevre Bilinci Ödüllendiriliyor: Elazığ’da Dev Geri Dönüşüm Kampanyası - Kanal23",
+      "ozet": "Çevre Bilinci Ödüllendiriliyor: Elazığ’da Dev Geri Dönüşüm Kampanyası Kanal23",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOSS1mdU5jckozWEYwYklxYnRYWHIzNFhaUFZjQ0ZLSVZFVEdmTnpuOGlxMTJkUjBiSVZ0bnprUmU0TWFWb2VKZkk0SkRMQk15VXJ0T3dzM3Q5STNZR05yV1h3OE5oRDd1NnJ3R1pzbFFMY2VZQklrLTJEOGhBSklTZTc1QW9kVU4taDNvX0xLMzB2d0tCd29rWHdxZ0JFRGdlX3J3TzZvV3RpZ2FQYzJ5dmZCYw?oc=5",
+      "tarih": "2026-04-15T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Doğu Anadolu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "",
+      "_haber_kat": "STK & Kampanyalar"
+    },
+    {
       "id": 16509,
       "baslik": "Kocaeli’nin çevre kirliliği bu toplantıda konuşuldu - Çağdaş Kocaeli Gazetesi",
       "kaynak": "Google News",
@@ -1615,6 +1734,22 @@
       "etiketler": [],
       "haber_kategorisi": "Orman ve Doğa",
       "_haber_kat": "Orman ve Doğa"
+    },
+    {
+      "id": "deab68dece2a",
+      "baslik": "Malatya'da maden işçilerini taşıyan minibüs devrildi: 2 ölü, 10 yaralı - TRT Haber",
+      "ozet": "Malatya'da maden işçilerini taşıyan minibüs devrildi: 2 ölü, 10 yaralı TRT Haber",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPS1dvSHIzR3JQZk1MRF9jb3JGLWRHYVpXTFpwb0NzeEFxRnN6QUloeU51VUktb1daRnp1S3dmWXdJNklXbWJkdmRXSU9hRnAtdThwWElULUQ1M3JqR1VRUk5aamRxNlE2VWg1bzI1NVFoTDVBSWhLQk42SlQ0N2JsSGh5Z3ZuZllPRjdrY0ZzdDVacnJnNFUwWWRVdGN5RkNmSFVGckFSSFM4SDM5Zldqd19EZlNLRldyQWc?oc=5",
+      "tarih": "2026-04-13T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Doğu Anadolu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Maden ve Enerji",
+      "_haber_kat": "Maden ve Enerji"
     },
     {
       "id": 16519,
