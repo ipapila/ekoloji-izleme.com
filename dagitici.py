@@ -296,6 +296,16 @@ def _sayisal_mi(deger) -> bool:
     """ID sayısal mı? (admin-panel kaynaklı = sayısal, scraper = alfanümerik)"""
     return str(deger).isdigit()
 
+# Google News başlığa ' - Yayıncı' / ' | Yayıncı' eki ekler ve bu ek
+# çalıştırmalar arası değişir (DW↔DW.com, Anadolu Ajansı↔aa.com.tr). Düz
+# strip().lower() bunu yakalayamadığı için aynı haber ekosistem/kategorilerde
+# birden çok kez birikiyordu. Bu anahtar son yayıncı ekini kırpar.
+_BASLIK_EK_RE = re.compile(r"\s*[-–—|]\s*[^-–—|]{1,45}$")
+def _baslik_dedup_anahtar(baslik: str) -> str:
+    s = re.sub(r"\s+", " ", baslik or "").strip().lower()
+    s2 = _BASLIK_EK_RE.sub("", s)
+    return s2 if len(s2) >= 15 else s
+
 def baslik_tekille(liste: list) -> list:
     """
     Aynı başlığa sahip kayıtları teke indirir.
@@ -305,7 +315,7 @@ def baslik_tekille(liste: list) -> list:
     gorulen = {}          # normalize başlık -> temiz listedeki index
     temiz = []
     for x in liste:
-        k = (x.get("baslik") or "").strip().lower()
+        k = _baslik_dedup_anahtar(x.get("baslik") or "")
         if not k:
             temiz.append(x)          # başlıksız kayıtları olduğu gibi bırak
             continue

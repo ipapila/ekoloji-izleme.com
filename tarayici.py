@@ -1201,6 +1201,18 @@ def baslik_normalize(baslik: str) -> str:
     return re.sub(r"\s+", " ", baslik).strip().lower()
 
 
+# Google News başlığa ' - Yayıncı' / ' | Yayıncı' ekler ve bu ek çalıştırmalar
+# arası değişir (DW↔DW.com, Anadolu Ajansı↔aa.com.tr, Euronews↔Euronews.com).
+# Ek başlığı VE haber_id'yi değiştirdiği için aynı haber her seferinde yeni kayıt
+# olarak birikiyordu. Bu anahtar yalnızca TEKRAR KARŞILAŞTIRMASI içindir; başlığı
+# ve haber_id'yi DEĞİŞTİRMEZ (arşiv ID eşleşmesi korunur).
+_BASLIK_EK_RE = re.compile(r"\s*[-–—|]\s*[^-–—|]{1,45}$")
+def baslik_dedup_anahtar(baslik: str) -> str:
+    s = baslik_normalize(baslik)
+    s2 = _BASLIK_EK_RE.sub("", s)
+    return s2 if len(s2) >= 15 else s
+
+
 def haber_id(url: str, baslik: str, kaynak: str = "") -> str:
     """Stabil ID üretir. Google News URL'leri çalıştırmalar arasında değiştiği için
     bu kaynaklarda baslik+kaynak kullanılır."""
@@ -1431,7 +1443,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
     for kol in ("haberler", "raporlar", "makaleler", "uluslararasi", "ekosistem"):
         for h in eski.get(kol, []):
             h_id  = str(h.get("id", ""))
-            h_bas = baslik_normalize(h.get("baslik", ""))
+            h_bas = baslik_dedup_anahtar(h.get("baslik", ""))
             gorulen_idler.add(h_id)
             if h.get("url"):  gorulen_urller.add(url_normalize(h["url"]))
             if h_bas:
@@ -1465,7 +1477,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
         for h in kaynaklar:
             h_id  = str(h["id"])
             h_url = url_normalize(h.get("url", ""))
-            h_bas = baslik_normalize(h.get("baslik", ""))
+            h_bas = baslik_dedup_anahtar(h.get("baslik", ""))
 
             if h_id in gorulen_idler:
                 continue
