@@ -675,7 +675,7 @@ EKOSISTEM_RSS_KAYNAKLARI = [
     {"url": "https://news.google.com/rss/search?q=deniz+canlısı+yunus+kaplumbağa+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Su Canlıları", "genel": False,
      "hedef": "ekosistem", "bolum": "su-canlilari", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=hayvan+hakları+istismar+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+    {"url": "https://news.google.com/rss/search?q=hayvan+hakları+hayvan+istismarı+barınak+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Hayvan Hakları", "genel": False,
      "hedef": "ekosistem", "bolum": "hayvan-haklari", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=hayvan+hakları+yasa+sokak+hayvanı+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
@@ -875,6 +875,11 @@ ORTA_SINYAL = [
     "ihlal", "ruhsatsız", "izinsiz", "yıkım", "ağaç", "sera gazı",
     "plastik kirlilik", "sondaj", "arama ruhsatı", "TEMA", "WWF", "Greenpeace",
     "doğal yaşam", "yaban hayat", "kuş türü", "balık türü",
+    # hayvan hakları / ekosistem bölüm sözcükleri — gerçek bölüm içeriğinin
+    # eşik=1 filtresini geçmesi için (önceden bu sözcükler yoktu; bu yüzden
+    # gerçek hayvan hakları haberleri 0 puan alıp eleniyordu).
+    "hayvan hakk", "hayvan ihlal", "hayvan istismar", "sokak hayvan",
+    "barınak", "sahiplendir", "veteriner", "köpe", "kedi", "yaban hayvan",
 ]
 
 RAPOR_SINYAL = [
@@ -1001,26 +1006,49 @@ def haber_kategorisi_tespit(kayit: dict) -> str:
     return ""
 
 
+# ── KELİME-SINIRLI ANAHTAR EŞLEŞMESİ ──────────────────────────────
+# Düz `anahtar in metin` ALT-DİZGİ eşleşmesidir ve kısa anahtarlarda
+# yanlış pozitif üretir: "sel" → "cinsel" içinde, "GES" → "önergesi"
+# içinde, "RES" → "adres", "bor" → "borç" içinde eşleşir. Bu yüzden
+# alakasız haberler ekoloji puanı kazanıp filtreyi geçer. Aşağıdaki
+# yardımcı, anahtarın bir KELİME BAŞINDA geçmesini şart koşar (öncesinde
+# harf/rakam OLMAMALI). Kelime SONU serbesttir; Türkçe ekler eşleşmeye
+# devam eder: "sel" → "selde"/"sele" eşleşir, "cinsel"e eşleşmez.
+_ANAHTAR_RE = {}
+def _anahtar_re(k: str):
+    r = _ANAHTAR_RE.get(k)
+    if r is None:
+        r = re.compile(r'(?<!\w)' + re.escape(k.lower()), re.UNICODE)
+        _ANAHTAR_RE[k] = r
+    return r
+
+def _ara(metin: str, k: str) -> bool:
+    return _anahtar_re(k).search(metin) is not None
+
+def _anahtar_var(metin: str, anahtarlar) -> bool:
+    return any(_ara(metin, k) for k in anahtarlar)
+
+
 def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False,
                   hedef: str = "haberler") -> int:
     metin = (baslik + " " + ozet).lower()
-    if any(k.lower() in metin for k in GUCLU_NEGATIF):
+    if _anahtar_var(metin, GUCLU_NEGATIF):
         return 0
-    if genel_kaynak and any(k.lower() in metin for k in GENEL_KAYNAK_NEGATIF):
+    if genel_kaynak and _anahtar_var(metin, GENEL_KAYNAK_NEGATIF):
         return 0
     puan = 0
     for k in YUKSEK_SINYAL:
-        if k.lower() in metin:
+        if _ara(metin, k):
             puan += 3
     for k in ORTA_SINYAL:
-        if k.lower() in metin:
+        if _ara(metin, k):
             puan += 1
     baslik_lower = baslik.lower()
     for k in YUKSEK_SINYAL:
-        if k.lower() in baslik_lower:
+        if _ara(baslik_lower, k):
             puan += 2
     if hedef in ("raporlar", "makaleler", "uluslararasi") and puan == 0:
-        if any(k.lower() in metin for k in RAPOR_SINYAL + KOSE_SINYAL):
+        if _anahtar_var(metin, RAPOR_SINYAL + KOSE_SINYAL):
             puan = 2
     return puan
 
@@ -1074,6 +1102,9 @@ BOLUM_DOGRULA_ANAHTAR = {
     "ciftci":   ["çiftçi", "köylü", "köy ", "tarım", "tarımsal", "ekin",
                  "hasat", "mera", "tohum", "fındık üretic", "çay üretic",
                  "buğday", "besici", "hayvancılık", "süt üretic", "küçük üretici"],
+    "hayvan-haklari": ["hayvan", "köpe", "kedi", "barınak", "sokak hayvan",
+                       "sahiplendir", "veteriner", "yaban", "pati", "fauna",
+                       "at hakları", "eşek", "kısırlaştır"],
 }
 
 # Bölüme özgü GÜVENİLİR örgüt kaynakları: tarayıcı bu kaynaklardan zaten
