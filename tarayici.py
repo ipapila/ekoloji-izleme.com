@@ -503,22 +503,24 @@ RSS_KAYNAKLARI = [
         "dil": "tr"
     },
     # ── LGBTİ+ / İklim Adaleti & Queer Ekoloji ──
+    # hedef "ekosistem": kalıcı (haberler.json aylık budandığı için eskiden
+    # bu kayıtlar bir ay sonra ekosistem sayfasından kayboluyordu).
     {
-        "url": "https://news.google.com/rss/search?q=site:kaosgl.org+(ekoloji+OR+iklim+OR+çevre+OR+queer+ekoloji)&hl=tr&gl=TR&ceid=TR:tr",
+        "url": "https://news.google.com/rss/search?q=site:kaosgl.org+(ekoloji+OR+iklim+OR+çevre+OR+doğa+OR+kuraklık+OR+orman+OR+su+OR+queer+ekoloji)&hl=tr&gl=TR&ceid=TR:tr",
         "kaynak": "Kaos GL",
-        "kategori": "İklim",
+        "kategori": "LGBTİ+ & Çevre",
         "genel": False,
         "bolum": "lgbti",
-        "hedef": "haberler",
+        "hedef": "ekosistem",
         "dil": "tr"
     },
     {
-        "url": "https://news.google.com/rss/search?q=site:17mayis.org+(iklim+OR+ekoloji+OR+çevre)&hl=tr&gl=TR&ceid=TR:tr",
+        "url": "https://news.google.com/rss/search?q=site:17mayis.org+(iklim+OR+ekoloji+OR+çevre+OR+doğa+OR+afet)&hl=tr&gl=TR&ceid=TR:tr",
         "kaynak": "17 Mayıs Derneği",
-        "kategori": "İklim",
+        "kategori": "LGBTİ+ & Çevre",
         "genel": False,
         "bolum": "lgbti",
-        "hedef": "haberler",
+        "hedef": "ekosistem",
         "dil": "tr"
     },
     {
@@ -532,10 +534,10 @@ RSS_KAYNAKLARI = [
     {
         "url": "https://news.google.com/rss/search?q=site:coalitionrainbow.org+(iklim+OR+ekoloji+OR+çevre+OR+climate+OR+ecology)&hl=tr&gl=TR&ceid=TR:tr",
         "kaynak": "Coalition Rainbow",
-        "kategori": "İklim",
+        "kategori": "LGBTİ+ & Çevre",
         "genel": False,
         "bolum": "lgbti",
-        "hedef": "haberler",
+        "hedef": "ekosistem",
         "dil": "tr"
     },
 ]
@@ -735,6 +737,26 @@ EKOSISTEM_RSS_KAYNAKLARI = [
     {"url": "https://news.google.com/rss/search?q=drone+insansız+hava+aracı+çevre+etki&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Savaş Teknolojisi", "genel": False,
      "hedef": "ekosistem", "bolum": "savas-teknoloji", "dil": "tr"},
+
+    # ── Engelliler & Erişim (önceden hiç kaynağı yoktu; bolum dogrulamasından
+    #    muaf, ekoloji_puani eşiği yine de konuyu çevre/iklimle sınırlar) ──
+    {"url": "https://news.google.com/rss/search?q=engelli+iklim+afet+tahliye+erişim+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Engelliler & Erişim", "genel": False,
+     "hedef": "ekosistem", "bolum": "engelliler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=engelli+erişim+yeşil+alan+kent+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Engelliler & Erişim", "genel": False,
+     "hedef": "ekosistem", "bolum": "engelliler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=disability+climate+disaster+accessibility+Turkey&hl=en&gl=US&ceid=US:en",
+     "kaynak": "Google News EN", "kategori": "Engelliler & Erişim", "genel": False,
+     "hedef": "ekosistem", "bolum": "engelliler", "dil": "en"},
+
+    # ── LGBTİ+ & Çevre — org kaynakları (Kaos GL, 17 Mayıs, Coalition Rainbow)
+    #    HABER listesinde "ekosistem" hedefine taşındı (kalıcılık için).
+    #    Burada yalnızca tek siteye bağımlı olmayan, anahtar-kelime kapısına tabi
+    #    genel sorgu var (kaynak "Google News" → metinde lgbti/queer aranır): ──
+    {"url": "https://news.google.com/rss/search?q=queer+ekoloji+OR+lgbti+iklim+OR+kuir+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "LGBTİ+ & Çevre", "genel": False,
+     "hedef": "ekosistem", "bolum": "lgbti", "dil": "tr"},
 ]
 
 EKOSISTEM_WEB_KAYNAKLARI = [
@@ -1098,10 +1120,14 @@ BOLUM_DOGRULA_ANAHTAR = {
                  "gökkuşağı", "trans birey", "onur yürüyüş", "onur haftası",
                  "pride", "biseksüel", "interseks", "gey hareket"],
     "kadinlar": ["kadın", "kadınlar", "feminist", "feminizm", "ekofeminist",
-                 "ekofeminizm", "kadın kooperatif", "kadın emek", "anneler"],
+                 "ekofeminizm", "kadın kooperatif", "kadın emek", "anneler",
+                 "toplumsal cinsiyet", "kadın hakları", "kadın çiftçi",
+                 "kadın üretici", "kadın emekçi", "kız çocuk", "ebeveyn"],
     "ciftci":   ["çiftçi", "köylü", "köy ", "tarım", "tarımsal", "ekin",
                  "hasat", "mera", "tohum", "fındık üretic", "çay üretic",
-                 "buğday", "besici", "hayvancılık", "süt üretic", "küçük üretici"],
+                 "buğday", "besici", "hayvancılık", "süt üretic", "küçük üretici",
+                 "üretici", "rençber", "bağcı", "bahçıvan", "kooperatif",
+                 "yayla", "otlak", "zeytin üretic", "çiftlik", "ziraat"],
     "hayvan-haklari": ["hayvan", "köpe", "kedi", "barınak", "sokak hayvan",
                        "sahiplendir", "veteriner", "yaban", "pati", "fauna",
                        "at hakları", "eşek", "kısırlaştır"],
