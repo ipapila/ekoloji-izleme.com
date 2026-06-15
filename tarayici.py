@@ -698,12 +698,15 @@ EKOSISTEM_RSS_KAYNAKLARI = [
     {"url": "https://news.google.com/rss/search?q=balıkçı+deniz+kirliliği+av+yasağı+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Balıkçı Toplulukları", "genel": False,
      "hedef": "ekosistem", "bolum": "balikci", "dil": "tr"},
+    # "yerli" bölümü iptal edildi — bu iki sorgu zaten direniş içerikli;
+    # genel haber akışına yönlendirildi, içerik-bazlı sınıflama onları
+    # direnis-agi.html'de "Direniş ve Eylemler" kategorisine düşürür.
     {"url": "https://news.google.com/rss/search?q=yerel+halk+maden+HES+RES+direniş+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Yerli & Yerel Haklar", "genel": False,
-     "hedef": "ekosistem", "bolum": "yerli", "dil": "tr"},
+     "kaynak": "Google News", "kategori": "Haber", "genel": False,
+     "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=köy+halkı+toprak+hakları+direniş+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Yerli & Yerel Haklar", "genel": False,
-     "hedef": "ekosistem", "bolum": "yerli", "dil": "tr"},
+     "kaynak": "Google News", "kategori": "Haber", "genel": False,
+     "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=iklim+gençlik+Türkiye+genç+aktivist&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Gençlik & Ekoloji", "genel": False,
      "hedef": "ekosistem", "bolum": "genclik", "dil": "tr"},
@@ -857,7 +860,6 @@ KATEGORI_HARITALAMA = {
     "Kadınlar & Ekoloji":        {"eylem": None,               "etiketler": ["Kadınlar & Ekoloji"]},
     "Çiftçi & Köylü":            {"eylem": None,               "etiketler": ["Çiftçi & Köylü Sorunları"]},
     "Balıkçı Toplulukları":      {"eylem": None,               "etiketler": ["Balıkçı Toplulukları"]},
-    "Yerli & Yerel Haklar":      {"eylem": None,               "etiketler": ["Yerli & Yerel Haklar"]},
     "Gençlik & Ekoloji":         {"eylem": None,               "etiketler": ["Çocuklar & Gençlik"]},
     "Ekolojik Eşitsizlik":       {"eylem": None,               "etiketler": ["Ekolojik Eşitsizlik"]},
     "Kentsel Çevre":             {"eylem": None,               "etiketler": ["Kentsel Çevre"]},
@@ -1112,7 +1114,7 @@ EKOSISTEM_ANAHTAR = {
 #  içerik o konuyu doğrulamıyorsa bölüm DÜŞÜRÜLÜR — kayıt kaynağına değil,
 #  İÇERİĞİNE göre sınıflandırılır. Doğa/konu-odaklı bölümler (turler, yaban,
 #  bitki, su-canlilari, hayvan-haklari, genclik, goc, kentsel, esitsizlik,
-#  savas, savas-teknoloji, yerli, balikci) burada YOK; kaynağa güvenmeye
+#  savas, savas-teknoloji, balikci) burada YOK; kaynağa güvenmeye
 #  devam eder. Yeni bir bölüm kirlenirse buraya anahtar kelimeleriyle ekle.
 # ══════════════════════════════════════════════════════════════════
 BOLUM_DOGRULA_ANAHTAR = {

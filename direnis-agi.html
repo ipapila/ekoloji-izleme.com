@@ -480,7 +480,8 @@ function dataJsonEkle(direnisListesi){
 Promise.allSettled([
   fetch("haberler.json?v="+Date.now()).then(r=>r.ok?r.json():null),
   fetch("data.json?v="+Date.now()).then(r=>r.ok?r.json():null),
-]).then(([habRes,datRes])=>{
+  fetch("direnis.json?v="+Date.now()).then(r=>r.ok?r.json():null),
+]).then(([habRes,datRes,dirRes])=>{
   if(habRes.status==="fulfilled" && habRes.value){
     const veri = habRes.value;
     const haberler = veri.haberler || (Array.isArray(veri)?veri:[]);
@@ -493,6 +494,13 @@ Promise.allSettled([
     const dr = datRes.value.direnis || [];
     dr.forEach(d=>serverIds.add(String(d.id)));
     dataJsonEkle(dr);
+  }
+  /* direnis.json — pipeline + senkron ile gelen kanonik direniş kayıtları
+     (data.json artık pipeline tarafından güncellenmiyor; kanonik dosya budur) */
+  if(dirRes.status==="fulfilled" && dirRes.value){
+    const dd = (dirRes.value.direnis || []).filter(d=>!serverIds.has(String(d.id)));
+    dd.forEach(d=>serverIds.add(String(d.id)));
+    if(dd.length) dataJsonEkle(dd);
   }
   /* localStorage'daki, sunucuda olmayan direniş kayıtları */
   const lsDirenis = (typeof SITE!=="undefined" ? (SITE.get("direnis")||[]) : [])

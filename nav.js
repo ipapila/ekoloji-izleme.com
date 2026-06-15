@@ -238,7 +238,6 @@
         <a href="ekosistem.html?sec=engelliler"><span class="dot"></span>Engelliler & Erişim</a>
         <a href="ekosistem.html?sec=ciftci"><span class="dot"></span>Çiftçi & Köylü Sorunları</a>
         <a href="ekosistem.html?sec=balikci"><span class="dot"></span>Balıkçı Toplulukları</a>
-        <a href="ekosistem.html?sec=yerli"><span class="dot"></span>Yerli & Yerel Haklar</a>
         <a href="ekosistem.html?sec=genclik"><span class="dot"></span>Çocuklar & Gençlik</a>
         <hr>
         <div class="dropdown-label">Çevre Adaleti</div>
