@@ -658,7 +658,7 @@ def haberler_senkronize(kaynak: dict) -> int:
         # ekosistem: mevcut dosyayı oku ve KORU. dagitici aksi halde ekosistem.json'u
         # sıfırdan yazıp ELLE GİRİLEN kayıtları (ve birikmiş eski tarama kayıtlarını) siler.
         # Yeni tarama + listede olmayan mevcut kayıtlar (manuel girişler dahil) birleştirilir.
-        if kaynak_adi == "ekosistem":
+        if kaynak_adi in ("raporlar", "makaleler", "uluslararasi", "ekosistem"):
             try:
                 _eski = json.loads(Path(hedef_dosya).read_text(encoding="utf-8"))
                 _eski_liste = _eski.get(hedef_anahtar, []) if isinstance(_eski, dict) else (_eski if isinstance(_eski, list) else [])
@@ -806,9 +806,12 @@ def dagit(gonder_github=False):
     print("\nAylık budama uygulanıyor…")
     haberler_liste = haberler_aylik_buda(kaynak)
     ihlaller_aylik_buda()
-    koleksiyon_aylik_buda("raporlar.json",  "raporlar")
-    koleksiyon_aylik_buda("makaleler.json", "makaleler")
-    koleksiyon_aylik_buda("kuresel.json",   "kuresel")
+    # KATALOG KOLEKSİYONLARI BUDANMAZ — raporlar.html/makaleler.html/kuresel.html
+    # arşivi okumuyor; budama bu sayfalarda geçmiş-ay kayıtlarını yok ediyordu.
+    # (Veri kaybını önlemek için kapatıldı. Frontend arşiv okuyacak hale gelirse geri açılabilir.)
+    # koleksiyon_aylik_buda("raporlar.json",  "raporlar")
+    # koleksiyon_aylik_buda("makaleler.json", "makaleler")
+    # koleksiyon_aylik_buda("kuresel.json",   "kuresel")
 
     # 4. Alt-kategori dosyaları yaz
     print("  Alt-kategori dosyaları yazılıyor…")
