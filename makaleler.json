@@ -1,10 +1,24 @@
 {
   "meta": {
-    "guncelleme": "2026-06-15T03:57:27.951551+00:00",
-    "toplam": 172,
-    "kaynak": "arsiv_birlesik_kurtarma"
+    "guncelleme": "2026-06-15T04:05:30.394129+00:00",
+    "toplam": 189
   },
   "makaleler": [
+    {
+      "id": 5,
+      "baslik": "Yerin Altındaki Pazarlık",
+      "yazar": "ekoloji-izleme.com",
+      "tarih": "2026-06-14",
+      "tur": "Araştırma",
+      "etiketler": [
+        "Ekolojik İhlal",
+        "Jeotermal"
+      ],
+      "ozet": "Yerkürenin ısısı, kâğıt üzerinde, bir iklim aktivistinin rüyasıdır: tükenmez, yerli, kesintisiz, baca tüten bir kömür santraline benzemeyen bir kaynak. Türkiye bu rüyayı satın aldı; bugün dünyanın jeotermal kurulu gücünde dördüncü, Avrupa'da birinci. Ama bu enerjinin neredeyse tamamı tek bir coğrafyada üretiliyor: Ege'nin iki çöküntü ovasında, Büyük Menderes ve Gediz grabenlerinde. Tam da Türkiye'nin incirini, zeytinini, üzümünü ve pamuğunu yetiştiren topraklarda. Mesele burada \"yenilenebilir mi, değil mi\" olmaktan çıkıp başka bir soruya dönüşüyor: kimin için temiz, kimin pahasına?",
+      "url": "",
+      "foto_url": "",
+      "dosya": "https://ekoloji-izleme.com/dosya/jeotermal_ege_risk.html"
+    },
     {
       "id": "3e3730cef6c9",
       "baslik": "Greenpeace Türkiye Direktörü Özyer: COP31 temiz gelecek için dönüm noktası olsun - greenpeace.org",
@@ -25,6 +39,27 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
+      "id": 4,
+      "baslik": "Büyük Menderes Havzasında Çok Kaynaklı Ekolojik Baskı: Mekânsal Risk Analizi ve Bütünleşik Bir Değerlendirme",
+      "yazar": "ekoloji-izleme.com",
+      "tarih": "2026-06-10",
+      "tur": "Analiz",
+      "etiketler": [
+        "Ekolojik İhlal",
+        "Biyoçeşitlilik",
+        "Tarım & Köy",
+        "Su Hakkı",
+        "Atık & Kirlilik",
+        "Hava Kirliliği",
+        "Deniz Kirliliği",
+        "Toprak Kirliliği"
+      ],
+      "ozet": "Bu çalışma, Büyük Menderes Havzası’nda (≈ 25.000 km²) ekolojik bütünlüğü tehdit eden baskı kaynaklarını mekânsal olarak haritalandırmakta ve dokuz kategoride tanımlanan 26 risk noktasını ağırlıklı yoğunluk analiziyle değerlendirmektedir. QGIS/PyQGIS ortamında üretilen vektör katmanları ve risk-ağırlıklı ısı haritası, kirlilik yükünün havza boyunca tekil noktalar hâlinde değil, akarsu ağı boyunca birbirini besleyen bir baskı koridoru hâlinde örgütlendiğini göstermektedir. Ortalama risk skoru 10 üzerinden 7,0; kritik eşik (≥ 8) üzerindeki kaynak sayısı 9’dur. Jeotermal enerji üretimi, tekstil-deri sanayii ve arıtma kapasitesi yetersiz kentsel deşarjlar en yüksek baskı sınıflarını oluşturmakta; bu baskıların coğrafi dağılımı ile bölgedeki gelir, mülkiyet ve emek ilişkileri arasında belirgin bir örtüşme gözlenmektedir.",
+      "url": "",
+      "foto_url": "",
+      "dosya": "https://ekoloji-izleme.com/dosya/buyuk_menderes_havzasi_risk_analizi.pdf"
+    },
+    {
       "id": "92c23d53c565",
       "baslik": "GREENPEACE’TEN TÜRKİYE’NİN COP31 EYLEM GÜNDEMİ YORUMU - greenpeace.org",
       "ozet": "GREENPEACE’TEN TÜRKİYE’NİN COP31 EYLEM GÜNDEMİ YORUMU greenpeace.org",
@@ -42,6 +77,94 @@
         "Köşe & Yorum"
       ],
       "haber_kategorisi": "Direniş ve Eylemler"
+    },
+    {
+      "id": "58a4dd91b1ed",
+      "baslik": "Kömürden Çıkış için Tarihi Karar - greenpeace.org",
+      "ozet": "Kömürden Çıkış için Tarihi Karar greenpeace.org",
+      "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5aWHBjZjhLdnc0dXFHQjZ2cWVQV0RzX3RrblBOSENFZGkxbEl2RjBaZTRhMlhRaHhhMnhXVnZjVXgwMktFcU5GMmVZdlVSNV9Wd2JwWXRyTVBTRm54SVRraWl1LWRmUXhSRjhIczFVX0VFNVBGYWptR1BWRm0?oc=5",
+      "tarih": "2026-06-08T18:42:35+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yorum / Değerlendirme",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "Yorum",
+        "Değerlendirme",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "STK & Kampanyalar"
+    },
+    {
+      "id": 3,
+      "baslik": "Sinop'ta İki Cephe: Bakır mı, Nükleer mi?",
+      "yazar": "ekoloji-izleme.com",
+      "tarih": "2026-06-08",
+      "tur": "Köşe Yazısı",
+      "etiketler": [
+        "Maden Ocağı",
+        "Nükleer Enerji",
+        "ÇED Kararları"
+      ],
+      "ozet": "Karadeniz'in bu küçük şehrinde yıllar içinde birikmiş bir direniş var. Bir yanda Boyabat'ın dağ köylüleri, arazilerini Cengiz Holding'e kaptırmamak için hukuk savaşı veriyor. Öte yanda Sinop halkı, kıyısına yaklaştırılmak istenen nükleer santralin gölgesinde her yıl meydanı dolduruyor. İkisi farklı mücadeleler gibi görünse de aynı soruya yanıt arıyor: Kim için?...",
+      "url": "https://www.ekolojipolitik.com/sinopta-iki-cephe-bakir-mi-nukleer-mi/",
+      "foto_url": "",
+      "dosya": ""
+    },
+    {
+      "id": 2,
+      "baslik": "Doğa da Queer'dir: LGBTİ+ Bireyler ve Ekoloji Krizi",
+      "yazar": "ekoloji-izleme.com",
+      "tarih": "2026-06-08",
+      "tur": "Köşe Yazısı",
+      "etiketler": [
+        "LGBTİ+ & Çevre",
+        "Ekolojik Eşitsizlik"
+      ],
+      "ozet": "Bu metin, iklim krizi ile LGBTİ+ hakları arasındaki derin bağı, doğanın sanıldığı gibi sadece ikili bir yapıda olmadığını savunan kuir ekoloji perspektifiyle ele almaktadır. Kaynaklar, çevresel felaketlerin toplumsal eşitsizlikleri derinleştirdiğini ve özellikle ekonomik ile sosyal açıdan kırılgan olan LGBTİ+ bireyleri barınma, sağlık ve güvenlik noktalarında daha ağır etkilediğini vurgulamaktadır. Kaos GL ve 17 Mayıs Derneği gibi sivil toplum kuruluşlarının Türkiye'deki çalışmaları, ekoloji mücadelesinin toplumsal cinsiyet özgürlüğünden ayrı düşünülemeyeceğini somut verilerle ortaya koymaktadır. Doğadaki biyolojik çeşitliliğin heteronormatif kalıplara sığmadığı hatırlatılarak, kapitalist ve ataerkil sistemin hem doğayı hem de azınlıkları sömürdüğü analiz edilmektedir. Sonuç olarak yazı, gerçek bir iklim adaleti için dışlanan tüm kimliklerin haklarını kapsayan bütüncül bir direnişin gerekliliğini savunmaktadır.",
+      "url": "",
+      "foto_url": "",
+      "dosya": "https://ekoloji-izleme.com/dosya/makale-lgbti-ekoloji.docx"
+    },
+    {
+      "id": "23329a9ddd24",
+      "baslik": "Başkan Çebi: Çevreyi korumak, gelecek nesillere karşı bir sorumluluğumuzdur - Habere Güven",
+      "ozet": "Başkan Çebi: Çevreyi korumak, gelecek nesillere karşı bir sorumluluğumuzdur Habere Güven",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOaXBuZVJ2SURiV2pOU2tQdXBIVGtMcFlWazJrOWU3RDNvNXFRZm43WDF0QUEtcnkzUVU2SE1FQnNrLWNYSXVoTlNfMnpKQ2NPOURmZ0JpUkIwWDZkQk9wcFJ2QnExendkUUY4UHJLM21HeDlzMjRuM1lyZGx0dWJBX3JPNHU5czZxRkNUM3NiSW1TRi1GbnFZMWdSckFQUTJ5THBtbHp3b1nSAagBQVVfeXFMTmlwbmVSdklEYldqTlNrUHVwSFRrTHBZVmsyazllN0QzbzVxUWZuN1gxdEFBLXJ5M1FVNkhNRUJzay1jWEl1aE5TXzJ6SkNjTzlEZmdCaVJCMFg2ZEJPcHBSdkJxMXp3ZFFGOFBySzNtR3g5czI0bjNZcmRsdHViQV9yTzR1OXM2cUZDVDNzYkltU0YtRm5xWTFnUnJBUFEyeUxwbWx6d29Z?oc=5",
+      "tarih": "2026-06-06T11:21:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yorum / Değerlendirme",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yorum",
+        "Değerlendirme",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": ""
+    },
+    {
+      "id": "6a6c7a3f7dca",
+      "baslik": "ÇMO 2. Başkanı Akdoğan, Bilimsel Ve Sürdürülebilir Politikalar Çağrısı Yaptı - Habere Güven",
+      "ozet": "ÇMO 2. Başkanı Akdoğan, Bilimsel Ve Sürdürülebilir Politikalar Çağrısı Yaptı Habere Güven",
+      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOZDFwVEVrQnVBSERHTTg3eVZmNEVIWjBfakhVekJPTldUcjBQMTdxc3c0dUk5cUgwclg1NlY4Q1JZNjNSRFNuRTJBSkg0bDZtSjB6X3o0MUYxMTFxQVdxMXUtZWc2Nm5oaE1fSmtTUjZxcWJiLTlHd0dBc055ZUp4bmVuTXNfajNBSUY5a2NDMmtWeUVzMHJGRzNwVlBuZ2h5UUxiSm8tSXZBQdIBqgFBVV95cUxOZDFwVEVrQnVBSERHTTg3eVZmNEVIWjBfakhVekJPTldUcjBQMTdxc3c0dUk5cUgwclg1NlY4Q1JZNjNSRFNuRTJBSkg0bDZtSjB6X3o0MUYxMTFxQVdxMXUtZWc2Nm5oaE1fSmtTUjZxcWJiLTlHd0dBc055ZUp4bmVuTXNfajNBSUY5a2NDMmtWeUVzMHJGRzNwVlBuZ2h5UUxiSm8tSXZBQQ?oc=5",
+      "tarih": "2026-06-05T14:51:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yorum / Değerlendirme",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yorum",
+        "Değerlendirme",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet"
     },
     {
       "id": "43dcc9d25c5f",
@@ -571,6 +694,25 @@
       "haber_kategorisi": "Hukuki Süreçler"
     },
     {
+      "id": "0ac61eb1d910",
+      "baslik": "NDC nedir? - greenpeace.org",
+      "ozet": "NDC nedir? greenpeace.org",
+      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE93RF92ZWlCZG9kTmJRQzBZa1ZxTW5TVS1sZW1VMng2cGJmclhvRFNsMnlSRl9aOElrU0d2aHZfaGtpbVNEZ2E2REV3Y1p1S3JDczlqMDFvdmhSU2J2ZVE?oc=5",
+      "tarih": "2025-09-23T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yorum / Değerlendirme",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yorum",
+        "Değerlendirme",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "STK & Kampanyalar"
+    },
+    {
       "id": "d7aa0370db6a",
       "baslik": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti - Anka",
       "ozet": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti Anka",
@@ -592,6 +734,24 @@
       "id": "afe5a3610d70",
       "baslik": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti - ANKA Haber",
       "ozet": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti ANKA Haber",
+      "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxPSkpnLTh6XzFRelE3ai1kelp2OXgweUxobW5rX0VUMFZKWFlwWjQtRWlUWXZCcURzTGN6Z25Kb3VRYmNBUXNSb1o5ZnpwMF9sUUZqYnVZd0E0NTIwVjcwLXVGZnl2XzdYclhad2pxaFFtY2kwbFh6V3lOZEd2LWpOQjlnbmtPSXQ0RGphcmVxQmFJYTV0anQxRWNWTW5jaXBGcDE2eEx3VU9uRV9MV3Q0R1FtSUp5Z3dMeGhFcFc5UzBKTzBUWDRjOGQtSXh5Q3MwYjdPQ3c4VUR0LXc0M2FLbnBwTkR6QUt5OFJiTFJ2U0JURnRISUE?oc=5",
+      "tarih": "2025-09-22T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Hukuki Yorum",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "Hukuki Yorum",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "Hukuki Süreçler"
+    },
+    {
+      "id": "16ee26e4655f",
+      "baslik": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti - ankahaber.net",
+      "ozet": "Sinop Boyabat Çevre Platformu, Boyabat'taki bakır madeni projesine ilişkin yürütülen ÇED sürecinin durdurulmasını talep etti ankahaber.net",
       "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxPSkpnLTh6XzFRelE3ai1kelp2OXgweUxobW5rX0VUMFZKWFlwWjQtRWlUWXZCcURzTGN6Z25Kb3VRYmNBUXNSb1o5ZnpwMF9sUUZqYnVZd0E0NTIwVjcwLXVGZnl2XzdYclhad2pxaFFtY2kwbFh6V3lOZEd2LWpOQjlnbmtPSXQ0RGphcmVxQmFJYTV0anQxRWNWTW5jaXBGcDE2eEx3VU9uRV9MV3Q0R1FtSUp5Z3dMeGhFcFc5UzBKTzBUWDRjOGQtSXh5Q3MwYjdPQ3c4VUR0LXc0M2FLbnBwTkR6QUt5OFJiTFJ2U0JURnRISUE?oc=5",
       "tarih": "2025-09-22T10:00:00+03:00",
       "kaynak": "Google News",
@@ -957,6 +1117,25 @@
       "haber_kategorisi": "STK & Kampanyalar"
     },
     {
+      "id": "feb424b73987",
+      "baslik": "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı 14 soruda \"İklim Kanunu Teklifi\"ni anlattı - Anadolu Ajansı",
+      "ozet": "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı 14 soruda \"İklim Kanunu Teklifi\"ni anlattı Anadolu Ajansı",
+      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNRkNWbk5MeFktb3VpeGZ1VW1VbjBSOUlUY2VBM3dRZUd0Y24yV0dNdGJMeVh6b0xuY3ZBV1hoN25qYXc5cXVGZkdFRWdvck5LTFhoSV9SU0Y4Qy0yMW5XLVlQOFlpRHRxWkV6bXZweGlrUHExUTNxaDZTM0lIbkd4QW1BbHlLR1UxOEFVaHNhZFl0ZkJ6empFcXlWOUd4SkxNTmU1cVZsUVBsTEM5MXhoQ29KQUNmX1VhdW1xanZWT2lqRldYcU0w?oc=5",
+      "tarih": "2025-04-08T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yorum / Değerlendirme",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yorum",
+        "Değerlendirme",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet"
+    },
+    {
       "id": "d4b074e11ed9",
       "baslik": "12 maddede nasıl bir iklim kanunu istiyoruz? - greenpeace.org",
       "ozet": "12 maddede nasıl bir iklim kanunu istiyoruz? greenpeace.org",
@@ -1258,9 +1437,47 @@
       "haber_kategorisi": "Hukuki Süreçler"
     },
     {
+      "id": "c4708d191467",
+      "baslik": "Yüzlerce metre çekilen İznik Gölü’nün yanı başında yeni tehdit - yesilgazete.org",
+      "ozet": "Yüzlerce metre çekilen İznik Gölü’nün yanı başında yeni tehdit yesilgazete.org",
+      "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxNVElqMmR5c3RHOHBvZ3JGMmpXbnozaUpjYVpZZnduWHQ5WGg1Qy14Q2xITks2MmVDV0l4TlU3eTF0STVKMEswRjBUS1daWEVQWkF4Wlpvamt5TW9FY3VVSEVKN3pvRHR5STV3SVUxRndZTV80V3VoRTFzdXZrZnZWMVZVQmdnelA5NHdQY05pcw?oc=5",
+      "tarih": "2024-04-12T10:00:00+03:00",
+      "kaynak": "Yeşil Gazete",
+      "kategori": "Görüş / Yorum",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Görüş",
+        "Yorum",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "Su ve Kıyı"
+    },
+    {
       "id": "84e040cacca2",
       "baslik": "Afşin Elbistanlılar kömürlü termik santrallere ek ünite istemiyor - Yeşil Gazete",
       "ozet": "Afşin Elbistanlılar kömürlü termik santrallere ek ünite istemiyor Yeşil Gazete",
+      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNR2U1QVRoQ1J1cGtST0FaTUhRVnNhWlhGUURIRHhzUkhlYU81c09zX0lCd2VtZXNrZ0N2QWptZEZDeFh4UExLSGtuRk9jME5aRVZoZGJ1cldGMFQ2WHJHc2RNbWF5ZWx1cXRNM19aNnNrdEFhbXM1TDlKQ1BaYnAzSA?oc=5",
+      "tarih": "2024-04-03T10:00:00+03:00",
+      "kaynak": "Yeşil Gazete",
+      "kategori": "Görüş / Yorum",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Görüş",
+        "Yorum",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "Maden ve Enerji"
+    },
+    {
+      "id": "457ad41d0e49",
+      "baslik": "Afşin Elbistanlılar kömürlü termik santrallere ek ünite istemiyor - yesilgazete.org",
+      "ozet": "Afşin Elbistanlılar kömürlü termik santrallere ek ünite istemiyor yesilgazete.org",
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNR2U1QVRoQ1J1cGtST0FaTUhRVnNhWlhGUURIRHhzUkhlYU81c09zX0lCd2VtZXNrZ0N2QWptZEZDeFh4UExLSGtuRk9jME5aRVZoZGJ1cldGMFQ2WHJHc2RNbWF5ZWx1cXRNM19aNnNrdEFhbXM1TDlKQ1BaYnAzSA?oc=5",
       "tarih": "2024-04-03T10:00:00+03:00",
       "kaynak": "Yeşil Gazete",
@@ -1714,6 +1931,26 @@
       "haber_kategorisi": ""
     },
     {
+      "id": "b341994382bd",
+      "baslik": "COP 27: Kayıp ve Zarar, İklim Adaletinin Şafağı Olacak Mı? - greenpeace.org",
+      "ozet": "COP 27: Kayıp ve Zarar, İklim Adaletinin Şafağı Olacak Mı? greenpeace.org",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNODMxNDJWYWVaWGd5QXRJb3ZjVkJsQTZxaVRKUnFraGZBYW91MDNialBtaFl0b0NfeWhUR3pBYXVsSktVdDRfeWxmZ2V2Q05GTEhyUmh5Z1c0TXBLZ05yWnN5a0JYaWtDV041bkFWMXdFT3B1ZnVsZWRJQWF4N05tT3RGZGYzTjhYaFp1ZE1IOExYVEhMTklDYzNERQ?oc=5",
+      "tarih": "2022-11-25T11:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yorum / Değerlendirme",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yorum",
+        "Değerlendirme",
+        "Yaban Hayatı İzleme",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "STK & Kampanyalar"
+    },
+    {
       "id": "caf2bf237a0e",
       "baslik": "COP 27: Türkiye'nin yeni iklim hedefini uzmanlar nasıl yorumluyor? - BBC",
       "ozet": "COP 27: Türkiye'nin yeni iklim hedefini uzmanlar nasıl yorumluyor? BBC",
@@ -2014,6 +2251,44 @@
         "Köşe & Yorum"
       ],
       "haber_kategorisi": "Hukuki Süreçler"
+    },
+    {
+      "id": "d1bb56039705",
+      "baslik": "Rapor: Gelişmiş ekonomilerde insanlar, iklim değişikliği nedeniyle alışkanlıklarını değiştirmeye hazır - Yeşil Gazete",
+      "ozet": "Rapor: Gelişmiş ekonomilerde insanlar, iklim değişikliği nedeniyle alışkanlıklarını değiştirmeye hazır Yeşil Gazete",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNMV9GRXl2cUh2SE1QV0R4ZzV1VFd2bjRJV0lOa2MtcmN6RjUwMFYyOWxMeGxPZjEyaVNHelROeHo2dWFKbEYtWnZ1cTFoSnM3MXlTVGsyREdSVmR6VlFxZ1VYWWJiQi1yaTI0NHlJczVGRzFMVUpWSUg4S214cU1hd0hhMC1YLThfMlBzamVDZlZ2bXdtVUdHWTV5ZW5FQVNubDh4MjRaUE9qQ3FnNmM2MzVUQTdIcW80aVcwZ1VvYjA3YVk?oc=5",
+      "tarih": "2021-09-30T10:00:00+03:00",
+      "kaynak": "Yeşil Gazete",
+      "kategori": "Görüş / Yorum",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Görüş",
+        "Yorum",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "İklim ve Afet"
+    },
+    {
+      "id": "8cf4cfbbef68",
+      "baslik": "Rapor: Gelişmiş ekonomilerde insanlar, iklim değişikliği nedeniyle alışkanlıklarını değiştirmeye hazır - yesilgazete.org",
+      "ozet": "Rapor: Gelişmiş ekonomilerde insanlar, iklim değişikliği nedeniyle alışkanlıklarını değiştirmeye hazır yesilgazete.org",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNMV9GRXl2cUh2SE1QV0R4ZzV1VFd2bjRJV0lOa2MtcmN6RjUwMFYyOWxMeGxPZjEyaVNHelROeHo2dWFKbEYtWnZ1cTFoSnM3MXlTVGsyREdSVmR6VlFxZ1VYWWJiQi1yaTI0NHlJczVGRzFMVUpWSUg4S214cU1hd0hhMC1YLThfMlBzamVDZlZ2bXdtVUdHWTV5ZW5FQVNubDh4MjRaUE9qQ3FnNmM2MzVUQTdIcW80aVcwZ1VvYjA3YVk?oc=5",
+      "tarih": "2021-09-30T10:00:00+03:00",
+      "kaynak": "Yeşil Gazete",
+      "kategori": "Görüş / Yorum",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Görüş",
+        "Yorum",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "İklim ve Afet"
     },
     {
       "id": "e9860c453546",
@@ -2754,6 +3029,25 @@
       "haber_kategorisi": "İklim ve Afet"
     },
     {
+      "id": "92f383fa5db8",
+      "baslik": "İklim Değişikliğine Yerel Çözümler: Yağmur Hasadı projesi bileşenleri ile görüştük - yesilgazete.org",
+      "ozet": "İklim Değişikliğine Yerel Çözümler: Yağmur Hasadı projesi bileşenleri ile görüştük yesilgazete.org",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNUDZUcHJDZnZQYmx2NDIxQVBJOHhKQ1NjaEFOLWg0ZTZJZmpfY3NWRmVxSGZxdzFvd2p2c2VaMlVGemNTT1RZSjFFWTc1dW54Uk1sOVE2UnRlX2JwNDVUYkFzYXMwTzA1dml4NS0xaEVTWTJKN3B3YVZ5bE9RSTlnNkgwWk5jX2JTYk1EUm5kWktlRHFtMjNCemNRMzVwVGRCQmVKZDh2RG1zcjV2bEVyR3hfYjBmUEh5WXJIT1oyV0dGQQ?oc=5",
+      "tarih": "2017-03-01T11:00:00+03:00",
+      "kaynak": "Yeşil Gazete",
+      "kategori": "Görüş / Yorum",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Görüş",
+        "Yorum",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet"
+    },
+    {
       "id": "11fcdef67e40",
       "baslik": "Ahmet'le Açık Görüş - Silivri Cezaevi İzlenimleri - Bianet",
       "ozet": "Ahmet'le Açık Görüş - Silivri Cezaevi İzlenimleri Bianet",
@@ -3249,6 +3543,24 @@
         "Köşe & Yorum"
       ],
       "haber_kategorisi": ""
+    },
+    {
+      "id": "95bce2d1b105",
+      "baslik": "MADEN KANUNU, CİNER E DOKUNMADI! - Haber3",
+      "ozet": "MADEN KANUNU, CİNER E DOKUNMADI! Haber3",
+      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNVFBrQWNCdFRBWG03UFNsS3FYbUJJTERMUFVfNEdoRHVNb0JyMVBjc1dIZUpyZnBJdDRCZ0FQLXAwZzVrcVFlYTlIZFRfakZIUGFEQUl5Mlk1eFF4MG9Ga0pQWnBjOHJEM0JJb1NxUVJiYXFDUkRrSVZ6akZJZUd4VW5n0gGCAUFVX3lxTE1UUGtBY0J0VEFYbTdQU2xLcVhtQklMRExQVV80R2hEdU1vQnIxUGNzV0hlSnJmcEl0NEJnQVAtcDBnNWtxUWVhOUhkVF9qRkhQYURBSXkyWTV4UXgwb0ZrSlBacGM4ckQzQklvU3FRUmJhcUNSRGtJVnpqRkllR3hVbmc?oc=5",
+      "tarih": "2004-06-05T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Hukuki Yorum",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "Hukuki Yorum",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "Hukuki Süreçler"
     }
   ]
 }
