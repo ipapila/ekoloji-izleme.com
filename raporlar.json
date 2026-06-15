@@ -85,6 +85,23 @@
       "foto_url": ""
     },
     {
+      "id": 1,
+      "yil": 2025,
+      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
+      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
+      "dosya": "",
+      "etiket": "Maden",
+      "yazar": "",
+      "foto_url": "",
+      "tarih": "",
+      "tur": "Alan Araştırması",
+      "etiketler": [
+        "Maden Ocağı",
+        "Taş-Mermer Ocağı",
+        "Orman Alanı"
+      ]
+    },
+    {
       "id": "ff8a8eada877",
       "baslik": "MARMARA DENİZİ'NİN GELECEĞİ KOCAELİ'DE ŞEKİLLENİYOR - Analiz Gazetesi",
       "ozet": "MARMARA DENİZİ'NİN GELECEĞİ KOCAELİ'DE ŞEKİLLENİYOR Analiz Gazetesi",
@@ -4018,23 +4035,10 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
-      "id": 1,
-      "yil": 2025,
-      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
-      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
-      "dosya": "",
-      "etiket": "Maden",
-      "yazar": "",
-      "foto_url": "",
-      "tarih": "",
-      "tur": "Alan Araştırması",
-      "etiketler": [
-        "Maden Ocağı",
-        "Taş-Mermer Ocağı",
-        "Orman Alanı"
-      ]
     }
-  ]
+  ],
+  "_meta": {
+    "guncelleme": "2026-06-15T09:11:47.789Z",
+    "toplam": 212
+  }
 }
