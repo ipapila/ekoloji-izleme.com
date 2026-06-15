@@ -9,6 +9,8 @@
   // hem sayfa görünümlerini hem admin senkronunun birleştirme adımını
   // zehirleyip tarayıcıdan gelen yeni haberleri eliyordu. Kalıcı olarak sil.
   try { localStorage.removeItem("ekoloji_haber_silinen"); } catch {}
+  try { localStorage.removeItem("ekoloji_makale_silinen"); } catch {}
+  try { localStorage.removeItem("ekoloji_rapor_silinen"); } catch {}
   
   // Güvenli oturum kontrolü
   const adminAktif = (function() {
