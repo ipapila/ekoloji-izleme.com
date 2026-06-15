@@ -323,7 +323,7 @@ EKOSISTEM_RSS = [
      "url": "https://news.google.com/rss/search?q=çiftçi+köylü+tarım+maden+kamulaştırma+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
     {"ad": "Google News",  "etiket": "Balıkçı Toplulukları",   "genel": False, "hedef": "ekosistem", "bolum": "balikci",        "dil": "tr",
      "url": "https://news.google.com/rss/search?q=balıkçı+deniz+kirliliği+av+yasağı+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
-    {"ad": "Google News",  "etiket": "Yerli & Yerel Haklar",   "genel": False, "hedef": "ekosistem", "bolum": "yerli",          "dil": "tr",
+    {"ad": "Google News",  "etiket": "Haber",   "genel": False, "hedef": "haberler",          "dil": "tr",
      "url": "https://news.google.com/rss/search?q=yerel+halk+maden+HES+RES+direniş+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
     {"ad": "Google News",  "etiket": "Kadınlar & Ekoloji",     "genel": False, "hedef": "ekosistem", "bolum": "kadinlar",       "dil": "tr",
      "url": "https://news.google.com/rss/search?q=kadın+çevre+ekoloji+maden+HES+Türkiye&hl=tr&gl=TR&ceid=TR:tr", "web": "https://news.google.com"},
