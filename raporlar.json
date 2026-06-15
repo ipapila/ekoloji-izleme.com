@@ -1,6 +1,6 @@
 {
   "meta": {
-    "guncelleme": "2026-06-15T04:18:05.288534+00:00",
+    "guncelleme": "2026-06-15T12:14:55.789329+00:00",
     "toplam": 212
   },
   "raporlar": [
@@ -83,23 +83,6 @@
       "ozet": "Gediz Havzası, Batı Anadolu'nun en üretken tarım ovalarından birini beslerken aynı zamanda Türkiye'nin yoğun deri, tekstil ve jeotermal sanayi kümelerine ev sahipliği yapmaktadır. Bu çalışma, havzadaki yirmi kirletici odağı türlerine göre sınıflandırarak her birine geri dönüşsüzlük ve aciliyet eksenli bir risk ağırlığı (1–10) atamış ve bu ağırlıkları QGIS or-tamında mekânsal olarak haritalandırmıştır. Bulgular, havzanın 157 puanlık toplam göreli risk yükünün yaklaşık %83'ünün dört kirletici sınıftan (sanayi, madencilik, noktasal deşarj, jeotermal) kaynaklandığını ve kirliliğin Uşak, Manisa–Turgutlu–Salihli ve Alaşehir–Kula eksenlerinde mekânsal olarak kümelendiğini göstermektedir. Kümülatif yük, Ramsar statüsündeki Gediz Deltası'nda birikmektedir. Çalışma, göreli önceliklendirmeye dayalı bu yaklaşımın saha temelli su kalitesi ölçümleriyle kalibre edilmesi gerektiğini vurgulayarak alt-havza ölçeğinde farklılaştırılmış müdahale önerileri sunmaktadır.",
       "dosya": "https://ekoloji-izleme.com/dosya/Gediz_Havzas_nda_K_m_latif_Ekolojik_Risk_A_rl_kl_Bir_Mek_nsal_De_erlendirme.pdf",
       "foto_url": ""
-    },
-    {
-      "id": 1,
-      "yil": 2025,
-      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
-      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
-      "dosya": "",
-      "etiket": "Maden",
-      "yazar": "",
-      "foto_url": "",
-      "tarih": "",
-      "tur": "Alan Araştırması",
-      "etiketler": [
-        "Maden Ocağı",
-        "Taş-Mermer Ocağı",
-        "Orman Alanı"
-      ]
     },
     {
       "id": "ff8a8eada877",
@@ -4035,10 +4018,23 @@
         "Rapor & Analiz"
       ],
       "haber_kategorisi": "STK & Kampanyalar"
+    },
+    {
+      "id": 1,
+      "yil": 2025,
+      "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
+      "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
+      "dosya": "",
+      "etiket": "Maden",
+      "yazar": "",
+      "foto_url": "",
+      "tarih": "",
+      "tur": "Alan Araştırması",
+      "etiketler": [
+        "Maden Ocağı",
+        "Taş-Mermer Ocağı",
+        "Orman Alanı"
+      ]
     }
-  ],
-  "_meta": {
-    "guncelleme": "2026-06-15T09:11:47.789Z",
-    "toplam": 212
-  }
+  ]
 }
