@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+dagitici_content = r'''#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 dagitici.py — Tarama sonuçlarını hedef JSON dosyalarına dağıtır.
