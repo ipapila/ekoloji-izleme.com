@@ -3,8 +3,8 @@ name: Günlük Rapor Üretimi
 on:
   workflow_dispatch:
   schedule:
-    # 14:00 UTC = 17:00 Türkiye saati — günde tek rapor
-    - cron: '0 14 * * *'
+    # 07:00 UTC = 10:00 Türkiye saati — günde tek rapor
+    - cron: '0 7 * * *'
 
 jobs:
   rapor-uret:
