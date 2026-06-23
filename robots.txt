@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap konumu
+Sitemap: https://ekoloji-izleme.com/sitemap.xml
+
+# Gereksiz dosyaları indeksleme
+Disallow: /haberler.json
+Disallow: /site-data.js
