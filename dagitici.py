@@ -409,6 +409,7 @@ def arsiv_yaz():
         "makaleler": ("makaleler.json", "makaleler"),
         "kuresel":   ("kuresel.json",   "kuresel"),
         "ekosistem": ("ekosistem.json", "ekosistem"),
+        "direnis":   ("direnis.json",   "direnis"),
     }
 
     degisen = []
@@ -805,12 +806,16 @@ def dagit(gonder_github=False):
     print("\nAylık budama uygulanıyor…")
     haberler_liste = haberler_aylik_buda(kaynak)
     ihlaller_aylik_buda()
-    # KATALOG KOLEKSİYONLARI BUDANMAZ — raporlar.html/makaleler.html/kuresel.html
-    # arşivi okumuyor; budama bu sayfalarda geçmiş-ay kayıtlarını yok ediyordu.
-    # (Veri kaybını önlemek için kapatıldı. Frontend arşiv okuyacak hale gelirse geri açılabilir.)
-    # koleksiyon_aylik_buda("raporlar.json",  "raporlar")
-    # koleksiyon_aylik_buda("makaleler.json", "makaleler")
-    # koleksiyon_aylik_buda("kuresel.json",   "kuresel")
+    # KATALOG KOLEKSİYONLARI — arsiv.html artık raporlar/makaleler/kuresel/
+    # ekosistem/direnis dosyalarını da genel ARSIV_DOSYALAR listesinden
+    # okuyup sidebar'da gösteriyor, bu yüzden budama güvenle açılabilir.
+    # arsiv_yaz() her koleksiyon için önce arşiv dosyasını yazıp doğruladığından
+    # (id bazlı doğrulama), arşivlenmeyen hiçbir kayıt canlıdan silinmez.
+    koleksiyon_aylik_buda("raporlar.json",  "raporlar")
+    koleksiyon_aylik_buda("makaleler.json", "makaleler")
+    koleksiyon_aylik_buda("kuresel.json",   "kuresel")
+    koleksiyon_aylik_buda("ekosistem.json", "ekosistem")
+    koleksiyon_aylik_buda("direnis.json",   "direnis")
 
     # 4. Alt-kategori dosyaları yaz
     print("  Alt-kategori dosyaları yazılıyor…")
