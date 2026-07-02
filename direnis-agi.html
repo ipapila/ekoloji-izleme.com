@@ -544,6 +544,20 @@ Promise.allSettled([
     .filter(d=>!serverIds.has(String(d.id)));
   if(lsDirenis.length) dataJsonEkle(lsDirenis);
 
+  /* Savunma filtresi: localStorage'daki kayıtlar sunucudan bağımsız,
+     süresiz saklanıyor — bir kayıt sunucuda arşive taşınsa bile daha önce
+     bu tarayıcıya inmişse (SITE.get("direnis")) sonsuza dek gösterilmeye
+     devam edebiliyordu. Yalnızca bu ayı (+ tarihsiz grup/platform kayıtlarını)
+     tut; diğer canlı sayfalarla (haberler.html, raporlar.html, ekosistem.html)
+     aynı mantık.
+  */
+  const _buAyDrD = new Date();
+  const _buAyDr = `${_buAyDrD.getFullYear()}-${String(_buAyDrD.getMonth()+1).padStart(2,"0")}`;
+  tumKayitlar = tumKayitlar.filter(k => {
+    const ay = (k && k.tarih ? String(k.tarih) : "").slice(0,7);
+    return ay.length !== 7 || ay >= _buAyDr;
+  });
+
   /* tarihe göre sırala (gruplar tarihsiz, sona düşer) */
   tumKayitlar.sort((a,b)=> new Date(b.tarih||0) - new Date(a.tarih||0));
 

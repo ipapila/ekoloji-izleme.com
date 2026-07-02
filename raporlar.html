@@ -553,10 +553,21 @@ function yukle(){
   }).catch(()=>{const el=document.getElementById("ks_gunluk");if(el)el.textContent="0";});
 }
 
+// Diğer canlı sayfalarla (haberler.html, ihlaller.html, index.html, ekosistem.html)
+// aynı savunma mantığı: sunucu zaten bu ayı gösterecek şekilde budanıyor, ama
+// localStorage'daki 'raporlar' koleksiyonu (yerelListe) sunucudan bağımsız,
+// süresiz saklanıyor. Sunucudan arşive taşınmış bir kayıt, daha önce bu
+// tarayıcıya inmişse yerelListe üzerinden sonsuza dek sayfada kalabiliyordu.
+// Bu filtre, tarihi geçmiş-ay olan kayıtları (tarihsiz olanlar hariç) eler.
+const _buAyRapD = new Date();
+const _buAyRap = `${_buAyRapD.getFullYear()}-${String(_buAyRapD.getMonth()+1).padStart(2,"0")}`;
+const _guncelAydaRap = h => { const ay = (h && h.tarih ? String(h.tarih) : "").slice(0,7); return ay.length !== 7 || ay >= _buAyRap; };
+
 function isleRaporlar(uzakListe,yerelListe,silinen,meta){
   const map=new Map();
   [...uzakListe,...yerelListe].forEach(h=>{
     if(silinen.has(String(h.id)))return;
+    if(!_guncelAydaRap(h))return;
     const key=(h.url||h.baslik||String(h.id)).toLowerCase();
     if(!map.has(key)){if(!h.kategori&&h.etiket)h.kategori=h.etiket;h._haber_kat=haberKatTespit(h);map.set(key,h);}
   });
