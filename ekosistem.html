@@ -389,8 +389,21 @@ function digerKaynaklardan(data) {
 }
 
 /* ═══ VERİ YÜKLEME ═══════════════════════════════════════════════ */
-const EKOSISTEM_URL    = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/ekosistem.json";
-const HABERLER_URL_EKO = "https://raw.githubusercontent.com/ipapila/ekoloji-izleme.com/main/haberler.json";
+// NOT: raw.githubusercontent.com yerine aynı-origin (canlı domain) yolu
+// kullanılıyor — raw.githubusercontent kendi CDN önbelleğine sahip ve
+// backend budama sonrası dakikalarca eski (tüm geçmiş aylar dahil) veri
+// döndürebiliyordu, bu da sayfada Temmuz yanında eski ayların da
+// görünmesine yol açıyordu.
+const EKOSISTEM_URL    = "./ekosistem.json";
+const HABERLER_URL_EKO = "./haberler.json";
+
+// Diğer canlı sayfalarla (haberler.html, ihlaller.html, index.html) aynı
+// mantık: backend budama arşivlemeyi garantiliyor ama sayfa da savunma
+// amaçlı yalnızca bu ayı (+ tarihsiz kayıtları) göstersin — arşivlenmemiş
+// eski bir kayıt backend'de kalsa bile sayfada sızmasın.
+const _buAyEkoD = new Date();
+const _buAyEko = `${_buAyEkoD.getFullYear()}-${String(_buAyEkoD.getMonth()+1).padStart(2,"0")}`;
+const _guncelAydaEko = k => { const ay = (k && k.tarih ? String(k.tarih) : "").slice(0,7); return ay.length !== 7 || ay >= _buAyEko; };
 
 const silinen = getSilinen();
 const lsData  = (typeof SITE !== "undefined" ? (SITE.get("ekosistem") || []) : [])
@@ -405,7 +418,8 @@ function haberlerdenEkle(habData) {
     ...lsData,
     ...tumEkosistem.filter(k => !lsIds.has(String(k.id))),
     ...ekstra,
-  ].sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
+  ].filter(_guncelAydaEko)
+   .sort((a,b) => new Date(b.tarih||0) - new Date(a.tarih||0));
   renderSayfa();
 }
 
@@ -416,7 +430,7 @@ buildSidebar();
 fetch(EKOSISTEM_URL + "?v=" + Date.now())
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(data => {
-    const sunucu = (data.ekosistem || []).filter(k => !silinen.has(String(k.id)));
+    const sunucu = (data.ekosistem || []).filter(k => !silinen.has(String(k.id)) && _guncelAydaEko(k));
     const lsIds  = new Set(lsData.map(k => String(k.id)));
     tumEkosistem = [...lsData, ...sunucu.filter(k => !lsIds.has(String(k.id)))];
     return fetch(HABERLER_URL_EKO + "?v=" + Date.now())

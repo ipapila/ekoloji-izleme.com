@@ -199,6 +199,11 @@ async function aylarıYukle() {
     for (const kol of Object.keys(ARSIV_DOSYALAR)) {
       kontrol.push({ ay, kol, dosya: `arsiv/${ARSIV_DOSYALAR[kol]}-${ay}.json` });
     }
+    // Direniş Ağı canlı sayfada esas olarak haberler.json'dan "Eylem & Toplum"
+    // kategorisine giren kayıtları gösteriyor (direnis.json sadece birkaç özel
+    // kayıt tutuyor). O yüzden arşivde de o ay için haberler arşivi varsa
+    // "Direniş Ağı" ayı mevcut sayılmalı — yoksa neredeyse hiç ay görünmez.
+    kontrol.push({ ay, kol: "direnis", dosya: `arsiv/haberler-${ay}.json` });
   }
 
   const sonuclar = await Promise.allSettled(
@@ -282,6 +287,57 @@ function kolSec(btn, kol) {
   veriYukle();
 }
 
+// ── Kategori tespiti — direnis-agi.html ile birebir aynı ─────────────
+// (arşivdeki haberler-YYYY-MM.json içinden "Direniş Ağı"na ait olan
+//  alt kümeyi ayıklamak için gerekli; direnis.json çok az sayıda özel
+//  kayıt tutuyor, esas içerik haberler.json'dan kategori bazlı süzülüyor.)
+function _arsivHaberKatTespit(h) {
+  if (h.haber_kategorisi) return h.haber_kategorisi;
+  const _M = {"İ":"i","Ş":"ş","Ğ":"ğ","Ü":"ü","Ö":"ö","Ç":"ç"};
+  const _n = s => (s||"").replace(/[İŞĞÜÖÇ]/g, c => _M[c]||c).toLowerCase();
+  const eylem = _n(h.eylem);
+  const kat   = _n(h.kategori || h.etiket);
+  const metin = _n([h.baslik, h.ozet, h.kategori, h.etiket,
+                    ...(Array.isArray(h.etiketler) ? h.etiketler : [h.etiketler])
+                   ].filter(Boolean).join(" "));
+  const _D = {
+    "iklim":"İklim ve Afet","iklim olayları":"İklim ve Afet","iklim raporu":"İklim ve Afet",
+    "türkiye / iklim":"İklim ve Afet","hes / res / baraj":"Maden ve Enerji",
+    "orman / maden":"Maden ve Enerji","maden riski / atık":"Maden ve Enerji",
+    "resmi ihale / maden":"Maden ve Enerji","resmi / maden":"Maden ve Enerji",
+    "ihale / enerji":"Maden ve Enerji","resmi / enerji":"Maden ve Enerji",
+    "jes / çevre ihlali":"Maden ve Enerji","tarım alanları / maden":"Maden ve Enerji",
+    "enerji politikası":"Maden ve Enerji","kamulaştırma":"Hukuki Süreçler",
+    "çed kararları":"Hukuki Süreçler","çed analizi":"Hukuki Süreçler",
+    "hukuki yorum":"Hukuki Süreçler","stk":"STK & Kampanyalar",
+    "stk raporu":"STK & Kampanyalar","iklim hareketi":"STK & Kampanyalar",
+    "yaban hayatı":"Yaban Hayatı","nesli tehlike türler":"Yaban Hayatı",
+    "hayvan hakları":"Yaban Hayatı","su canlıları":"Su ve Kıyı",
+    "bitki & habitat":"Orman ve Doğa","akademik analiz":"Hukuki Süreçler",
+    "politika analizi":"Hukuki Süreçler","alan araştırması":"Orman ve Doğa",
+  };
+  if (_D[kat]) return _D[kat];
+  if (metin.includes("nöbet") || metin.includes("gözaltı") || metin.includes("tutuklama"))
+    return "Nöbetler ve Gözaltılar";
+  if (eylem.includes("direniş") || eylem.includes("eylem") ||
+      metin.includes("direniş") || metin.includes("protesto") ||
+      metin.includes("miting")  || metin.includes("yürüyüş") || metin.includes("boykot"))
+    return "Direniş ve Eylemler";
+  if (eylem.includes("stk") || kat.includes("stk") ||
+      metin.includes("greenpeace") || metin.includes("wwf") ||
+      metin.includes("doğa derneği") || metin.includes("tema vakfı"))
+    return "STK & Kampanyalar";
+  if (eylem.includes("hukuk") || eylem.includes("dava") ||
+      metin.includes("mahkeme") || metin.includes("yürütmeyi durdur") ||
+      metin.includes("iptal kararı") || metin.includes("çed kararı") ||
+      metin.includes("itiraz") || metin.includes("acele kamulaştırma"))
+    return "Hukuki Süreçler";
+  return "";
+}
+const _ARSIV_EYLEM_TOPLUM = new Set([
+  "Direniş ve Eylemler","Hukuki Süreçler","Nöbetler ve Gözaltılar","STK & Kampanyalar",
+]);
+
 // ── Veri yükle ───────────────────────────────────────────────────────
 async function veriYukle() {
   const liste = document.getElementById("haberListe");
@@ -289,8 +345,33 @@ async function veriYukle() {
   document.getElementById("sayfaNav").innerHTML = "";
   document.getElementById("toplamBant").innerHTML = "";
 
-  const dosya = `arsiv/${ARSIV_DOSYALAR[_seciliKol]}-${_seciliAy}.json?v=${Date.now()}`;
   try {
+    if (_seciliKol === "direnis") {
+      // Direniş Ağı = arsiv/direnis-{ay}.json (özel kayıtlar) +
+      // arsiv/haberler-{ay}.json içinden Eylem&Toplum kategorisine girenler.
+      const [dirR, habR] = await Promise.allSettled([
+        fetch(`arsiv/direnis-${_seciliAy}.json?v=${Date.now()}`).then(r => r.ok ? r.json() : null),
+        fetch(`arsiv/haberler-${_seciliAy}.json?v=${Date.now()}`).then(r => r.ok ? r.json() : null),
+      ]);
+      const birlesik = [];
+      if (dirR.status === "fulfilled" && dirR.value) {
+        birlesik.push(...(dirR.value.direnis || []));
+      }
+      if (habR.status === "fulfilled" && habR.value) {
+        const haberler = habR.value.haberler || [];
+        haberler.forEach(h => {
+          if (_ARSIV_EYLEM_TOPLUM.has(_arsivHaberKatTespit(h))) birlesik.push(h);
+        });
+      }
+      if (!birlesik.length) throw new Error("Bulunamadı");
+      _tumVeri = birlesik;
+      _filtreliVeri = [..._tumVeri];
+      toplamGuncelle();
+      sayfaRender();
+      return;
+    }
+
+    const dosya = `arsiv/${ARSIV_DOSYALAR[_seciliKol]}-${_seciliAy}.json?v=${Date.now()}`;
     const r = await fetch(dosya);
     if (!r.ok) throw new Error("Bulunamadı");
     const veri = await r.json();
