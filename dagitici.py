@@ -566,6 +566,7 @@ def koleksiyon_aylik_buda(dosya_adi: str, anahtar: str) -> int:
     if isinstance(veri, dict):
         veri[anahtar] = kalan
         veri.setdefault("meta", {})["aylik_budama"] = datetime.now(timezone.utc).isoformat()
+        veri["meta"]["toplam"] = len(kalan)
         p.write_text(json.dumps(veri, ensure_ascii=False, indent=2), encoding="utf-8")
     else:
         p.write_text(json.dumps(kalan, ensure_ascii=False, indent=2), encoding="utf-8")
