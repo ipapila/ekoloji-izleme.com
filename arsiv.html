@@ -191,7 +191,11 @@ async function aylarıYukle() {
   const kontrol = [];
   for (let i = 1; i <= 36; i++) {
     const d = new Date(bugun.getFullYear(), bugun.getMonth() - i, 1);
-    const ay = d.toISOString().slice(0, 7);
+    // NOT: toISOString() UTC'ye çevirir; UTC'nin doğusundaki saat dilimlerinde
+    // (ör. Türkiye, UTC+3) yerel gece yarısı UTC'de bir önceki günün akşamına
+    // denk gelir ve ay bir geriye kayar (en son tamamlanan ay hiç taranmaz).
+    // Yerel yıl/ay bileşenlerini doğrudan kullanmak bu kaymayı önler.
+    const ay = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     for (const kol of Object.keys(ARSIV_DOSYALAR)) {
       kontrol.push({ ay, kol, dosya: `arsiv/${ARSIV_DOSYALAR[kol]}-${ay}.json` });
     }

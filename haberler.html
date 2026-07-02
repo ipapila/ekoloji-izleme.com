@@ -693,7 +693,7 @@ function guncelleKolSayac() {
 // Yereldeki (localStorage) eski kayıtlar sunucudan arşive devredilen veriyi
 // hortlatmasın diye yerel katkılar mevcut ay + tarihsizlerle sınırlanır.
 // localStorage'a DOKUNULMAZ — yalnızca görüntüleme filtresi.
-const _buAy = new Date().toISOString().slice(0,7);
+const _buAyD = new Date(); const _buAy = `${_buAyD.getFullYear()}-${String(_buAyD.getMonth()+1).padStart(2,"0")}`;
 const _guncelAyda = h => { const ay = (h && h.tarih ? String(h.tarih) : "").slice(0,7); return ay.length !== 7 || ay >= _buAy; };
 function birlestir(data, localHaberler) {
   const silinen = _adminMod.getSilinen("haberler");
