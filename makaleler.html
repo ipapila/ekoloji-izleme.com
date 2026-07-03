@@ -436,7 +436,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")makaleKapat();});
 /* İlk render - makaleler.json'dan yükle, sonra render et */
 fetch('./makaleler.json?v='+Date.now())
   .then(r=>r.json())
-  .then(d=>{ if(typeof SITE!=='undefined'&&d.makaleler) SITE.bulkImport('makaleler',d.makaleler); })
+  .then(d=>{ if(typeof SITE!=='undefined') SITE.set('makaleler', Array.isArray(d.makaleler)?d.makaleler:[]); })
   .catch(()=>{})
   .finally(()=>{
     tumListe = tumMakaleler();
