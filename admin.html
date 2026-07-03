@@ -1008,6 +1008,14 @@ async function veriYaz(){
     const govde={...tam,[anahtar]:birlesik,_meta:{guncelleme:new Date().toISOString(),toplam:birlesik.length}};
     if(sha)await ghYaz(dosya,govde,sha);
     else await ghYazVeyaOlustur(dosya,govde);
+    // ÖNEMLİ: Yazma başarılı olduktan sonra yerel (localStorage) önbelleği temizle.
+    // Aksi halde bu koleksiyondaki kayıtlar GitHub'a başarıyla yazılmış olsa bile
+    // tarayıcıda sonsuza dek "yerel" olarak kalır ve bir sonraki senkronizasyonda
+    // (panelde İLGİSİZ bir kayıt eklense/silinse bile, çünkü veriYaz() TÜM
+    // koleksiyonları senkronize eder) dagitici.py'nin arşive gönderdiği eski
+    // kayıtları geri diriltir — aylık budama boşa çıkar. Artık veri GitHub'da
+    // güvende olduğu için yerelde ayrıca korunmasına gerek yok.
+    SITE.set(col,[]);
     return birlesik.length;
   }
   try{
