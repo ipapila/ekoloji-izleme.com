@@ -142,16 +142,18 @@ KURALLAR = [
         "AB çevre direktifi", "Paris anlaşması Türkiye",
     ]),
     ("makaleler", [
-        "analiz:", "inceleme:", "köşe yazısı",
+        "analiz:", "inceleme:", "köşe yazısı", "akademik analiz",
         "akademik çalışma", "üniversite araştırması",
-        "uzman görüşü", "bilim insanları",
+        "uzman görüşü", "uzman analizi", "bilim insanları",
         "iklim krizi neden", "ekoloji nedir",
-        "tarihsel arka plan", "perspektif",
+        "tarihsel arka plan", "perspektif", "görüş yazısı",
+        "yorum yazısı", "değerlendirme yazısı",
         "sürdürülebilirlik", "döngüsel ekonomi",
         "yeşil dönüşüm", "enerji dönüşümü analiz",
         "biyoçeşitlilik kaybı nedenleri",
         "karbon ayak izi", "emisyon analiz",
         "gıda güvenliği ekoloji", "tarım ekolojisi",
+        "prof. dr", "doç. dr", "araştırmacılar diyor",
     ]),
     ("kuresel", [
         "dünya genelinde", "küresel ısınma",
@@ -213,6 +215,13 @@ def kural_siniflandir(item: dict) -> str:
         if any(k in metin for k in ["küresel", "dünya", "cop ", "ipcc", "ab ", "avrupa"]):
             return "kuresel"
         return "haberler"
+    # Açıkça köşe yazısı/akademik analiz/görüş olarak etiketlenmiş kaynak
+    # kategorileri doğrudan makalelere gitsin — zayıf anahtar kelime
+    # puanlamasına bırakılırsa "raporlar"a kayabiliyorlardı.
+    if kategori in ["akademik analiz", "köşe yazısı", "köşe", "görüş", "görüş yazısı",
+                     "yorum", "yorum yazısı", "perspektif", "değerlendirme yazısı",
+                     "uzman görüşü", "uzman analizi"]:
+        return "makaleler"
 
     puan = {h: 0 for h, _ in KURALLAR}
     for hedef, kelimeler in KURALLAR:
