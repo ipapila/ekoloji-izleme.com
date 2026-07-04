@@ -88,6 +88,22 @@ import time
 import base64
 import requests
 from datetime import datetime, timezone, timedelta
+
+# Türkiye yerel saati (UTC+3). GitHub Actions runner'ları UTC kullandığından,
+# "bu ay" hesaplamalarında datetime.now()/date.today() (naive/UTC) yerine
+# bunu kullanmak, gece yarısına yakın saatlerde ay sınırının yanlış
+# belirlenmesini (arşivleme/budama hatalarını) önler.
+TR_TZ = timezone(timedelta(hours=3))
+
+
+def bu_ay_tr() -> str:
+    """Türkiye yerel saatine göre 'YYYY-MM' biçiminde bulunulan ay."""
+    return datetime.now(TR_TZ).strftime("%Y-%m")
+
+
+def bu_gun_tr_str() -> str:
+    """Türkiye yerel saatine göre 'YYYY-MM-DD' biçiminde bugünün tarihi."""
+    return datetime.now(TR_TZ).strftime("%Y-%m-%d")
 from pathlib import Path
 from collections import defaultdict
 
@@ -405,7 +421,7 @@ def arsiv_yaz():
     Değişen/yeni arşiv dosyalarının listesini döndürür (GitHub'a göndermek için).
     """
     from datetime import date
-    bu_ay = date.today().strftime("%Y-%m")
+    bu_ay = bu_ay_tr()
 
     arsiv_dir = Path("arsiv")
     arsiv_dir.mkdir(exist_ok=True)
@@ -434,9 +450,19 @@ def arsiv_yaz():
             continue
 
         # Geçmiş aylara göre grupla
+        # NOT — "makaleler": Google News arama tabanlı kaynaklardan geldiği için
+        # kayıtların gerçek yayın tarihi (tarih) genelde geçmişe ait olabiliyor
+        # (site tarafından o gün ilk kez KEŞFEDİLMİŞ olsa bile). Bu yüzden makale
+        # ayı, keşif anını temsil eden "tarama_tarihi" alanına göre belirlenir;
+        # bu alan yoksa (eski kayıtlar) "tarih" alanına düşülür. Diğer koleksiyonlar
+        # için değişiklik yok, onlarda "tarih" yayın tarihiyle aynı şeydir.
         aylar = defaultdict(list)
         for it in kayitlar:
-            ay = (it.get("tarih") or "")[:7]
+            if anahtar == "makaleler":
+                ay_kaynagi = it.get("tarama_tarihi") or it.get("tarih") or ""
+            else:
+                ay_kaynagi = it.get("tarih") or ""
+            ay = ay_kaynagi[:7]
             if len(ay) == 7 and ay < bu_ay:        # sadece tamamlanmış geçmiş aylar
                 aylar[ay].append(it)
 
@@ -488,7 +514,7 @@ def ihlaller_aylik_buda() -> int:
         print(f"  ⚠ İhlal budama: dosya okunamadı: {e}")
         return 0
     liste = veri.get("ihlaller", [])
-    bu_ay = datetime.now().strftime("%Y-%m")
+    bu_ay = bu_ay_tr()
     _onbellek = {}
 
     def _arsiv_idleri(ay):
@@ -542,7 +568,7 @@ def koleksiyon_aylik_buda(dosya_adi: str, anahtar: str) -> int:
         return 0
 
     liste = veri.get(anahtar, []) if isinstance(veri, dict) else (veri if isinstance(veri, list) else [])
-    bu_ay = datetime.now().strftime("%Y-%m")
+    bu_ay = bu_ay_tr()
     _onbellek = {}
 
     def _arsiv_idleri(ay):
@@ -561,7 +587,14 @@ def koleksiyon_aylik_buda(dosya_adi: str, anahtar: str) -> int:
 
     kalan, budanan, korunan = [], 0, 0
     for h in liste:
-        ay = (h.get("tarih") or "")[:7]
+        # "makaleler": ay, gerçek yayın tarihi yerine keşif tarihine (tarama_tarihi)
+        # göre belirlenir — bkz. arsiv_yaz() içindeki açıklama. Diğer koleksiyonlar
+        # için davranış değişmedi.
+        if anahtar == "makaleler":
+            ay_kaynagi = h.get("tarama_tarihi") or h.get("tarih") or ""
+        else:
+            ay_kaynagi = h.get("tarih") or ""
+        ay = ay_kaynagi[:7]
         if len(ay) == 7 and ay < bu_ay:
             if str(h.get("id")) in _arsiv_idleri(ay):
                 budanan += 1
@@ -595,7 +628,7 @@ def haberler_aylik_buda(kaynak: dict) -> list:
     Birleşik şemanın diğer anahtarlarına (raporlar/makaleler/…) dokunulmaz.
     arsiv_yaz()'dan SONRA çağrılmalıdır.
     """
-    bu_ay = datetime.now().strftime("%Y-%m")
+    bu_ay = bu_ay_tr()
     liste = kaynak.get("haberler", [])
     _onbellek = {}
 
@@ -661,7 +694,7 @@ def haberler_senkronize(kaynak: dict) -> int:
         # 180 günlük tarih sınırı: raporlar, makaleler ve ekosistem muaf.
         # ekosistem referans/arşiv niteliğindedir; içeriği tarihiyle eskidiğinde
         # KAYBOLMAMALI (su-canlıları/gençlik gibi seyrek bölümler aksi halde sıfırlanır).
-        _sinir_h = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
+        _sinir_h = (datetime.now(TR_TZ) - timedelta(days=180)).strftime("%Y-%m-%d")
         if kaynak_adi not in ("raporlar", "makaleler", "ekosistem"):
             liste = [x for x in liste if (x.get("tarih") or "9999") >= _sinir_h or not x.get("tarih")]
 

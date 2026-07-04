@@ -276,6 +276,44 @@ const SABIT_MAKALELER = [];
 const KAT_BADGEMAP = {analiz:"badge-analiz",hukuk:"badge-hukuk",saha:"badge-saha",veri:"badge-veri",politika:"badge-politika"};
 const KAT_LABELMAP = {analiz:"Analiz",hukuk:"Hukuki İnceleme",saha:"Saha Raporu",veri:"Veri / İstatistik",politika:"Politika"};
 
+// Tarayıcının (kategori alanı) ve admin panelinin (tur alanı) ürettiği ham
+// değerler, sidebar/filtre çubuğundaki 5 gruptan (analiz/hukuk/saha/veri/politika)
+// FARKLI metinler. Bu eşleştirme olmadan filtreler hep boş dönüyordu.
+// NOT: şu an "veri" (Veri / İstatistik) grubuna denk gelen bir kaynak yok;
+// bu grup canlıda boş görünebilir, yeni bir veri/istatistik kaynağı eklenene kadar normaldir.
+const KATEGORI_ESLESTIRME = {
+  // — tarayici.py kaynak kategorileri —
+  "Köşe / Yorum":        "politika",
+  "Köşe / Görüş":        "politika",
+  "Görüş / Yorum":       "politika",
+  "Analiz / Yorum":      "analiz",
+  "Yorum / Değerlendirme":"analiz",
+  "Hukuki Yorum":        "hukuk",
+  "Mühendislik / Analiz":"analiz",
+  // — admin.html "tur" alanı değerleri —
+  "Resmi Açıklama":      "politika",
+  "Basın Bülteni":       "politika",
+  "Kurum Bildirisi":     "politika",
+  "Köşe Yazısı":         "politika",
+  "Açık Mektup":         "politika",
+  "Analiz":              "analiz",
+  "Araştırma":           "analiz",
+  "Akademik Makale":     "analiz",
+  "Vaka Çalışması":      "saha",
+  "Politika Belgesi":    "politika",
+  "Röportaj":            "diger",
+  "Çeviri / Derleme":    "diger",
+  "Bireysel Yazı":       "diger",
+  "Diğer":               "diger"
+};
+// Bir makale kaydının filtre grubunu döndürür (analiz/hukuk/saha/veri/politika/diger).
+// Önce ham "kategori" (tarayıcı), sonra "tur" (admin panel) alanına bakar.
+function katGrup(m){
+  if(!m) return "diger";
+  const ham = m.kategori || m.tur || "";
+  return KATEGORI_ESLESTIRME[ham] || "diger";
+}
+
 let aktifKat = "hepsi";
 let goruntulenecek = 10;
 let tumListe = [];
@@ -295,15 +333,13 @@ function tumMakaleler(){
 }
 
 function badgeCls(kat){return KAT_BADGEMAP[kat]||"badge-diger";}
-function badgeLabel(m){return m.kategoriLabel||KAT_LABELMAP[m.kategori]||m.kategori||m.tur||"Makale";}
+function badgeLabel(m){return m.kategoriLabel||KAT_LABELMAP[katGrup(m)]||m.kategori||m.tur||"Makale";}
 
 function renderGrid(){
   const q = (document.getElementById("searchBox")||{value:""}).value.toLowerCase();
   filtreliListe = tumListe.filter(m=>{
-    if(aktifKat!=="hepsi"&&aktifKat!=="diger"){
-      if((m.kategori||"")!==aktifKat) return false;
-    } else if(aktifKat==="diger"){
-      if(KAT_BADGEMAP[m.kategori]) return false;
+    if(aktifKat!=="hepsi"){
+      if(katGrup(m)!==aktifKat) return false;
     }
     if(q&&!((m.baslik||"")+" "+(m.ozet||"")+" "+(m.yazar||"")).toLowerCase().includes(q)) return false;
     return true;
@@ -317,7 +353,7 @@ function renderGrid(){
     const tarih = m.tarih?new Date(m.tarih).toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"}):"";
     const domain = (m.url||m.kaynak_url)?(()=>{try{return new URL(m.url||m.kaynak_url).hostname.replace("www.","");}catch(e){return "";}})():"";
     const bl = badgeLabel(m);
-    const bc = badgeCls(m.kategori);
+    const bc = badgeCls(katGrup(m));
     return `<div class="haber-kart" onclick="makaleAc('${_esc(String(m.id))}')">
       <div>
         <h3>${_esc(m.baslik)}</h3>
@@ -361,9 +397,7 @@ function guncelleStatus(){
 function guncelleSidebar(){
   const say={analiz:0,hukuk:0,saha:0,veri:0,politika:0,diger:0};
   tumListe.forEach(m=>{
-    const k=m.kategori||"";
-    if(say[k]!==undefined) say[k]++;
-    else say.diger++;
+    say[katGrup(m)]++;
   });
   document.getElementById("ks_toplam").textContent = tumListe.length;
   ["analiz","hukuk","saha","veri","politika","diger"].forEach(k=>{

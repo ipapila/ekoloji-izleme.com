@@ -1524,10 +1524,12 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
                     if h_url: gorulen_urller.add(h_url)
                     baslik_to_id[h_bas] = h_id
                     log.info(f"  [dedup] alfanumerik {eski_id} -> sayisal {h_id}: {h.get('baslik','')[:60]}")
+                    h.setdefault("tarama_tarihi", datetime.now(timezone.utc).isoformat())
                     yeni.append(h)
                 # Her iki ID de ayni tipte → gercek duplicate, atla
                 continue
 
+            h.setdefault("tarama_tarihi", datetime.now(timezone.utc).isoformat())
             yeni.append(h)
             gorulen_idler.add(h_id)
             if h_url: gorulen_urller.add(h_url)
