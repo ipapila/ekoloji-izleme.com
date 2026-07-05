@@ -579,29 +579,71 @@ RAPOR_WEB_KAYNAKLARI = [
 ]
 
 # ══════════════════════════════════════════════════════════════════
-#  KÖŞE / YORUM / MAKALE KAYNAKLARI  →  hedef: "makaleler"
+#  MAKALE KAYNAKLARI  →  hedef: "makaleler"
+#  Makaleler menüsündeki 7 alt başlığa göre gruplanmıştır (bkz. makaleler.html
+#  dropdown). "kategori" alanı, dagitici.py'deki KATEGORI_ESLESTIRME /
+#  kural_siniflandir ile eşleşecek şekilde admin panel "tur" adlarıyla
+#  BİREBİR aynı yazılır: Resmi Açıklama, Basın Bülteni, Bireysel Yazı,
+#  Köşe Yazısı, Analiz, Araştırma, Akademik Makale, Röportaj.
 # ══════════════════════════════════════════════════════════════════
 
 MAKALE_RSS_KAYNAKLARI = [
-    {"url": "https://bianet.org/bianet/feed/rss",
-     "kaynak": "Bianet", "kategori": "Köşe / Yorum", "genel": False, "hedef": "makaleler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:bianet.org+%22k%C3%B6%C5%9Fe%22+OR+%22g%C3%B6r%C3%BC%C5%9F%22+cevre&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Bianet", "kategori": "Köşe / Görüş", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    # ── Resmi Açıklamalar ──
+    {"url": "https://news.google.com/rss/search?q=site:csb.gov.tr+%22bas%C4%B1n+a%C3%A7%C4%B1klamas%C4%B1%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı", "kategori": "Resmi Açıklama", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:tarimorman.gov.tr+%22bas%C4%B1n+a%C3%A7%C4%B1klamas%C4%B1%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Tarım ve Orman Bakanlığı", "kategori": "Resmi Açıklama", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=%C3%A7evre+bakanl%C4%B1%C4%9F%C4%B1+resmi+a%C3%A7%C4%B1klama+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Resmi Açıklama", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    # ── Basın Bültenleri (aktif STK'lar) ──
+    {"url": "https://news.google.com/rss/search?q=site:dogadernegi.org+%22bas%C4%B1n+b%C3%BClteni%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Doğa Derneği", "kategori": "Basın Bülteni", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=%22350.org%22+T%C3%BCrkiye+bas%C4%B1n+b%C3%BClteni+iklim&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "350.org TR", "kategori": "Basın Bülteni", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=%22K%C3%BCresel+Eylem+Grubu%22+bas%C4%B1n+b%C3%BClteni&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Küresel Eylem Grubu", "kategori": "Basın Bülteni", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    # ── Bireysel Yazılar ──
+    {"url": "https://news.google.com/rss/search?q=medium.com+ekoloji+iklim+kriz+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:yesilgazete.org+%22g%C3%B6r%C3%BC%C5%9F%22+OR+%22yorum%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Yeşil Gazete", "kategori": "Görüş / Yorum", "genel": False, "hedef": "makaleler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:iklimhaber.org+%22analiz%22+OR+%22yorum%22+OR+%22g%C3%B6r%C3%BC%C5%9F%22&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "İklim Haber", "kategori": "Analiz / Yorum", "genel": False, "hedef": "makaleler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=çevre+ekoloji+köşe+yorum+görüş+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Köşe / Görüş", "genel": False, "hedef": "makaleler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=iklim+krizi+yorum+değerlendirme+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Yorum / Değerlendirme", "genel": False, "hedef": "makaleler", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=orman+maden+çevre+hukuku+yorum+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Google News", "kategori": "Hukuki Yorum", "genel": False, "hedef": "makaleler", "dil": "tr"},
+     "kaynak": "Yeşil Gazete", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    # ── Köşe Yazıları ──
+    {"url": "https://bianet.org/bianet/feed/rss",
+     "kaynak": "Bianet", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:bianet.org+%22k%C3%B6%C5%9Fe%22+cevre&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Bianet", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:t24.com.tr+%22k%C3%B6%C5%9Fe+yaz%C4%B1s%C4%B1%22+%C3%A7evre+OR+ekoloji+OR+iklim&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "T24", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:artigercek.com+%22k%C3%B6%C5%9Fe%22+%C3%A7evre+OR+ekoloji&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Artı Gerçek", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    # ── Analiz & Araştırma ──
+    {"url": "https://news.google.com/rss/search?q=site:iklimhaber.org+%22analiz%22+OR+%22g%C3%B6r%C3%BC%C5%9F%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "İklim Haber", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=iklim+kriz+ekoloji+analiz+de%C4%9Ferlendirme+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=%C3%A7evre+ekoloji+ara%C5%9Ft%C4%B1rma+bulgular%C4%B1+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Araştırma", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=orman+maden+%C3%A7evre+hukuku+yorum+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    # ── Akademik Makaleler ──
+    {"url": "https://news.google.com/rss/search?q=site:dergipark.org.tr+ekoloji+OR+%C3%A7evre+OR+iklim&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "DergiPark", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=%C3%BCniversite+ara%C5%9Ft%C4%B1rmas%C4%B1+ekoloji+OR+iklim+OR+biyo%C3%A7e%C5%9Fitlilik+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    # ── Röportajlar ──
+    {"url": "https://news.google.com/rss/search?q=r%C3%B6portaj+ekoloji+OR+%C3%A7evre+OR+iklim+uzman+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Röportaj", "genel": False, "hedef": "makaleler", "dil": "tr"},
 ]
 
 MAKALE_WEB_KAYNAKLARI = [
     {"url": "https://politeknik.org.tr",
-     "kaynak": "Politeknik", "kategori": "Mühendislik / Analiz",
+     "kaynak": "Politeknik", "kategori": "Analiz",
      "secici": ".post-title a, h3 a, h2 a, article a",
      "ozet_secici": ".post-excerpt, p", "genel": False, "hedef": "makaleler", "dil": "tr",
      "ssl_dogrulama": True},

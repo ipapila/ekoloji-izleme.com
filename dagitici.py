@@ -236,7 +236,11 @@ def kural_siniflandir(item: dict) -> str:
     # puanlamasına bırakılırsa "raporlar"a kayabiliyorlardı.
     if kategori in ["akademik analiz", "köşe yazısı", "köşe", "görüş", "görüş yazısı",
                      "yorum", "yorum yazısı", "perspektif", "değerlendirme yazısı",
-                     "uzman görüşü", "uzman analizi"]:
+                     "uzman görüşü", "uzman analizi",
+                     # Makaleler menüsü alt başlıkları (tarayici.py MAKALE_RSS_KAYNAKLARI
+                     # ile birebir aynı yazılır — admin panel "tur" alanıyla da ortak):
+                     "resmi açıklama", "basın bülteni", "bireysel yazı",
+                     "analiz", "araştırma", "akademik makale", "röportaj"]:
         return "makaleler"
 
     puan = {h: 0 for h, _ in KURALLAR}
