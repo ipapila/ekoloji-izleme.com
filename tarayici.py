@@ -543,14 +543,8 @@ RSS_KAYNAKLARI = [
 # ══════════════════════════════════════════════════════════════════
 
 RAPOR_RSS_KAYNAKLARI = [
-    {"url": "https://news.google.com/rss/search?q=site:wwf.org.tr+rapor+OR+arastirma+OR+yayın&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "WWF Türkiye", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:tema.org.tr+rapor+OR+arastirma&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "TEMA", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:dogadernegi.org&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Doğa Derneği", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=site:greenpeace.org+turkey+rapor+OR+report&hl=tr&gl=TR&ceid=TR:tr",
-     "kaynak": "Greenpeace TR", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=iklim+raporu+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "İklim Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=çevre+araştırma+analiz+Türkiye+üniversite&hl=tr&gl=TR&ceid=TR:tr",
@@ -566,11 +560,6 @@ RAPOR_RSS_KAYNAKLARI = [
 ]
 
 RAPOR_WEB_KAYNAKLARI = [
-    {"url": "https://www.wwf.org.tr/ne_yapiyoruz/",
-     "kaynak": "WWF Türkiye", "kategori": "STK Raporu",
-     "secici": "article h2 a, .post-title a, h3 a, [class*='title'] a",
-     "ozet_secici": "p, .excerpt", "genel": False, "hedef": "raporlar", "dil": "tr",
-     "ssl_dogrulama": True},
     {"url": "https://www.dogadernegi.org/haberler/",
      "kaynak": "Doğa Derneği", "kategori": "STK Raporu",
      "secici": ".post-title a, h2 a, h3 a, article a",
@@ -672,13 +661,7 @@ ULUSLARARASI_RSS_KAYNAKLARI = [
      "kaynak": "Google News EN", "kategori": "Türkiye / Nükleer", "genel": False, "hedef": "uluslararasi", "dil": "en"},
 ]
 
-ULUSLARARASI_WEB_KAYNAKLARI = [
-    {"url": "https://www.greenpeace.org/international/tag/turkey/",
-     "kaynak": "Greenpeace International", "kategori": "Türkiye / Uluslararası",
-     "secici": ".post-title a, h2 a, h3 a, [class*='title'] a",
-     "ozet_secici": "p, .excerpt", "genel": False, "hedef": "uluslararasi", "dil": "en",
-     "ssl_dogrulama": True},
-]
+ULUSLARARASI_WEB_KAYNAKLARI = []
 
 # ══════════════════════════════════════════════════════════════════
 #  EKOSİSTEM & TOPLULUK KAYNAKLARI  →  hedef: "ekosistem"
@@ -806,11 +789,6 @@ EKOSISTEM_WEB_KAYNAKLARI = [
      "secici": ".post-title a, h2 a, h3 a, article a",
      "ozet_secici": ".excerpt, p",
      "genel": False, "hedef": "ekosistem", "bolum": "yaban", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.greenpeace.org/turkey/tag/iklim-krizi/",
-     "kaynak": "Greenpeace TR", "kategori": "Ekolojik Eşitsizlik",
-     "secici": ".post-title a, h2 a, h3 a, [class*='title'] a",
-     "ozet_secici": ".post-excerpt p, p",
-     "genel": False, "hedef": "ekosistem", "bolum": "esitsizlik", "dil": "tr", "ssl_dogrulama": True},
 ]
 
 # ══════════════════════════════════════════════════════════════════
@@ -826,10 +804,6 @@ WEB_KAYNAKLARI = [
      "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
     {"url": "https://magmadergisi.com",          "kaynak": "Magma Dergisi",   "kategori": "Çevre Medyası",
      "secici": ".card-title a, h3 a, h2 a, article a", "ozet_secici": ".card-text, .excerpt, p",
-     "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
-    {"url": "https://www.greenpeace.org/turkey/blog/", "kaynak": "Greenpeace TR", "kategori": "STK",
-     "secici": ".post-title a, h2 a, h3 a, .article__title a, [class*='title'] a",
-     "ozet_secici": ".post-excerpt p, [class*='excerpt'], p",
      "genel": False, "hedef": "haberler", "dil": "tr", "ssl_dogrulama": True},
     {"url": "https://www.csb.gov.tr/duyurular",  "kaynak": "Çevre Bakanlığı", "kategori": "Resmi",
      "secici": ".duyuru-item a, .news-item a, h3 a, h4 a, .list-item a, li a",
@@ -935,7 +909,7 @@ ORTA_SINYAL = [
     "yangın", "sel", "taşkın", "heyelan", "kıyı", "deniz", "göl", "dere",
     "su hakkı", "tarım arazisi", "bor", "altın maden", "jeotermal",
     "ihlal", "ruhsatsız", "izinsiz", "yıkım", "ağaç", "sera gazı",
-    "plastik kirlilik", "sondaj", "arama ruhsatı", "TEMA", "WWF", "Greenpeace",
+    "plastik kirlilik", "sondaj", "arama ruhsatı",
     "doğal yaşam", "yaban hayat", "kuş türü", "balık türü",
     # hayvan hakları / ekosistem bölüm sözcükleri — gerçek bölüm içeriğinin
     # eşik=1 filtresini geçmesi için (önceden bu sözcükler yoktu; bu yüzden
@@ -1031,7 +1005,7 @@ def haber_kategorisi_tespit(kayit: dict) -> str:
             ["direniş", "protesto", "miting", "yürüyüş", "boykot"]):
         return "Direniş ve Eylemler"
     if "stk & kampanya" in eylem or "stk" in kat or any(k in metin for k in
-            ["greenpeace", "wwf", "doğa derneği", "tema vakfı", "350.org"]):
+            ["doğa derneği", "350.org", "küresel eylem grubu"]):
         return "STK & Kampanyalar"
     if "hukuk & dava" in eylem or any(k in metin for k in
             ["mahkeme", "yürütmeyi durdur", "iptal kararı", "çed kararı", "itiraz",
