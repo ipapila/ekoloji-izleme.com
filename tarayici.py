@@ -653,6 +653,14 @@ ULUSLARARASI_RSS_KAYNAKLARI = [
      "kaynak": "The Guardian", "kategori": "Uluslararası Haber", "genel": True, "hedef": "uluslararasi", "dil": "en"},
     {"url": "https://350.org/feed/",
      "kaynak": "350.org", "kategori": "İklim Hareketi", "genel": False, "hedef": "uluslararasi", "dil": "en"},
+    {"url": "https://e360.yale.edu/feed.xml",
+     "kaynak": "Yale Environment 360", "kategori": "Uluslararası Analiz", "genel": False, "hedef": "uluslararasi", "dil": "en"},
+    {"url": "https://grist.org/feed/",
+     "kaynak": "Grist", "kategori": "Uluslararası Haber", "genel": False, "hedef": "uluslararasi", "dil": "en"},
+    {"url": "https://insideclimatenews.org/feed/",
+     "kaynak": "Inside Climate News", "kategori": "Uluslararası İklim Haberi", "genel": False, "hedef": "uluslararasi", "dil": "en"},
+    {"url": "https://www.globalpolicyjournal.com/blog/author/%2A/feed",
+     "kaynak": "Global Policy Journal", "kategori": "Küresel Politika Analizi", "genel": True, "hedef": "uluslararasi", "dil": "en"},
     {"url": "https://news.google.com/rss/search?q=Turkey+environment+mining+ecology&hl=en&gl=US&ceid=US:en",
      "kaynak": "Google News EN", "kategori": "Türkiye / Uluslararası", "genel": False, "hedef": "uluslararasi", "dil": "en"},
     {"url": "https://news.google.com/rss/search?q=Turkey+climate+deforestation+coal&hl=en&gl=US&ceid=US:en",
@@ -945,6 +953,49 @@ GENEL_KAYNAK_NEGATIF = [
     "eğitim", "üniversite sınav", "okul",
 ]
 
+# ── İNGİLİZCE SİNYAL LİSTELERİ ─────────────────────────────────────
+# dil="en" kaynaklar (Carbon Brief, Guardian, Mongabay, Yale E360, Grist,
+# Inside Climate News, Global Policy Journal vb.) için yukarıdaki Türkçe
+# anahtar kelimeler hiçbir zaman eşleşmez; ekoloji_puani daima 0 döndürüp
+# tüm İngilizce kayıtları elerdi. Bu liste o boşluğu kapatır.
+YUKSEK_SINYAL_EN = [
+    "environmental violation", "environmental disaster", "environmental impact assessment",
+    "deforestation", "illegal logging", "illegal mining", "coal plant", "coal-fired",
+    "nuclear plant", "wetland destruction", "biodiversity loss", "endangered species",
+    "water pollution", "air pollution", "soil pollution", "oil spill",
+    "toxic waste", "hazardous waste", "protected area", "national park",
+    "carbon emissions", "greenhouse gas", "extinction crisis", "coastal erosion",
+]
+
+ORTA_SINYAL_EN = [
+    "climate", "climate change", "environment", "environmental", "ecology", "ecological",
+    "pollution", "deforestation", "wildlife", "biodiversity", "conservation",
+    "renewable energy", "fossil fuel", "drought", "wildfire", "flood", "landslide",
+    "coastal", "ocean", "sea level", "forest", "mining", "dam", "emissions",
+    "sustainability", "sustainable", "nature", "habitat", "species", "ecosystem",
+    "recycling", "plastic waste", "animal rights", "animal welfare", "endangered",
+]
+
+RAPOR_SINYAL_EN = [
+    "report", "study", "research", "analysis", "assessment", "findings",
+    "data", "statistics", "survey",
+]
+
+KOSE_SINYAL_EN = [
+    "opinion", "commentary", "op-ed", "perspective", "column", "analysis", "viewpoint",
+]
+
+GUCLU_NEGATIF_EN = [
+    "stock market", "interest rate", "election result", "football", "soccer match",
+    "box office", "celebrity", "album release", "cryptocurrency", "bitcoin",
+]
+
+GENEL_KAYNAK_NEGATIF_EN = [
+    "trade deal", "gdp growth", "military operation", "national security strategy",
+    "election campaign", "tourism season", "stock exchange", "interest rates",
+    "hospital", "surgery", "university exam",
+]
+
 # ══════════════════════════════════════════════════════════════════
 #  9 GÖRÜNTÜ KATEGORİSİ TESPİTİ
 # ══════════════════════════════════════════════════════════════════
@@ -1066,25 +1117,52 @@ def _anahtar_var(metin: str, anahtarlar) -> bool:
 
 
 def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False,
-                  hedef: str = "haberler") -> int:
+                  hedef: str = "haberler", dil: str = "tr") -> int:
+    if dil == "tr":
+        yuksek, orta   = YUKSEK_SINYAL, ORTA_SINYAL
+        rapor, kose    = RAPOR_SINYAL, KOSE_SINYAL
+        guclu_neg      = GUCLU_NEGATIF
+        genel_neg      = GENEL_KAYNAK_NEGATIF
+    elif dil == "en":
+        yuksek, orta   = YUKSEK_SINYAL_EN, ORTA_SINYAL_EN
+        rapor, kose    = RAPOR_SINYAL_EN, KOSE_SINYAL_EN
+        guclu_neg      = GUCLU_NEGATIF_EN
+        genel_neg      = GENEL_KAYNAK_NEGATIF_EN
+    else:
+        # Türkçe/İngilizce dışındaki diller (Kürtçe, Arapça, Fransızca,
+        # Almanca vb.) için elimizde anahtar kelime sözlüğü yok. Böyle bir
+        # kaynağı "tr" sanıp Türkçe kelimelerle puanlamak — önceki hata —
+        # metni hiç eşleştiremeyip HER ZAMAN 0 puan verir ve kaydı sessizce
+        # eler. Bunun yerine: bu dildeki kaynaklar zaten bilinçli olarak
+        # ekoloji/iklim konusuna ÖZEL seçilmiş yayın organlarıdır (RSS
+        # URL'sinin kendisi zaten konuyu sınırlar) — tıpkı diğer bölümlerdeki
+        # GÜVENİLİR_ORG_KAYNAKLAR listesinin anahtar kelime aramadan kabul
+        # edilmesi gibi (bkz. bolum_dogrula). O yüzden anahtar kelime
+        # filtresini atlayıp kaydı doğrudan kabul ediyoruz.
+        # Not: "genel": True (yani geniş/genel konulu) bir kaynağı bu dilde
+        # eklerseniz gürültü süzülemez; bu durumda o dil için ayrı bir
+        # YUKSEK_SINYAL_XX / ORTA_SINYAL_XX / GENEL_KAYNAK_NEGATIF_XX listesi
+        # eklemek gerekir (aşağıdaki TR/EN listeleriyle aynı desende).
+        return 5
+
     metin = (baslik + " " + ozet).lower()
-    if _anahtar_var(metin, GUCLU_NEGATIF):
+    if _anahtar_var(metin, guclu_neg):
         return 0
-    if genel_kaynak and _anahtar_var(metin, GENEL_KAYNAK_NEGATIF):
+    if genel_kaynak and _anahtar_var(metin, genel_neg):
         return 0
     puan = 0
-    for k in YUKSEK_SINYAL:
+    for k in yuksek:
         if _ara(metin, k):
             puan += 3
-    for k in ORTA_SINYAL:
+    for k in orta:
         if _ara(metin, k):
             puan += 1
     baslik_lower = baslik.lower()
-    for k in YUKSEK_SINYAL:
+    for k in yuksek:
         if _ara(baslik_lower, k):
             puan += 2
     if hedef in ("raporlar", "makaleler", "uluslararasi") and puan == 0:
-        if _anahtar_var(metin, RAPOR_SINYAL + KOSE_SINYAL):
+        if _anahtar_var(metin, rapor + kose):
             puan = 2
     return puan
 
@@ -1324,7 +1402,7 @@ def _rss_tek_kaynak(kaynak: dict) -> tuple:
                 entry.get("published_parsed") or entry.get("updated_parsed"))
             if not baslik or not link:
                 continue
-            puan = ekoloji_puani(baslik, ozet, genel, hedef)
+            puan = ekoloji_puani(baslik, ozet, genel, hedef, dil)
             esik = 4 if genel else 1
             if puan < esik:
                 reddedilen += 1
@@ -1408,7 +1486,7 @@ def _web_tek_kaynak(kaynak: dict) -> tuple:
                     el = parent.select_one(kaynak["ozet_secici"])
                     if el:
                         ozet = el.get_text(" ", strip=True)[:300]
-            puan = ekoloji_puani(baslik, ozet, genel, hedef)
+            puan = ekoloji_puani(baslik, ozet, genel, hedef, dil)
             esik = 4 if genel else 1
             if puan < esik:
                 reddedilen += 1
