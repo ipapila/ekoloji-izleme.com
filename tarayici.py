@@ -1339,6 +1339,28 @@ def haber_id(url: str, baslik: str, kaynak: str = "") -> str:
     return hashlib.md5(f"{url_normalize(url)}|{baslik_normalize(baslik)}".encode()).hexdigest()[:12]
 
 
+_LISTELEME_BASLIK_RE = re.compile(
+    r"(?:^|/)\s*(?:sayfa|page)\s*:?\s*\d+\b", re.IGNORECASE)
+_LISTELEME_TAM_BASLIK = {
+    "haberler", "duyurular", "basın açıklamaları", "basın duyurusu",
+    "basın bültenleri", "anasayfa", "ana sayfa",
+}
+
+def _listeleme_sayfasi_mi(baslik: str) -> bool:
+    """Google News bazen site: sorgularında gerçek makale yerine, o sitenin
+    sayfalama/listeleme (arşiv) sayfalarını sonuç olarak döndürüyor
+    (örn. 'Haberler / Sayfa: 289 - ...'). Bunlar gerçek içerik değildir,
+    her taramada 'yeni' görünüp listeyi kirletir; burada eleniyor."""
+    if not baslik:
+        return False
+    if _LISTELEME_BASLIK_RE.search(baslik):
+        return True
+    # Site adı öncesi ilk parça (örn. "Haberler - T.C. Çevre...") tek başına
+    # jenerik bir liste adıysa da ele.
+    ilk_parca = re.split(r"\s*[-–—|]\s*", baslik, maxsplit=1)[0].strip().lower()
+    return ilk_parca in _LISTELEME_TAM_BASLIK
+
+
 def tarih_normalize(tarih_str) -> Optional[str]:
     if not tarih_str:
         return None
@@ -1401,6 +1423,9 @@ def _rss_tek_kaynak(kaynak: dict) -> tuple:
             tarih  = tarih_normalize(
                 entry.get("published_parsed") or entry.get("updated_parsed"))
             if not baslik or not link:
+                continue
+            if _listeleme_sayfasi_mi(baslik):
+                reddedilen += 1
                 continue
             puan = ekoloji_puani(baslik, ozet, genel, hedef, dil)
             esik = 4 if genel else 1
@@ -1474,6 +1499,9 @@ def _web_tek_kaynak(kaynak: dict) -> tuple:
         for a in linkler:
             baslik = a.get_text(" ", strip=True)
             if not baslik or len(baslik) < 10:
+                continue
+            if _listeleme_sayfasi_mi(baslik):
+                reddedilen += 1
                 continue
             href = a.get("href", "")
             if not href:
