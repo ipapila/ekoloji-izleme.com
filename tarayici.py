@@ -545,7 +545,7 @@ RSS_KAYNAKLARI = [
 RAPOR_RSS_KAYNAKLARI = [
     {"url": "https://news.google.com/rss/search?q=site:dogadernegi.org&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Doğa Derneği", "kategori": "STK Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
-    {"url": "https://news.google.com/rss/search?q=iklim+raporu+Türkiye+2025&hl=tr&gl=TR&ceid=TR:tr",
+    {"url": "https://news.google.com/rss/search?q=iklim+raporu+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "İklim Raporu", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=çevre+araştırma+analiz+Türkiye+üniversite&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Akademik Analiz", "genel": False, "hedef": "raporlar", "dil": "tr"},
@@ -560,7 +560,7 @@ RAPOR_RSS_KAYNAKLARI = [
 ]
 
 RAPOR_WEB_KAYNAKLARI = [
-    {"url": "https://www.dogadernegi.org/haberler/",
+    {"url": "https://dogadernegi.org/tr/haberler/",
      "kaynak": "Doğa Derneği", "kategori": "STK Raporu",
      "secici": ".post-title a, h2 a, h3 a, article a",
      "ozet_secici": ".excerpt, p", "genel": False, "hedef": "raporlar", "dil": "tr",
@@ -792,7 +792,7 @@ EKOSISTEM_RSS_KAYNAKLARI = [
 ]
 
 EKOSISTEM_WEB_KAYNAKLARI = [
-    {"url": "https://www.dogadernegi.org/haberler/",
+    {"url": "https://dogadernegi.org/tr/haberler/",
      "kaynak": "Doğa Derneği", "kategori": "Yaban Hayatı",
      "secici": ".post-title a, h2 a, h3 a, article a",
      "ozet_secici": ".excerpt, p",
