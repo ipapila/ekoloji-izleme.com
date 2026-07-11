@@ -655,10 +655,24 @@ MAKALE_RSS_KAYNAKLARI = [
      "kaynak": "DergiPark", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=%C3%BCniversite+ara%C5%9Ft%C4%B1rmas%C4%B1+ekoloji+OR+iklim+OR+biyo%C3%A7e%C5%9Fitlilik+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=%22Levent+Kurnaz%22+iklim&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "M. Levent Kurnaz (Boğaziçi İklim Merkezi)", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:yesilgazete.org+%22Sedat+G%C3%BCndo%C4%9Fdu%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Sedat Gündoğdu (Yeşil Gazete)", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://www.aykutcoban.org/feed/",
+     "kaynak": "Aykut Çoban (Kişisel Site)", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:polenekoloji.org+%22Aykut+%C3%87oban%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Aykut Çoban (Polen Ekoloji)", "kategori": "Akademik Makale", "genel": False, "hedef": "makaleler", "dil": "tr"},
 
     # ── Röportajlar ──
     {"url": "https://news.google.com/rss/search?q=r%C3%B6portaj+ekoloji+OR+%C3%A7evre+OR+iklim+uzman+T%C3%BCrkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Röportaj", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    # ── İklim Medyası / Analiz Kuruluşları ──
+    {"url": "https://iklimgazetesi.com/feed/",
+     "kaynak": "İklim Gazetesi", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://www.ekoiq.com/feed/",
+     "kaynak": "ekoIQ", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
 ]
 
 MAKALE_WEB_KAYNAKLARI = [
