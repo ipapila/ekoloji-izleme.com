@@ -557,6 +557,10 @@ RAPOR_RSS_KAYNAKLARI = [
      "kaynak": "Google News", "kategori": "Enerji Politikası", "genel": False, "hedef": "raporlar", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=site:shura-enerji.com&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "SHURA Enerji", "kategori": "Enerji Politikası", "genel": False, "hedef": "raporlar", "dil": "tr"},
+    {"url": "https://sefia.org/feed/",
+     "kaynak": "SEFiA", "kategori": "Enerji Politikası", "genel": False, "hedef": "raporlar", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=SEFiA+k%C3%B6m%C3%BCr+OR+enerji+OR+iklim&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "SEFiA", "kategori": "Enerji Politikası", "genel": False, "hedef": "raporlar", "dil": "tr"},
 ]
 
 RAPOR_WEB_KAYNAKLARI = [
@@ -673,6 +677,10 @@ MAKALE_RSS_KAYNAKLARI = [
      "kaynak": "İklim Gazetesi", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
     {"url": "https://www.ekoiq.com/feed/",
      "kaynak": "ekoIQ", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://www.ekoloji.org/feed/",
+     "kaynak": "Toplumsal Ekoloji Grubu", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:ekoloji.org&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Toplumsal Ekoloji Grubu", "kategori": "Analiz", "genel": False, "hedef": "makaleler", "dil": "tr"},
 ]
 
 MAKALE_WEB_KAYNAKLARI = [
