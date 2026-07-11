@@ -599,6 +599,37 @@ MAKALE_RSS_KAYNAKLARI = [
     {"url": "https://news.google.com/rss/search?q=site:yesilgazete.org+%22g%C3%B6r%C3%BC%C5%9F%22+OR+%22yorum%22&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Yeşil Gazete", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
 
+    # ── Bağımsız Gazeteciler / Yazarlar (isim bazlı takip) ──
+    # Yeni bir isim eklerken: varsa kişisel blog/RSS + o isme özel
+    # Google News site: sorguları şeklinde ekle, "kategori" hep "Bireysel Yazı" kalsın.
+    {"url": "https://yusufyavuzhaber2022.com/feed/",
+     "kaynak": "Yusuf Yavuz (Blog)", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:odatv.com+%22Yusuf+Yavuz%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Yusuf Yavuz (Odatv)", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:bianet.org+%22Yusuf+Yavuz%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Yusuf Yavuz (Bianet)", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    {"url": "https://news.google.com/rss/search?q=site:evrensel.net+%22%C3%96zer+Akdemir%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Özer Akdemir (Evrensel)", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:ekolojibirligi.org+%22%C3%96zer+Akdemir%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Özer Akdemir (Ekoloji Birliği)", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    {"url": "https://elifince.com/feed/",
+     "kaynak": "Elif İnce (Blog)", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:iklimadaleti.org+%22Elif+%C4%B0nce%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Elif İnce (İklim Adaleti)", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    {"url": "https://news.google.com/rss/search?q=%22Mine+B.+Tekman%22+ekoloji+OR+n%C3%BCkleer&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Mine B. Tekman", "kategori": "Bireysel Yazı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    {"url": "https://news.google.com/rss/search?q=site:cumhuriyet.com.tr+%22Murat+A%C4%9F%C4%B1rel%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Murat Ağırel (Cumhuriyet)", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
+    {"url": "https://sokaktv.com/kose-yazilari/feed/",
+     "kaynak": "Fatih Bozoğlu (Sokak TV)", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+    {"url": "https://news.google.com/rss/search?q=site:sokaktv.com+%22Fatih+Bozo%C4%9Flu%22&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Fatih Bozoğlu (Sokak TV)", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
+
     # ── Köşe Yazıları ──
     {"url": "https://bianet.org/bianet/feed/rss",
      "kaynak": "Bianet", "kategori": "Köşe Yazısı", "genel": False, "hedef": "makaleler", "dil": "tr"},
