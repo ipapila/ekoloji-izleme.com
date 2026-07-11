@@ -1,22 +1,21 @@
 {
   "meta": {
     "guncelleme": "2026-07-11T09:56:15.021860+00:00",
-    "toplam": 56,
+    "toplam": 57,
     "aylik_budama": "2026-07-11T09:56:15.190595+00:00"
   },
   "raporlar": [
     {
-      "id": 31,
+      "id": 32,
       "baslik": "Derin Deniz Madenciliği Raporu",
-      "tarih": "2026-07-11",
+      "tarih": "2026-07-11T12:00:00+03:00",
       "yil": 2026,
       "yazar": "ekoloji-izleme.com",
       "tur": "Alan Araştırması",
       "etiketler": [
+        "Maden Ocağı",
         "Biyoçeşitlilik",
         "Deniz Kirliliği",
-        "Bilimsel Araştırma",
-        "Nesli Tehlike Altında Türler",
         "Su Canlıları"
       ],
       "ozet": "Neyin madenciliği yapılıyor?\n\nDerin deniz madenciliği, 4-6 km derinlikteki okyanus tabanından üç tür kaynağın çıkarılmasını kapsıyor: abisal ovalardaki polimetalik nodüller (manganez, nikel, kobalt, bakır içeren \"patates\" büyüklüğünde taşlar), hidrotermal bacalardaki polimetalik sülfitler ve deniz dağlarındaki kobalt bakımından zengin kabuklar.\n\nEndüstrinin ana argümanı, bu minerallerin \"yeşil dönüşüm\" teknolojileri için kritik olduğu ve karadaki madenciliğin sosyal/ekolojik maliyetlerinden kaçınmanın bir yolu olduğudur. Bu raporun amacı, bu argümanı bilimsel kanıt, ekolojik risk, insan hakları ve siyasi-iktisadi güç ilişkileri açısından sınamak.",
@@ -29,7 +28,8 @@
       "baslik": "Türkiye'de Madencilik ve Orman Tahribatı Raporu",
       "ozet": "2020–2025 arası maden sahası kayıplarının analizi.",
       "dosya": "",
-      "etiket": "Maden"
+      "etiket": "Maden",
+      "tarih": "2025-06-30T12:00:00+03:00"
     },
     {
       "id": "241d1f188375",
@@ -1139,7 +1139,7 @@
     }
   ],
   "_meta": {
-    "guncelleme": "2026-07-11T12:07:47.452Z",
-    "toplam": 57
+    "guncelleme": "2026-07-11T11:53:38.906Z",
+    "toplam": 58
   }
 }
