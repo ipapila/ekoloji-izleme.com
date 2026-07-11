@@ -1631,6 +1631,13 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
                 eski.setdefault(kol, [])
             toplam = sum(len(eski[k]) for k in ("haberler","raporlar","makaleler","uluslararasi","ekosistem"))
             log.info(f"Mevcut: {toplam} kayit")
+            # [TEŞHİS] Koleksiyon bazlı kırılım — bir koleksiyonun beklenenden
+            # düşük gelmesi (örn. raporlar için tek haneli bir sayı), o
+            # koleksiyonun her taramada "sıfırdan" okunduğunu ve mevcut
+            # kayıtların dedup için görünmediğini gösterir (tarama_tarihi'nin
+            # sürekli "şimdi"ye sıfırlanması sorununun kök nedeni budur).
+            for kol in ("haberler", "raporlar", "makaleler", "uluslararasi", "ekosistem"):
+                log.info(f"  [TEŞHİS] eski[{kol}]: {len(eski.get(kol, []))} kayit")
         except Exception as e:
             log.warning(f"Mevcut dosya okunamadi: {e}, sifirdan baslaniyor.")
 
