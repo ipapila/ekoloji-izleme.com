@@ -206,11 +206,22 @@ ISTISNA_IDLER = {
     '57d8101fa98b',  # CHP Meclis haberi
 }
 
+# ── KÖŞE YAZISI BAŞLIK DESENİ ─────────────────────────────────────────
+# Google News, köşe yazılarını "Yazar Adı yazdı : Başlık" biçiminde döndürür
+# (bkz. "Deniz Berktay yazdı :", "Olaylar Ve Görüşler yazdı :"). Bu, kaynağın
+# "kategori" alanından bağımsız, başlığın kendisinden gelen güçlü bir
+# köşe-yazısı sinyalidir. "Haber / Genel Haber / Gündem" gibi genel
+# kategorili kaynaklar (ör. Cumhuriyet'in genel çevre RSS'i) bu tür
+# yazıları da taşıyabildiği için, kategoriye bakan kısayoldan ÖNCE
+# kontrol edilmesi gerekir; aksi halde köşe yazıları haberler'de kalır.
+KOSE_BASLIK_DESENI = re.compile(r'(?i)^.{2,60}\byazd[ıi]\s*:')
+
 def kural_siniflandir(item: dict) -> str:
     if item.get("id") in ISTISNA_IDLER:
         return "haberler"
+    baslik = item.get("baslik") or ""
     metin = (
-        (item.get("baslik") or "") + " " +
+        baslik + " " +
         (item.get("ozet") or "") + " " +
         (item.get("kategori") or "")
     ).lower()
@@ -220,6 +231,14 @@ def kural_siniflandir(item: dict) -> str:
 
     if kaynak_turu == "harita":
         return "ihlaller"
+
+    # Başlık "Yazar Adı yazdı : ..." desenine uyuyorsa, kategoriye
+    # bakılmaksızın makalelere yönlendir. "Haber / Genel Haber / Gündem"
+    # gibi genel kategorili kaynaklardan (ör. Cumhuriyet'in genel çevre
+    # RSS'i) gelen köşe yazıları başka hiçbir kurala uymadığı için bu
+    # kontrol, diğer tüm kısayollardan önce yapılır.
+    if KOSE_BASLIK_DESENI.search(baslik):
+        return "makaleler"
 
     if kategori in ["çevre ihlali", "hed / res / baraj", "kamulaştırma", "çed kararları", "orman / maden", "resmi / maden", "resmi i̇hale / maden", "resmi ihale / maden", "resmi / enerji", "resmi gazete çevre"]:
         return "ihlaller"
@@ -235,7 +254,8 @@ def kural_siniflandir(item: dict) -> str:
     # kategorileri doğrudan makalelere gitsin — zayıf anahtar kelime
     # puanlamasına bırakılırsa "raporlar"a kayabiliyorlardı.
     if kategori in ["akademik analiz", "köşe yazısı", "köşe", "görüş", "görüş yazısı",
-                     "yorum", "yorum yazısı", "perspektif", "değerlendirme yazısı",
+                     "görüşler", "yorum", "yorum yazısı", "yorumlar", "yazarlar",
+                     "köşe yazarı", "köşe yazarları", "perspektif", "değerlendirme yazısı",
                      "uzman görüşü", "uzman analizi",
                      # Makaleler menüsü alt başlıkları (tarayici.py MAKALE_RSS_KAYNAKLARI
                      # ile birebir aynı yazılır — admin panel "tur" alanıyla da ortak):

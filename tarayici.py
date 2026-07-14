@@ -985,9 +985,16 @@ RAPOR_SINYAL = [
 ]
 
 KOSE_SINYAL = [
-    "köşe", "yorum", "görüş", "değerlendirme", "eleştiri",
-    "perspektif", "bakış açısı", "analiz", "tartışma",
+    "köşe", "yorum", "yorumlar", "görüş", "görüşler", "yazarlar",
+    "değerlendirme", "eleştiri", "perspektif", "bakış açısı",
+    "analiz", "tartışma",
 ]
+
+# Google News, köşe yazılarını "Yazar Adı yazdı : Başlık" biçiminde
+# döndürür (ör. "Deniz Berktay yazdı :", "Olaylar Ve Görüşler yazdı :").
+# Bu, kaynağın statik "hedef" alanından bağımsız, başlığın kendisinden
+# gelen güçlü bir köşe-yazısı sinyalidir.
+KOSE_BASLIK_DESENI = re.compile(r'(?i)^.{2,60}\byazd[ıi]\s*:')
 
 GUCLU_NEGATIF = [
     "faiz", "borsa", "döviz", "kur", "enflasyon", "bütçe açığı",
@@ -1223,6 +1230,8 @@ def ekoloji_puani(baslik: str, ozet: str = "", genel_kaynak: bool = False,
 def icerik_tipi_tespit(baslik: str, ozet: str, hedef: str, kaynak: str) -> str:
     if hedef == "uluslararasi":
         return "uluslararasi"
+    if KOSE_BASLIK_DESENI.search(baslik or ""):
+        return "kose"
     metin = (baslik + " " + ozet).lower()
     if hedef == "raporlar" or any(k in metin for k in RAPOR_SINYAL):
         return "rapor"
@@ -1457,17 +1466,24 @@ def fetch(url: str, timeout: int = 8, ssl_dogrulama: bool = True) -> Optional[re
 #  RSS TARAMA
 # ══════════════════════════════════════════════════════════════════
 
-def _rss_tek_kaynak(kaynak: dict) -> tuple:
-    """Tek bir RSS kaynağını tarar, (hedef, kayit_listesi) döndürür."""
+def _rss_tek_kaynak(kaynak: dict) -> dict:
+    """Tek bir RSS kaynağını tarar, {hedef: kayit_listesi} döndürür.
+
+    Not: Kayıtların çoğu kaynağın statik `hedef` alanına gider, ancak
+    köşe yazısı başlık desenine uyan tekil kayıtlar (bkz. KOSE_BASLIK_DESENI)
+    kaynağın hedefinden bağımsız olarak "makaleler"e yönlendirilir; bu
+    yüzden dönüş değeri tek bir hedefe değil, hedef başına gruplanmış bir
+    sözlüğe dönüştürülmüştür.
+    """
     genel  = kaynak.get("genel", False)
     hedef  = kaynak.get("hedef", "haberler")
     dil    = kaynak.get("dil", "tr")
-    kayitlar = []
+    sonuc: dict = {}
     log.info(f"RSS: {kaynak['kaynak']} [{hedef}|{dil}|genel={genel}]")
     try:
         feed = feedparser.parse(kaynak["url"])
         if feed.bozo and not feed.entries:
-            return hedef, kayitlar
+            return sonuc
         kabul = reddedilen = 0
         for entry in feed.entries[:25]:
             baslik = entry.get("title", "").strip()
@@ -1485,6 +1501,14 @@ def _rss_tek_kaynak(kaynak: dict) -> tuple:
             if puan < esik:
                 reddedilen += 1
                 continue
+            # Genel "haberler" hedefli kaynaklardan (ör. Cumhuriyet'in
+            # genel çevre RSS'i) gelen köşe yazıları — "Yazar Adı yazdı :"
+            # başlık deseniyle tanınır — statik hedefe bakılmaksızın
+            # makalelere yönlendirilir.
+            kayit_hedef = hedef
+            koseyazisi_mi = hedef == "haberler" and dil == "tr" and KOSE_BASLIK_DESENI.search(baslik)
+            if koseyazisi_mi:
+                kayit_hedef = "makaleler"
             _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
             kayit = {
                 "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
@@ -1493,7 +1517,7 @@ def _rss_tek_kaynak(kaynak: dict) -> tuple:
                 "url":         link,
                 "tarih":       tarih,
                 "kaynak":      kaynak["kaynak"],
-                "kategori":    kaynak["kategori"],
+                "kategori":    "Köşe Yazısı" if koseyazisi_mi else kaynak["kategori"],
                 "kaynak_turu": "rss",
                 "icerik_tipi": icerik_tipi_tespit(baslik, ozet, hedef, kaynak["kaynak"]),
                 "dil":         dil,
@@ -1505,12 +1529,12 @@ def _rss_tek_kaynak(kaynak: dict) -> tuple:
             if _b:
                 kayit["bolum"] = _b
             kayit = zenginlestir(kayit)
-            kayitlar.append(kayit)
+            sonuc.setdefault(kayit_hedef, []).append(kayit)
             kabul += 1
         log.info(f"  -> {kaynak['kaynak']}: {kabul} kabul / {reddedilen} reddedildi")
     except Exception as e:
         log.warning(f"  RSS hatasi [{kaynak['kaynak']}]: {e}")
-    return hedef, kayitlar
+    return sonuc
 
 
 def rss_tara(kaynaklar: list) -> dict:
@@ -1519,9 +1543,8 @@ def rss_tara(kaynaklar: list) -> dict:
         futures = {ex.submit(_rss_tek_kaynak, k): k for k in kaynaklar}
         for fut in as_completed(futures):
             try:
-                hedef, kayitlar = fut.result()
-                for kayit in kayitlar:
-                    sonuc.setdefault(hedef, []).append(kayit)
+                for hedef, kayitlar in fut.result().items():
+                    sonuc.setdefault(hedef, []).extend(kayitlar)
             except Exception as e:
                 log.warning(f"  RSS thread hatasi: {e}")
     return sonuc
@@ -1530,17 +1553,21 @@ def rss_tara(kaynaklar: list) -> dict:
 #  WEB SCRAPING
 # ══════════════════════════════════════════════════════════════════
 
-def _web_tek_kaynak(kaynak: dict) -> tuple:
-    """Tek bir web kaynağını tarar, (hedef, kayit_listesi) döndürür."""
+def _web_tek_kaynak(kaynak: dict) -> dict:
+    """Tek bir web kaynağını tarar, {hedef: kayit_listesi} döndürür.
+
+    Not: bkz. _rss_tek_kaynak — köşe yazısı başlık desenine uyan kayıtlar
+    kaynağın statik hedefinden bağımsız olarak "makaleler"e yönlendirilir.
+    """
     genel         = kaynak.get("genel", False)
     hedef         = kaynak.get("hedef", "haberler")
     dil           = kaynak.get("dil", "tr")
     ssl_dogrulama = kaynak.get("ssl_dogrulama", True)
-    kayitlar = []
+    sonuc: dict = {}
     log.info(f"Web: {kaynak['kaynak']} [{hedef}|{dil}|genel={genel}]")
     r = fetch(kaynak["url"], ssl_dogrulama=ssl_dogrulama)
     if not r:
-        return hedef, kayitlar
+        return sonuc
     try:
         soup    = BeautifulSoup(r.text, "lxml")
         kabul = reddedilen = 0
@@ -1572,6 +1599,10 @@ def _web_tek_kaynak(kaynak: dict) -> tuple:
             if puan < esik:
                 reddedilen += 1
                 continue
+            kayit_hedef = hedef
+            koseyazisi_mi = hedef == "haberler" and dil == "tr" and KOSE_BASLIK_DESENI.search(baslik)
+            if koseyazisi_mi:
+                kayit_hedef = "makaleler"
             _hm = KATEGORI_HARITALAMA.get(kaynak["kategori"], {})
             kayit = {
                 "id":          haber_id(link, baslik, kaynak.get("kaynak", "")),
@@ -1580,7 +1611,7 @@ def _web_tek_kaynak(kaynak: dict) -> tuple:
                 "url":         link,
                 "tarih":       datetime.now(TR_TZ).isoformat(),
                 "kaynak":      kaynak["kaynak"],
-                "kategori":    kaynak["kategori"],
+                "kategori":    "Köşe Yazısı" if koseyazisi_mi else kaynak["kategori"],
                 "kaynak_turu": "web",
                 "icerik_tipi": icerik_tipi_tespit(baslik, ozet, hedef, kaynak["kaynak"]),
                 "dil":         dil,
@@ -1592,12 +1623,12 @@ def _web_tek_kaynak(kaynak: dict) -> tuple:
             if _b:
                 kayit["bolum"] = _b
             kayit = zenginlestir(kayit)
-            kayitlar.append(kayit)
+            sonuc.setdefault(kayit_hedef, []).append(kayit)
             kabul += 1
         log.info(f"  -> {kaynak['kaynak']}: {kabul} kabul / {reddedilen} reddedildi")
     except Exception as e:
         log.warning(f"  Scrape hatasi [{kaynak['kaynak']}]: {e}")
-    return hedef, kayitlar
+    return sonuc
 
 
 def web_tara(kaynaklar: list) -> dict:
@@ -1606,9 +1637,8 @@ def web_tara(kaynaklar: list) -> dict:
         futures = {ex.submit(_web_tek_kaynak, k): k for k in kaynaklar}
         for fut in as_completed(futures):
             try:
-                hedef, kayitlar = fut.result()
-                for kayit in kayitlar:
-                    sonuc.setdefault(hedef, []).append(kayit)
+                for hedef, kayitlar in fut.result().items():
+                    sonuc.setdefault(hedef, []).extend(kayitlar)
             except Exception as e:
                 log.warning(f"  Web thread hatasi: {e}")
     return sonuc
