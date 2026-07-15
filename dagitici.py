@@ -474,17 +474,18 @@ def arsiv_yaz():
             continue
 
         # Geçmiş aylara göre grupla
-        # NOT: Google News arama tabanlı kaynaklardan (ve genel olarak raporlar/
-        # makaleler/kuresel/ekosistem/direnis gibi haber-dışı koleksiyonlardan)
-        # gelen kayıtların gerçek yayın tarihi (tarih) genelde geçmişe ait olabiliyor
-        # (site tarafından o gün ilk kez KEŞFEDİLMİŞ olsa bile). Bu yüzden ay,
-        # keşif anını temsil eden "tarama_tarihi" alanına göre belirlenir; bu alan
-        # yoksa (eski kayıtlar) "tarih" alanına düşülür. Böylece yeni keşfedilen
-        # ama eski tarihli bir rapor/makale/ekosistem kaydı yanlışlıkla "geçmiş ay"
-        # sayılıp arşive gönderilmez.
+        # NOT: raporlar/makaleler İÇİN AY, GERÇEK YAYIN TARİHİNE (tarih) GÖRE
+        # belirlenir — sadece tarih yoksa keşif tarihine (tarama_tarihi) düşülür.
+        # Bilinçli tercih: bu iki koleksiyonda sayfa "o ayın verisi"ni göstermeli;
+        # yayın tarihi eski olan bir kayıt, o gün ilk kez keşfedilmiş olsa bile
+        # kendi ait olduğu aya (yayın tarihine göre) arşivlenir. (Diğer
+        # koleksiyonlar için tarama_tarihi önceliği korunur.)
         aylar = defaultdict(list)
         for it in kayitlar:
-            ay_kaynagi = it.get("tarama_tarihi") or it.get("tarih") or ""
+            if prefix in ("raporlar", "makaleler"):
+                ay_kaynagi = it.get("tarih") or it.get("tarama_tarihi") or ""
+            else:
+                ay_kaynagi = it.get("tarama_tarihi") or it.get("tarih") or ""
             ay = ay_kaynagi[:7]
             if len(ay) == 7 and ay < bu_ay:        # sadece tamamlanmış geçmiş aylar
                 aylar[ay].append(it)
@@ -610,10 +611,14 @@ def koleksiyon_aylik_buda(dosya_adi: str, anahtar: str) -> int:
 
     kalan, budanan, korunan = [], 0, 0
     for h in liste:
-        # Ay, gerçek yayın tarihi yerine keşif tarihine (tarama_tarihi) göre
-        # belirlenir — bkz. arsiv_yaz() içindeki açıklama. tarama_tarihi yoksa
-        # (eski kayıtlar) "tarih" alanına düşülür.
-        ay_kaynagi = h.get("tarama_tarihi") or h.get("tarih") or ""
+        # raporlar/makaleler: ay, gerçek yayın tarihine (tarih) göre belirlenir
+        # — bkz. arsiv_yaz() içindeki açıklama. tarih yoksa keşif tarihine
+        # (tarama_tarihi) düşülür. Diğer koleksiyonlarda öncelik ters (tarama_tarihi
+        # önce) korunur.
+        if anahtar in ("raporlar", "makaleler"):
+            ay_kaynagi = h.get("tarih") or h.get("tarama_tarihi") or ""
+        else:
+            ay_kaynagi = h.get("tarama_tarihi") or h.get("tarih") or ""
         ay = ay_kaynagi[:7]
         if len(ay) == 7 and ay < bu_ay:
             if str(h.get("id")) in _arsiv_idleri(ay):

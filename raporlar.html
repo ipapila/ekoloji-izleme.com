@@ -559,14 +559,12 @@ function yukle(){
 // süresiz saklanıyor. Sunucudan arşive taşınmış bir kayıt, daha önce bu
 // tarayıcıya inmişse yerelListe üzerinden sonsuza dek sayfada kalabiliyordu.
 // Bu filtre, tarihi geçmiş-ay olan kayıtları (tarihsiz olanlar hariç) eler.
-// NOT: Raporlar genelde geçmişe dönük gerçek belge/yayın tarihi taşır ama site
-// tarafından o gün ilk kez KEŞFEDİLMİŞ olabilir. Bu yüzden ay, keşif tarihini
-// temsil eden "tarama_tarihi" alanına göre belirlenir (yoksa "tarih"e düşülür) —
-// böylece backend'de canlı kalan yeni-keşif ama eski-tarihli kayıtlar burada
-// yanlışlıkla elenmez.
+// NOT: Sayfa "o ayın verisi"ni gösterir — ay, gerçek yayın tarihine (tarih) göre
+// belirlenir (yoksa keşif tarihi "tarama_tarihi"ne düşülür). Yayın tarihi eski
+// olan bir kayıt, o gün ilk kez keşfedilmiş olsa bile burada elenir (arşive gider).
 const _buAyRapD = new Date();
 const _buAyRap = `${_buAyRapD.getFullYear()}-${String(_buAyRapD.getMonth()+1).padStart(2,"0")}`;
-const _guncelAydaRap = h => { const ay = (h && (h.tarama_tarihi || h.tarih) ? String(h.tarama_tarihi || h.tarih) : "").slice(0,7); return ay.length !== 7 || ay >= _buAyRap; };
+const _guncelAydaRap = h => { const ay = (h && (h.tarih || h.tarama_tarihi) ? String(h.tarih || h.tarama_tarihi) : "").slice(0,7); return ay.length !== 7 || ay >= _buAyRap; };
 
 function isleRaporlar(uzakListe,yerelListe,silinen,meta){
   const map=new Map();
@@ -576,7 +574,7 @@ function isleRaporlar(uzakListe,yerelListe,silinen,meta){
     const key=(h.url||h.baslik||String(h.id)).toLowerCase();
     if(!map.has(key)){if(!h.kategori&&h.etiket)h.kategori=h.etiket;h._haber_kat=haberKatTespit(h);map.set(key,h);}
   });
-  tumRaporlar=Array.from(map.values()).sort((a,b)=>new Date(b.tarama_tarihi||b.tarih||0)-new Date(a.tarama_tarihi||a.tarih||0));
+  tumRaporlar=Array.from(map.values()).sort((a,b)=>new Date(b.tarih||b.tarama_tarihi||0)-new Date(a.tarih||a.tarama_tarihi||0));
   const params=new URLSearchParams(location.search);
   const hkat=params.get("hkat");
   if(hkat){

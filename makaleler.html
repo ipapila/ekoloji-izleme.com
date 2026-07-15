@@ -321,18 +321,24 @@ let filtreliListe = [];
 
 function _esc(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
+// NOT: Sayfa "o ayın verisi"ni gösterir — ay, gerçek yayın tarihine (tarih) göre
+// belirlenir (yoksa keşif tarihi "tarama_tarihi"ne düşülür). Yayın tarihi eski
+// olan bir makale, o gün ilk kez keşfedilmiş olsa bile burada elenir (arşive gider).
+// (Sunucu tarafında zaten budanıyor; bu, localStorage/eski önbellek kaynaklı
+// kayıtlara karşı ikinci bir savunma katmanıdır — bkz. raporlar.html.)
+const _buAyMakD = new Date();
+const _buAyMak = `${_buAyMakD.getFullYear()}-${String(_buAyMakD.getMonth()+1).padStart(2,"0")}`;
+const _guncelAydaMak = m => { const ay = (m && (m.tarih || m.tarama_tarihi) ? String(m.tarih || m.tarama_tarihi) : "").slice(0,7); return ay.length !== 7 || ay >= _buAyMak; };
+
 function tumMakaleler(){
   const siteListe = (typeof SITE!=="undefined"?SITE.getList("makaleler"):[]) || [];
   const sabitIds  = new Set(SABIT_MAKALELER.map(m=>String(m.id)));
   const ekler     = siteListe.filter(m=>!sabitIds.has(String(m.id)));
-  // NOT: Makaleler genelde geçmişe dönük gerçek yayın tarihi taşır ama site
-  // tarafından o gün ilk kez KEŞFEDİLMİŞ olabilir (Google News alaka-sıralı,
-  // tarih-sıralı değil). Bu yüzden sıralama önce keşif tarihine (tarama_tarihi)
-  // bakar; yoksa "tarih"e düşer — böylece yeni keşfedilen makaleler, eski
-  // yayın tarihi taşısalar bile listenin başında görünür.
-  return [...ekler,...SABIT_MAKALELER].sort((a,b)=>{
-    const ta=a.tarama_tarihi?new Date(a.tarama_tarihi):(a.tarih?new Date(a.tarih):new Date(0));
-    const tb=b.tarama_tarihi?new Date(b.tarama_tarihi):(b.tarih?new Date(b.tarih):new Date(0));
+  // Sıralama önce gerçek yayın tarihine (tarih) bakar; yoksa keşif tarihine
+  // (tarama_tarihi) düşer.
+  return [...ekler,...SABIT_MAKALELER].filter(_guncelAydaMak).sort((a,b)=>{
+    const ta=a.tarih?new Date(a.tarih):(a.tarama_tarihi?new Date(a.tarama_tarihi):new Date(0));
+    const tb=b.tarih?new Date(b.tarih):(b.tarama_tarihi?new Date(b.tarama_tarihi):new Date(0));
     return tb-ta;
   });
 }
