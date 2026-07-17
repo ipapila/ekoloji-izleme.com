@@ -1,15 +1,97 @@
 {
   "meta": {
-    "guncelleme": "2026-07-17T05:36:30.357372+03:00",
-    "toplam_haber": 1464,
+    "guncelleme": "2026-07-17T11:11:32.167098+03:00",
+    "toplam_haber": 1012,
     "toplam_rapor": 384,
-    "toplam_makale": 471,
-    "toplam_ulus": 446,
+    "toplam_makale": 473,
+    "toplam_ulus": 448,
     "toplam_ekosistem": 628,
-    "dagitici_calistirma": "2026-07-17T02:36:32.717322+00:00",
-    "aylik_budama": "2026-07-17T02:36:32.908660+00:00"
+    "dagitici_calistirma": "2026-07-17T08:11:34.491795+00:00",
+    "aylik_budama": "2026-07-17T08:11:34.637466+00:00"
   },
   "haberler": [
+    {
+      "id": "c4801c29a96e",
+      "baslik": "Kazdağları’nda Jeotermal Kuşatmasına İzin Yok",
+      "ozet": "Ayvacık Kocaköy’deki jeotermal kaynak arama projesi için keşif ve bilirkişi incelemesi yapıldı. STK’lar ve yurttaşlar, toprağı zehirleyecek, suyu tüketecek ve bölge halkını göçe zorlayacak jeotermal projelere karşı hukuki ve fiili mücadelelerini kararlılıkla sürdüreceklerini bildirdi. Çanakkale’nin ",
+      "url": "https://www.iklimhaber.org/kazdaglarinda-jeotermal-kusatmasina-izin-yok/",
+      "tarih": "2026-07-17T10:04:22+03:00",
+      "kaynak": "İklim Haber",
+      "kategori": "İklim",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "İklim Olayları",
+        "Çiftçi & Köylü Sorunları",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-07-17T08:11:32.161969+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "d6c6a2caf263",
+      "baslik": "2100’e Kadar İstanbul’da Aşırı Sıcağa Bağlı Ölümler 10 Kat Artabilir",
+      "ozet": "Yeni bir çalışma, küresel emisyonların artmaya devam ettiği olumsuz senaryoda, yüksek sıcaklıkların yüzyıl ortasında İstanbul’da 25 bin fazladan ölüme neden olabileceği uyarısında bulunuyor. Yüzyıl sonuna gelindiğinde ise bu sayının yaklaşık 40 bine ulaşabileceği hesaplanıyor. Bu bulgular, yüksek sı",
+      "url": "https://www.iklimhaber.org/2100e-kadar-istanbulda-asiri-sicaga-bagli-olumler-10-kat-artabilir/",
+      "tarih": "2026-07-17T09:50:13+03:00",
+      "kaynak": "İklim Haber",
+      "kategori": "İklim",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "İklim Olayları",
+        "Yaban Hayatı İzleme",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-07-17T08:11:32.161991+00:00",
+      "_haber_kat": "İklim ve Afet"
+    },
+    {
+      "id": "5e3cdd0467f0",
+      "baslik": "Aşağı Tuna Havzası’ndaki Yaban Hayatı Suçlarından Binlerce Mersin Balığı Etkilendi",
+      "ozet": "10 yıllık bulgular, Avrupa’nın son doğal hayattaki Tuna mersin balıklarını hedef alan yasa dışı faaliyetlerin ulaştığı boyutu gözler önüne seriyor. Son 10 yılda yetkililer, en az 6,5 ton yasa dışı mersin balığı eti ile bütün haldeki mersin balıklarını ele geçirdi. Türkiye’de de mersin balığı türleri",
+      "url": "https://www.iklimhaber.org/asagi-tuna-havzasindaki-yaban-hayati-suclarindan-binlerce-mersin-baligi-etkilendi/",
+      "tarih": "2026-07-17T09:30:31+03:00",
+      "kaynak": "İklim Haber",
+      "kategori": "İklim",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "İklim Olayları",
+        "Yaban Hayatı İzleme",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-07-17T08:11:32.162010+00:00",
+      "_haber_kat": "Yaban Hayatı"
+    },
+    {
+      "id": "d851a893c48c",
+      "baslik": "Malê Sala’deki yurttaşlar: GES’e karşı direneceğiz, talana izin vermeyeceğiz",
+      "ozet": "Malê Sala Mahallesi’nde planlanan GES projesinin yaşam alanlarını yok edeceğini belirten yurttaşlar, sonuna kadar direneceklerini ve hiçbir şekilde talana izin vermeyeceklerini belirtti Kürdistan’ın doğası, Hidro Elektrik Santrali (HES), barajlar, Güneş Enerji Santralleri (GES), orman kıyımları ve m",
+      "url": "https://yeniyasamgazetesi9.com/male-saladeki-yurttaslar-gese-karsi-direnecegiz-talana-izin-vermeyecegiz/",
+      "tarih": "2026-07-17T09:20:00+03:00",
+      "kaynak": "Yeni Yaşam",
+      "kategori": "Ekoloji",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Ekolojik İhlal"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-07-17T08:11:32.162092+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
     {
       "id": "546eba83912c",
       "baslik": "Tarım ve Orman Bakanı İbrahim Yumaklı Van’a Geliyor - Van Ekspres",
@@ -25346,6 +25428,43 @@
   ],
   "makaleler": [
     {
+      "id": "6c6843d3fdbe",
+      "baslik": "Yapay Zeka İklim Hedeflerini Hızlandırıyor!",
+      "ozet": "Yeni bir rapor, yapay zekanın temiz enerji dönüşümünü hızlandırmanın yanı sıra net sıfır emisyon hedeflerine ulaşmada önemli bir rol üstlendiğini ortaya koyuyor. Enerji liderlerinin katıldıkları küresel araştırmaya göre, katılımcıların %97’si ile neredeyse tamamı yapay zekayı net sıfır emisyon hedef",
+      "url": "https://www.ekoiq.com/yapay-zeka-iklim-hedeflerini-hizlandiriyor/",
+      "tarih": "2026-07-17T10:11:58+03:00",
+      "kaynak": "ekoIQ",
+      "kategori": "Analiz",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yaban Hayatı İzleme",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-07-17T08:11:32.162695+00:00"
+    },
+    {
+      "id": "9bd574267afc",
+      "baslik": "Türkiye’de Çelik Sektörünün Dönüşüm için Yıllık Yatırım İhtiyacı 1 ila 2 milyar dolar",
+      "ozet": "Güncel bulgulara göre, Türkiye’de çelik sektörünün karbonsuzlaşması için yıllık 1 ila 2 milyar dolar arasında yatırım ihtiyacı bulunuyor. Türkiye’deki tüm sektörlerin net sıfır hedefine ulaşması için 20 yıl içinde 165 milyar dolar yatırım gerekli. Sektör yılda yaklaşık 40 milyon ton seragazı emisyon",
+      "url": "https://www.ekoiq.com/turkiyede-celik-sektorunun-donusum-icin-yillik-yatirim-ihtiyaci-1-ila-2-milyar-dolar/",
+      "tarih": "2026-07-17T10:00:48+03:00",
+      "kaynak": "ekoIQ",
+      "kategori": "Analiz",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-07-17T08:11:32.162719+00:00"
+    },
+    {
       "id": "c8fa9a6bba2e",
       "baslik": "İlk evim konut kredi başvurusu ne zaman yapılacak? İlk evim kredisi şartları neler olacak, kimlere verilecek? - Yeni Şafak",
       "ozet": "İlk evim konut kredi başvurusu ne zaman yapılacak? İlk evim kredisi şartları neler olacak, kimlere verilecek? Yeni Şafak",
@@ -34019,6 +34138,42 @@
     }
   ],
   "uluslararasi": [
+    {
+      "id": "7ae6db0695c3",
+      "baslik": "Biden’s climate law is dead. The energy transition might not be.",
+      "ozet": "",
+      "url": "https://grist.org/energy/trump-inflation-reduction-act-big-beautiful-bil/",
+      "tarih": "2026-07-17T11:00:00+03:00",
+      "kaynak": "Grist",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-07-17T08:11:32.163111+00:00"
+    },
+    {
+      "id": "3b220c952228",
+      "baslik": "Nepal’s birdwatchers can fill gaps in conservation data",
+      "ozet": "Nepal’s expanding birdwatching community offers a vital lifeline for both biodiversity monitoring and ecotourism, reports contributor Bibek Bhandari for Mongabay. According to a recent study, a growing interest in birdwatching, particularly among younger generations, is helping bridge gaps in ecolog",
+      "url": "https://news.mongabay.com/short-article/2026/07/nepals-birdwatchers-can-fill-gaps-in-conservation-data/",
+      "tarih": "2026-07-17T07:28:27+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-07-17T08:11:32.163214+00:00"
+    },
     {
       "id": "152e98f4c14e",
       "baslik": "Ronald Sanabria sought to make tourism more sustainable",
