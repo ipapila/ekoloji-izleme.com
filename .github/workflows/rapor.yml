@@ -33,7 +33,7 @@ jobs:
         run: |
           for dosya in haberler.json ihlaller.json raporlar.json gunluk-raporlar.json; do
             STATUS=$(curl -s -o "${dosya}" -w "%{http_code}" \
-              --max-time 30 \
+              --max-time 30 --retry 2 --retry-delay 5 --retry-all-errors \
               -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
               "${WEBHOOK_URL}?dosya=${dosya}" 2>/dev/null || echo "000")
             if [ "$STATUS" = "200" ]; then
@@ -95,7 +95,7 @@ jobs:
               continue
             fi
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-              --max-time 30 \
+              --max-time 30 --retry 2 --retry-delay 5 --retry-all-errors \
               -X POST "${WEBHOOK_URL}?dosya=${dosya}" \
               -H "Content-Type: application/json" \
               -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
