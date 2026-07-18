@@ -8,6 +8,7 @@ GitHub commit + Plesk gönderimi workflow tarafından yapılır.
 
 import json
 import os
+import time
 import requests
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
@@ -188,36 +189,54 @@ def rapor_uret(haberler, ihlaller):
         ihlaller_ozet = _ihlal_ozet(ihlaller),
     )
 
-    try:
-        r = requests.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key":         ANTHROPIC_API_KEY,
-                "anthropic-version": "2023-06-01",
-                "content-type":      "application/json",
-            },
-            json={
-                "model":      MODEL,
-                "max_tokens": MAX_TOKENS,
-                "system":     SISTEM_PROMPT,
-                "messages":   [{"role": "user", "content": kullanici}],
-            },
-            timeout=60,
-        )
-        r.raise_for_status()
-        metin = r.json()["content"][0]["text"].strip()
-        if metin.startswith("```"):
-            metin = metin.split("```")[1]
-            if metin.startswith("json"):
-                metin = metin[4:]
-        rapor = json.loads(metin.strip())
-        rapor["uretildi"] = datetime.now(timezone.utc).isoformat()
-        rapor.setdefault("veri_ozet", {})["one_cikan_kategoriler"] = one_cikanlar
-        print("Rapor uretildi")
-        return rapor
-    except Exception as e:
-        print(f"Claude API hatasi: {e}")
-        return _bos_rapor()
+    MAKS_DENEME = 3
+    BEKLEME_SANIYE = [5, 15]  # denemeler arasi bekleme (son deneme sonrasi beklenmez)
+    son_hata = None
+
+    for deneme in range(1, MAKS_DENEME + 1):
+        try:
+            r = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers={
+                    "x-api-key":         ANTHROPIC_API_KEY,
+                    "anthropic-version": "2023-06-01",
+                    "content-type":      "application/json",
+                },
+                json={
+                    "model":      MODEL,
+                    "max_tokens": MAX_TOKENS,
+                    "system":     SISTEM_PROMPT,
+                    "messages":   [{"role": "user", "content": kullanici}],
+                },
+                timeout=60,
+            )
+            if r.status_code in (429, 500, 502, 503, 529) and deneme < MAKS_DENEME:
+                bekleme = BEKLEME_SANIYE[deneme - 1]
+                print(f"Claude API {r.status_code} (gecici) — {deneme}. deneme basarisiz, {bekleme}sn sonra tekrar denenecek")
+                time.sleep(bekleme)
+                continue
+            r.raise_for_status()
+            metin = r.json()["content"][0]["text"].strip()
+            if metin.startswith("```"):
+                metin = metin.split("```")[1]
+                if metin.startswith("json"):
+                    metin = metin[4:]
+            rapor = json.loads(metin.strip())
+            rapor["uretildi"] = datetime.now(timezone.utc).isoformat()
+            rapor.setdefault("veri_ozet", {})["one_cikan_kategoriler"] = one_cikanlar
+            print(f"Rapor uretildi ({deneme}. denemede)")
+            return rapor
+        except Exception as e:
+            son_hata = e
+            if deneme < MAKS_DENEME:
+                bekleme = BEKLEME_SANIYE[deneme - 1]
+                print(f"Claude API hatasi ({deneme}. deneme): {e} — {bekleme}sn sonra tekrar denenecek")
+                time.sleep(bekleme)
+            else:
+                print(f"Claude API hatasi ({deneme}. deneme, son): {e}")
+
+    print(f"UYARI: {MAKS_DENEME} denemenin tumu basarisiz oldu, hata raporu yazilacak. Son hata: {son_hata}")
+    return _bos_rapor()
 
 
 def _bos_rapor():
@@ -305,4 +324,7 @@ if __name__ == "__main__":
     rapor    = rapor_uret(haberler, ihlaller)
     arsiv    = arsiv_guncelle(rapor)
     yerel_yaz(rapor)
-    print("=== Tamamlandi ===")
+    if rapor.get("hata"):
+        print("=== Tamamlandi (HATA: rapor icerigi uretilemedi, bos rapor arsivlendi) ===")
+    else:
+        print("=== Tamamlandi ===")
