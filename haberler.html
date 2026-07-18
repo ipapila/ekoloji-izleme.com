@@ -53,20 +53,6 @@
 .search-wrap{display:flex;gap:8px;align-items:center;}
 .search-box{font-family:"JetBrains Mono",monospace;font-size:11px;padding:8px 14px;background:rgba(45,158,107,.07);border:1px solid rgba(45,158,107,.2);border-radius:3px;color:var(--cream);outline:none;width:220px;}
 .search-box:focus{border-color:var(--accent);}
-.tur-chip{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.07em;padding:5px 11px;border-radius:2px;border:1px solid rgba(45,158,107,.2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.tur-chip:hover,.tur-chip.aktif{background:rgba(45,158,107,.12);border-color:var(--accent);color:var(--bright);}
-.tur-chip[data-kol="raporlar"]:hover,.tur-chip[data-kol="raporlar"].aktif{background:rgba(34,197,94,.1);border-color:#22c55e;color:#22c55e;}
-.tur-chip[data-kol="makaleler"]:hover,.tur-chip[data-kol="makaleler"].aktif{background:rgba(245,158,11,.1);border-color:#f59e0b;color:#f59e0b;}
-
-.koleksiyon-bar{background:var(--dark);padding:10px 80px;border-bottom:1px solid rgba(45,158,107,.07);display:flex;gap:20px;flex-wrap:wrap;}
-.kol-chip{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;cursor:pointer;padding:3px 8px;border-radius:2px;border:1px solid transparent;transition:all .2s;}
-.kol-chip:hover{border-color:rgba(45,158,107,.2);}
-.kol-chip b{font-weight:600;}
-.kol-chip.aktif-kol{border-color:rgba(45,158,107,.3);background:rgba(45,158,107,.06);}
-.kol-chip[data-kol="raporlar"] b{color:#22c55e;}
-.kol-chip[data-kol="makaleler"] b{color:#f59e0b;}
-.kol-chip[data-kol="haberler"] b{color:var(--accent);}
-
 .scan-bar{background:var(--dark);padding:14px 80px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(45,158,107,.1);flex-wrap:wrap;}
 .scan-status{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);flex:1;}
 .btn-tara,.btn-import,.btn-dup{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all .2s;}
@@ -179,17 +165,8 @@
     </div>
     <div class="search-wrap">
       <input class="search-box" id="searchBox" placeholder="Ara…" oninput="filtrele()">
-      <button class="tur-chip" data-kol="raporlar" onclick="setTurChip(this)">📋 Rapor</button>
-      <button class="tur-chip" data-kol="makaleler" onclick="setTurChip(this)">✍ Köşe</button>
     </div>
   </div>
-</div>
-
-<div class="koleksiyon-bar" id="koleksiyonBar">
-  <span class="kol-chip aktif-kol" data-kol="" onclick="setKoleksiyon(this)"><b>—</b> Tümü</span>
-  <span class="kol-chip" data-kol="haberler" onclick="setKoleksiyon(this)"><b id="kSayiHaber">…</b> Haber</span>
-  <span class="kol-chip" data-kol="raporlar" onclick="setKoleksiyon(this)"><b id="kSayiRapor">…</b> Rapor & Analiz</span>
-  <span class="kol-chip" data-kol="makaleler" onclick="setKoleksiyon(this)"><b id="kSayiMakale">…</b> Köşe & Yorum</span>
 </div>
 
 <div class="scan-bar">
@@ -681,14 +658,6 @@ function setHkat(el) {
   }
 }
 
-function guncelleKolSayac() {
-  const say = { haberler:0, raporlar:0, makaleler:0 };
-  tumHaberler.forEach(h => { if (say[h._koleksiyon]!==undefined) say[h._koleksiyon]++; });
-  safeSetText("kSayiHaber", say.haberler);
-  safeSetText("kSayiRapor", say.raporlar);
-  safeSetText("kSayiMakale", say.makaleler);
-}
-
 // Canlı sayfa yalnızca MEVCUT AYI gösterir; geçmiş aylar arsiv.html'de.
 // Yereldeki (localStorage) eski kayıtlar sunucudan arşive devredilen veriyi
 // hortlatmasın diye yerel katkılar mevcut ay + tarihsizlerle sınırlanır.
@@ -700,14 +669,10 @@ function birlestir(data, localHaberler) {
   const map = new Map();
   const kollar = [
     { liste: data.haberler  || [], kol: "haberler"  },
-    { liste: data.raporlar  || [], kol: "raporlar"  },
-    { liste: data.makaleler || [], kol: "makaleler" },
   ];
   const defH = (typeof SITE!=="undefined"&&SITE.defaults) ? (SITE.defaults.haberler||[]) : [];
-  const defR = (typeof SITE!=="undefined"&&SITE.defaults) ? (SITE.defaults.raporlar||[])  : [];
   const defHIds = new Set(localHaberler.map(h=>String(h.id)));
-  const extraDefs = [...defH.filter(h=>!defHIds.has(String(h.id))),
-                     ...defR.filter(h=>!defHIds.has(String(h.id)))];
+  const extraDefs = [...defH.filter(h=>!defHIds.has(String(h.id)))];
   const tumLocal = [...localHaberler, ...extraDefs].filter(_guncelAyda);
   [...kollar.flatMap(k => k.liste.filter(_guncelAyda).map(h => ({...h, _koleksiyon: k.kol}))),
    ...tumLocal.map(h => ({...h, _koleksiyon: h._koleksiyon||"haberler"}))
@@ -736,12 +701,6 @@ function urlParamOku() {
     document.querySelectorAll(".kat-item, .kat-tumü").forEach(el => {
       el.classList.toggle("aktif-kat", (el.dataset.hkat||"")===hkat);
     });
-  }
-  const kol = params.get("kol");
-  if (kol) {
-    aktifKoleksiyon = kol;
-    document.querySelectorAll(".kol-chip").forEach(c => c.classList.toggle("aktif-kol", (c.dataset.kol||"")===kol));
-    document.querySelectorAll(".tur-chip").forEach(c => c.classList.toggle("aktif", (c.dataset.kol||"")===kol));
   }
 }
 
@@ -778,7 +737,7 @@ function yukle(zorlaHkat) {
       if (Array.isArray(data)) data = { haberler: data };
       tumHaberler = birlestir(data, localHaberler);
       urlParamOku();
-      filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
+      filtrele(); guncelleSidebarSayac();
       const meta = (data.meta && data.meta.guncelleme) || (data._meta && data._meta.guncelleme);
       const tarihStr = meta ? " · " + new Date(meta).toLocaleString("tr-TR") : "";
       safeSetText("scanStatus", tumHaberler.length + " kayıt" + tarihStr);
@@ -795,7 +754,7 @@ function yukle(zorlaHkat) {
         }));
       }
       urlParamOku();
-      filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
+      filtrele(); guncelleSidebarSayac();
       safeSetText("scanStatus", tumHaberler.length + " kayıt (yerel)");
     });
 }
@@ -860,7 +819,7 @@ function importUygula() {
   if (typeof SITE!=="undefined") SITE.set("haberler", tumHaberler);
   const importModal = document.getElementById("importModal");
   if (importModal) importModal.style.display="none";
-  filtrele(); guncelleKolSayac(); guncelleSidebarSayac();
+  filtrele(); guncelleSidebarSayac();
   gosterBildirim(`✓ ${yeniler.length} yeni kayıt eklendi (${importData.length-yeniler.length} duplicate atlandı).`);
 }
 
@@ -908,30 +867,6 @@ document.addEventListener("keydown", e=>{
     const m=document.getElementById(id); if(m) m.style.display="none";
   });
 });
-
-function setKoleksiyon(chip) {
-  aktifKoleksiyon = chip.dataset.kol || "";
-  document.querySelectorAll(".kol-chip").forEach(c => c.classList.remove("aktif-kol"));
-  chip.classList.add("aktif-kol");
-  document.querySelectorAll(".tur-chip").forEach(b => {
-    b.classList.toggle("aktif", b.dataset.kol === aktifKoleksiyon);
-  });
-  filtrele();
-}
-
-function setTurChip(btn) {
-  if (aktifKoleksiyon === btn.dataset.kol) {
-    aktifKoleksiyon = "";
-    document.querySelectorAll(".tur-chip,.kol-chip").forEach(b => b.classList.remove("aktif","aktif-kol"));
-    document.querySelector('.kol-chip[data-kol=""]')?.classList.add("aktif-kol");
-  } else {
-    aktifKoleksiyon = btn.dataset.kol;
-    document.querySelectorAll(".tur-chip").forEach(b => b.classList.remove("aktif"));
-    btn.classList.add("aktif");
-    document.querySelectorAll(".kol-chip").forEach(c => c.classList.toggle("aktif-kol", (c.dataset.kol||"") === aktifKoleksiyon));
-  }
-  filtrele();
-}
 
 if (typeof SITE!=="undefined" && SITE.isAdmin()) {
   const alan = document.getElementById("adminAlan");
