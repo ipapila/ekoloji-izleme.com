@@ -1882,6 +1882,43 @@ KITAP_SORGULARI = [
     {"q": "çevre hareketi",         "alt_kategori": "Ekolojik Hareketler ve Direniş"},
     {"q": "hayvan hakları ekoloji", "alt_kategori": "Biyoçeşitlilik ve Yaban Hayat"},
     {"q": "kentsel ekoloji",        "alt_kategori": "Şehircilik ve Ekoloji"},
+
+    # ── Yazarlar (bağımsız ekoloji akademisyen/aktivistleri) ──
+    {"q": 'inauthor:"Beyza Üstün"', "alt_kategori": "Ekolojik Hareketler ve Direniş"},
+
+    # ── Meslek odaları (TMMOB ve bağlı odalar) ──
+    # Not: TEMA ve benzeri büyük fon/vakıf temelli kurumlar bilinçli olarak
+    # dışarıda tutuluyor (bkz. KAYNAKLAR.md) — burada üye aidatıyla yürüyen,
+    # bağımsız meslek örgütleri hedefleniyor.
+    {"q": 'inpublisher:"TMMOB"',                          "alt_kategori": "Ekolojik Hareketler ve Direniş"},
+    {"q": 'inpublisher:"Çevre Mühendisleri Odası"',       "alt_kategori": "Sürdürülebilirlik"},
+    {"q": 'inpublisher:"Orman Mühendisleri Odası"',       "alt_kategori": "Orman ve Doğa Koruma"},
+    {"q": 'inpublisher:"Ziraat Mühendisleri Odası"',      "alt_kategori": "Tarım ve Gıda Ekolojisi"},
+    {"q": 'inpublisher:"Jeoloji Mühendisleri Odası"',     "alt_kategori": "Madencilik ve Enerji"},
+    {"q": 'inpublisher:"Şehir Plancıları Odası"',         "alt_kategori": "Şehircilik ve Ekoloji"},
+    {"q": 'inpublisher:"Mimarlar Odası"',                 "alt_kategori": "Şehircilik ve Ekoloji"},
+    {"q": 'inpublisher:"TMMOB Maden Mühendisleri Odası"', "alt_kategori": "Madencilik ve Enerji"},
+    {"q": 'inpublisher:"Makina Mühendisleri Odası"',      "alt_kategori": "Sürdürülebilirlik"},
+
+    # ── Bağımsız Türkiye yayınevleri (ekoloji/iklim odaklı katalog) ──
+    {"q": 'inpublisher:"Yeni İnsan Yayınevi"',        "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+    {"q": 'inpublisher:"İş Bankası Kültür Yayınları" ekoloji', "alt_kategori": "Biyoçeşitlilik ve Yaban Hayat"},
+    {"q": 'inpublisher:"Can Yayınları" ekoloji',      "alt_kategori": "Şehircilik ve Ekoloji"},
+    {"q": 'inpublisher:"Kolektif Kitap"',             "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+    {"q": 'inpublisher:"Erdem Yayınları" çevre',      "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+    {"q": 'inpublisher:"Remzi Kitabevi" çevre',       "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+    {"q": 'inpublisher:"Ege Yayınları" iklim',        "alt_kategori": "İklim Değişikliği"},
+    {"q": 'inpublisher:"Nobel Akademik Yayıncılık" çevre', "alt_kategori": "Sürdürülebilirlik"},
+    {"q": 'inpublisher:"Filiz Kitabevi"',             "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+    {"q": 'inpublisher:"İmge Kitabevi" çevre',        "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+    {"q": 'inpublisher:"Orion Kitabevi" iklim',       "alt_kategori": "Şehircilik ve Ekoloji"},
+    {"q": 'inpublisher:"Süreli Kitap"',               "alt_kategori": "Sürdürülebilirlik"},
+    {"q": 'inpublisher:"Alfa Yayınları" iklim',       "alt_kategori": "İklim Değişikliği"},
+    {"q": 'inpublisher:"Pınar Yayınları" ekoloji',    "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+
+    # ── Bağımsız uluslararası yayınevleri (langRestrict devre dışı: kendi dilinde taranır) ──
+    {"q": 'inpublisher:"Haymarket Books" ecology',              "alt_kategori": "Ekolojik Hareketler ve Direniş", "dil": "en"},
+    {"q": 'inpublisher:"Rowohlt Taschenbuch Verlag" Ökologie',  "alt_kategori": "Sürdürülebilirlik", "dil": "de"},
 ]
 
 KITAP_KAT_ANAHTAR = {
@@ -2003,10 +2040,12 @@ def _google_kitap_isle(item: dict, alt_kategori_varsayilan: str) -> Optional[dic
 
 
 def kitap_tara() -> list:
-    """Tüm KITAP_SORGULARI için Google Books API'yi tarar, ham kayıt listesi döndürür."""
+    """Tüm KITAP_SORGULARI için Google Books API'yi tarar, ham kayıt listesi döndürür.
+    Her sorgu isteğe bağlı 'dil' anahtarı taşıyabilir (varsayılan 'tr') — uluslararası
+    yayınevi sorguları (İngilizce/Almanca vb.) langRestrict=tr tarafından elenmesin diye."""
     tumu = []
     for sorgu in KITAP_SORGULARI:
-        items = google_books_ara(sorgu["q"])
+        items = google_books_ara(sorgu["q"], dil=sorgu.get("dil", "tr"))
         for it in items:
             kayit = _google_kitap_isle(it, sorgu["alt_kategori"])
             if kayit:
