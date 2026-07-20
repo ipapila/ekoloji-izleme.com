@@ -15,6 +15,7 @@ import hashlib
 import json
 import logging
 import os
+import random
 import re
 import sys
 import time
@@ -1953,8 +1954,8 @@ def google_books_ara(sorgu: str, dil: str = "tr", max_sonuc: int = 20) -> list:
     """Google Books API'de tek bir sorgu çalıştırır, ham 'items' listesini döndürür.
     ANONİM (API anahtarsız) istekler GitHub Actions gibi paylaşımlı datacenter
     IP'lerinden çok hızlı HTTP 429 (rate limit) alıyor — bu yüzden GOOGLE_BOOKS_API_KEY
-    ortam değişkeni varsa isteğe eklenir. Ayrıca 429 durumunda üstel bekleme ile
-    en fazla 3 deneme yapılır."""
+    ortam değişkeni varsa isteğe eklenir. 429 durumunda, varsa 'Retry-After' header'ı
+    esas alınır; yoksa üstel bekleme + jitter ile en fazla 4 deneme yapılır."""
     params = {
         "q": sorgu,
         "langRestrict": dil,
@@ -1965,8 +1966,9 @@ def google_books_ara(sorgu: str, dil: str = "tr", max_sonuc: int = 20) -> list:
     if GOOGLE_BOOKS_API_KEY:
         params["key"] = GOOGLE_BOOKS_API_KEY
 
-    bekleme = 2
-    for deneme in range(3):
+    MAX_DENEME = 4
+    bekleme = 8  # saniye, ilk bekleme (eskiden 2 -- IP seviyesi limit için çok kısaydı)
+    for deneme in range(MAX_DENEME):
         try:
             r = requests.get(GOOGLE_BOOKS_API, params=params, timeout=10)
         except Exception as e:
@@ -1976,13 +1978,27 @@ def google_books_ara(sorgu: str, dil: str = "tr", max_sonuc: int = 20) -> list:
         if r.status_code == 200:
             return r.json().get("items", [])
 
-        if r.status_code == 429 and deneme < 2:
-            log.warning(f"  [kitap] {sorgu!r}: HTTP 429, {bekleme}sn sonra tekrar denenecek ({deneme+1}/3)")
-            time.sleep(bekleme)
+        if r.status_code == 429 and deneme < MAX_DENEME - 1:
+            retry_after = r.headers.get("Retry-After")
+            if retry_after:
+                try:
+                    gecikme = float(retry_after)
+                except ValueError:
+                    gecikme = bekleme
+            else:
+                gecikme = bekleme + random.uniform(0, bekleme * 0.5)  # jitter
+            log.warning(
+                f"  [kitap] {sorgu!r}: HTTP 429, {gecikme:.1f}sn sonra tekrar "
+                f"denenecek ({deneme + 1}/{MAX_DENEME})"
+            )
+            time.sleep(gecikme)
             bekleme *= 3
             continue
 
-        log.warning(f"  [kitap] {sorgu!r}: HTTP {r.status_code}")
+        if r.status_code == 429:
+            log.warning(f"  [kitap] {sorgu!r}: HTTP 429, tüm denemeler tükendi, atlanıyor")
+        else:
+            log.warning(f"  [kitap] {sorgu!r}: HTTP {r.status_code}")
         return []
     return []
 
@@ -2042,15 +2058,39 @@ def _google_kitap_isle(item: dict, alt_kategori_varsayilan: str) -> Optional[dic
 def kitap_tara() -> list:
     """Tüm KITAP_SORGULARI için Google Books API'yi tarar, ham kayıt listesi döndürür.
     Her sorgu isteğe bağlı 'dil' anahtarı taşıyabilir (varsayılan 'tr') — uluslararası
-    yayınevi sorguları (İngilizce/Almanca vb.) langRestrict=tr tarafından elenmesin diye."""
+    yayınevi sorguları (İngilizce/Almanca vb.) langRestrict=tr tarafından elenmesin diye.
+
+    Circuit breaker: API anahtarsız çalışırken IP tamamen bloklanmışsa (art arda
+    birkaç sorgu tüm denemelerini 429 ile tüketirse), kalan sorguları denemek sadece
+    zaman kaybettirir ve bloğu uzatabilir — bu durumda tarama erken sonlandırılır."""
     tumu = []
+    ardisik_basarisiz = 0
+    ARDISIK_ESIK = 3 if not GOOGLE_BOOKS_API_KEY else 6
+
+    if not GOOGLE_BOOKS_API_KEY:
+        log.warning(
+            "  [kitap] GOOGLE_BOOKS_API_KEY tanımlı değil — anonim istekler paylaşımlı "
+            "IP'lerde çok daha kolay 429 alır. Mümkünse ortam değişkeni olarak ekleyin."
+        )
+
     for sorgu in KITAP_SORGULARI:
         items = google_books_ara(sorgu["q"], dil=sorgu.get("dil", "tr"))
+        if items:
+            ardisik_basarisiz = 0
+        else:
+            ardisik_basarisiz += 1
+            if ardisik_basarisiz >= ARDISIK_ESIK:
+                log.warning(
+                    f"  [kitap] art arda {ardisik_basarisiz} sorgu başarısız oldu "
+                    "(muhtemelen IP seviyesinde bloklandı) — bu koşu için kitap "
+                    "taraması erken sonlandırılıyor."
+                )
+                break
         for it in items:
             kayit = _google_kitap_isle(it, sorgu["alt_kategori"])
             if kayit:
                 tumu.append(kayit)
-        time.sleep(2.0)
+        time.sleep(4.0 + random.uniform(0, 2.0))
     return tumu
 
 
