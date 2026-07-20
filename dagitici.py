@@ -912,6 +912,7 @@ def dagit(gonder_github=False):
             HABERLER_DOSYA, IHLALLER_DOSYA,
             Path("raporlar.json"), Path("makaleler.json"),
             Path("kuresel.json"), Path("ekosistem.json"),
+            Path("kitaplar.json"),
         ]
         for dosya in dosyalar:
             if dosya.exists():

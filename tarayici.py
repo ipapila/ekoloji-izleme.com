@@ -1853,6 +1853,205 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
     return cikti
 
 
+# ══════════════════════════════════════════════════════════════════
+#  KİTAP ARŞİVİ  →  hedef: "kitaplar"  (Google Books API)
+#
+#  Diğer koleksiyonlardan farkı: haber akışı değil, kalıcı bir kütüphane
+#  kataloğudur. Bu yüzden haberler.json'daki 365 günlük/aylık budama
+#  mantığına TABİ DEĞİLDİR — kitaplar.json kendi başına, ayrı bir
+#  dosyada tutulur ve dagitici.py tarafından sadece GitHub'a yüklenir,
+#  budanmaz. (Bilinçli tasarım kararı — bkz. KAYNAKLAR.md)
+# ══════════════════════════════════════════════════════════════════
+
+GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes"
+
+KITAP_SORGULARI = [
+    {"q": "iklim değişikliği",      "alt_kategori": "İklim Değişikliği"},
+    {"q": "ekoloji",                "alt_kategori": "Ekoloji ve Çevre Felsefesi"},
+    {"q": "orman ekosistemi",       "alt_kategori": "Orman ve Doğa Koruma"},
+    {"q": "doğa koruma",            "alt_kategori": "Orman ve Doğa Koruma"},
+    {"q": "biyoçeşitlilik",         "alt_kategori": "Biyoçeşitlilik ve Yaban Hayat"},
+    {"q": "su kaynakları çevre",    "alt_kategori": "Su ve Deniz Ekolojisi"},
+    {"q": "deniz ekolojisi",        "alt_kategori": "Su ve Deniz Ekolojisi"},
+    {"q": "madencilik çevre",       "alt_kategori": "Madencilik ve Enerji"},
+    {"q": "sürdürülebilirlik",      "alt_kategori": "Sürdürülebilirlik"},
+    {"q": "ekolojik tarım",         "alt_kategori": "Tarım ve Gıda Ekolojisi"},
+    {"q": "iklim adaleti",          "alt_kategori": "Ekolojik Hareketler ve Direniş"},
+    {"q": "çevre hareketi",         "alt_kategori": "Ekolojik Hareketler ve Direniş"},
+    {"q": "hayvan hakları ekoloji", "alt_kategori": "Biyoçeşitlilik ve Yaban Hayat"},
+    {"q": "kentsel ekoloji",        "alt_kategori": "Şehircilik ve Ekoloji"},
+]
+
+KITAP_KAT_ANAHTAR = {
+    "İklim Değişikliği":              ["iklim", "küresel ısınma", "karbon", "sera gazı"],
+    "Orman ve Doğa Koruma":           ["orman", "ağaç", "milli park", "doğa koruma", "habitat"],
+    "Biyoçeşitlilik ve Yaban Hayat":  ["biyoçeşit", "hayvan hak", "yaban hayat", "nesli tehlike"],
+    "Su ve Deniz Ekolojisi":          ["su kaynak", "deniz", "nehir", "göl ", "okyanus", "kıyı"],
+    "Madencilik ve Enerji":           ["maden", "enerji", "kömür", "petrol", "nükleer"],
+    "Sürdürülebilirlik":              ["sürdürülebilir", "döngüsel", "geri dönüşüm", "tüketim"],
+    "Tarım ve Gıda Ekolojisi":        ["tarım", "gıda", "toprak", "çiftçi", "permakültür"],
+    "Ekolojik Hareketler ve Direniş": ["direniş", "aktivizm", "eylem", "ekoloji hareketi"],
+    "Şehircilik ve Ekoloji":          ["kent", "şehir", "ekolojik mimari", "yeşil alan"],
+    "Ekoloji ve Çevre Felsefesi":     ["ekoloji", "felsefe", "çevre bilinci", "doğa yazını"],
+}
+
+
+def kitap_alt_kategori_rafine(baslik: str, ozet: str, varsayilan: str) -> str:
+    """Google Books'un kategori bilgisi güvenilmez/eksik olduğundan, başlık+özet
+    üzerinden anahtar kelime eşleşmesiyle en uygun alt-kategori seçilir."""
+    metin = f"{baslik} {ozet}".lower()
+    for kat, kelimeler in KITAP_KAT_ANAHTAR.items():
+        if any(k in metin for k in kelimeler):
+            return kat
+    return varsayilan
+
+
+def kitap_id(google_id: str) -> str:
+    return hashlib.md5(f"kitap:{google_id}".encode("utf-8")).hexdigest()[:12]
+
+
+def google_books_ara(sorgu: str, dil: str = "tr", max_sonuc: int = 20) -> list:
+    """Google Books API'de tek bir sorgu çalıştırır, ham 'items' listesini döndürür."""
+    try:
+        r = requests.get(
+            GOOGLE_BOOKS_API,
+            params={
+                "q": sorgu,
+                "langRestrict": dil,
+                "maxResults": max_sonuc,
+                "printType": "books",
+                "orderBy": "newest",
+            },
+            timeout=10,
+        )
+        if r.status_code != 200:
+            log.warning(f"  [kitap] {sorgu!r}: HTTP {r.status_code}")
+            return []
+        return r.json().get("items", [])
+    except Exception as e:
+        log.warning(f"  [kitap] {sorgu!r} taranamadi: {e}")
+        return []
+
+
+def _google_kitap_isle(item: dict, alt_kategori_varsayilan: str) -> Optional[dict]:
+    vinfo = item.get("volumeInfo", {}) or {}
+    ainfo = item.get("accessInfo", {}) or {}
+    sinfo = item.get("saleInfo", {}) or {}
+
+    baslik = (vinfo.get("title") or "").strip()
+    if not baslik:
+        return None
+    alt_baslik = (vinfo.get("subtitle") or "").strip()
+    if alt_baslik:
+        baslik = f"{baslik}: {alt_baslik}"
+
+    ozet = (vinfo.get("description") or "").strip()
+    if len(ozet) > 600:
+        ozet = ozet[:597].rstrip() + "…"
+
+    yazarlar = vinfo.get("authors") or []
+    kapak = ((vinfo.get("imageLinks") or {}).get("thumbnail")
+             or (vinfo.get("imageLinks") or {}).get("smallThumbnail") or "")
+    kapak = kapak.replace("http://", "https://")
+
+    # DİJİTAL İNDİRME LİNKİ — YALNIZCA AÇIK ERİŞİM/TELİFSİZ KAYNAKLAR İÇİN.
+    # Ticari kitaplar için indirme_linki HER ZAMAN None kalır; tanitim_linki
+    # (yayınevi/Google Books sayfası) üzerinden "nereden temin edilir"
+    # bilgisine ulaşılır. Bu bilinçli bir tasarım kararıdır.
+    acik_erisim = bool(ainfo.get("publicDomain")) or sinfo.get("saleability") == "FREE"
+    indirme_linki = None
+    if acik_erisim and (ainfo.get("pdf", {}).get("isAvailable") or ainfo.get("epub", {}).get("isAvailable")):
+        indirme_linki = ainfo.get("webReaderLink") or None
+
+    yayin_yili = (vinfo.get("publishedDate") or "")[:4]
+
+    return {
+        "id": kitap_id(item.get("id", baslik)),
+        "google_id": item.get("id", ""),
+        "baslik": baslik,
+        "yazar": ", ".join(yazarlar) if yazarlar else "Yazar belirtilmemiş",
+        "yayinevi": vinfo.get("publisher") or "",
+        "yayin_yili": yayin_yili,
+        "ozet": ozet or "Bu kitap için özet bilgisi bulunmuyor.",
+        "kapak_url": kapak,
+        "tanitim_linki": vinfo.get("infoLink") or vinfo.get("previewLink") or "",
+        "acik_erisim": acik_erisim,
+        "indirme_linki": indirme_linki,
+        "alt_kategori": kitap_alt_kategori_rafine(baslik, ozet, alt_kategori_varsayilan),
+        "dil": vinfo.get("language") or "tr",
+        "kaynak": "Google Books",
+        "hedef": "kitaplar",
+        "tarama_tarihi": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def kitap_tara() -> list:
+    """Tüm KITAP_SORGULARI için Google Books API'yi tarar, ham kayıt listesi döndürür."""
+    tumu = []
+    for sorgu in KITAP_SORGULARI:
+        items = google_books_ara(sorgu["q"])
+        for it in items:
+            kayit = _google_kitap_isle(it, sorgu["alt_kategori"])
+            if kayit:
+                tumu.append(kayit)
+        time.sleep(0.3)
+    return tumu
+
+
+def kitaplari_guncelle(cikti_dosyasi: str = "kitaplar.json", max_kayit: int = 3000) -> dict:
+    """
+    Google Books taramasını çalıştırır, kitaplar.json'u OKUR-BİRLEŞTİRİR-YAZAR.
+    Diğer koleksiyonların aksine kitaplar.json aylık budamaya TABİ DEĞİLDİR:
+    bu bir kütüphane kataloğudur, haber akışı değildir — eski kitaplar da
+    canlı sayfada aranabilir/gezinilebilir kalmalıdır (bilinçli tasarım kararı).
+    """
+    log.info("\n-- Kitap Arsivi: Google Books --")
+    p = Path(cikti_dosyasi)
+    eski: dict = {}
+    if p.exists():
+        try:
+            eski = json.loads(p.read_text(encoding="utf-8"))
+        except Exception as e:
+            log.warning(f"kitaplar.json okunamadi: {e}, sifirdan baslaniyor.")
+    mevcut = eski.get("kitaplar", [])
+    gorulen_id = {str(k.get("id")) for k in mevcut}
+    gorulen_google_id = {str(k.get("google_id")) for k in mevcut if k.get("google_id")}
+
+    try:
+        taranan = kitap_tara()
+    except Exception as e:
+        log.error(f"  Kitap tarama hatasi: {e}")
+        taranan = []
+
+    yeni = []
+    for k in taranan:
+        if k["id"] in gorulen_id or (k["google_id"] and k["google_id"] in gorulen_google_id):
+            continue
+        gorulen_id.add(k["id"])
+        if k["google_id"]:
+            gorulen_google_id.add(k["google_id"])
+        yeni.append(k)
+
+    birlesik = yeni + mevcut
+    birlesik.sort(key=lambda x: x.get("tarama_tarihi") or "", reverse=True)
+    birlesik = birlesik[:max_kayit]
+
+    cikti = {
+        "meta": {
+            "guncelleme": datetime.now(TR_TZ).isoformat(),
+            "toplam": len(birlesik),
+            "not": "Kalıcı kütüphane kataloğu — aylık budamaya tabi değildir.",
+        },
+        "kitaplar": birlesik,
+    }
+    json_str = json.dumps(cikti, ensure_ascii=False, indent=2)
+    tmp = p.with_suffix(".tmp")
+    tmp.write_text(json_str, encoding="utf-8")
+    tmp.replace(p)
+    log.info(f"  OK {cikti_dosyasi}: +{len(yeni)} yeni kitap -> toplam {len(birlesik)}")
+    return cikti
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cikti", default="haberler.json")
@@ -1866,6 +2065,7 @@ def main():
         while True:
             try:
                 tara(args.cikti, args.max_haber, args.max_diger)
+                kitaplari_guncelle()
             except KeyboardInterrupt:
                 sys.exit(0)
             except Exception as e:
@@ -1873,6 +2073,7 @@ def main():
             time.sleep(args.aralik * 60)
     else:
         tara(args.cikti, args.max_haber, args.max_diger)
+        kitaplari_guncelle()
 
 
 if __name__ == "__main__":

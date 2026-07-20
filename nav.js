@@ -250,6 +250,23 @@
       <a href="direnis-agi.html" class="nav-link ${current === 'direnis-agi.html' ? 'active' : ''}">Direniş Ağı</a>
     </li>
     <li class="nav-item">
+      <a href="kitaplar.html" class="nav-link ${current === 'kitaplar.html' ? 'active' : ''}">Kitaplar
+        <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+      </a>
+      <div class="dropdown">
+        <a href="kitaplar.html"><span class="dot"></span>Tüm Kitaplar</a>
+        <hr>
+        <div class="dropdown-label">Konu</div>
+        <a href="kitaplar.html?kat=%C4%B0klim+De%C4%9Fi%C5%9Fikli%C4%9Fi"><span class="dot"></span>İklim Değişikliği</a>
+        <a href="kitaplar.html?kat=Orman+ve+Do%C4%9Fa+Koruma"><span class="dot"></span>Orman & Doğa Koruma</a>
+        <a href="kitaplar.html?kat=Biyo%C3%A7e%C5%9Fitlilik+ve+Yaban+Hayat"><span class="dot"></span>Biyoçeşitlilik & Yaban Hayat</a>
+        <a href="kitaplar.html?kat=Su+ve+Deniz+Ekolojisi"><span class="dot"></span>Su & Deniz Ekolojisi</a>
+        <a href="kitaplar.html?kat=Ekolojik+Hareketler+ve+Direni%C5%9F"><span class="dot"></span>Ekolojik Hareketler & Direniş</a>
+        <hr>
+        <a href="kitaplar.html?acik=1"><span class="dot"></span>Açık Erişim / İndirilebilir</a>
+      </div>
+    </li>
+    <li class="nav-item">
       <a href="arsiv.html" class="nav-link ${current === 'arsiv.html' ? 'active' : ''}">Arşiv</a>
     </li>
   </ul>

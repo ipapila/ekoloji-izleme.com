@@ -114,6 +114,34 @@ Dersim-Munzur-Cudi-Gabar-Hevsel bölgesel sorguları
 
 ---
 
+## 6. Kitap Arşivi
+
+| Kaynak | Erişim | Kapsam |
+|---|---|---|
+| Google Books API | `googleapis.com/books/v1/volumes` (14 anahtar kelime sorgusu, `langRestrict=tr`) | Ekoloji, iklim, orman, biyoçeşitlilik, su, madencilik, sürdürülebilirlik, tarım, direniş, şehircilik, felsefe konulu kitaplar |
+
+**Tasarım notları:**
+- Kitaplar `tarayici.py`'deki `kitaplari_guncelle()` fonksiyonuyla taranır ve doğrudan
+  `kitaplar.json`'a yazılır — haberler.json akışına dahil edilmez, `dagitici.py`'nin
+  kural tabanlı sınıflandırıcısından geçmez.
+  Sadece GitHub'a yüklenirken `dagitici.py`'nin gönderim listesine dahildir.
+- **Alt-kategori** başlık+özet üzerinden anahtar kelime eşleşmesiyle (`KITAP_KAT_ANAHTAR`)
+  belirlenir; sorgu bazlı varsayılan kategoriye düşer.
+- **Dijital indirme linki** yalnızca açık erişim/telifsiz kitaplar için doldurulur
+  (`accessInfo.publicDomain` veya `saleInfo.saleability == "FREE"`, ayrıca
+  pdf/epub erişilebilirliği). Ticari kitaplarda bu alan her zaman boştur —
+  yalnızca `tanitim_linki` (Google Books sayfası/yayınevi) gösterilir.
+- **Bilinçli tasarım kararı:** `kitaplar.json` aylık budamaya/arşivlemeye TABİ DEĞİLDİR.
+  Diğer koleksiyonlar bir haber akışıdır ve eski kayıtlar arşive taşınır; kitap
+  arşivi ise kalıcı bir kütüphane kataloğudur — eski kitaplar da canlı sayfada
+  aranabilir/gezinilebilir kalmalıdır.
+- Google News'in eski kitapları "yeni keşif" gibi sunması riski burada söz konusu
+  değildir (RSS değil, doğrudan API sorgusu kullanılır); ancak anahtar kelime
+  sorguları zamanla alakasız/düşük kaliteli sonuçlar getirebilir — gerekirse
+  `KITAP_SORGULARI` listesi daraltılabilir veya yayınevi bazlı kaynaklar eklenebilir.
+
+---
+
 ## Hedef koleksiyon dağılımı
 
 Kaynaklar `hedef` alanına göre şu koleksiyonlara yazılır:
@@ -124,3 +152,4 @@ Kaynaklar `hedef` alanına göre şu koleksiyonlara yazılır:
 - `uluslararasi` (kuresel) — uluslararası kaynaklar
 - `ekosistem` — türler, yaban, bitki, su canlıları, hayvan hakları, kadınlar, çiftçi,
   balıkçı, gençlik, eşitsizlik, kentsel, göç, savaş, engelliler bölümleri
+- `kitaplar` — ekoloji/iklim/çevre konulu kitaplar (kalıcı katalog, ayrı akış)
