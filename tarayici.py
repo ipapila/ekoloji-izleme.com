@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import logging
+import os
 import re
 import sys
 import time
@@ -1864,6 +1865,7 @@ def tara(cikti_dosyasi="haberler.json", max_haber=2000, max_diger=1000):
 # ══════════════════════════════════════════════════════════════════
 
 GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes"
+GOOGLE_BOOKS_API_KEY = os.environ.get("GOOGLE_BOOKS_API_KEY", "")
 
 KITAP_SORGULARI = [
     {"q": "iklim değişikliği",      "alt_kategori": "İklim Değişikliği"},
@@ -1911,26 +1913,41 @@ def kitap_id(google_id: str) -> str:
 
 
 def google_books_ara(sorgu: str, dil: str = "tr", max_sonuc: int = 20) -> list:
-    """Google Books API'de tek bir sorgu çalıştırır, ham 'items' listesini döndürür."""
-    try:
-        r = requests.get(
-            GOOGLE_BOOKS_API,
-            params={
-                "q": sorgu,
-                "langRestrict": dil,
-                "maxResults": max_sonuc,
-                "printType": "books",
-                "orderBy": "newest",
-            },
-            timeout=10,
-        )
-        if r.status_code != 200:
-            log.warning(f"  [kitap] {sorgu!r}: HTTP {r.status_code}")
+    """Google Books API'de tek bir sorgu çalıştırır, ham 'items' listesini döndürür.
+    ANONİM (API anahtarsız) istekler GitHub Actions gibi paylaşımlı datacenter
+    IP'lerinden çok hızlı HTTP 429 (rate limit) alıyor — bu yüzden GOOGLE_BOOKS_API_KEY
+    ortam değişkeni varsa isteğe eklenir. Ayrıca 429 durumunda üstel bekleme ile
+    en fazla 3 deneme yapılır."""
+    params = {
+        "q": sorgu,
+        "langRestrict": dil,
+        "maxResults": max_sonuc,
+        "printType": "books",
+        "orderBy": "newest",
+    }
+    if GOOGLE_BOOKS_API_KEY:
+        params["key"] = GOOGLE_BOOKS_API_KEY
+
+    bekleme = 2
+    for deneme in range(3):
+        try:
+            r = requests.get(GOOGLE_BOOKS_API, params=params, timeout=10)
+        except Exception as e:
+            log.warning(f"  [kitap] {sorgu!r} taranamadi: {e}")
             return []
-        return r.json().get("items", [])
-    except Exception as e:
-        log.warning(f"  [kitap] {sorgu!r} taranamadi: {e}")
+
+        if r.status_code == 200:
+            return r.json().get("items", [])
+
+        if r.status_code == 429 and deneme < 2:
+            log.warning(f"  [kitap] {sorgu!r}: HTTP 429, {bekleme}sn sonra tekrar denenecek ({deneme+1}/3)")
+            time.sleep(bekleme)
+            bekleme *= 3
+            continue
+
+        log.warning(f"  [kitap] {sorgu!r}: HTTP {r.status_code}")
         return []
+    return []
 
 
 def _google_kitap_isle(item: dict, alt_kategori_varsayilan: str) -> Optional[dict]:
@@ -1994,7 +2011,7 @@ def kitap_tara() -> list:
             kayit = _google_kitap_isle(it, sorgu["alt_kategori"])
             if kayit:
                 tumu.append(kayit)
-        time.sleep(0.3)
+        time.sleep(2.0)
     return tumu
 
 
