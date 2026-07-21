@@ -1884,6 +1884,18 @@ KITAP_SORGULARI = [
     {"q": "hayvan hakları ekoloji", "alt_kategori": "Biyoçeşitlilik ve Yaban Hayat"},
     {"q": "kentsel ekoloji",        "alt_kategori": "Şehircilik ve Ekoloji"},
 
+    # ── Atık, kirlilik ve nükleer enerji ──
+    {"q": "atık yönetimi çevre",          "alt_kategori": "Atık ve Kirlilik"},
+    {"q": "geri dönüşüm çevre kirliliği", "alt_kategori": "Atık ve Kirlilik"},
+    {"q": "nükleer enerji çevre",         "alt_kategori": "Nükleer Enerji"},
+    {"q": "nükleer santral",              "alt_kategori": "Nükleer Enerji"},
+
+    # ── Toplumsal cinsiyet, kimlik ve çevresel adalet ──
+    {"q": "queer ekoloji",              "alt_kategori": "Toplumsal Cinsiyet, Kimlik ve Ekoloji"},
+    {"q": "LGBTİ+ çevre hareketi",       "alt_kategori": "Toplumsal Cinsiyet, Kimlik ve Ekoloji"},
+    {"q": "çevresel adalet eşitsizlik",  "alt_kategori": "Çevresel Adalet ve Dezavantajlı Gruplar"},
+    {"q": "engelli çevre adaleti",       "alt_kategori": "Çevresel Adalet ve Dezavantajlı Gruplar"},
+
     # ── Yazarlar (bağımsız ekoloji akademisyen/aktivistleri) ──
     {"q": 'inauthor:"Beyza Üstün"', "alt_kategori": "Ekolojik Hareketler ve Direniş"},
 
@@ -1927,12 +1939,16 @@ KITAP_KAT_ANAHTAR = {
     "Orman ve Doğa Koruma":           ["orman", "ağaç", "milli park", "doğa koruma", "habitat"],
     "Biyoçeşitlilik ve Yaban Hayat":  ["biyoçeşit", "hayvan hak", "yaban hayat", "nesli tehlike"],
     "Su ve Deniz Ekolojisi":          ["su kaynak", "deniz", "nehir", "göl ", "okyanus", "kıyı"],
-    "Madencilik ve Enerji":           ["maden", "enerji", "kömür", "petrol", "nükleer"],
+    "Madencilik ve Enerji":           ["maden", "enerji", "kömür", "petrol"],
     "Sürdürülebilirlik":              ["sürdürülebilir", "döngüsel", "geri dönüşüm", "tüketim"],
     "Tarım ve Gıda Ekolojisi":        ["tarım", "gıda", "toprak", "çiftçi", "permakültür"],
     "Ekolojik Hareketler ve Direniş": ["direniş", "aktivizm", "eylem", "ekoloji hareketi"],
     "Şehircilik ve Ekoloji":          ["kent", "şehir", "ekolojik mimari", "yeşil alan"],
     "Ekoloji ve Çevre Felsefesi":     ["ekoloji", "felsefe", "çevre bilinci", "doğa yazını"],
+    "Atık ve Kirlilik":               ["atık", "kirlilik", "geri dönüşüm", "çöp", "arıtma"],
+    "Nükleer Enerji":                 ["nükleer", "radyasyon", "reaktör", "santral"],
+    "Toplumsal Cinsiyet, Kimlik ve Ekoloji": ["queer ekoloji", "lgbti", "toplumsal cinsiyet", "kimlik ve ekoloji"],
+    "Çevresel Adalet ve Dezavantajlı Gruplar": ["çevresel adalet", "eşitsizlik", "engelli", "dezavantajlı", "yoksulluk çevre"],
 }
 
 
