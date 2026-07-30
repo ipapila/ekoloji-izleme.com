@@ -106,9 +106,9 @@
 </div>
 
 <div id="legend">
-  <div class="row"><span class="sw" style="background:#ff6a3d;"></span> Yüksek güvenli tespit</div>
-  <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenli tespit</div>
-  <div class="row"><span class="sw" style="background:#8a9199;"></span> Düşük güvenli tespit (küçük/başlangıç aşaması olabilir)</div>
+  <div class="row"><span class="sw" style="background:#ff6a3d;"></span> Yüksek güvenilirlikli tespit</div>
+  <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenilirlikli tespit</div>
+  <div class="row"><span class="sw" style="background:#8a9199;"></span> Düşük güvenilirlikli tespit (küçük/başlangıç aşaması olabilir)</div>
   <div style="margin-top:6px; opacity:0.75;">Veri her 3 saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "Arazi / Orman görünümü"ne geçerek ormanları ve yerleşim adlarını daha net görebilirsiniz.</div>
 </div>
 
@@ -152,10 +152,27 @@
   const countEl = document.getElementById('count');
   const refreshBtn = document.getElementById('refresh-btn');
 
-  function colorFor(guven) {
-    const c = (guven || '').toLowerCase();
-    if (c === 'h' || c === 'yüksek' || (Number(c) >= 80)) return '#ff6a3d';
-    if (c === 'n' || c === 'orta' || (Number(c) >= 50)) return '#e0b64d';
+  function colorFor(k) {
+    // Öncelik: guven_kod — sabit, dile bağlı olmayan tek harf (h/n/l).
+    // Türkçe kelimelerle (yüksek/orta) karşılaştırma yapmıyoruz; farklı
+    // Unicode normalizasyonu (ü, ş gibi karakterlerde) bu karşılaştırmayı
+    // sessizce başarısız kılıp her şeyi "düşük" gri renge düşürebiliyordu.
+    const kod = (k.guven_kod || '').toLowerCase().trim();
+    if (kod === 'h') return '#ff6a3d';
+    if (kod === 'n') return '#e0b64d';
+    if (kod === 'l') return '#8a9199';
+
+    // Yedek: guven_kod içermeyen eski veri dosyaları için sayısal/metinsel
+    // alanlara bak.
+    const sayi = Number(k.guven_seviye_sayi);
+    if (!Number.isNaN(sayi)) {
+      if (sayi >= 80) return '#ff6a3d';
+      if (sayi >= 50) return '#e0b64d';
+      return '#8a9199';
+    }
+    const metin = (k.guven_seviye || '').normalize('NFC').toLowerCase().trim();
+    if (metin === 'yüksek') return '#ff6a3d';
+    if (metin === 'orta') return '#e0b64d';
     return '#8a9199';
   }
 
@@ -182,7 +199,7 @@
       kayitlar.forEach(k => {
         const lat = k.koordinatlar?.lat, lng = k.koordinatlar?.lng;
         if (typeof lat !== 'number' || typeof lng !== 'number') return;
-        const renk = colorFor(k.guven_seviye || (k.aciklama || '').match(/güven.*?(yüksek|orta|düşük)/i)?.[1] || '');
+        const renk = colorFor(k);
         const marker = L.circleMarker([lat, lng], { radius: 5, color: renk, fillColor: renk, fillOpacity: 0.85, weight: 1 });
 
         const konumBasligi = [k.yerlesim, k.ilce, k.il].filter(Boolean).join(' / ') || 'Konum bilgisi yok';

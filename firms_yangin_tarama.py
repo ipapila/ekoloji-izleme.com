@@ -200,12 +200,21 @@ def kayitlara_donustur(satirlar, il_ilce_coz=True, bekleme=1.0, max_geocode=150)
             "MODIS_NRT": "MODIS",
         }.get(sensor, sensor or "bilinmiyor")
 
-        # Herkesin anlayabileceği güven ifadesi (harita rengiyle de eşleşir)
-        guven_seviye = {"h": "Yüksek", "n": "Orta", "l": "Düşük"}.get(guven)
-        if guven_seviye is None and guven.isdigit():
+        # Harita rengi bu koda göre belirlenir: sabit, dile bağlı olmayan
+        # tek harf (h/n/l). guven_seviye ise SADECE ekranda gösterilecek
+        # Türkçe metin içindir — renk mantığı asla bu metne bakmamalı,
+        # çünkü Türkçe karakter karşılaştırması (ü, ş) Unicode normalizasyon
+        # farklarında sessizce yanlış sonuç verebilir (bu yüzden önceden
+        # yüksek/orta noktalar haritada gri/"düşük" görünüyordu).
+        if guven in GECERLI_GUVEN:
+            guven_kod = guven  # zaten h/n/l
+        elif guven.isdigit():
             sayi = int(guven)
-            guven_seviye = "Yüksek" if sayi >= 80 else ("Orta" if sayi >= 50 else "Düşük")
-        guven_seviye = guven_seviye or "Bilinmiyor"
+            guven_kod = "h" if sayi >= 80 else ("n" if sayi >= 50 else "l")
+        else:
+            guven_kod = "l"
+
+        guven_seviye = {"h": "Yüksek", "n": "Orta", "l": "Düşük"}[guven_kod]
 
         # Konum ifadesi: önce en yakın yerleşim, yoksa ilçe, yoksa il
         konum_ifadesi = yerlesim or ilce or il or "bilinmeyen bir konumda"
@@ -222,7 +231,7 @@ def kayitlara_donustur(satirlar, il_ilce_coz=True, bekleme=1.0, max_geocode=150)
 
         teknik_detay = (
             f"Sensör: {sensor_etiket}, uydu geçiş saati: {saat[:2]}:{saat[2:]} UTC, "
-            f"FRP: {frp} MW, güven: {guven}"
+            f"FRP: {frp} MW, güvenilirlik kodu: {guven}"
         )
 
         kayit = {
@@ -242,6 +251,7 @@ def kayitlara_donustur(satirlar, il_ilce_coz=True, bekleme=1.0, max_geocode=150)
             "aciklama": aciklama_sade,
             "teknik_detay": teknik_detay,
             "guven_seviye": guven_seviye,
+            "guven_kod": guven_kod,
             "alt_kategori": "",
             "kaynak_turu": "uydu",
         }
