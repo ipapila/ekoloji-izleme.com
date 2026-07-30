@@ -108,7 +108,11 @@
   <div class="field">
     <label for="map-key">FIRMS MAP_KEY</label>
     <input type="password" id="map-key" placeholder="ör. a1b2c3d4e5f6...">
-    <div class="hint">Ücretsiz: <a href="https://firms.modaps.eosdis.nasa.gov/api/area/" target="_blank">firms.modaps.eosdis.nasa.gov/api/area</a>. Anahtar sadece bu sekmede, tarayıcı belleğinde tutulur — kaydedilmez.</div>
+    <div class="hint">Ücretsiz: <a href="https://firms.modaps.eosdis.nasa.gov/api/area/" target="_blank">firms.modaps.eosdis.nasa.gov/api/area</a></div>
+    <label style="display:flex; align-items:center; gap:6px; margin-top:8px; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:11px; color:var(--text-dim); cursor:pointer;">
+      <input type="checkbox" id="remember-key" style="width:13px;height:13px;accent-color:var(--ember);">
+      Bu tarayıcıda hatırla
+    </label>
   </div>
 
   <div class="field">
@@ -161,6 +165,36 @@
 
   const log = document.getElementById('result-log');
   const scanBtn = document.getElementById('scan-btn');
+  const keyInput = document.getElementById('map-key');
+  const rememberBox = document.getElementById('remember-key');
+
+  // Kayıtlı MAP_KEY varsa geri yükle (yalnızca kendi sunucunda barındırıldığında
+  // çalışır — Claude önizlemesinde localStorage devre dışıdır).
+  try {
+    const savedKey = localStorage.getItem('firms_map_key');
+    if (savedKey) {
+      keyInput.value = savedKey;
+      rememberBox.checked = true;
+    }
+  } catch (e) { /* localStorage erişilemiyor, sorun değil */ }
+
+  rememberBox.addEventListener('change', () => {
+    try {
+      if (rememberBox.checked && keyInput.value.trim()) {
+        localStorage.setItem('firms_map_key', keyInput.value.trim());
+      } else {
+        localStorage.removeItem('firms_map_key');
+      }
+    } catch (e) { /* yoksay */ }
+  });
+
+  keyInput.addEventListener('input', () => {
+    try {
+      if (rememberBox.checked) {
+        localStorage.setItem('firms_map_key', keyInput.value.trim());
+      }
+    } catch (e) { /* yoksay */ }
+  });
 
   function setLog(html, cls) {
     log.innerHTML = cls ? `<span class="${cls}">${html}</span>` : html;
