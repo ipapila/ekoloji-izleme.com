@@ -1,0 +1,41 @@
+name: Sayfa Dağıtımı (Deploy)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.html'
+      - '**.css'
+      - '**.js'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Repo Kodlarını Çek
+        uses: actions/checkout@v4
+
+      - name: Kök Dizindeki HTML/CSS/JS Dosyalarını Plesk'e Gönder
+        env:
+          UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          shopt -s nullglob
+          dosyalar=(*.html *.css *.js)
+          if [ ${#dosyalar[@]} -eq 0 ]; then
+            echo "Gönderilecek dosya bulunamadı."
+            exit 0
+          fi
+          for dosya in "${dosyalar[@]}"; do
+            echo "Gönderiliyor: $dosya"
+            HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+              -X POST "${SITE_URL}/upload.php" \
+              -F "secret=${UPLOAD_SECRET}" \
+              -F "klasor=kok" \
+              -F "dosya=@${dosya}")
+            echo "HTTP $HTTP_CODE → $dosya → $(cat /tmp/response.txt)"
+            if [ "$HTTP_CODE" != "200" ]; then
+              echo "⚠ $dosya gönderilirken hata oldu (HTTP $HTTP_CODE)"
+            fi
+          done
