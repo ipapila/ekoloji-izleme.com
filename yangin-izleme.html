@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yangın & Isı İzleme — Türkiye</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root{
+    --bg: #12161a; --panel: #181d22; --panel-line: #262d34;
+    --text: #e7e4dc; --text-dim: #8a9199;
+    --ember: #ff6a3d; --ember-dim: #c74f28; --teal: #4fb8a8;
+    --warn: #e0b64d;
+    --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+    --sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; height:100%; background:var(--bg); color:var(--text); font-family:var(--sans); }
+  #map { position:absolute; inset:0; background:#0d1013; }
+
+  .leaflet-control-attribution { background: rgba(18,22,26,0.7) !important; color: var(--text-dim) !important; font-family: var(--mono); font-size:10px; }
+  .leaflet-control-attribution a { color: var(--teal) !important; }
+  .leaflet-control-zoom a { background: var(--panel) !important; color: var(--text) !important; border-color: var(--panel-line) !important; }
+
+  #topbar{
+    position:absolute; top:0; left:0; right:0; z-index:1000;
+    display:flex; align-items:baseline; justify-content:space-between;
+    padding: 16px 22px 10px;
+    background: linear-gradient(180deg, rgba(13,16,19,0.92) 0%, rgba(13,16,19,0) 100%);
+    pointer-events:none;
+  }
+  #topbar .brand{ display:flex; align-items:baseline; gap:10px; }
+  #topbar h1{ font-family: var(--mono); font-size:15px; font-weight:600; letter-spacing:0.06em; margin:0; text-transform:uppercase; color:var(--text); }
+  #topbar h1 span{ color: var(--ember); }
+  #topbar .sub{ font-family: var(--mono); font-size:11px; color: var(--text-dim); letter-spacing:0.03em; }
+
+  #panel{
+    position:absolute; top:70px; right:18px; z-index:1000; width: 250px;
+    background: var(--panel); border: 1px solid var(--panel-line); border-radius: 3px;
+    padding: 14px 14px 14px; pointer-events:auto;
+  }
+  #panel h2{ font-family: var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color: var(--text-dim); margin: 0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--panel-line); }
+  .field{ margin-bottom:12px; }
+  .field label{ display:block; font-family: var(--mono); font-size:10px; color: var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:5px; }
+  select, input[type=text], input[type=password]{
+    width:100%; background:#0f1216; color:var(--text); border:1px solid var(--panel-line);
+    border-radius:2px; padding:6px 8px; font-family:var(--mono); font-size:12px;
+  }
+  select:focus, input:focus{ outline:1px solid var(--teal); }
+  .hint{ font-size:10px; color: var(--text-dim); margin-top:4px; line-height:1.5; }
+  .hint a{ color: var(--teal); }
+
+  .btn{
+    width:100%; background: var(--ember); border:1px solid var(--ember); color:#12161a;
+    font-family:var(--mono); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em;
+    padding:9px; border-radius:2px; cursor:pointer; margin-top:4px; margin-bottom:4px;
+  }
+  .btn:hover{ background: var(--ember-dim); border-color: var(--ember-dim); }
+  .btn:disabled{ background: var(--panel-line); border-color: var(--panel-line); color: var(--text-dim); cursor:default; }
+  .btn-ghost{
+    width:100%; background:transparent; border:1px solid var(--panel-line); color:var(--text-dim);
+    font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.06em;
+    padding:7px; border-radius:2px; cursor:pointer; margin-top:6px;
+  }
+  .btn-ghost:hover{ border-color: var(--teal); color: var(--teal); }
+
+  #result-log{
+    font-family: var(--mono); font-size:10px; color: var(--text-dim); margin-top:10px;
+    padding-top:10px; border-top:1px solid var(--panel-line); line-height:1.6; min-height: 16px;
+  }
+  #result-log .ok{ color: var(--teal); }
+  #result-log .warn{ color: var(--warn); }
+  #result-log .err{ color: var(--ember); }
+
+  #legend{
+    position:absolute; bottom:18px; left:18px; z-index:1000;
+    background: var(--panel); border:1px solid var(--panel-line); border-radius:3px;
+    padding: 10px 14px; font-family: var(--mono); font-size:10px; color: var(--text-dim); max-width: 320px;
+  }
+  #legend .row{ display:flex; align-items:center; gap:7px; margin:3px 0; }
+  #legend .sw{ width:8px; height:8px; border-radius:50%; }
+
+  .leaflet-popup-content-wrapper{ background: var(--panel); color: var(--text); border-radius:3px; border:1px solid var(--panel-line); }
+  .leaflet-popup-tip{ background: var(--panel); }
+  .popup-title{ font-family:var(--mono); font-size:11px; color:var(--ember); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
+  .popup-row{ font-size:12px; color:var(--text-dim); margin:2px 0; }
+
+  @media (max-width: 640px){
+    #panel{ width: calc(100% - 36px); left:18px; right:18px; }
+    #legend{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div id="topbar">
+  <div class="brand">
+    <h1>ISI<span>·</span>YANGIN İZLEME</h1>
+    <div class="sub">NASA FIRMS — Türkiye — talep üzerine tarama</div>
+  </div>
+</div>
+
+<div id="panel">
+  <h2>Tarama Ayarları</h2>
+
+  <div class="field">
+    <label for="map-key">FIRMS MAP_KEY</label>
+    <input type="password" id="map-key" placeholder="ör. a1b2c3d4e5f6...">
+    <div class="hint">Ücretsiz: <a href="https://firms.modaps.eosdis.nasa.gov/api/area/" target="_blank">firms.modaps.eosdis.nasa.gov/api/area</a>. Anahtar sadece bu sekmede, tarayıcı belleğinde tutulur — kaydedilmez.</div>
+  </div>
+
+  <div class="field">
+    <label for="sensor">Uydu / Sensör</label>
+    <select id="sensor">
+      <option value="VIIRS_SNPP_NRT">VIIRS Suomi-NPP (375m)</option>
+      <option value="VIIRS_NOAA20_NRT">VIIRS NOAA-20 (375m)</option>
+      <option value="VIIRS_NOAA21_NRT">VIIRS NOAA-21 (375m)</option>
+      <option value="MODIS_NRT">MODIS Terra+Aqua (1km)</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="range">Gün Aralığı</label>
+    <select id="range">
+      <option value="1">Son 24 saat</option>
+      <option value="2">Son 48 saat</option>
+      <option value="3">Son 3 gün</option>
+      <option value="7">Son 7 gün</option>
+    </select>
+  </div>
+
+  <button class="btn" id="scan-btn">Taramayı Başlat</button>
+  <button class="btn-ghost" id="clear-btn">Haritayı Temizle</button>
+
+  <div id="result-log">Henüz tarama yapılmadı.</div>
+</div>
+
+<div id="legend">
+  <div class="row"><span class="sw" style="background:#ff6a3d;"></span> Yüksek güvenli tespit</div>
+  <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenli tespit</div>
+  <div style="margin-top:6px; opacity:0.75;">Nokta = ısıl anomali tespiti (uydu geçişinden ~3-5 saat sonra işlenir). Mutlaka yangın anlamına gelmez — büyük sanayi tesisi, gaz flaring, vb. de işaretlenebilir.</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const TURKIYE_BOUNDS = [[35.5, 25.5], [42.5, 45.0]];
+  const TURKIYE_BBOX = "25.5,35.5,45.0,42.5"; // west,south,east,north
+
+  const map = L.map('map', { zoomControl: true, attributionControl: true }).fitBounds(TURKIYE_BOUNDS);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 19
+  }).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19, opacity: 0.85
+  }).addTo(map);
+
+  let markerLayer = L.layerGroup().addTo(map);
+
+  const log = document.getElementById('result-log');
+  const scanBtn = document.getElementById('scan-btn');
+
+  function setLog(html, cls) {
+    log.innerHTML = cls ? `<span class="${cls}">${html}</span>` : html;
+  }
+
+  function parseCsv(text) {
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',');
+    return lines.slice(1).map(line => {
+      const cols = line.split(',');
+      const row = {};
+      headers.forEach((h, i) => row[h.trim()] = (cols[i] || '').trim());
+      return row;
+    });
+  }
+
+  function colorFor(confidence) {
+    const c = (confidence || '').toLowerCase();
+    if (c === 'h' || (Number(c) >= 80)) return '#ff6a3d';
+    if (c === 'n' || (Number(c) >= 50)) return '#e0b64d';
+    return '#8a9199';
+  }
+
+  async function runScan() {
+    const key = document.getElementById('map-key').value.trim();
+    const sensor = document.getElementById('sensor').value;
+    const days = document.getElementById('range').value;
+
+    if (!key) {
+      setLog('MAP_KEY girmeden tarama yapılamaz. Yukarıdaki alana ekle.', 'err');
+      return;
+    }
+
+    scanBtn.disabled = true;
+    setLog('Taranıyor…');
+
+    const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${key}/${sensor}/${TURKIYE_BBOX}/${days}`;
+
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+
+      if (!res.ok || /invalid|error/i.test(text.slice(0, 60))) {
+        setLog(`FIRMS API hata döndürdü: ${text.slice(0, 150)}`, 'err');
+        scanBtn.disabled = false;
+        return;
+      }
+
+      const rows = parseCsv(text);
+      markerLayer.clearLayers();
+
+      let cizilen = 0;
+      rows.forEach(r => {
+        const lat = parseFloat(r.latitude), lng = parseFloat(r.longitude);
+        if (isNaN(lat) || isNaN(lng)) return;
+        const renk = colorFor(r.confidence);
+        const marker = L.circleMarker([lat, lng], {
+          radius: 5, color: renk, fillColor: renk, fillOpacity: 0.85, weight: 1
+        });
+        marker.bindPopup(`
+          <div class="popup-title">Isı Anomalisi</div>
+          <div class="popup-row">Tarih: ${r.acq_date || '—'} ${r.acq_time || ''} UTC</div>
+          <div class="popup-row">Güven: ${r.confidence || '—'}</div>
+          <div class="popup-row">FRP: ${r.frp || '—'} MW</div>
+          <div class="popup-row">Koordinat: ${lat.toFixed(3)}, ${lng.toFixed(3)}</div>
+        `);
+        marker.addTo(markerLayer);
+        cizilen++;
+      });
+
+      const simdi = new Date().toLocaleTimeString('tr-TR');
+      if (cizilen === 0) {
+        setLog(`Tarama tamam (${simdi}) — bu aralıkta Türkiye'de tespit yok. Bu iyi bir haber; hata değil.`, 'ok');
+      } else {
+        setLog(`Tarama tamam (${simdi}) — ${cizilen} tespit bulundu.`, 'warn');
+      }
+    } catch (e) {
+      setLog('İstek başarısız oldu — muhtemelen tarayıcı CORS kısıtlaması. Alttaki linki yeni sekmede aç.', 'err');
+      const link = document.createElement('div');
+      link.style.marginTop = '6px';
+      link.innerHTML = `<a href="${url}" target="_blank" style="color:var(--teal);">Ham CSV'yi doğrudan aç →</a>`;
+      log.appendChild(link);
+    }
+
+    scanBtn.disabled = false;
+  }
+
+  scanBtn.addEventListener('click', runScan);
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    markerLayer.clearLayers();
+    setLog('Harita temizlendi.');
+  });
+</script>
+</body>
+</html>
