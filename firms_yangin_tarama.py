@@ -55,8 +55,13 @@ TURKIYE_BBOX = "25.5,35.5,45.0,42.5"
 GUN_ARALIGI = 1
 
 # Güven eşiği: VIIRS için confidence "l"(low)/"n"(nominal)/"h"(high) döner.
-# "n" ve "h" olanları al, düşük güvenli gürültüyü ele.
-GECERLI_GUVEN = {"n", "h"}
+# Küçük/başlangıç aşamasındaki yangınlar genelde düşük FRP'li olduğu için
+# düşük güvenle işaretlenir — bu yüzden "l" artık ELENMİYOR, sadece
+# aciklama/kayıtta "düşük güven" olarak işaretleniyor (harita tarafında
+# farklı renkle gösteriliyor). Tamamen gürültü olan MODIS'in çok düşük
+# sayısal güven değerleri (<MODIS_MIN_GUVEN) hâlâ elenir.
+GECERLI_GUVEN = {"l", "n", "h"}
+MODIS_MIN_GUVEN = 20  # önceden 50 idi — daha küçük/zayıf tespitleri de al
 
 # Aynı yangının farklı sensörlerde tekrar sayılmasını önlemek için
 # yuvarlama çözünürlüğü (derece) — ~1.1km
@@ -152,10 +157,10 @@ def kayitlara_donustur(satirlar, il_ilce_coz=True, bekleme=1.0, max_geocode=150)
     for s in satirlar:
         guven = str(s.get("confidence", "")).strip().lower()
 
-        if guven.isdigit() and int(guven) < 50:
+        if guven.isdigit() and int(guven) < MODIS_MIN_GUVEN:
             continue
-        if guven in ("l",):  # düşük güvenli VIIRS noktalarını at
-            continue
+        if guven not in GECERLI_GUVEN and not guven.isdigit():
+            continue  # tanınmayan/boş değer
 
         try:
             lat = float(s["latitude"])
