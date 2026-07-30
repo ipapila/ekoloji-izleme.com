@@ -2,7 +2,7 @@ name: Yangin Taramasi (FIRMS)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */3 * * *'   # her 3 saatte bir (UTC)
+    - cron: '0 * * * *'   # her saat başı (UTC)
 jobs:
   tara:
     runs-on: ubuntu-latest
