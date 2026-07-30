@@ -22,6 +22,10 @@
   .leaflet-control-attribution a { color: var(--teal) !important; }
   .leaflet-control-zoom a { background: var(--panel) !important; color: var(--text) !important; border-color: var(--panel-line) !important; }
 
+  .leaflet-control-layers{ background: var(--panel) !important; border:1px solid var(--panel-line) !important; border-radius:3px !important; color: var(--text) !important; font-family: var(--mono); font-size:11px; box-shadow:none !important; }
+  .leaflet-control-layers-base label{ margin:4px 0; color: var(--text); }
+  .leaflet-control-layers-separator{ border-top:1px solid var(--panel-line) !important; }
+
   #topbar{
     position:absolute; top:0; left:0; right:0; z-index:1000;
     display:flex; align-items:baseline; justify-content:space-between;
@@ -105,7 +109,7 @@
   <div class="row"><span class="sw" style="background:#ff6a3d;"></span> Yüksek güvenli tespit</div>
   <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenli tespit</div>
   <div class="row"><span class="sw" style="background:#8a9199;"></span> Düşük güvenli tespit (küçük/başlangıç aşaması olabilir)</div>
-  <div style="margin-top:6px; opacity:0.75;">Veri her 3 saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez.</div>
+  <div style="margin-top:6px; opacity:0.75;">Veri her 3 saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "Arazi / Orman görünümü"ne geçerek ormanları ve yerleşim adlarını daha net görebilirsiniz.</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -115,12 +119,31 @@
 
   const map = L.map('map', { zoomControl: true, attributionControl: true }).fitBounds(TURKIYE_BOUNDS);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 19
-  }).addTo(map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd', maxZoom: 19, opacity: 0.85
-  }).addTo(map);
+  // Karanlık tema — mevcut estetik, gece/ember hissi
+  const karanlikKatman = L.layerGroup([
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 19
+    }),
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd', maxZoom: 19, opacity: 0.85
+    })
+  ]);
+
+  // Topoğrafik/arazi görünümü — orman örtüsü, yerleşim ve köy adları çok
+  // daha net görünür; teknik bilgisi olmayan kullanıcı için "burası neresi,
+  // orman mı yerleşim mi" sorusunu tek bakışta cevaplar.
+  const araziKatman = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: 'Harita: &copy; OpenTopoMap (CC-BY-SA) — Veri: &copy; OpenStreetMap katkıda bulunanlar, SRTM',
+    subdomains: 'abc', maxZoom: 17
+  });
+
+  karanlikKatman.addTo(map);
+
+  L.control.layers(
+    { 'Karanlık (varsayılan)': karanlikKatman, 'Arazi / Orman görünümü': araziKatman },
+    null,
+    { position: 'topright', collapsed: false }
+  ).addTo(map);
 
   let markerLayer = L.layerGroup().addTo(map);
 
@@ -129,10 +152,10 @@
   const countEl = document.getElementById('count');
   const refreshBtn = document.getElementById('refresh-btn');
 
-  function colorFor(confidence) {
-    const c = (confidence || '').toLowerCase();
-    if (c === 'h' || (Number(c) >= 80)) return '#ff6a3d';
-    if (c === 'n' || (Number(c) >= 50)) return '#e0b64d';
+  function colorFor(guven) {
+    const c = (guven || '').toLowerCase();
+    if (c === 'h' || c === 'yüksek' || (Number(c) >= 80)) return '#ff6a3d';
+    if (c === 'n' || c === 'orta' || (Number(c) >= 50)) return '#e0b64d';
     return '#8a9199';
   }
 
@@ -159,14 +182,15 @@
       kayitlar.forEach(k => {
         const lat = k.koordinatlar?.lat, lng = k.koordinatlar?.lng;
         if (typeof lat !== 'number' || typeof lng !== 'number') return;
-        const guven = (k.aciklama || '').match(/güven:\s*(\w+)/i);
-        const renk = colorFor(guven ? guven[1] : '');
+        const renk = colorFor(k.guven_seviye || (k.aciklama || '').match(/güven.*?(yüksek|orta|düşük)/i)?.[1] || '');
         const marker = L.circleMarker([lat, lng], { radius: 5, color: renk, fillColor: renk, fillOpacity: 0.85, weight: 1 });
+
+        const konumBasligi = [k.yerlesim, k.ilce, k.il].filter(Boolean).join(' / ') || 'Konum bilgisi yok';
         marker.bindPopup(`
-          <div class="popup-title">${k.ad || 'Isı Anomalisi'}</div>
-          <div class="popup-row">${k.il || ''}${k.ilce ? ' / ' + k.ilce : ''}</div>
-          <div class="popup-row">Eklenme: ${k.eklenme || '—'}</div>
-          <div class="popup-row">${k.aciklama || ''}</div>
+          <div class="popup-title">🔥 ${konumBasligi}</div>
+          <div class="popup-row" style="color:var(--text); margin-bottom:6px;">${k.aciklama || ''}</div>
+          <div class="popup-row">Tarih: ${k.eklenme || '—'}</div>
+          <div class="popup-row" style="opacity:0.65; font-size:11px; margin-top:4px;">${k.teknik_detay || ''}</div>
         `);
         marker.addTo(markerLayer);
       });
