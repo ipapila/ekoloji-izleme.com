@@ -29,6 +29,7 @@ import sys
 import csv
 import io
 import json
+import math
 import random
 import string
 import time
@@ -49,6 +50,76 @@ def _ipv4_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
 
 
 socket.getaddrinfo = _ipv4_getaddrinfo
+
+
+# --- Çevrimdışı en-yakın-il yedeği ---------------------------------------
+# Nominatim reverse-geocoding ağ isteği başarısız olur ya da max_geocode
+# sınırı aşılırsa, en azından il adı boş kalmasın diye 81 il merkezine
+# olan mesafeyi (haversine) hesaplayıp en yakınını döndürüyoruz. Ağ
+# gerektirmez, anında çalışır — böylece popup'ta "Konum bilgisi yok"
+# yerine en azından il adı her zaman görünür.
+IL_MERKEZLERI = {
+    "Adana": (37.0000, 35.3213), "Adıyaman": (37.7648, 38.2786),
+    "Afyonkarahisar": (38.7507, 30.5567), "Ağrı": (39.7191, 43.0503),
+    "Amasya": (40.6499, 35.8353), "Ankara": (39.9334, 32.8597),
+    "Antalya": (36.8969, 30.7133), "Artvin": (41.1828, 41.8183),
+    "Aydın": (37.8560, 27.8416), "Balıkesir": (39.6484, 27.8826),
+    "Bilecik": (40.1451, 29.9798), "Bingöl": (38.8855, 40.4989),
+    "Bitlis": (38.4006, 42.1095), "Bolu": (40.7392, 31.6089),
+    "Burdur": (37.7203, 30.2908), "Bursa": (40.1826, 29.0665),
+    "Çanakkale": (40.1553, 26.4142), "Çankırı": (40.6013, 33.6134),
+    "Çorum": (40.5506, 34.9556), "Denizli": (37.7765, 29.0864),
+    "Diyarbakır": (37.9144, 40.2306), "Edirne": (41.6771, 26.5557),
+    "Elazığ": (38.6810, 39.2264), "Erzincan": (39.7500, 39.5000),
+    "Erzurum": (39.9000, 41.2700), "Eskişehir": (39.7767, 30.5206),
+    "Gaziantep": (37.0662, 37.3833), "Giresun": (40.9128, 38.3895),
+    "Gümüşhane": (40.4602, 39.4813), "Hakkari": (37.5744, 43.7408),
+    "Hatay": (36.4018, 36.3498), "Isparta": (37.7648, 30.5566),
+    "Mersin": (36.8000, 34.6333), "İstanbul": (41.0082, 28.9784),
+    "İzmir": (38.4237, 27.1428), "Kars": (40.6013, 43.0975),
+    "Kastamonu": (41.3887, 33.7827), "Kayseri": (38.7312, 35.4787),
+    "Kırklareli": (41.7333, 27.2167), "Kırşehir": (39.1425, 34.1709),
+    "Kocaeli": (40.8533, 29.8815), "Konya": (37.8746, 32.4932),
+    "Kütahya": (39.4242, 29.9833), "Malatya": (38.3552, 38.3095),
+    "Manisa": (38.6191, 27.4289), "Kahramanmaraş": (37.5753, 36.9228),
+    "Mardin": (37.3212, 40.7245), "Muğla": (37.2153, 28.3636),
+    "Muş": (38.9462, 41.7539), "Nevşehir": (38.6939, 34.6857),
+    "Niğde": (37.9667, 34.6833), "Ordu": (40.9839, 37.8764),
+    "Rize": (41.0201, 40.5234), "Sakarya": (40.6940, 30.4358),
+    "Samsun": (41.2867, 36.3300), "Siirt": (37.9333, 41.9500),
+    "Sinop": (42.0231, 35.1531), "Sivas": (39.7477, 37.0179),
+    "Tekirdağ": (40.9833, 27.5167), "Tokat": (40.3167, 36.5500),
+    "Trabzon": (41.0027, 39.7168), "Tunceli": (39.3074, 39.4388),
+    "Şanlıurfa": (37.1591, 38.7969), "Uşak": (38.6823, 29.4082),
+    "Van": (38.4891, 43.4089), "Yozgat": (39.8181, 34.8147),
+    "Zonguldak": (41.4564, 31.7987), "Aksaray": (38.3687, 34.0370),
+    "Bayburt": (40.2552, 40.2249), "Karaman": (37.1759, 33.2287),
+    "Kırıkkale": (39.8468, 33.5153), "Batman": (37.8812, 41.1351),
+    "Şırnak": (37.4187, 42.4918), "Bartın": (41.5811, 32.4610),
+    "Ardahan": (41.1105, 42.7022), "Iğdır": (39.9167, 44.0333),
+    "Yalova": (40.6500, 29.2667), "Karabük": (41.2061, 32.6204),
+    "Kilis": (36.7184, 37.1212), "Osmaniye": (37.0742, 36.2478),
+    "Düzce": (40.8438, 31.1565),
+}
+
+
+def en_yakin_il(lat, lng):
+    """Haversine ile 81 il merkezinden en yakınını bulur. Ağ gerektirmez."""
+    R = 6371.0
+    lat1 = math.radians(lat)
+    en_yakin, en_kucuk_mesafe = "", float("inf")
+    for il, (il_lat, il_lng) in IL_MERKEZLERI.items():
+        lat2 = math.radians(il_lat)
+        dlat = math.radians(il_lat - lat)
+        dlng = math.radians(il_lng - lng)
+        a = (
+            math.sin(dlat / 2) ** 2
+            + math.cos(lat1) * math.cos(lat2) * math.sin(dlng / 2) ** 2
+        )
+        mesafe = 2 * R * math.asin(math.sqrt(a))
+        if mesafe < en_kucuk_mesafe:
+            en_kucuk_mesafe, en_yakin = mesafe, il
+    return en_yakin
 
 # --- Ayarlar -----------------------------------------------------------
 
@@ -219,6 +290,13 @@ def kayitlara_donustur(satirlar, il_ilce_coz=True, bekleme=1.0, max_geocode=150)
                 time.sleep(bekleme)  # Nominatim rate limit
             # max_geocode aşılırsa il/ilce boş kalır — GitHub Actions zaman
             # aşımını önlemek için; büyük yangın günlerinde koordinat yine de var.
+
+        # Nominatim çağrısı hiç yapılmadıysa (max_geocode aşıldı) ya da
+        # yapıldı ama sonuç boş döndüyse (ağ hatası, rate limit, vs.),
+        # popup'ta "Konum bilgisi yok" görünmesin diye en azından il adını
+        # çevrimdışı hesapla — bu her zaman çalışır, ağ gerektirmez.
+        if not il and not ilce and not yerlesim:
+            il = en_yakin_il(lat, lng)
 
         frp = s.get("frp", "")  # Fire Radiative Power (MW) - şiddet göstergesi
         tarih = s.get("acq_date", bugun)
