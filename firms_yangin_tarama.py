@@ -194,27 +194,47 @@ def firms_verisini_cek(sensor):
         print("HATA: FIRMS_MAP_KEY tanımlı değil. Ortam değişkeni olarak ekleyin.")
         sys.exit(1)
 
-    url = (
-        f"https://firms.modaps.eosdis.nasa.gov/api/area/csv/"
-        f"{MAP_KEY}/{sensor}/{TURKIYE_BBOX}/{GUN_ARALIGI}"
-    )
-    req = urllib.request.Request(url, headers={"User-Agent": "ekoloji-izleme/1.0"})
+    # NASA'nın resmi FIRMS API sunucuları: ana sunucu (firms) ve bakım/arıza
+    # durumlarında kullanılması önerilen ayna sunucu (firms2). Ana sunucu
+    # 3 denemede de zaman aşımına uğrarsa (bağlantı hatası — API'nin kendisi
+    # bir hata mesajıyla YANIT VERMİŞ olması değil), otomatik olarak firms2'ye
+    # geçiyoruz. Kaynak: NASA FIRMS bakım duyuruları
+    # (https://www.earthdata.nasa.gov/data/alerts-outages) — "ana sunucuda
+    # sorun olursa firms2.modaps.eosdis.nasa.gov'u kullanın" tavsiyesi.
+    sunucular = [
+        "https://firms.modaps.eosdis.nasa.gov",
+        "https://firms2.modaps.eosdis.nasa.gov",
+    ]
 
-    ham = None
-    son_hata = None
-    for deneme in range(1, 4):
-        try:
-            with urllib.request.urlopen(req, timeout=30) as r:
-                ham = r.read().decode("utf-8")
+    for sunucu_index, taban_url in enumerate(sunucular):
+        url = f"{taban_url}/api/area/csv/{MAP_KEY}/{sensor}/{TURKIYE_BBOX}/{GUN_ARALIGI}"
+        req = urllib.request.Request(url, headers={"User-Agent": "ekoloji-izleme/1.0"})
+
+        ham = None
+        son_hata = None
+        for deneme in range(1, 4):
+            try:
+                with urllib.request.urlopen(req, timeout=30) as r:
+                    ham = r.read().decode("utf-8")
+                break
+            except (OSError, urllib.error.URLError) as e:
+                son_hata = e
+                if deneme < 3:
+                    bekleme = 5 * deneme
+                    print(f"  ⚠ {sensor} ({taban_url}): bağlantı hatası ({e}), {bekleme}sn sonra {deneme + 1}. deneme...")
+                    time.sleep(bekleme)
+
+        if ham is not None:
+            if sunucu_index > 0:
+                print(f"  ℹ {sensor}: ana sunucu yanıt vermedi, yedek sunucudan ({taban_url}) veri alındı.")
             break
-        except (OSError, urllib.error.URLError) as e:
-            son_hata = e
-            if deneme < 3:
-                bekleme = 5 * deneme
-                print(f"  ⚠ {sensor}: bağlantı hatası ({e}), {bekleme}sn sonra {deneme + 1}. deneme...")
-                time.sleep(bekleme)
+
+        if sunucu_index == 0:
+            print(f"  ⚠ {sensor}: ana sunucu (firms) 3 denemede de başarısız oldu ({son_hata}), yedek sunucu (firms2) deneniyor...")
+        else:
+            print(f"  ✗ {sensor}: hem ana hem yedek sunucu (firms/firms2) 3'er denemede de başarısız oldu: {son_hata}")
+
     if ham is None:
-        print(f"  ✗ {sensor}: 3 denemeden sonra bağlanılamadı: {son_hata}")
         return []
 
     if ham.strip().lower().startswith("invalid") or "error" in ham[:50].lower():
