@@ -89,6 +89,16 @@ UYDU_YOLLARI = {
     "mtg": "MTG/MTFRPPixel/NATIVE",  # MTG şu an demo statüsünde — bkz. LSA SAF mailindeki not
 }
 
+# LSA SAF'tan 31 Temmuz 2026'da alınan resmi cevaba göre (Sandra Gomes,
+# LSA SAF User Services): FRP-GRID ürünü 23 Haziran 2026'dan itibaren
+# 6 aylık deneme askıya alınmasına dahil, ama FRP-PIXEL hattı (bu script
+# bunu kullanıyor) tamamen etkilenmiyor ve normal üretiliyor. MSG
+# FRP-PIXEL tam operasyonel; MTG FRP-PIXEL ise yakında tam operasyonel
+# statüye geçmesi planlanan bir "demonstration" ürünü — bu yüzden MTG
+# kayıtları çıktıda ayrıca işaretleniyor (bkz. UYDU_STATU, urun_statu alanı).
+UYDU_ADLARI = {"msg": "MSG", "mtg": "MTG"}
+UYDU_STATU = {"msg": "operasyonel", "mtg": "demo"}
+
 # --- HDF5 alan adayları (--inspect ile doğrulanana kadar KESİN DEĞİL) ----
 # Her mantıksal alan için, LSA SAF FRP-PIXEL PUM'da (Product User Manual)
 # geçen tipik dataset adlarından birkaç aday — script dosyada ilk bulduğu
@@ -192,7 +202,13 @@ def en_son_listproduct_dosyasini_bul(uydu="msg", geriye_saat=3):
     """Bugünkü (gerekirse dünkü) dizin sayfalarını tarayıp en son
     '-ListProduct_' HDF5 dosyasının tam URL'sini döndürür. Dizin sayfası
     düz HTML olduğu için basit bir regex ile link isimlerini çıkarıyoruz —
-    tam bir HTML parser'a gerek yok, h5ai çıktısı sabit bir örüntüde."""
+    tam bir HTML parser'a gerek yok, h5ai çıktısı sabit bir örüntüde.
+
+    Döner: (tam_url, gun_farki) — gun_farki 0 ise dosya bugünün klasöründen
+    geldi, 1 ise dünün klasöründen (yakalanabilen en yakın gecikme sinyali).
+    LSA SAF'ın 31 Temmuz 2026 mailinde bahsettiği türden bir senkronizasyon
+    gecikmesi tekrar yaşanırsa, çağıran kod bu değeri loglayıp fark
+    edebilsin diye döndürülüyor."""
     simdi = datetime.now(timezone.utc)
     for gun_farki in (0, 1):  # gece yarısı UTC sınırında dünkü klasöre düşme ihtimaline karşı
         tarih = simdi - timedelta(days=gun_farki)
@@ -207,8 +223,8 @@ def en_son_listproduct_dosyasini_bul(uydu="msg", geriye_saat=3):
         dosyalar = sorted(set(dosyalar))
         en_son = dosyalar[-1]
         tam_url = en_son if en_son.startswith("http") else yol + en_son.split("/")[-1]
-        return tam_url
-    return None
+        return tam_url, gun_farki
+    return None, None
 
 
 def hdf5_yapisini_incele(dosya_yolu):
@@ -258,7 +274,7 @@ def _olceklendir(dataset):
     return veri
 
 
-def hdf5ten_kayitlara_donustur(dosya_yolu, il_ilce_coz=False):
+def hdf5ten_kayitlara_donustur(dosya_yolu, uydu="msg", il_ilce_coz=False):
     with h5py.File(dosya_yolu, "r") as f:
         lat_ds = _alan_bul(f, ALAN_ADAYLARI["lat"])
         lon_ds = _alan_bul(f, ALAN_ADAYLARI["lon"])
@@ -309,10 +325,19 @@ def hdf5ten_kayitlara_donustur(dosya_yolu, il_ilce_coz=False):
         else:
             guven_kod, guven_seviye = "l", "Düşük"
 
+        uydu_adi = UYDU_ADLARI.get(uydu, uydu.upper())
+        urun_statu = UYDU_STATU.get(uydu, "operasyonel")
+        demo_notu = (
+            " (Bu ürün LSA SAF tarafında hâlâ 'demonstration' statüsünde; "
+            "tam operasyonel olana kadar diğer kaynaklara göre daha temkinli "
+            "değerlendirilmelidir.)"
+            if urun_statu == "demo" else ""
+        )
+
         kayit = {
             "id": uid(),
             "tip": "İklim Olayları",
-            "ad": f"Uydu Tespitli Isı Anomalisi (Meteosat){f' ({konum_ifadesi})' if konum_ifadesi != 'bilinmeyen bir konumda' else ''}",
+            "ad": f"Uydu Tespitli Isı Anomalisi (Meteosat {uydu_adi}){f' ({konum_ifadesi})' if konum_ifadesi != 'bilinmeyen bir konumda' else ''}",
             "il": il,
             "ilce": ilce,
             "yerlesim": yerlesim,
@@ -321,20 +346,22 @@ def hdf5ten_kayitlara_donustur(dosya_yolu, il_ilce_coz=False):
             "durum": "Aktif",
             "belge_no": "",
             "eklenme": tarih,
-            "kaynak": "LSA SAF FRP-PIXEL (Meteosat MSG)",
+            "kaynak": f"LSA SAF FRP-PIXEL (Meteosat {uydu_adi})",
             "kaynak_link": "https://landsaf.ipma.pt/",
             "aciklama": (
                 f"Bu nokta, {konum_ifadesi}{' yakınında' if konum_ifadesi != 'bilinmeyen bir konumda' else ''} "
-                f"Meteosat jeostatik uydusu tarafından tespit edilen bir ısı anomalisidir "
+                f"Meteosat jeostatik uydusu ({uydu_adi}) tarafından tespit edilen bir ısı anomalisidir "
                 f"(Fire Radiative Power: {frp_deger:.1f} MW). "
                 "Bu tür tespitler her zaman yangın anlamına gelmez; tarım arazisi yakma, "
                 "sanayi tesisi ısısı veya güneş yansıması da benzer sinyal verebilir."
+                f"{demo_notu}"
             ),
             "teknik_detay": f"FRP: {frp_deger:.1f} MW, güvenilirlik: {guven_deger}",
             "guven_seviye": guven_seviye,
             "guven_kod": guven_kod,
             "alt_kategori": "",
             "kaynak_turu": "uydu",
+            "urun_statu": urun_statu,
         }
         kayitlar.append(kayit)
 
@@ -361,12 +388,22 @@ def main():
     ap.add_argument("--uydu", choices=["msg", "mtg"], default="msg")
     args = ap.parse_args()
 
-    print(f"LSA SAF FRP-PIXEL ({args.uydu.upper()}) için en son dosya aranıyor...")
-    dosya_url = en_son_listproduct_dosyasini_bul(args.uydu)
+    print(f"LSA SAF FRP-PIXEL ({args.uydu.upper()}, statü: {UYDU_STATU.get(args.uydu, '?')}) için en son dosya aranıyor...")
+    dosya_url, gun_farki = en_son_listproduct_dosyasini_bul(args.uydu)
     if not dosya_url:
         print("✗ Dizin sayfasında ListProduct dosyası bulunamadı.")
         sys.exit(1)
     print(f"→ Bulunan dosya: {dosya_url}")
+    if gun_farki and gun_farki > 0:
+        # LSA SAF'ın 31 Temmuz 2026 mailinde bahsettiği türden bir
+        # senkronizasyon gecikmesinin tekrar başlaması ihtimaline karşı:
+        # bugünün klasöründe dosya yoksa ve dünkü klasöre düşüyorsak
+        # bunu açıkça logla ki fark edilsin.
+        print(
+            f"  ⚠ Bugünün klasöründe dosya bulunamadı, {gun_farki} gün "
+            "önceki klasöre düşüldü — bu, LSA SAF tarafında geçici bir "
+            "gecikme/senkronizasyon sorunu olabilir."
+        )
 
     ham = _istek_yap(dosya_url, binary=True)
     if ham is None:
@@ -389,7 +426,7 @@ def main():
         )
         return
 
-    kayitlar = hdf5ten_kayitlara_donustur(yerel_yol)
+    kayitlar = hdf5ten_kayitlara_donustur(yerel_yol, uydu=args.uydu)
     os.remove(yerel_yol)
     print(f"Türkiye bbox'ı içinde {len(kayitlar)} nokta bulundu.")
 
