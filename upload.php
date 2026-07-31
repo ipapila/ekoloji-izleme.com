@@ -53,7 +53,7 @@ if (!hash_equals($_beklenen, $secret)) {
 
 /* ── Klasör kontrolü ── */
 $klasor = trim($_POST['klasor'] ?? '');
-$izinli_klasorler = ['ortam', 'dosya', 'kok'];
+$izinli_klasorler = ['ortam', 'dosya', 'kok', 'arsiv'];
 if (!in_array($klasor, $izinli_klasorler, true)) {
     hata('Geçersiz klasör: "' . htmlspecialchars($klasor) . '"');
 }
