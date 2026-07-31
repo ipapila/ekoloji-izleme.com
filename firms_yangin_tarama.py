@@ -389,6 +389,39 @@ def kayitlara_donustur(satirlar, il_ilce_coz=True, bekleme=1.0, max_geocode=150)
     return kayitlar
 
 
+def arsive_yaz(kayitlar):
+    """Kayıtları 'eklenme' (acq_date) alanına göre gruplar ve her tarih için
+    arsiv/YYYY-MM-DD.json dosyasını tam olarak o günün kayıtlarıyla üretir.
+
+    GUN_ARALIGI=1 olduğundan pratikte tek grup (bugünkü UTC tarihi) oluşur;
+    script saatlik çalıştığı için bu dosya gün boyunca defalarca baştan
+    yazılır ve günün kümülatif tespitlerini taşır. Gece yarısı UTC sınırında
+    bazı geç saatlerdeki taramaların birkaç dakika farkla bir önceki güne
+    ait kayıt döndürmesi ihtimaline karşı gruplama tek bir sabit tarihe
+    güvenmek yerine kayıtların kendi 'eklenme' alanına bakar.
+    """
+    os.makedirs("arsiv", exist_ok=True)
+    gruplar = {}
+    for k in kayitlar:
+        tarih = k.get("eklenme") or "bilinmeyen"
+        gruplar.setdefault(tarih, []).append(k)
+
+    yazilanlar = []
+    for tarih, grup in gruplar.items():
+        if tarih == "bilinmeyen":
+            continue
+        cikti = {
+            "guncelleme": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "kayit_sayisi": len(grup),
+            "kayitlar": grup,
+        }
+        yol = os.path.join("arsiv", f"{tarih}.json")
+        with open(yol, "w", encoding="utf-8") as f:
+            json.dump(cikti, f, ensure_ascii=False, indent=2)
+        yazilanlar.append(yol)
+    return yazilanlar
+
+
 def geojsona_cevir(kayitlar):
     features = []
     for k in kayitlar:
@@ -429,7 +462,11 @@ def main():
     with open("firms_yangin.geojson", "w", encoding="utf-8") as f:
         json.dump(geojsona_cevir(kayitlar), f, ensure_ascii=False, indent=2)
 
+    arsiv_dosyalari = arsive_yaz(kayitlar)
+
     print(f"Tamamlandı: {len(kayitlar)} kayıt -> firms_yangin.json / firms_yangin.geojson")
+    if arsiv_dosyalari:
+        print(f"Arşiv güncellendi: {', '.join(arsiv_dosyalari)}")
 
 
 if __name__ == "__main__":

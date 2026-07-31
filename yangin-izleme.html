@@ -95,6 +95,15 @@
   .btn-ghost:hover{ border-color: var(--teal); color: var(--teal); }
   .btn-ghost:disabled{ opacity:0.5; cursor:default; }
 
+  #date-row{ display:flex; gap:6px; margin-bottom:12px; }
+  #tarih-sec{
+    flex:1; min-width:0; background: var(--bg); border:1px solid var(--panel-line); color: var(--text);
+    font-family: var(--mono); font-size:11px; border-radius:2px; padding:6px 6px; color-scheme: dark;
+  }
+  #tarih-sec:focus{ outline:none; border-color: var(--teal); }
+  #bugun-btn{ width:auto; flex-shrink:0; margin-top:0; padding:6px 9px; }
+  .archive-badge{ display:inline-block; font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color: var(--warn); border:1px solid var(--warn); border-radius:2px; padding:1px 5px; margin-left:6px; vertical-align:middle; }
+
   #legend{
     position:absolute; bottom:18px; right:18px; z-index:1000;
     background: var(--panel); border:1px solid var(--panel-line); border-radius:3px;
@@ -143,10 +152,14 @@
 </div>
 
 <div id="panel">
-  <h2>Durum</h2>
+  <h2>Durum <span class="archive-badge" id="archive-badge" hidden>arşiv</span></h2>
+  <div id="date-row">
+    <input type="date" id="tarih-sec" aria-label="Tarih seç">
+    <button class="btn-ghost" id="bugun-btn">Bugün</button>
+  </div>
   <div class="status-row" id="status-row">
     <span class="dot"></span>
-    <span class="status-label">Son tarama:</span>
+    <span class="status-label" id="status-label">Son tarama:</span>
     <span class="status-val" id="last-scan">yükleniyor…</span>
   </div>
   <div id="count">—</div>
@@ -159,13 +172,15 @@
   <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenilirlikli tespit</div>
   <div class="row"><span class="sw" style="background:#8a9199;"></span> Düşük güvenilirlikli tespit (küçük/başlangıç aşaması olabilir)</div>
   <div class="row"><span class="sw" style="background:#ff6a3d; border-radius:2px;"></span> Yangın alanı sınırı (EFFIS, katmanlardan açılabilir)</div>
-  <div style="margin-top:6px; opacity:0.75;">Veri saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "OSM Standart" görünümüne geçerek yerleşim ve yol adlarını daha net görebilirsiniz.</div>
+  <div style="margin-top:6px; opacity:0.75;">Veri saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "OSM Standart" görünümüne geçerek yerleşim ve yol adlarını daha net görebilirsiniz. Sağ üstteki takvimden geçmiş bir günü seçerek o güne ait arşivlenmiş tespitleri görebilirsiniz.</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   const TURKIYE_BOUNDS = [[35.5, 25.5], [42.5, 45.0]];
   const VERI_URL = "firms_yangin.json"; // Aynı dizindeki JSON — GitHub Actions bunu periyodik günceller
+  const ARSIV_KLASOR = "arsiv"; // Tarih başına arsiv/YYYY-MM-DD.json — aynı workflow tarafından üretilir
+  const ARSIV_GUN_SAYISI = 10; // Takvimde geriye dönük seçilebilecek gün sayısı (backfill ile eşleşmeli)
   const EFFIS_RISK_URL = "effis_yangin_riski.json"; // İl bazlı günlük yangın riski (EFFIS FWI)
   const EFFIS_POLY_URL = "effis_yangin_alanlari.geojson"; // Yangın alanı poligonları (EFFIS burnt-area)
 
@@ -227,8 +242,25 @@
   const sidebarCount = document.getElementById('sidebar-count');
   const sidebarEl = document.getElementById('sidebar');
   const sidebarToggle = document.getElementById('sidebar-toggle');
+  const tarihSec = document.getElementById('tarih-sec');
+  const bugunBtn = document.getElementById('bugun-btn');
+  const statusLabelEl = document.getElementById('status-label');
+  const archiveBadgeEl = document.getElementById('archive-badge');
+  const countLabelEl = document.getElementById('count-label');
+  const sidebarHeaderEl = document.querySelector('#sidebar-header h2');
 
   sidebarToggle.addEventListener('click', () => sidebarEl.classList.toggle('open'));
+
+  // Tarihler her yerde UTC bazlı tutulur — backend (FIRMS acq_date) verileri
+  // de UTC gününe göre etiketliyor, yerel saat dilimiyle karışmasın diye.
+  function utcTarihStr(d) { return d.toISOString().slice(0, 10); }
+  const BUGUN_STR = utcTarihStr(new Date());
+  const MIN_TARIH_STR = utcTarihStr(new Date(Date.now() - (ARSIV_GUN_SAYISI - 1) * 86400000));
+
+  tarihSec.min = MIN_TARIH_STR;
+  tarihSec.max = BUGUN_STR;
+  tarihSec.value = BUGUN_STR;
+  let seciliTarih = BUGUN_STR;
 
   function colorFor(k) {
     // Öncelik: guven_kod — sabit, dile bağlı olmayan tek harf (h/n/l).
@@ -283,15 +315,45 @@
     } catch (e) { /* EFFIS poligon verisi yoksa sessizce geç */ }
   }
 
-  async function veriyiYukle() {
+  function veriUrlleri(tarih) {
+    // Seçili tarih için önce arşiv dosyasını dener; bugün seçiliyse ve
+    // arşiv dosyası henüz oluşmamışsa (ör. günün ilk taraması bitmeden
+    // önce ya da arsiv özelliği yeni eklendiği için geçmişte kalan bir
+    // an) firms_yangin.json'a düşer. Geçmiş bir tarih için arşiv yoksa
+    // yedek aranmaz — o gün için veri üretilmemiş demektir.
+    const arsivUrl = `${ARSIV_KLASOR}/${tarih}.json`;
+    return tarih === BUGUN_STR ? [arsivUrl, VERI_URL] : [arsivUrl];
+  }
+
+  async function veriyiCek(tarih) {
+    let sonHata = null;
+    for (const url of veriUrlleri(tarih)) {
+      try {
+        const res = await fetch(url + '?v=' + Date.now());
+        if (!res.ok) { sonHata = new Error('HTTP ' + res.status); continue; }
+        return await res.json();
+      } catch (e) { sonHata = e; }
+    }
+    throw sonHata || new Error('veri bulunamadı');
+  }
+
+  async function veriyiYukle(tarih) {
+    tarih = tarih || seciliTarih;
+    seciliTarih = tarih;
+    const bugunMu = tarih === BUGUN_STR;
+
+    archiveBadgeEl.hidden = bugunMu;
+    statusLabelEl.textContent = bugunMu ? 'Son tarama:' : 'Arşiv oluşturma:';
+    countLabelEl.textContent = bugunMu ? 'Aktif Tespit' : `${tarih} Tespiti`;
+    sidebarHeaderEl.textContent = bugunMu ? 'Son Tespitler' : `Tespitler — ${tarih}`;
+    refreshBtn.textContent = bugunMu ? 'Şimdi Yenile' : 'Bu Günü Yenile';
+
     refreshBtn.disabled = true;
     statusRow.className = 'status-row';
     lastScanEl.textContent = 'yükleniyor…';
 
     try {
-      const res = await fetch(VERI_URL + '?v=' + Date.now());
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const veri = await res.json();
+      const veri = await veriyiCek(tarih);
 
       const kayitlar = veri.kayitlar || (Array.isArray(veri) ? veri : []);
       markerLayer.clearLayers();
@@ -324,17 +386,19 @@
 
       if (veri.guncelleme) {
         lastScanEl.textContent = relatifZaman(veri.guncelleme);
-        const dakikaFark = (Date.now() - new Date(veri.guncelleme).getTime()) / 60000;
-        if (dakikaFark > 360) statusRow.className = 'status-row stale'; // 6 saatten eskiyse uyar
+        if (bugunMu) {
+          const dakikaFark = (Date.now() - new Date(veri.guncelleme).getTime()) / 60000;
+          if (dakikaFark > 360) statusRow.className = 'status-row stale'; // 6 saatten eskiyse uyar
+        }
       } else {
         lastScanEl.textContent = 'zaman bilgisi yok';
       }
     } catch (e) {
       statusRow.className = 'status-row err';
-      lastScanEl.textContent = 'veri yüklenemedi';
+      lastScanEl.textContent = bugunMu ? 'veri yüklenemedi' : 'bu tarih için arşiv yok';
       countEl.textContent = '—';
       sidebarCount.textContent = '—';
-      sidebarList.innerHTML = '<div id="sidebar-empty">Veri yüklenemedi.</div>';
+      sidebarList.innerHTML = `<div id="sidebar-empty">${bugunMu ? 'Veri yüklenemedi.' : 'Bu tarih için arşiv verisi bulunamadı.'}</div>`;
     }
 
     refreshBtn.disabled = false;
@@ -384,8 +448,16 @@
     }
   });
 
-  refreshBtn.addEventListener('click', () => { effisVerisiYukle(); veriyiYukle(); });
-  effisVerisiYukle().then(veriyiYukle);
+  tarihSec.addEventListener('change', () => {
+    if (!tarihSec.value) return;
+    veriyiYukle(tarihSec.value);
+  });
+  bugunBtn.addEventListener('click', () => {
+    tarihSec.value = BUGUN_STR;
+    veriyiYukle(BUGUN_STR);
+  });
+  refreshBtn.addEventListener('click', () => { effisVerisiYukle(); veriyiYukle(seciliTarih); });
+  effisVerisiYukle().then(() => veriyiYukle(BUGUN_STR));
 </script>
 </body>
 </html>
