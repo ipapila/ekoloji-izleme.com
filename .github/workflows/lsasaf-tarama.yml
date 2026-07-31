@@ -7,7 +7,8 @@ on:
         required: false
         default: 'false'
   schedule:
-    - cron: '15 * * * *'   # saatlik — MSG 15dk'da bir güncellense de Actions schedule dakika hassasiyeti garanti etmiyor
+    - cron: '15 * * * *'   # saatlik
+
 jobs:
   tara:
     runs-on: ubuntu-latest
@@ -21,10 +22,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: h5py Kurulumu
-        run: pip install h5py
+      - name: Bağımlılıkları Kur
+        run: pip install h5py requests
 
       - name: LSA SAF Taramasını Çalıştır
+        env:
+          LSA_USER: ${{ secrets.LSA_USER }}
+          LSA_PASS: ${{ secrets.LSA_PASS }}
         run: |
           if [ "${{ github.event.inputs.inspect }}" = "true" ]; then
             python lsasaf_frp_tarama.py --inspect
