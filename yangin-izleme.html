@@ -45,6 +45,28 @@
   }
   #panel h2{ font-family: var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color: var(--text-dim); margin: 0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--panel-line); }
 
+  #sidebar{
+    position:absolute; top:0; left:0; bottom:0; z-index:1001; width:300px;
+    background: var(--panel); border-right:1px solid var(--panel-line);
+    display:flex; flex-direction:column; padding-top:64px;
+  }
+  #sidebar-header{ padding:12px 16px 10px; border-bottom:1px solid var(--panel-line); flex-shrink:0; }
+  #sidebar-header h2{ font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-dim); margin:0 0 4px; }
+  #sidebar-count{ font-family:var(--mono); font-size:11px; color:var(--text); }
+  #sidebar-list{ flex:1; overflow-y:auto; }
+  #sidebar-empty{ padding:16px; font-family:var(--mono); font-size:11px; color:var(--text-dim); }
+  .sidebar-item{ display:flex; align-items:flex-start; gap:9px; padding:10px 16px; cursor:pointer; border-bottom:1px solid rgba(38,45,52,0.5); transition:background .15s; }
+  .sidebar-item:hover{ background: rgba(255,255,255,0.04); }
+  .sidebar-item.active{ background: rgba(255,106,61,0.1); }
+  .sidebar-item .dot{ width:8px; height:8px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+  .si-title{ font-size:12px; color:var(--text); line-height:1.35; }
+  .si-meta{ font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-top:3px; letter-spacing:0.02em; }
+
+  #sidebar-toggle{
+    display:none; pointer-events:auto; background:var(--panel); border:1px solid var(--panel-line);
+    color:var(--text); font-family:var(--mono); font-size:13px; border-radius:2px; padding:6px 10px; cursor:pointer;
+  }
+
   .status-row{ display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px; margin-bottom:6px; }
   .status-row .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); flex-shrink:0; }
   .status-row.stale .dot{ background: var(--warn); box-shadow:0 0 6px var(--warn); }
@@ -64,7 +86,7 @@
   .btn-ghost:disabled{ opacity:0.5; cursor:default; }
 
   #legend{
-    position:absolute; bottom:18px; left:18px; z-index:1000;
+    position:absolute; bottom:18px; right:18px; z-index:1000;
     background: var(--panel); border:1px solid var(--panel-line); border-radius:3px;
     padding: 10px 14px; font-family: var(--mono); font-size:10px; color: var(--text-dim); max-width: 320px;
   }
@@ -79,6 +101,12 @@
   @media (max-width: 640px){
     #panel{ width: calc(100% - 36px); left:18px; right:18px; }
     #legend{ display:none; }
+    #sidebar{
+      width: 84%; max-width:320px; transform: translateX(-100%);
+      transition: transform .25s ease; box-shadow: 3px 0 16px rgba(0,0,0,0.45);
+    }
+    #sidebar.open{ transform: translateX(0); }
+    #sidebar-toggle{ display:inline-flex; }
   }
 </style>
 </head>
@@ -88,8 +116,19 @@
 
 <div id="topbar">
   <div class="brand">
+    <button id="sidebar-toggle" aria-label="Listeyi aç/kapat">☰</button>
     <h1>ISI<span>·</span>YANGIN İZLEME</h1>
     <div class="sub">NASA FIRMS — Türkiye — saatte bir otomatik tarama</div>
+  </div>
+</div>
+
+<div id="sidebar">
+  <div id="sidebar-header">
+    <h2>Son Tespitler</h2>
+    <div id="sidebar-count">—</div>
+  </div>
+  <div id="sidebar-list">
+    <div id="sidebar-empty">yükleniyor…</div>
   </div>
 </div>
 
@@ -109,6 +148,7 @@
   <div class="row"><span class="sw" style="background:#ff6a3d;"></span> Yüksek güvenilirlikli tespit</div>
   <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenilirlikli tespit</div>
   <div class="row"><span class="sw" style="background:#8a9199;"></span> Düşük güvenilirlikli tespit (küçük/başlangıç aşaması olabilir)</div>
+  <div class="row"><span class="sw" style="background:#ff6a3d; border-radius:2px;"></span> Yangın alanı sınırı (EFFIS, katmanlardan açılabilir)</div>
   <div style="margin-top:6px; opacity:0.75;">Veri saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "OSM Standart" görünümüne geçerek yerleşim ve yol adlarını daha net görebilirsiniz.</div>
 </div>
 
@@ -116,8 +156,11 @@
 <script>
   const TURKIYE_BOUNDS = [[35.5, 25.5], [42.5, 45.0]];
   const VERI_URL = "firms_yangin.json"; // Aynı dizindeki JSON — GitHub Actions bunu periyodik günceller
+  const EFFIS_RISK_URL = "effis_yangin_riski.json"; // İl bazlı günlük yangın riski (EFFIS FWI)
+  const EFFIS_POLY_URL = "effis_yangin_alanlari.geojson"; // Yangın alanı poligonları (EFFIS burnt-area)
 
-  const map = L.map('map', { zoomControl: true, attributionControl: true }).fitBounds(TURKIYE_BOUNDS);
+  const map = L.map('map', { zoomControl: false, attributionControl: true }).fitBounds(TURKIYE_BOUNDS);
+  L.control.zoom({ position: 'topright' }).addTo(map);
 
   // Karanlık tema — mevcut estetik, gece/ember hissi
   const karanlikKatman = L.layerGroup([
@@ -139,20 +182,43 @@
     subdomains: 'abc', maxZoom: 19
   });
 
+  // EFFIS yangın alanı (burnt-area) poligonları — üstteki nokta
+  // tespitlerinden farklı olarak, uydu görüntüsünden manuel/otomatik
+  // sınırlandırılmış gerçek yanmış alan şeklini gösterir.
+  const effisPoligonKatman = L.geoJSON(null, {
+    style: { color: '#ff6a3d', weight: 2, fillColor: '#ff6a3d', fillOpacity: 0.18 },
+    onEachFeature: (feature, layer) => {
+      const ozellik = feature.properties || {};
+      const satirlar = Object.entries(ozellik)
+        .filter(([, v]) => v !== null && v !== '')
+        .map(([k, v]) => `<div class="popup-row">${k}: ${v}</div>`)
+        .join('');
+      layer.bindPopup(`<div class="popup-title">🔥 EFFIS Yangın Alanı</div>${satirlar || '<div class="popup-row">Detay yok</div>'}`);
+    }
+  });
+
   karanlikKatman.addTo(map);
 
   L.control.layers(
     { 'Karanlık (varsayılan)': karanlikKatman, 'OSM Standart': osmKatman },
-    null,
+    { 'Yangın Alanları (EFFIS)': effisPoligonKatman },
     { position: 'topright', collapsed: false }
   ).addTo(map);
 
   let markerLayer = L.layerGroup().addTo(map);
+  const markerById = new Map();
+  let effisRiski = {}; // il adı -> { fwi, risk }
 
   const statusRow = document.getElementById('status-row');
   const lastScanEl = document.getElementById('last-scan');
   const countEl = document.getElementById('count');
   const refreshBtn = document.getElementById('refresh-btn');
+  const sidebarList = document.getElementById('sidebar-list');
+  const sidebarCount = document.getElementById('sidebar-count');
+  const sidebarEl = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+
+  sidebarToggle.addEventListener('click', () => sidebarEl.classList.toggle('open'));
 
   function colorFor(k) {
     // Öncelik: guven_kod — sabit, dile bağlı olmayan tek harf (h/n/l).
@@ -185,6 +251,28 @@
     return `${Math.round(fark / 1440)} gün önce`;
   }
 
+  async function effisVerisiYukle() {
+    // EFFIS verileri (il riski + poligonlar) ana FIRMS akışından bağımsız;
+    // biri başarısız olsa da nokta tespitlerinin gösterimini etkilemesin
+    // diye ayrı try/catch içinde, sessizce başarısız olabiliyor.
+    try {
+      const res = await fetch(EFFIS_RISK_URL + '?v=' + Date.now());
+      if (res.ok) {
+        const veri = await res.json();
+        effisRiski = veri.iller || {};
+      }
+    } catch (e) { /* EFFIS risk verisi yoksa sessizce geç */ }
+
+    try {
+      const res = await fetch(EFFIS_POLY_URL + '?v=' + Date.now());
+      if (res.ok) {
+        const veri = await res.json();
+        effisPoligonKatman.clearLayers();
+        effisPoligonKatman.addData(veri);
+      }
+    } catch (e) { /* EFFIS poligon verisi yoksa sessizce geç */ }
+  }
+
   async function veriyiYukle() {
     refreshBtn.disabled = true;
     statusRow.className = 'status-row';
@@ -197,6 +285,7 @@
 
       const kayitlar = veri.kayitlar || (Array.isArray(veri) ? veri : []);
       markerLayer.clearLayers();
+      markerById.clear();
 
       kayitlar.forEach(k => {
         const lat = k.koordinatlar?.lat, lng = k.koordinatlar?.lng;
@@ -205,16 +294,23 @@
         const marker = L.circleMarker([lat, lng], { radius: 5, color: renk, fillColor: renk, fillOpacity: 0.85, weight: 1 });
 
         const konumBasligi = [k.yerlesim, k.ilce, k.il].filter(Boolean).join(' / ') || 'Konum bilgisi yok';
+        const risk = effisRiski[k.il];
+        const riskSatiri = risk
+          ? `<div class="popup-row">Günlük yangın riski (EFFIS): <b style="color:var(--text);">${risk.risk}</b></div>`
+          : '';
         marker.bindPopup(`
           <div class="popup-title">🔥 ${konumBasligi}</div>
           <div class="popup-row" style="color:var(--text); margin-bottom:6px;">${k.aciklama || ''}</div>
           <div class="popup-row">Tarih: ${k.eklenme || '—'}</div>
+          ${riskSatiri}
           <div class="popup-row" style="opacity:0.65; font-size:11px; margin-top:4px;">${k.teknik_detay || ''}</div>
         `);
         marker.addTo(markerLayer);
+        if (k.id) markerById.set(k.id, marker);
       });
 
       countEl.textContent = kayitlar.length;
+      sidebarListeDoldur(kayitlar);
 
       if (veri.guncelleme) {
         lastScanEl.textContent = relatifZaman(veri.guncelleme);
@@ -227,13 +323,59 @@
       statusRow.className = 'status-row err';
       lastScanEl.textContent = 'veri yüklenemedi';
       countEl.textContent = '—';
+      sidebarCount.textContent = '—';
+      sidebarList.innerHTML = '<div id="sidebar-empty">Veri yüklenemedi.</div>';
     }
 
     refreshBtn.disabled = false;
   }
 
-  refreshBtn.addEventListener('click', veriyiYukle);
-  veriyiYukle();
+  function sidebarListeDoldur(kayitlar) {
+    sidebarCount.textContent = `${kayitlar.length} kayıt`;
+
+    if (!kayitlar.length) {
+      sidebarList.innerHTML = '<div id="sidebar-empty">Şu anda gösterilecek tespit yok.</div>';
+      return;
+    }
+
+    // En yeni tarih en üstte — tarih formatı YYYY-MM-DD olduğu için
+    // metin karşılaştırması kronolojik sırayla aynı sonucu verir.
+    const sirali = [...kayitlar].sort((a, b) => (b.eklenme || '').localeCompare(a.eklenme || ''));
+
+    sidebarList.innerHTML = sirali.map(k => {
+      const konumBasligi = [k.yerlesim, k.ilce, k.il].filter(Boolean).join(' / ') || 'Konum bilgisi yok';
+      const renk = colorFor(k);
+      return `
+        <div class="sidebar-item" data-id="${k.id || ''}">
+          <span class="dot" style="background:${renk};"></span>
+          <div class="si-body">
+            <div class="si-title">${konumBasligi}</div>
+            <div class="si-meta">${k.eklenme || '—'} · ${k.guven_seviye || 'bilinmiyor'} güven</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  sidebarList.addEventListener('click', (e) => {
+    const item = e.target.closest('.sidebar-item');
+    if (!item) return;
+
+    document.querySelectorAll('.sidebar-item.active').forEach(el => el.classList.remove('active'));
+    item.classList.add('active');
+
+    const marker = markerById.get(item.dataset.id);
+    if (marker) {
+      map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 9), { duration: 0.6 });
+      marker.openPopup();
+    }
+    if (window.matchMedia('(max-width: 640px)').matches) {
+      sidebarEl.classList.remove('open');
+    }
+  });
+
+  refreshBtn.addEventListener('click', () => { effisVerisiYukle(); veriyiYukle(); });
+  effisVerisiYukle().then(veriyiYukle);
 </script>
 </body>
 </html>
