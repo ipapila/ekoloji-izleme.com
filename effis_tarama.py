@@ -24,6 +24,19 @@ görünüyor; kod dokümante edilmiş resmi endpoint'lere göre yazıldı,
 sunucu düzeldiğinde çalışması bekleniyor. İlk çalıştırmayı
 workflow_dispatch ile elle tetikleyip çıktıyı kontrol etmen önerilir.
 
+KÖK NEDEN (sonradan teşhis edildi): "msLoadSymbolSet(): Unknown
+identifier. First token must be SYMBOLSET..." hatası, MapServer'ın
+paylaşılan mapfile'ı yüklerken referans verdiği sembol dosyasının
+bozuk/eksik olmasından kaynaklanıyor. Bu, gelen isteğin türünden
+(WMS/WFS) tamamen bağımsız bir hata — mapfile ilk yüklenirken patlıyor,
+bu yüzden her iki servis de aynı şekilde etkileniyor. Yani bizim istek
+parametrelerimizle ilgili bir sorun değil, EFFIS tarafının kendi sunucu
+yapılandırması/altyapısıyla ilgili bir arıza. Bizim tarafımızdan
+düzeltilebilecek bir şey yok — sadece periyodik olarak (workflow_dispatch
+ile elle ya da zamanlanmış çalıştırmalarla) tekrar denemek ve EFFIS
+düzelttiğinde çalışmaya başlamasını beklemek gerekiyor. Sorun uzun sürerse
+jrc-effis@ec.europa.eu adresine bildirmek bir seçenek.
+
 KULLANIM
 --------
 python effis_tarama.py
@@ -205,7 +218,8 @@ def yangin_alanlarini_cek():
     için gelen özellikleri (properties) olduğu gibi geçiriyoruz."""
     url = (
         f"{EFFIS_WMS}?service=WFS&request=getfeature&typename=ms:modis.ba.poly"
-        f"&version=1.1.0&outputformat=GEOJSON&bbox={TURKIYE_BBOX}"
+        f"&version=1.1.0&outputformat=geojson&srsname=EPSG:4326"
+        f"&bbox={TURKIYE_BBOX},EPSG:4326"
     )
     yanit = _istek_yap(url, deneme=3)
     if yanit is None:
