@@ -109,7 +109,7 @@
   <div class="row"><span class="sw" style="background:#ff6a3d;"></span> Yüksek güvenilirlikli tespit</div>
   <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenilirlikli tespit</div>
   <div class="row"><span class="sw" style="background:#8a9199;"></span> Düşük güvenilirlikli tespit (küçük/başlangıç aşaması olabilir)</div>
-  <div style="margin-top:6px; opacity:0.75;">Veri her 3 saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "Arazi / Orman görünümü"ne geçerek ormanları ve yerleşim adlarını daha net görebilirsiniz.</div>
+  <div style="margin-top:6px; opacity:0.75;">Veri her 3 saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "OSM Standart" görünümüne geçerek yerleşim ve yol adlarını daha net görebilirsiniz.</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -129,18 +129,20 @@
     })
   ]);
 
-  // Topoğrafik/arazi görünümü — orman örtüsü, yerleşim ve köy adları çok
-  // daha net görünür; teknik bilgisi olmayan kullanıcı için "burası neresi,
-  // orman mı yerleşim mi" sorusunu tek bakışta cevaplar.
-  const araziKatman = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Harita: &copy; OpenTopoMap (CC-BY-SA) — Veri: &copy; OpenStreetMap katkıda bulunanlar, SRTM',
-    subdomains: 'abc', maxZoom: 17
+  // OSM Standart görünümü — arazi/topografik katmandaki (OpenTopoMap)
+  // kontur çizgileri ve gölgelendirme yoğun noktalarda tespit
+  // işaretlerinin net görülmesini zorlaştırıyordu; bunun yerine yerleşim
+  // ve yol adlarını hâlâ gösteren ama sade kalan standart OSM tile'ları
+  // kullanılıyor.
+  const osmKatman = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap katkıda bulunanlar',
+    subdomains: 'abc', maxZoom: 19
   });
 
   karanlikKatman.addTo(map);
 
   L.control.layers(
-    { 'Karanlık (varsayılan)': karanlikKatman, 'Arazi / Orman görünümü': araziKatman },
+    { 'Karanlık (varsayılan)': karanlikKatman, 'OSM Standart': osmKatman },
     null,
     { position: 'topright', collapsed: false }
   ).addTo(map);
