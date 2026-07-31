@@ -26,6 +26,13 @@
   .leaflet-control-layers-base label{ margin:4px 0; color: var(--text); }
   .leaflet-control-layers-separator{ border-top:1px solid var(--panel-line) !important; }
 
+  /* #panel (Durum kutusu) Leaflet'in sağ üst köşe kontrol yığınıyla (zoom +
+     katman seçici) aynı bölgede duruyor; ikisi de z-index:1000 olduğu için
+     DOM sırasına göre #panel üstte çiziliyor ve katman seçiciyi görsel
+     olarak kapatıyordu. Leaflet köşelerine daha yüksek bir z-index vererek
+     katman seçicinin her zaman görünür/tıklanabilir kalmasını sağlıyoruz. */
+  .leaflet-top, .leaflet-bottom{ z-index: 1200 !important; }
+
   #topbar{
     position:absolute; top:0; left:0; right:0; z-index:1000;
     display:flex; align-items:baseline; justify-content:space-between;
@@ -39,7 +46,10 @@
   #topbar .sub{ font-family: var(--mono); font-size:11px; color: var(--text-dim); letter-spacing:0.03em; }
 
   #panel{
-    position:absolute; top:70px; right:18px; z-index:1000; width: 230px;
+    /* top değeri, üstündeki zoom + katman seçici kontrol yığınının
+       (yaklaşık 190-200px) altına düşecek şekilde ayarlandı — bkz. yukarıdaki
+       .leaflet-top z-index notu. */
+    position:absolute; top:215px; right:18px; z-index:1000; width: 230px;
     background: var(--panel); border: 1px solid var(--panel-line); border-radius: 3px;
     padding: 14px; pointer-events:auto;
   }
