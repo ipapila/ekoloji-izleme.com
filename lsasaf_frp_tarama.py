@@ -1,447 +1,286 @@
 #!/usr/bin/env python3
 """
-lsasaf_frp_tarama.py
----------------------
-LSA SAF (Land Surface Analysis Satellite Applications Facility, EUMETSAT/
-IPMA) FRP-PIXEL ürününden — Meteosat (MSG, ileride MTG) jeostatik uydusunun
-15 dakikada bir ürettiği tüm-disk (full-disk) yangın radyatif gücü (Fire
-Radiative Power) piksel listesinden — Türkiye bbox'ına denk gelen noktaları
-çeker.
-
-ÖNEMLİ — BU SCRIPT İKİ AŞAMALI ÇALIŞACAK ŞEKİLDE YAZILDI
----------------------------------------------------------
-LSA SAF'ın herkese açık dizin sunucusunda dosyaları görebiliyoruz (bkz.
-mail: kimlik doğrulama / MAP_KEY gerekmiyor), ama HDF5 içindeki dataset
-adlarını (FRP, LATITUDE, FIRE_CONFIDENCE vb. gerçek key isimleri ve
-ölçekleme/offset attribute'ları) elimizde gerçek bir dosyayı açıp
-görmeden %100 doğrulayamıyoruz — bu ortamdan o sunucuya ağ erişimi yok.
-
-Bu yüzden script iki modda çalışıyor:
-
-  1) --inspect modu: en son dosyayı indirir, içindeki TÜM dataset'lerin
-     adını, shape'ini, dtype'ını ve attribute'larını (SCALING_FACTOR,
-     OFFSET, MISSING_VALUE vb.) ekrana basar, hiçbir varsayım yapmadan.
-     ÖNCE BUNU workflow_dispatch ile bir kere elle çalıştır, çıktısını
-     Actions log'undan kopyalayıp bana gönder — gerçek key isimlerine
-     göre aşağıdaki `ALAN_ADAYLARI` sözlüğünü kesinleştirip normal
-     tarama mantığını (firms_yangin_tarama.py ile aynı şema: il/ilçe,
-     güven kodu, arşiv) tamamlayacağım.
-
-  2) Normal tarama modu (varsayılan): ALAN_ADAYLARI'ndaki isim adaylarını
-     dosyada bulduğu ilk eşleşmeyle kullanıp kayıtlara dönüştürür. Adaylar
-     LSA SAF'ın yayınlanmış FRP-PIXEL Product User Manual'ındaki tipik
-     isimlere göre kondu ama --inspect ile doğrulanana kadar KESİN kabul
-     etme; ilk gerçek çalıştırmada `python lsasaf_frp_tarama.py --inspect`
-     çıktısını mutlaka kontrol et.
-
-KULLANIM
---------
-  pip install h5py
-  python lsasaf_frp_tarama.py --inspect        # yapıyı doğrula (önce bunu çalıştır)
-  python lsasaf_frp_tarama.py                  # normal tarama (JSON/GeoJSON üretir)
-  python lsasaf_frp_tarama.py --uydu mtg       # MTG operasyonel olduğunda
-
-Kimlik doğrulama / MAP_KEY GEREKMİYOR — LSA SAF dizini herkese açık.
+LSA SAF FRP-PIXEL (MSG) HDF5 İndirici ve Dönüştürücü
+Kullanım: python lsasaf_frp_tarama.py [--inspect]
 """
 
-import argparse
-import io
-import json
-import math
 import os
-import random
-import re
-import socket
-import string
 import sys
+import json
+import h5py
+import requests
+from requests.auth import HTTPBasicAuth
+from datetime import datetime, timedelta
 import time
-import urllib.error
-import urllib.request
-from datetime import datetime, timedelta, timezone
+import re
+import math
 
-try:
-    import h5py
-except ImportError:
-    print("HATA: h5py kurulu değil. Önce şunu çalıştır: pip install h5py")
-    sys.exit(1)
+# ---------------------------- KONFIGURASYON ----------------------------
+BASE_URL = "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG/FRP-PIXEL/HDF5"
+USER = os.environ.get('LSA_USER')
+PASS = os.environ.get('LSA_PASS')
+MAX_RETRIES = 3
+RETRY_DELAYS = [5, 10, 15]  # saniye
 
-# GitHub Actions runner'larında IPv6 route sorunu için (bkz. firms_yangin_tarama.py)
-_orig_getaddrinfo = socket.getaddrinfo
+# ---------------------------- YARDIMCI FONKSİYONLAR ----------------------------
+def auth_get(url, retry_count=0):
+    """Basic Auth ile GET isteği gönder, 401'de otomatik dene."""
+    if not USER or not PASS:
+        print("✗ HATA: LSA_USER veya LSA_PASS environment değişkenleri tanımlı değil!")
+        sys.exit(1)
 
-
-def _ipv4_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
-    sonuc = _orig_getaddrinfo(host, port, socket.AF_INET, type, proto, flags)
-    return sonuc or _orig_getaddrinfo(host, port, family, type, proto, flags)
-
-
-socket.getaddrinfo = _ipv4_getaddrinfo
-
-
-# --- Ayarlar -------------------------------------------------------------
-
-LSASAF_TABAN = "https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS"
-
-# Türkiye bounding box: west,south,east,north (firms_yangin_tarama.py ile aynı)
-TURKIYE_BBOX = (25.5, 35.5, 45.0, 42.5)
-
-UYDU_YOLLARI = {
-    "msg": "MSG/FRP-PIXEL/HDF5",
-    "mtg": "MTG/MTFRPPixel/NATIVE",  # MTG şu an demo statüsünde — bkz. LSA SAF mailindeki not
-}
-
-# LSA SAF'tan 31 Temmuz 2026'da alınan resmi cevaba göre (Sandra Gomes,
-# LSA SAF User Services): FRP-GRID ürünü 23 Haziran 2026'dan itibaren
-# 6 aylık deneme askıya alınmasına dahil, ama FRP-PIXEL hattı (bu script
-# bunu kullanıyor) tamamen etkilenmiyor ve normal üretiliyor. MSG
-# FRP-PIXEL tam operasyonel; MTG FRP-PIXEL ise yakında tam operasyonel
-# statüye geçmesi planlanan bir "demonstration" ürünü — bu yüzden MTG
-# kayıtları çıktıda ayrıca işaretleniyor (bkz. UYDU_STATU, urun_statu alanı).
-UYDU_ADLARI = {"msg": "MSG", "mtg": "MTG"}
-UYDU_STATU = {"msg": "operasyonel", "mtg": "demo"}
-
-# --- HDF5 alan adayları (--inspect ile doğrulanana kadar KESİN DEĞİL) ----
-# Her mantıksal alan için, LSA SAF FRP-PIXEL PUM'da (Product User Manual)
-# geçen tipik dataset adlarından birkaç aday — script dosyada ilk bulduğu
-# adayı kullanır. --inspect çıktısı bunları netleştirecek.
-ALAN_ADAYLARI = {
-    "lat": ["LATITUDE", "Latitude", "lat"],
-    "lon": ["LONGITUDE", "Longitude", "lon"],
-    "frp": ["FRP", "Fire_Radiative_Power"],
-    "frp_belirsizlik": ["FRP_UNCERTAINTY", "FRPUncertainty"],
-    "guven": ["FIRE_CONFIDENCE", "FireConfidence", "CONFIDENCE"],
-    "piksel_boyu": ["PIXEL_SIZE", "PixelSize"],
-}
-
-IL_MERKEZLERI = {
-    "Adana": (37.0000, 35.3213), "Adıyaman": (37.7648, 38.2786),
-    "Afyonkarahisar": (38.7507, 30.5567), "Ağrı": (39.7191, 43.0503),
-    "Amasya": (40.6499, 35.8353), "Ankara": (39.9334, 32.8597),
-    "Antalya": (36.8969, 30.7133), "Artvin": (41.1828, 41.8183),
-    "Aydın": (37.8560, 27.8416), "Balıkesir": (39.6484, 27.8826),
-    "Bilecik": (40.1451, 29.9798), "Bingöl": (38.8855, 40.4989),
-    "Bitlis": (38.4006, 42.1095), "Bolu": (40.7392, 31.6089),
-    "Burdur": (37.7203, 30.2908), "Bursa": (40.1826, 29.0665),
-    "Çanakkale": (40.1553, 26.4142), "Çankırı": (40.6013, 33.6134),
-    "Çorum": (40.5506, 34.9556), "Denizli": (37.7765, 29.0864),
-    "Diyarbakır": (37.9144, 40.2306), "Edirne": (41.6771, 26.5557),
-    "Elazığ": (38.6810, 39.2264), "Erzincan": (39.7500, 39.5000),
-    "Erzurum": (39.9000, 41.2700), "Eskişehir": (39.7767, 30.5206),
-    "Gaziantep": (37.0662, 37.3833), "Giresun": (40.9128, 38.3895),
-    "Gümüşhane": (40.4602, 39.4813), "Hakkari": (37.5744, 43.7408),
-    "Hatay": (36.4018, 36.3498), "Isparta": (37.7648, 30.5566),
-    "Mersin": (36.8000, 34.6333), "İstanbul": (41.0082, 28.9784),
-    "İzmir": (38.4237, 27.1428), "Kars": (40.6013, 43.0975),
-    "Kastamonu": (41.3887, 33.7827), "Kayseri": (38.7312, 35.4787),
-    "Kırklareli": (41.7333, 27.2167), "Kırşehir": (39.1425, 34.1709),
-    "Kocaeli": (40.8533, 29.8815), "Konya": (37.8746, 32.4932),
-    "Kütahya": (39.4242, 29.9833), "Malatya": (38.3552, 38.3095),
-    "Manisa": (38.6191, 27.4289), "Kahramanmaraş": (37.5753, 36.9228),
-    "Mardin": (37.3212, 40.7245), "Muğla": (37.2153, 28.3636),
-    "Muş": (38.9462, 41.7539), "Nevşehir": (38.6939, 34.6857),
-    "Niğde": (37.9667, 34.6833), "Ordu": (40.9839, 37.8764),
-    "Rize": (41.0201, 40.5234), "Sakarya": (40.6940, 30.4358),
-    "Samsun": (41.2867, 36.3300), "Siirt": (37.9333, 41.9500),
-    "Sinop": (42.0231, 35.1531), "Sivas": (39.7477, 37.0179),
-    "Tekirdağ": (40.9833, 27.5167), "Tokat": (40.3167, 36.5500),
-    "Trabzon": (41.0027, 39.7168), "Tunceli": (39.3074, 39.4388),
-    "Şanlıurfa": (37.1591, 38.7969), "Uşak": (38.6823, 29.4082),
-    "Van": (38.4891, 43.4089), "Yozgat": (39.8181, 34.8147),
-    "Zonguldak": (41.4564, 31.7987), "Aksaray": (38.3687, 34.0370),
-    "Bayburt": (40.2552, 40.2249), "Karaman": (37.1759, 33.2287),
-    "Kırıkkale": (39.8468, 33.5153), "Batman": (37.8812, 41.1351),
-    "Şırnak": (37.4187, 42.4918), "Bartın": (41.5811, 32.4610),
-    "Ardahan": (41.1105, 42.7022), "Iğdır": (39.9167, 44.0333),
-    "Yalova": (40.6500, 29.2667), "Karabük": (41.2061, 32.6204),
-    "Kilis": (36.7184, 37.1212), "Osmaniye": (37.0742, 36.2478),
-    "Düzce": (40.8438, 31.1565),
-}
-
-
-def en_yakin_il(lat, lng):
-    R = 6371.0
-    lat1 = math.radians(lat)
-    en_yakin, en_kucuk_mesafe = "", float("inf")
-    for il, (il_lat, il_lng) in IL_MERKEZLERI.items():
-        lat2 = math.radians(il_lat)
-        dlat = math.radians(il_lat - lat)
-        dlng = math.radians(il_lng - lng)
-        a = (
-            math.sin(dlat / 2) ** 2
-            + math.cos(lat1) * math.cos(lat2) * math.sin(dlng / 2) ** 2
-        )
-        mesafe = 2 * R * math.asin(math.sqrt(a))
-        if mesafe < en_kucuk_mesafe:
-            en_kucuk_mesafe, en_yakin = mesafe, il
-    return en_yakin
-
-
-def uid():
-    return "r" + "".join(
-        random.choices(string.ascii_lowercase + string.digits, k=9)
-    ) + str(int(time.time() * 1000))
-
-
-def _istek_yap(url, deneme=3, binary=False):
-    req = urllib.request.Request(url, headers={"User-Agent": "ekoloji-izleme/1.0"})
-    for i in range(1, deneme + 1):
-        try:
-            with urllib.request.urlopen(req, timeout=60) as r:
-                ham = r.read()
-                return ham if binary else ham.decode("utf-8", errors="replace")
-        except (OSError, urllib.error.URLError) as e:
-            if i < deneme:
-                bekleme = 5 * i
-                print(f"  ⚠ bağlantı hatası ({e}), {bekleme}sn sonra {i + 1}. deneme...")
-                time.sleep(bekleme)
-            else:
-                print(f"  ✗ {deneme} denemeden sonra bağlanılamadı: {e}")
-    return None
-
-
-def en_son_listproduct_dosyasini_bul(uydu="msg", geriye_saat=3):
-    """Bugünkü (gerekirse dünkü) dizin sayfalarını tarayıp en son
-    '-ListProduct_' HDF5 dosyasının tam URL'sini döndürür. Dizin sayfası
-    düz HTML olduğu için basit bir regex ile link isimlerini çıkarıyoruz —
-    tam bir HTML parser'a gerek yok, h5ai çıktısı sabit bir örüntüde.
-
-    Döner: (tam_url, gun_farki) — gun_farki 0 ise dosya bugünün klasöründen
-    geldi, 1 ise dünün klasöründen (yakalanabilen en yakın gecikme sinyali).
-    LSA SAF'ın 31 Temmuz 2026 mailinde bahsettiği türden bir senkronizasyon
-    gecikmesi tekrar yaşanırsa, çağıran kod bu değeri loglayıp fark
-    edebilsin diye döndürülüyor."""
-    simdi = datetime.now(timezone.utc)
-    for gun_farki in (0, 1):  # gece yarısı UTC sınırında dünkü klasöre düşme ihtimaline karşı
-        tarih = simdi - timedelta(days=gun_farki)
-        yol = f"{LSASAF_TABAN}/{UYDU_YOLLARI[uydu]}/{tarih.year:04d}/{tarih.month:02d}/{tarih.day:02d}/"
-        html = _istek_yap(yol)
-        if html is None:
-            continue
-        # Sadece ListProduct dosyalarını al (QualityProduct'ı şimdilik atlıyoruz)
-        dosyalar = re.findall(r'href="([^"]*ListProduct[^"]*)"', html)
-        if not dosyalar:
-            continue
-        dosyalar = sorted(set(dosyalar))
-        en_son = dosyalar[-1]
-        tam_url = en_son if en_son.startswith("http") else yol + en_son.split("/")[-1]
-        return tam_url, gun_farki
-    return None, None
-
-
-def hdf5_yapisini_incele(dosya_yolu):
-    """--inspect modu: dosyadaki her dataset'in adını, shape/dtype'ını ve
-    attribute'larını basar. Hiçbir varsayım yapmaz — gerçek yapıyı görmek
-    için kullanılır."""
-    print(f"\n=== {dosya_yolu} içeriği ===")
-    with h5py.File(dosya_yolu, "r") as f:
-        print("Kök (root) attribute'ları:")
-        for k, v in f.attrs.items():
-            print(f"  {k} = {v}")
-
-        def yazdir(ad, nesne):
-            if isinstance(nesne, h5py.Dataset):
-                print(f"\nDataset: {ad}")
-                print(f"  shape={nesne.shape}, dtype={nesne.dtype}")
-                for k, v in nesne.attrs.items():
-                    print(f"  attr[{k}] = {v}")
-            else:
-                print(f"\nGrup: {ad}")
-
-        f.visititems(yazdir)
-
-
-def _alan_bul(f, adaylar):
-    """ALAN_ADAYLARI listesindeki isimlerden dosyada var olan ilkini döndürür."""
-    for ad in adaylar:
-        if ad in f:
-            return f[ad]
-    return None
-
-
-def _olceklendir(dataset):
-    """SCALING_FACTOR / OFFSET attribute'ları varsa uygular, yoksa ham
-    değeri döndürür. LSA SAF ürünlerinde tipik attribute adları bunlar,
-    ama --inspect çıktısı gerçek adları doğrulayana kadar best-effort."""
-    veri = dataset[()].astype("float64")
-    olcek = dataset.attrs.get("SCALING_FACTOR")
-    kaydirma = dataset.attrs.get("OFFSET")
-    if olcek:
-        veri = veri / float(olcek)
-    if kaydirma:
-        veri = veri + float(kaydirma)
-    eksik = dataset.attrs.get("MISSING_VALUE")
-    if eksik is not None:
-        veri[veri == float(eksik)] = float("nan")
-    return veri
-
-
-def hdf5ten_kayitlara_donustur(dosya_yolu, uydu="msg", il_ilce_coz=False):
-    with h5py.File(dosya_yolu, "r") as f:
-        lat_ds = _alan_bul(f, ALAN_ADAYLARI["lat"])
-        lon_ds = _alan_bul(f, ALAN_ADAYLARI["lon"])
-        frp_ds = _alan_bul(f, ALAN_ADAYLARI["frp"])
-        guven_ds = _alan_bul(f, ALAN_ADAYLARI["guven"])
-
-        if lat_ds is None or lon_ds is None or frp_ds is None:
-            print(
-                "HATA: LATITUDE/LONGITUDE/FRP dataset'leri beklenen adaylarla "
-                "bulunamadı. Önce `--inspect` ile gerçek dataset adlarını "
-                "kontrol et ve ALAN_ADAYLARI sözlüğünü güncelle."
-            )
-            print(f"  Denenen lat adayları: {ALAN_ADAYLARI['lat']}")
-            print(f"  Denenen lon adayları: {ALAN_ADAYLARI['lon']}")
-            print(f"  Denenen frp adayları: {ALAN_ADAYLARI['frp']}")
-            print(f"  Dosyadaki kök anahtarlar: {list(f.keys())}")
-            return []
-
-        lat = _olceklendir(lat_ds)
-        lon = _olceklendir(lon_ds)
-        frp = _olceklendir(frp_ds)
-        guven = _olceklendir(guven_ds) if guven_ds is not None else None
-
-    bat, guney, dogu, kuzey = TURKIYE_BBOX
-    kayitlar = []
-    tarih = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    for i in range(len(lat)):
-        la, lo = float(lat[i]), float(lon[i])
-        if math.isnan(la) or math.isnan(lo):
-            continue
-        if not (bat <= lo <= dogu and guney <= la <= kuzey):
-            continue
-
-        frp_deger = float(frp[i]) if not math.isnan(frp[i]) else 0.0
-        guven_deger = float(guven[i]) if guven is not None and not math.isnan(guven[i]) else None
-
-        il, ilce, yerlesim = "", "", ""
-        if not il_ilce_coz:
-            il = en_yakin_il(la, lo)
-        konum_ifadesi = yerlesim or ilce or il or "bilinmeyen bir konumda"
-
-        if guven_deger is None:
-            guven_kod, guven_seviye = "l", "Düşük"
-        elif guven_deger >= 80:
-            guven_kod, guven_seviye = "h", "Yüksek"
-        elif guven_deger >= 50:
-            guven_kod, guven_seviye = "n", "Orta"
+    auth = HTTPBasicAuth(USER, PASS)
+    try:
+        resp = requests.get(url, auth=auth, timeout=30)
+        if resp.status_code == 401:
+            raise requests.exceptions.HTTPError("401 Unauthorized")
+        resp.raise_for_status()
+        return resp
+    except requests.exceptions.HTTPError as e:
+        if retry_count < MAX_RETRIES and "401" in str(e):
+            delay = RETRY_DELAYS[retry_count] if retry_count < len(RETRY_DELAYS) else 5
+            print(f"  ⚠ bağlantı hatası ({e}), {delay}sn sonra {retry_count+2}. deneme...")
+            time.sleep(delay)
+            return auth_get(url, retry_count + 1)
         else:
-            guven_kod, guven_seviye = "l", "Düşük"
+            raise
 
-        uydu_adi = UYDU_ADLARI.get(uydu, uydu.upper())
-        urun_statu = UYDU_STATU.get(uydu, "operasyonel")
-        demo_notu = (
-            " (Bu ürün LSA SAF tarafında hâlâ 'demonstration' statüsünde; "
-            "tam operasyonel olana kadar diğer kaynaklara göre daha temkinli "
-            "değerlendirilmelidir.)"
-            if urun_statu == "demo" else ""
-        )
+def find_latest_file():
+    """Bugünün en güncel HDF5 dosyasını URL'ini döndür."""
+    now = datetime.utcnow()
+    # LSA SAF dosyaları genelde şu formatta: .../YYYY/MM/DD/HDF5_LSASAF_MSG_FRP-PIXEL-ListProduct_MSG-Disk_YYYYMMDDHHMM
+    # Son 3 saati dene (eğer 15dk'da bir geliyorsa)
+    for hour_offset in range(0, 4):
+        dt = now - timedelta(hours=hour_offset)
+        date_path = dt.strftime("%Y/%m/%d")
+        # Dakikaları 15'e yuvarla (00,15,30,45) - en sonuncuyu al
+        minute_base = (dt.minute // 15) * 15
+        dt_rounded = dt.replace(minute=minute_base, second=0, microsecond=0)
+        
+        # 4 zaman dilimini dene (son 1 saat içindeki 15'lik dilimler)
+        for offset_min in [0, -15, -30, -45]:
+            check_dt = dt_rounded + timedelta(minutes=offset_min)
+            if check_dt > now:
+                continue
+            time_str = check_dt.strftime("%Y%m%d%H%M")
+            url = f"{BASE_URL}/{date_path}/HDF5_LSASAF_MSG_FRP-PIXEL-ListProduct_MSG-Disk_{time_str}"
+            # HEAD isteği ile dosyanın var olup olmadığını kontrol et (401 de dönebilir)
+            try:
+                resp = auth_get(url)  # HEAD yerine GET yap, ama sadece kontrol için; ama indirmeyelim.
+                # Eğer 200 gelirse içerik var. Ama bu sadece liste sayfası mı yoksa direkt dosya mı?
+                # LSA SAF bu URL'ye GET çekince direkt HDF5 dosyasını döndürüyor.
+                print(f"→ Bulunan dosya: {url}")
+                return url
+            except Exception:
+                continue
+    raise FileNotFoundError("Son 3 saat içinde uygun HDF5 dosyası bulunamadı.")
 
-        kayit = {
-            "id": uid(),
-            "tip": "İklim Olayları",
-            "ad": f"Uydu Tespitli Isı Anomalisi (Meteosat {uydu_adi}){f' ({konum_ifadesi})' if konum_ifadesi != 'bilinmeyen bir konumda' else ''}",
-            "il": il,
-            "ilce": ilce,
-            "yerlesim": yerlesim,
-            "koordinatlar": {"lat": la, "lng": lo},
-            "alan_ha": 0,
-            "durum": "Aktif",
-            "belge_no": "",
-            "eklenme": tarih,
-            "kaynak": f"LSA SAF FRP-PIXEL (Meteosat {uydu_adi})",
-            "kaynak_link": "https://landsaf.ipma.pt/",
-            "aciklama": (
-                f"Bu nokta, {konum_ifadesi}{' yakınında' if konum_ifadesi != 'bilinmeyen bir konumda' else ''} "
-                f"Meteosat jeostatik uydusu ({uydu_adi}) tarafından tespit edilen bir ısı anomalisidir "
-                f"(Fire Radiative Power: {frp_deger:.1f} MW). "
-                "Bu tür tespitler her zaman yangın anlamına gelmez; tarım arazisi yakma, "
-                "sanayi tesisi ısısı veya güneş yansıması da benzer sinyal verebilir."
-                f"{demo_notu}"
-            ),
-            "teknik_detay": f"FRP: {frp_deger:.1f} MW, güvenilirlik: {guven_deger}",
-            "guven_seviye": guven_seviye,
-            "guven_kod": guven_kod,
-            "alt_kategori": "",
-            "kaynak_turu": "uydu",
-            "urun_statu": urun_statu,
-        }
-        kayitlar.append(kayit)
+def download_hdf5(url, local_path="temp.h5"):
+    """Verilen URL'den HDF5 dosyasını indir."""
+    print(f"↓ İndiriliyor: {url}")
+    resp = auth_get(url)
+    total_size = len(resp.content)
+    with open(local_path, 'wb') as f:
+        f.write(resp.content)
+    print(f"✓ İndirme tamamlandı ({total_size // 1024} KB)")
+    return local_path
 
-    return kayitlar
+# ---------------------------- HDF5 İŞLEME ----------------------------
+def inspect_hdf5(file_path):
+    """HDF5 içindeki tüm dataset/grup yapısını ekrana basar."""
+    print(f"\n🔍 HDF5 Yapısı İnceleniyor: {file_path}")
+    with h5py.File(file_path, 'r') as f:
+        def print_structure(name, obj):
+            if isinstance(obj, h5py.Dataset):
+                print(f"  📊 Dataset : {name} → shape: {obj.shape}, dtype: {obj.dtype}")
+            elif isinstance(obj, h5py.Group):
+                print(f"  📁 Group   : {name}")
+        f.visititems(print_structure)
 
-
-def geojsona_cevir(kayitlar):
-    features = []
-    for k in kayitlar:
-        features.append({
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [k["koordinatlar"]["lng"], k["koordinatlar"]["lat"]],
-            },
-            "properties": {key: v for key, v in k.items() if key != "koordinatlar"},
-        })
-    return {"type": "FeatureCollection", "features": features}
-
-
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--inspect", action="store_true", help="HDF5 yapısını incele, hiçbir dönüşüm yapma")
-    ap.add_argument("--uydu", choices=["msg", "mtg"], default="msg")
-    args = ap.parse_args()
-
-    print(f"LSA SAF FRP-PIXEL ({args.uydu.upper()}, statü: {UYDU_STATU.get(args.uydu, '?')}) için en son dosya aranıyor...")
-    dosya_url, gun_farki = en_son_listproduct_dosyasini_bul(args.uydu)
-    if not dosya_url:
-        print("✗ Dizin sayfasında ListProduct dosyası bulunamadı.")
-        sys.exit(1)
-    print(f"→ Bulunan dosya: {dosya_url}")
-    if gun_farki and gun_farki > 0:
-        # LSA SAF'ın 31 Temmuz 2026 mailinde bahsettiği türden bir
-        # senkronizasyon gecikmesinin tekrar başlaması ihtimaline karşı:
-        # bugünün klasöründe dosya yoksa ve dünkü klasöre düşüyorsak
-        # bunu açıkça logla ki fark edilsin.
-        print(
-            f"  ⚠ Bugünün klasöründe dosya bulunamadı, {gun_farki} gün "
-            "önceki klasöre düşüldü — bu, LSA SAF tarafında geçici bir "
-            "gecikme/senkronizasyon sorunu olabilir."
-        )
-
-    ham = _istek_yap(dosya_url, binary=True)
-    if ham is None:
-        print("✗ Dosya indirilemedi.")
-        sys.exit(1)
-
-    yerel_yol = "lsasaf_gecici.h5"
-    with open(yerel_yol, "wb") as f:
-        f.write(ham)
-    print(f"→ İndirildi: {len(ham) / 1024:.0f} KB")
-
-    if args.inspect:
-        hdf5_yapisini_incele(yerel_yol)
-        os.remove(yerel_yol)
-        print(
-            "\n--inspect tamamlandı. Yukarıdaki dataset adlarını / "
-            "attribute'ları bana gönder, ALAN_ADAYLARI'nı kesinleştirip "
-            "tam tarama mantığını (il/ilçe çözümleme, arşiv, GeoJSON) "
-            "tamamlayalım."
-        )
-        return
-
-    kayitlar = hdf5ten_kayitlara_donustur(yerel_yol, uydu=args.uydu)
-    os.remove(yerel_yol)
-    print(f"Türkiye bbox'ı içinde {len(kayitlar)} nokta bulundu.")
-
-    cikti = {
-        "guncelleme": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "kayit_sayisi": len(kayitlar),
-        "kayitlar": kayitlar,
+def process_hdf5(file_path):
+    """
+    HDF5'ten FRP, Lat, Lon, Time verilerini oku, 
+    JSON ve GeoJSON üret.
+    """
+    print(f"\n⚙ Veri işleniyor: {file_path}")
+    data = {
+        "type": "FeatureCollection",
+        "features": []
     }
-    with open("lsasaf_frp.json", "w", encoding="utf-8") as f:
-        json.dump(cikti, f, ensure_ascii=False, indent=2)
-    with open("lsasaf_frp.geojson", "w", encoding="utf-8") as f:
-        json.dump(geojsona_cevir(kayitlar), f, ensure_ascii=False, indent=2)
+    
+    with h5py.File(file_path, 'r') as f:
+        # LSA SAF FRP-PIXEL içindeki tipik dataset isimleri
+        # Genelde /FRP, /Latitude, /Longitude, /Time (veya /LAT, /LON)
+        possible_frp = ["FRP", "frp", "/FRP", "/frp"]
+        possible_lat = ["Latitude", "Lat", "LAT", "/Latitude"]
+        possible_lon = ["Longitude", "Lon", "LON", "/Longitude"]
+        possible_time = ["Time", "time", "/Time", "/time", "AcqTime"]
 
-    print(f"Tamamlandı: {len(kayitlar)} kayıt -> lsasaf_frp.json / lsasaf_frp.geojson")
+        frp_data = None
+        lat_data = None
+        lon_data = None
+        time_data = None
 
+        # Dataset'leri bul
+        def find_dataset(possible_names):
+            for name in possible_names:
+                if name in f:
+                    return f[name][:]
+                # Grup içindeki göreceli yolları da dene
+                for key in f.keys():
+                    if isinstance(f[key], h5py.Group):
+                        if name in f[key]:
+                            return f[key][name][:]
+            return None
+
+        # Ana kökten bul
+        for name in possible_frp:
+            if name in f:
+                frp_data = f[name][:]
+                break
+        if frp_data is None:
+            # Grupları tara (örn: /geolocation/Latitude)
+            for group_name in f.keys():
+                if isinstance(f[group_name], h5py.Group):
+                    for ds_name in possible_frp:
+                        if ds_name in f[group_name]:
+                            frp_data = f[group_name][ds_name][:]
+                            break
+                    if frp_data is not None:
+                        break
+
+        for name in possible_lat:
+            if name in f:
+                lat_data = f[name][:]
+                break
+        if lat_data is None:
+            for group_name in f.keys():
+                if isinstance(f[group_name], h5py.Group):
+                    for ds_name in possible_lat:
+                        if ds_name in f[group_name]:
+                            lat_data = f[group_name][ds_name][:]
+                            break
+                    if lat_data is not None:
+                        break
+
+        for name in possible_lon:
+            if name in f:
+                lon_data = f[name][:]
+                break
+        if lon_data is None:
+            for group_name in f.keys():
+                if isinstance(f[group_name], h5py.Group):
+                    for ds_name in possible_lon:
+                        if ds_name in f[group_name]:
+                            lon_data = f[group_name][ds_name][:]
+                            break
+                    if lon_data is not None:
+                        break
+
+        # Zaman verisini al (opsiyonel)
+        for name in possible_time:
+            if name in f:
+                time_data = f[name][:]
+                break
+        if time_data is None:
+            for group_name in f.keys():
+                if isinstance(f[group_name], h5py.Group):
+                    for ds_name in possible_time:
+                        if ds_name in f[group_name]:
+                            time_data = f[group_name][ds_name][:]
+                            break
+                    if time_data is not None:
+                        break
+
+        if frp_data is None or lat_data is None or lon_data is None:
+            print("✗ Gerekli dataset'ler (FRP, Lat, Lon) bulunamadı! Lütfen --inspect ile kontrol edin.")
+            sys.exit(1)
+
+        # Verileri düzleştir (1D olmayabilir)
+        frp_flat = frp_data.flatten()
+        lat_flat = lat_data.flatten()
+        lon_flat = lon_data.flatten()
+        
+        # Zaman varsa onu da düzleştir
+        if time_data is not None:
+            time_flat = time_data.flatten()
+        else:
+            time_flat = [None] * len(frp_flat)
+
+        # GeoJSON oluştur
+        for i in range(len(frp_flat)):
+            frp_val = float(frp_flat[i])
+            if math.isnan(frp_val) or frp_val <= 0:
+                continue  # Sadece pozitif FRP değerlerini al (yangın var)
+            
+            lat = float(lat_flat[i])
+            lon = float(lon_flat[i])
+            if lat < -90 or lat > 90 or lon < -180 or lon > 180:
+                continue
+
+            prop = {
+                "frp": round(frp_val, 2),
+                "latitude": lat,
+                "longitude": lon
+            }
+            if time_flat[i] is not None:
+                # Zaman genelde sayısal (UTC saniye veya julian gün)
+                try:
+                    if time_flat[i] > 1e6:  # Unix timestamp (saniye)
+                        dt_obj = datetime.utcfromtimestamp(float(time_flat[i]))
+                        prop["time"] = dt_obj.isoformat()
+                    else:
+                        prop["time"] = str(time_flat[i])
+                except:
+                    prop["time"] = str(time_flat[i])
+
+            feature = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [lon, lat]
+                },
+                "properties": prop
+            }
+            data["features"].append(feature)
+
+    print(f"✓ {len(data['features'])} adet yangın pikseli bulundu.")
+    
+    # JSON olarak kaydet
+    with open("lsasaf_frp.json", "w", encoding="utf-8") as jf:
+        json.dump(data, jf, indent=2, ensure_ascii=False)
+    print("✓ lsasaf_frp.json oluşturuldu.")
+
+    # GeoJSON olarak kaydet (zaten aynı formatta)
+    with open("lsasaf_frp.geojson", "w", encoding="utf-8") as gf:
+        json.dump(data, gf, indent=2, ensure_ascii=False)
+    print("✓ lsasaf_frp.geojson oluşturuldu.")
+
+# ---------------------------- ANA FONKSİYON ----------------------------
+def main():
+    inspect_mode = "--inspect" in sys.argv
+
+    try:
+        # 1. En son dosyayı bul
+        file_url = find_latest_file()
+        
+        # 2. Dosyayı indir
+        local_file = download_hdf5(file_url)
+        
+        # 3. İnceleme veya işleme
+        if inspect_mode:
+            inspect_hdf5(local_file)
+        else:
+            process_hdf5(local_file)
+            
+        # 4. Temizlik
+        if os.path.exists(local_file):
+            os.remove(local_file)
+            print("🧹 Geçici dosya silindi.")
+            
+    except Exception as e:
+        print(f"✗ Kritik hata: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
