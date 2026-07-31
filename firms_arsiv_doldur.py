@@ -65,11 +65,27 @@ def firms_verisini_cek_tarihli(sensor, baslangic_tarih, gun_araligi):
             f"/{gun_araligi}/{baslangic_tarih}"
         )
         req = urllib.request.Request(url, headers={"User-Agent": "ekoloji-izleme/1.0"})
+        print(f"    URL: {url}")
         for deneme in range(1, 4):
             try:
                 with urllib.request.urlopen(req, timeout=30) as r:
                     ham = r.read().decode("utf-8")
                 break
+            except urllib.error.HTTPError as e:
+                gövde = ""
+                try:
+                    gövde = e.read().decode("utf-8", errors="replace")[:300]
+                except Exception:
+                    pass
+                son_hata = f"HTTP {e.code}: {gövde or e.reason}"
+                print(f"  ⚠ {sensor} ({taban_url}): {son_hata}")
+                if 400 <= e.code < 500:
+                    # İstemci hatası (kötü MAP_KEY, geçersiz parametre vb.) —
+                    # aynı isteği tekrar etmek sonucu değiştirmez, hemen vazgeç.
+                    break
+                if deneme < 3:
+                    bekleme = 5 * deneme
+                    time.sleep(bekleme)
             except (OSError, urllib.error.URLError) as e:
                 son_hata = e
                 if deneme < 3:
