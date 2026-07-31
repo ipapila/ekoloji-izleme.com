@@ -1,12 +1,19 @@
-name: Yangin Taramasi (FIRMS)
+name: Yangin Arsiv Doldurma (FIRMS, tek seferlik)
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 * * * *'   # her saat başı (UTC)
+    inputs:
+      gun_sayisi:
+        description: 'Geriye dönük kaç gün (varsayılan 10, FIRMS NRT genelde ~60 güne kadar destekler)'
+        required: false
+        default: '10'
+      geocode:
+        description: 'İl/ilçe/yerleşim için Nominatim geocoding açılsın mı? (yavaş)'
+        required: false
+        default: 'false'
 jobs:
-  tara:
+  doldur:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: Repo Kodlarını Çek
         uses: actions/checkout@v4
@@ -16,30 +23,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: FIRMS Taramasını Çalıştır
+      - name: Arşiv Doldurma Scriptini Çalıştır
         env:
           FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
-        run: python firms_yangin_tarama.py
-
-      - name: Sonucu Plesk'e Gönder
-        env:
-          UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
-          SITE_URL: ${{ secrets.SITE_URL }}
         run: |
-          for dosya in firms_yangin.json firms_yangin.geojson; do
-            if [ -f "$dosya" ]; then
-              HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
-                -X POST "${SITE_URL}/upload.php" \
-                -F "secret=${UPLOAD_SECRET}" \
-                -F "klasor=kok" \
-                -F "dosya=@${dosya}")
-              echo "HTTP $HTTP_CODE → $dosya → $(cat /tmp/response.txt)"
-            else
-              echo "⚠ $dosya üretilmedi, atlanıyor"
-            fi
-          done
+          ARGS="${{ github.event.inputs.gun_sayisi }}"
+          if [ "${{ github.event.inputs.geocode }}" = "true" ]; then
+            ARGS="$ARGS --geocode"
+          fi
+          python firms_arsiv_doldur.py $ARGS
 
-      - name: Arşiv Dosyasını Plesk'e Gönder
+      - name: Arşiv Dosyalarını Plesk'e Gönder
         env:
           UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
           SITE_URL: ${{ secrets.SITE_URL }}
