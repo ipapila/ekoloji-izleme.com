@@ -24,6 +24,7 @@ workflow olarak (örn. saatlik) ekleyebiliriz.
 """
 
 import os
+import socket
 import sys
 import csv
 import io
@@ -32,7 +33,22 @@ import random
 import string
 import time
 import urllib.request
+import urllib.error
 from datetime import datetime, timezone
+
+# GitHub Actions runner'larında bazen DNS, FIRMS/Nominatim için IPv6
+# adresi döndürüyor ama runner'da IPv6 route yok; bu da
+# "OSError: [Errno 101] Network is unreachable" hatasına yol açıyor.
+# Çözümlemeyi sadece IPv4 adresleriyle sınırlayarak bunu önlüyoruz.
+_orig_getaddrinfo = socket.getaddrinfo
+
+
+def _ipv4_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+    sonuc = _orig_getaddrinfo(host, port, socket.AF_INET, type, proto, flags)
+    return sonuc or _orig_getaddrinfo(host, port, family, type, proto, flags)
+
+
+socket.getaddrinfo = _ipv4_getaddrinfo
 
 # --- Ayarlar -----------------------------------------------------------
 
@@ -112,8 +128,23 @@ def firms_verisini_cek(sensor):
         f"{MAP_KEY}/{sensor}/{TURKIYE_BBOX}/{GUN_ARALIGI}"
     )
     req = urllib.request.Request(url, headers={"User-Agent": "ekoloji-izleme/1.0"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        ham = r.read().decode("utf-8")
+
+    ham = None
+    son_hata = None
+    for deneme in range(1, 4):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                ham = r.read().decode("utf-8")
+            break
+        except (OSError, urllib.error.URLError) as e:
+            son_hata = e
+            if deneme < 3:
+                bekleme = 5 * deneme
+                print(f"  ⚠ {sensor}: bağlantı hatası ({e}), {bekleme}sn sonra {deneme + 1}. deneme...")
+                time.sleep(bekleme)
+    if ham is None:
+        print(f"  ✗ {sensor}: 3 denemeden sonra bağlanılamadı: {son_hata}")
+        return []
 
     if ham.strip().lower().startswith("invalid") or "error" in ham[:50].lower():
         print(f"  ⚠ {sensor}: FIRMS API hata döndürdü: {ham[:150]}")
