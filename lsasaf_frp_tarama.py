@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import h5py
+import numpy as np
 import requests
 from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta
@@ -171,31 +172,32 @@ def _dataset_bul(datasetler, tam_adaylar, alt_dize_adaylar):
          Product" dosyaları FRP/LAT/LON'u ayrı dataset yerine TEK bir
          tablo dataset'inin alanları olarak tutuyor olabilir.)
       3) Son çare: dataset adında alt_dize_adaylar'dan biri geçiyor mu?
-    Döndürür: (numpy_array, bulunan_yol_bilgisi) ya da (None, None)
+    Döndürür: (numpy_array, bulunan_yol_bilgisi, orijinal_h5py_dataset) ya da (None, None, None)
+    orijinal_h5py_dataset, attrs (scale_factor/offset/fillvalue vb.) okumak için döndürülür.
     """
     tam_kucuk = [a.lower() for a in tam_adaylar]
 
     for yol, ds in datasetler.items():
         basename = yol.rsplit('/', 1)[-1]
         if basename.lower() in tam_kucuk:
-            return ds[:], yol
+            return ds[:], yol, ds
 
     for yol, ds in datasetler.items():
         if ds.dtype.names:
             for alan in ds.dtype.names:
                 if alan.lower() in tam_kucuk:
-                    return ds[alan][:], f"{yol}[{alan}]"
+                    return ds[alan][:], f"{yol}[{alan}]", ds
 
     for yol, ds in datasetler.items():
         basename = yol.rsplit('/', 1)[-1].lower()
         if any(sub in basename for sub in alt_dize_adaylar):
-            return ds[:], yol
+            return ds[:], yol, ds
         if ds.dtype.names:
             for alan in ds.dtype.names:
                 if any(sub in alan.lower() for sub in alt_dize_adaylar):
-                    return ds[alan][:], f"{yol}[{alan}]"
+                    return ds[alan][:], f"{yol}[{alan}]", ds
 
-    return None, None
+    return None, None, None
 
 
 def process_hdf5(file_path):
@@ -212,16 +214,16 @@ def process_hdf5(file_path):
     with h5py.File(file_path, 'r') as f:
         datasetler = _tum_datasetleri_topla(f)
 
-        frp_data, frp_yol = _dataset_bul(
+        frp_data, frp_yol, frp_ds = _dataset_bul(
             datasetler, ["FRP", "frp", "FRP_MW", "FRP_PIXEL"], ["frp"]
         )
-        lat_data, lat_yol = _dataset_bul(
+        lat_data, lat_yol, _ = _dataset_bul(
             datasetler, ["Latitude", "LATITUDE", "Lat", "LAT", "PIXEL_LATITUDE"], ["lat"]
         )
-        lon_data, lon_yol = _dataset_bul(
+        lon_data, lon_yol, _ = _dataset_bul(
             datasetler, ["Longitude", "LONGITUDE", "Lon", "LON", "PIXEL_LONGITUDE"], ["lon", "long"]
         )
-        time_data, time_yol = _dataset_bul(
+        time_data, time_yol, _ = _dataset_bul(
             datasetler,
             ["Time", "TIME", "AcqTime", "ACQTIME", "ACQUISITION_TIME", "OBSERVATION_TIME"],
             ["time"]
@@ -236,6 +238,22 @@ def process_hdf5(file_path):
             sys.exit(1)
 
         print(f"  ✓ frp:{frp_yol}  lat:{lat_yol}  lon:{lon_yol}  time:{time_yol or '(yok)'}")
+
+        # Teşhis çıktısı: "0 piksel bulundu" sonucunun gerçek mi (o slotta
+        # aktif yangın yok) yoksa veri okumada bir sorun mu (ham/ölçeklenmemiş
+        # kod değerleri, yanlış fill-value, vb.) olduğunu ayırt etmek için.
+        # LSA SAF ürünlerinde FRP genelde scale_factor/add_offset ile
+        # kodlanmış tam sayı olarak saklanabiliyor — bu attrs varsa görürüz.
+        frp_ham = frp_data.flatten()
+        gecerli_ham = frp_ham[~np.isnan(frp_ham)] if frp_ham.dtype.kind == 'f' else frp_ham
+        print(f"  ℹ frp dtype:{frp_data.dtype}  uzunluk:{len(frp_ham)}  "
+              f"min:{gecerli_ham.min() if len(gecerli_ham) else '—'}  "
+              f"max:{gecerli_ham.max() if len(gecerli_ham) else '—'}  "
+              f">0 sayısı:{int((gecerli_ham > 0).sum()) if len(gecerli_ham) else 0}")
+        if frp_ds is not None and dict(frp_ds.attrs):
+            print(f"  ℹ frp attrs: {dict(frp_ds.attrs)}")
+        if len(frp_ham):
+            print(f"  ℹ frp ilk 10 ham değer: {frp_ham[:10].tolist()}")
 
         # Verileri düzleştir (1D olmayabilir)
         frp_flat = frp_data.flatten()
