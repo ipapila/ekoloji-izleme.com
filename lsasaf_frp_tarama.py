@@ -45,43 +45,96 @@ def auth_get(url, retry_count=0):
         else:
             raise
 
+def list_directory(date_path):
+    """
+    Verilen tarih klasörünün (YYYY/MM/DD) Apache/nginx dizin listesini
+    çeker ve içindeki dosya adlarını döndürür. LSA SAF sunucusu bu
+    klasörlere GET ile gidildiğinde standart bir HTML index sayfası
+    döndürüyor; BeautifulSoup gibi ek bağımlılık gerekmesin diye href'leri
+    basit bir regex ile ayıklıyoruz.
+    """
+    url = f"{BASE_URL}/{date_path}/"
+    try:
+        resp = auth_get(url)
+    except Exception:
+        return []
+    hrefs = re.findall(r'href="([^"?]+)"', resp.text)
+    # "../" gibi üst dizin linklerini ve alt klasörleri (sonu / ile bitenleri) ele
+    return [h for h in hrefs if h and not h.endswith('/') and h not in ('..',)]
+
+# Gerçek piksel verisini içeren dosya adı deseni:
+#   HDF5_LSASAF_MSG_FRP-PIXEL_MSG-Disk_YYYYMMDDHHMM (üzerine .bz2 olabilir)
+# "-ListProduct" ekli varyant AYNI klasörde bulunan FARKLI bir dosya —
+# gerçek FRP/Lat/Lon dataset'lerini içermiyor, bu yüzden EXPLICIT olarak
+# eleniyor. (Bu satır önceki sürümde yanlışlıkla URL'ye sabit yazılmıştı.)
+FRP_DOSYA_DESENI = re.compile(r'^HDF5_LSASAF_MSG_FRP-PIXEL_MSG-Disk_(\d{12})(?:\.\w+)?$')
+
 def find_latest_file():
-    """Bugünün en güncel HDF5 dosyasını URL'ini döndür."""
+    """Son birkaç saat içindeki klasörleri tarayıp en güncel GERÇEK
+    FRP-PIXEL veri dosyasının URL'sini döndürür (ListProduct dosyaları
+    hariç tutularak)."""
     now = datetime.utcnow()
-    # LSA SAF dosyaları genelde şu formatta: .../YYYY/MM/DD/HDF5_LSASAF_MSG_FRP-PIXEL-ListProduct_MSG-Disk_YYYYMMDDHHMM
-    # Son 3 saati dene (eğer 15dk'da bir geliyorsa)
+    en_iyi = None  # (timestamp_str, url)
+
+    # Son 4 saatin klasörlerini kontrol et (gün sınırını geçen saatler için
+    # date_path değişebileceğinden, aynı date_path'i tekrar tekrar
+    # sorgulamamak için cache'liyoruz).
+    kontrol_edilen_klasorler = set()
     for hour_offset in range(0, 4):
         dt = now - timedelta(hours=hour_offset)
         date_path = dt.strftime("%Y/%m/%d")
-        # Dakikaları 15'e yuvarla (00,15,30,45) - en sonuncuyu al
-        minute_base = (dt.minute // 15) * 15
-        dt_rounded = dt.replace(minute=minute_base, second=0, microsecond=0)
-        
-        # 4 zaman dilimini dene (son 1 saat içindeki 15'lik dilimler)
-        for offset_min in [0, -15, -30, -45]:
-            check_dt = dt_rounded + timedelta(minutes=offset_min)
-            if check_dt > now:
+        if date_path in kontrol_edilen_klasorler:
+            continue
+        kontrol_edilen_klasorler.add(date_path)
+
+        dosyalar = list_directory(date_path)
+        if not dosyalar:
+            continue
+
+        for dosya_adi in dosyalar:
+            eslesme = FRP_DOSYA_DESENI.match(dosya_adi)
+            if not eslesme:
                 continue
-            time_str = check_dt.strftime("%Y%m%d%H%M")
-            url = f"{BASE_URL}/{date_path}/HDF5_LSASAF_MSG_FRP-PIXEL-ListProduct_MSG-Disk_{time_str}"
-            # HEAD isteği ile dosyanın var olup olmadığını kontrol et (401 de dönebilir)
+            zaman_str = eslesme.group(1)
             try:
-                resp = auth_get(url)  # HEAD yerine GET yap, ama sadece kontrol için; ama indirmeyelim.
-                # Eğer 200 gelirse içerik var. Ama bu sadece liste sayfası mı yoksa direkt dosya mı?
-                # LSA SAF bu URL'ye GET çekince direkt HDF5 dosyasını döndürüyor.
-                print(f"→ Bulunan dosya: {url}")
-                return url
-            except Exception:
+                dosya_zamani = datetime.strptime(zaman_str, "%Y%m%d%H%M")
+            except ValueError:
                 continue
-    raise FileNotFoundError("Son 3 saat içinde uygun HDF5 dosyası bulunamadı.")
+            if dosya_zamani > now:
+                continue  # gelecekteki bir zaman damgası olamaz
+            if en_iyi is None or zaman_str > en_iyi[0]:
+                en_iyi = (zaman_str, f"{BASE_URL}/{date_path}/{dosya_adi}")
+
+        # En güncel saatin klasöründe zaten bir eşleşme bulduysak daha eski
+        # saatlere bakmaya gerek yok.
+        if en_iyi is not None:
+            break
+
+    if en_iyi is None:
+        raise FileNotFoundError(
+            "Son 4 saat içinde 'ListProduct' olmayan bir FRP-PIXEL veri dosyası bulunamadı. "
+            "Sunucudaki dosya adlandırma deseni değişmiş olabilir — bir klasörü elle "
+            "(tarayıcıdan ya da curl ile) kontrol edin."
+        )
+
+    print(f"→ Bulunan dosya: {en_iyi[1]}")
+    return en_iyi[1]
 
 def download_hdf5(url, local_path="temp.h5"):
-    """Verilen URL'den HDF5 dosyasını indir."""
+    """Verilen URL'den HDF5 dosyasını indir. Dosya .bz2 ile sıkıştırılmış
+    geldiyse (bazı LSA SAF ürünlerinde olduğu gibi) otomatik açar."""
     print(f"↓ İndiriliyor: {url}")
     resp = auth_get(url)
-    total_size = len(resp.content)
+    icerik = resp.content
+    total_size = len(icerik)
+
+    if url.endswith('.bz2'):
+        import bz2
+        icerik = bz2.decompress(icerik)
+        print(f"  ↳ .bz2 açıldı ({total_size // 1024} KB → {len(icerik) // 1024} KB)")
+
     with open(local_path, 'wb') as f:
-        f.write(resp.content)
+        f.write(icerik)
     print(f"✓ İndirme tamamlandı ({total_size // 1024} KB)")
     return local_path
 
