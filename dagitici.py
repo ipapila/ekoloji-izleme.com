@@ -474,15 +474,21 @@ def arsiv_yaz():
             continue
 
         # Geçmiş aylara göre grupla
-        # NOT: raporlar/makaleler İÇİN AY, GERÇEK YAYIN TARİHİNE (tarih) GÖRE
-        # belirlenir — sadece tarih yoksa keşif tarihine (tarama_tarihi) düşülür.
-        # Bilinçli tercih: bu iki koleksiyonda sayfa "o ayın verisi"ni göstermeli;
-        # yayın tarihi eski olan bir kayıt, o gün ilk kez keşfedilmiş olsa bile
-        # kendi ait olduğu aya (yayın tarihine göre) arşivlenir. (Diğer
-        # koleksiyonlar için tarama_tarihi önceliği korunur.)
+        # NOT: raporlar/makaleler/ihlaller İÇİN AY, GERÇEK YAYIN/OLAY TARİHİNE
+        # (tarih) GÖRE belirlenir — sadece tarih yoksa keşif tarihine
+        # (tarama_tarihi) düşülür. Bilinçli tercih: bu koleksiyonlarda sayfa
+        # "o ayın verisi"ni göstermeli; yayın/olay tarihi eski olan bir kayıt,
+        # o gün ilk kez (ya da tekrar) keşfedilmiş olsa bile kendi ait olduğu
+        # aya (yayın/olay tarihine göre) arşivlenir. İhlaller bu gruba
+        # 2026-08'de eklendi: tarama_tarihi önceliği, tekrar taranan/kaynak
+        # feed'de tekrar görünen eski ihlallerin sürekli "bu ay" sayılıp hiç
+        # arşivlenmemesine yol açıyordu (bkz. ihlaller_aylik_buda ile aynı
+        # değişiklik — ikisi TUTARLI kalmalı). (Diğer koleksiyonlar —
+        # haberler, kuresel, ekosistem, direnis — için tarama_tarihi önceliği
+        # korunur.)
         aylar = defaultdict(list)
         for it in kayitlar:
-            if prefix in ("raporlar", "makaleler"):
+            if prefix in ("raporlar", "makaleler", "ihlaller"):
                 ay_kaynagi = it.get("tarih") or it.get("tarama_tarihi") or ""
             else:
                 ay_kaynagi = it.get("tarama_tarihi") or it.get("tarih") or ""
@@ -557,12 +563,12 @@ def ihlaller_aylik_buda() -> int:
 
     kalan, budanan, korunan = [], 0, 0
     for h in liste:
-        # arsiv_yaz() ile TUTARLI olmalı: ihlaller arşive tarama_tarihi
-        # (keşif tarihi) önceliğiyle yazılıyor, budama da aynı önceliği
+        # arsiv_yaz() ile TUTARLI olmalı: ihlaller arşive artık tarih
+        # (yayın/olay tarihi) önceliğiyle yazılıyor, budama da aynı önceliği
         # kullanmalı — aksi halde tarih ile tarama_tarihi farklı aya
         # düşen kayıtlar yanlış arşiv dosyasında aranıp "doğrulanamadı"
         # sayılır ve canlıda takılı kalır.
-        ay_kaynagi = h.get("tarama_tarihi") or h.get("tarih") or ""
+        ay_kaynagi = h.get("tarih") or h.get("tarama_tarihi") or ""
         ay = ay_kaynagi[:7]
         if len(ay) == 7 and ay < bu_ay:
             if str(h.get("id")) in _arsiv_idleri(ay):
