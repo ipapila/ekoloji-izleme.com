@@ -77,6 +77,12 @@
      olarak kapatıyordu. Leaflet köşelerine daha yüksek bir z-index vererek
      katman seçicinin her zaman görünür/tıklanabilir kalmasını sağlıyoruz. */
   .leaflet-top, .leaflet-bottom{ z-index: 1200 !important; }
+  /* Zoom kontrolü artık en altta (bottomright); #legend kutusu da aynı
+     köşede (bottom:18px right:18px) sabit konumlu olduğundan ikisi üst üste
+     binmesin diye zoom kontrolüne legend'in yaklaşık yüksekliği kadar alt
+     pay veriyoruz. Mobilde legend zaten gizlendiği için (bkz. aşağıdaki
+     medya sorgusu) bu payı orada sıfırlıyoruz. */
+  .leaflet-bottom.leaflet-right{ margin-bottom: 165px; }
 
   #topbar{
     position:absolute; top:var(--nav-h); left:0; right:0; z-index:1000;
@@ -91,10 +97,11 @@
   #topbar .sub{ font-family: var(--mono); font-size:11px; color: var(--text-dim); letter-spacing:0.03em; }
 
   #panel{
-    /* top değeri, üstündeki zoom + katman seçici kontrol yığınının
-       (yaklaşık 190-200px) altına düşecek şekilde ayarlandı — bkz. yukarıdaki
-       .leaflet-top z-index notu. */
-    position:absolute; top:calc(215px + var(--nav-h)); right:18px; z-index:1000; width: 230px;
+    /* Zoom kontrolü artık altta (bottomright) olduğu için burada sadece
+       sağ üstteki katman seçicinin (Karanlık/OSM/EFFIS — açık haldeyken
+       ~130-140px) altına düşecek kadar boşluk bırakıyoruz — panel eskisine
+       göre çok daha yukarıda. */
+    position:absolute; top:calc(140px + var(--nav-h)); right:18px; z-index:1000; width: 230px;
     background: var(--panel); border: 1px solid var(--panel-line); border-radius: 3px;
     padding: 14px; pointer-events:auto;
   }
@@ -172,7 +179,7 @@
        başlatılıyor (bkz. aşağıdaki L.control.layers çağrısı). */
     #panel{
       width: calc(100% - 36px); left:18px; right:18px;
-      max-height: calc(100vh - 235px - var(--nav-h)); overflow-y:auto;
+      max-height: calc(100vh - 160px - var(--nav-h)); overflow-y:auto;
     }
     #panel h2{ cursor:pointer; }
     #panel.collapsed h2{ margin-bottom:0; padding-bottom:0; border-bottom:none; }
@@ -181,6 +188,7 @@
     #panel.collapsed #panel-caret{ display:inline-block; }
     #panel:not(.collapsed) #panel-caret{ display:inline-block; }
     #legend{ display:none; }
+    .leaflet-bottom.leaflet-right{ margin-bottom: 0; }
     #sidebar{
       width: 84%; max-width:320px; transform: translateX(-100%);
       transition: transform .25s ease; box-shadow: 3px 0 16px rgba(0,0,0,0.45);
@@ -260,7 +268,7 @@
   const EFFIS_POLY_URL = "effis_yangin_alanlari.geojson"; // Yangın alanı poligonları (EFFIS burnt-area)
 
   const map = L.map('map', { zoomControl: false, attributionControl: true }).fitBounds(TURKIYE_BOUNDS);
-  L.control.zoom({ position: 'topright' }).addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
 
   // Karanlık tema — mevcut estetik, gece/ember hissi
   const karanlikKatman = L.layerGroup([
@@ -298,6 +306,7 @@
   });
 
   karanlikKatman.addTo(map);
+  effisPoligonKatman.addTo(map); // Yangın alanları (EFFIS) artık varsayılan olarak seçili/görünür
 
   // Mobilde katman seçici varsayılan açık (collapsed:false) kalırsa, zoom
   // kontrolüyle üst üste yığılıp "Durum" panelinin üstündeki boşluğu
@@ -564,6 +573,16 @@
   // izni) ancak native bir mobil uygulamayla mümkün olur.
   const KONUM_KAYDET_URL = "konum_kaydet.php"; // aynı dizinde, Plesk'e manuel yüklenir
   const KONUM_TOKEN = "Smtppl5862"; // konum_kaydet.php içindekiyle AYNI olmalı
+  // localStorage kullanılıyor (sessionStorage değil): sessionStorage sekme/
+  // tarayıcı kapanınca hemen silinir, bu yüzden "makine kapanmadığı sürece
+  // kapanmasın" isteğini karşılamaz. localStorage aynı tarayıcıda kalıcıdır
+  // — sayfa yenilense, sekme/tarayıcı kapatılıp açılsa bile "konum
+  // kaydedildi" durumu görünmeye devam eder; yalnızca kullanıcı tarayıcı
+  // verilerini temizlerse ya da farklı bir cihaz/tarayıcıdan girerse
+  // sıfırlanır (web teknolojisiyle "makine kapanınca sıfırla, açıkken asla
+  // sıfırlama" ayrımı yapılamıyor — localStorage bu isteğe en yakın ve daha
+  // güçlü/kalıcı olan seçenek).
+  const KONUM_KAYIT_KEY = "ei_konum_kaydedildi_ts";
 
   const konumBtn = document.getElementById('konum-btn');
   const konumStatusRow = document.getElementById('konum-status-row');
@@ -574,6 +593,15 @@
     konumStatusRow.className = 'status-row' + (sinif ? ' ' + sinif : '');
     konumStatusEl.textContent = mesaj;
   }
+
+  function konumKayitliMesajGoster(isoTarih) {
+    konumDurumGoster(`konum kaydedildi ✓ (25km alarm aktif) — ${relatifZaman(isoTarih)}`);
+  }
+
+  // Sayfa açılışında daha önce kaydedilmiş bir konum varsa (bu tarayıcıda),
+  // kullanıcı tekrar butona basmadan durumu göster.
+  const kayitliKonumTs = localStorage.getItem(KONUM_KAYIT_KEY);
+  if (kayitliKonumTs) konumKayitliMesajGoster(kayitliKonumTs);
 
   konumBtn.addEventListener('click', () => {
     if (!('geolocation' in navigator)) {
@@ -592,7 +620,9 @@
           body: JSON.stringify({ token: KONUM_TOKEN, lat: latitude, lng: longitude })
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
-        konumDurumGoster('konum kaydedildi ✓ (25km alarm aktif)');
+        const simdiIso = new Date().toISOString();
+        localStorage.setItem(KONUM_KAYIT_KEY, simdiIso);
+        konumKayitliMesajGoster(simdiIso);
       } catch (e) {
         konumDurumGoster('konum kaydedilemedi', 'err');
       } finally {
