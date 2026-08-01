@@ -186,6 +186,11 @@
     <div id="count">—</div>
     <div id="count-label">Aktif Tespit</div>
     <button class="btn-ghost" id="refresh-btn">Şimdi Yenile</button>
+    <button class="btn-ghost" id="konum-btn">📍 Konumumu Kaydet (25km alarm)</button>
+    <div class="status-row" id="konum-status-row" style="margin-top:8px; display:none;">
+      <span class="dot"></span>
+      <span class="status-val" id="konum-status"></span>
+    </div>
   </div>
 </div>
 
@@ -499,6 +504,58 @@
     veriyiYukle(BUGUN_STR);
   });
   refreshBtn.addEventListener('click', () => { effisVerisiYukle(); veriyiYukle(seciliTarih); });
+
+  // --- Konum bazlı alarm ---------------------------------------------
+  // "Konumumu Kaydet" butonuna basıldığında tarayıcının konum iznini
+  // ister ve alınan koordinatı konum_kaydet.php'ye gönderir. Saatlik
+  // FIRMS taraması (GitHub Actions) bu kaydedilen konumu okuyup 25 km
+  // çevresinde yeni bir tespit varsa Telegram'a alarm gönderir. Bu,
+  // GERÇEK ZAMANLI canlı takip DEĞİLDİR — "en son bu sayfayı ne zaman
+  // açtıysan o andaki konumun" esas alınır; statik site + saatlik
+  // Actions taraması mimarisinde ötesi (arka planda sürekli konum
+  // izni) ancak native bir mobil uygulamayla mümkün olur.
+  const KONUM_KAYDET_URL = "konum_kaydet.php"; // aynı dizinde, Plesk'e manuel yüklenir
+  const KONUM_TOKEN = "BURAYA_KENDI_TOKENINI_YAZ"; // konum_kaydet.php içindekiyle AYNI olmalı
+
+  const konumBtn = document.getElementById('konum-btn');
+  const konumStatusRow = document.getElementById('konum-status-row');
+  const konumStatusEl = document.getElementById('konum-status');
+
+  function konumDurumGoster(mesaj, sinif) {
+    konumStatusRow.style.display = 'flex';
+    konumStatusRow.className = 'status-row' + (sinif ? ' ' + sinif : '');
+    konumStatusEl.textContent = mesaj;
+  }
+
+  konumBtn.addEventListener('click', () => {
+    if (!('geolocation' in navigator)) {
+      konumDurumGoster('tarayıcı konum desteklemiyor', 'err');
+      return;
+    }
+    konumBtn.disabled = true;
+    konumDurumGoster('konum alınıyor…');
+
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      try {
+        const res = await fetch(KONUM_KAYDET_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: KONUM_TOKEN, lat: latitude, lng: longitude })
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        konumDurumGoster('konum kaydedildi ✓ (25km alarm aktif)');
+      } catch (e) {
+        konumDurumGoster('konum kaydedilemedi', 'err');
+      } finally {
+        konumBtn.disabled = false;
+      }
+    }, (err) => {
+      konumDurumGoster('konum izni verilmedi', 'err');
+      konumBtn.disabled = false;
+    }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 });
+  });
+
   effisVerisiYukle().then(() => veriyiYukle(BUGUN_STR));
 </script>
 </body>
