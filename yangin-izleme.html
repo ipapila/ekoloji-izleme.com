@@ -53,7 +53,10 @@
     background: var(--panel); border: 1px solid var(--panel-line); border-radius: 3px;
     padding: 14px; pointer-events:auto;
   }
-  #panel h2{ font-family: var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color: var(--text-dim); margin: 0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--panel-line); }
+  #panel h2{ font-family: var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color: var(--text-dim); margin: 0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--panel-line); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  #panel-summary{ display:none; font-family:var(--mono); font-size:10px; color:var(--text-dim); text-transform:none; letter-spacing:normal; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #panel-caret{ display:none; flex-shrink:0; color:var(--text-dim); font-size:10px; transition: transform .15s ease; }
+  #panel:not(.collapsed) #panel-caret{ transform: rotate(90deg); }
 
   #sidebar{
     position:absolute; top:0; left:0; bottom:0; z-index:1001; width:300px;
@@ -118,7 +121,20 @@
   .popup-row{ font-size:12px; color:var(--text-dim); margin:2px 0; }
 
   @media (max-width: 640px){
-    #panel{ width: calc(100% - 36px); left:18px; right:18px; }
+    /* Durum paneli mobilde varsayılan olarak daraltılmış: sadece başlık
+       satırı (özet + açma/kapama oku) görünür, haritanın büyük kısmını
+       kapatmaz. Katman seçici de aynı sebeple mobilde varsayılan kapalı
+       başlatılıyor (bkz. aşağıdaki L.control.layers çağrısı). */
+    #panel{
+      width: calc(100% - 36px); left:18px; right:18px;
+      max-height: calc(100vh - 235px); overflow-y:auto;
+    }
+    #panel h2{ cursor:pointer; }
+    #panel.collapsed h2{ margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    #panel.collapsed .panel-body{ display:none; }
+    #panel.collapsed #panel-summary,
+    #panel.collapsed #panel-caret{ display:inline-block; }
+    #panel:not(.collapsed) #panel-caret{ display:inline-block; }
     #legend{ display:none; }
     #sidebar{
       width: 84%; max-width:320px; transform: translateX(-100%);
@@ -151,20 +167,26 @@
   </div>
 </div>
 
-<div id="panel">
-  <h2>Durum <span class="archive-badge" id="archive-badge" hidden>arşiv</span></h2>
-  <div id="date-row">
-    <input type="date" id="tarih-sec" aria-label="Tarih seç">
-    <button class="btn-ghost" id="bugun-btn">Bugün</button>
+<div id="panel" class="collapsed">
+  <h2 id="panel-header">
+    <span>Durum <span class="archive-badge" id="archive-badge" hidden>arşiv</span></span>
+    <span id="panel-summary">yükleniyor…</span>
+    <span id="panel-caret">▸</span>
+  </h2>
+  <div class="panel-body">
+    <div id="date-row">
+      <input type="date" id="tarih-sec" aria-label="Tarih seç">
+      <button class="btn-ghost" id="bugun-btn">Bugün</button>
+    </div>
+    <div class="status-row" id="status-row">
+      <span class="dot"></span>
+      <span class="status-label" id="status-label">Son tarama:</span>
+      <span class="status-val" id="last-scan">yükleniyor…</span>
+    </div>
+    <div id="count">—</div>
+    <div id="count-label">Aktif Tespit</div>
+    <button class="btn-ghost" id="refresh-btn">Şimdi Yenile</button>
   </div>
-  <div class="status-row" id="status-row">
-    <span class="dot"></span>
-    <span class="status-label" id="status-label">Son tarama:</span>
-    <span class="status-val" id="last-scan">yükleniyor…</span>
-  </div>
-  <div id="count">—</div>
-  <div id="count-label">Aktif Tespit</div>
-  <button class="btn-ghost" id="refresh-btn">Şimdi Yenile</button>
 </div>
 
 <div id="legend">
@@ -224,10 +246,15 @@
 
   karanlikKatman.addTo(map);
 
+  // Mobilde katman seçici varsayılan açık (collapsed:false) kalırsa, zoom
+  // kontrolüyle üst üste yığılıp "Durum" panelinin üstündeki boşluğu
+  // dolduruyor ve panelle birlikte haritanın büyük kısmını kapatıyordu.
+  // Bu yüzden dar ekranlarda simge halinde (kapalı) başlatılıyor.
+  const mobilEkran = window.matchMedia('(max-width: 640px)').matches;
   L.control.layers(
     { 'Karanlık (varsayılan)': karanlikKatman, 'OSM Standart': osmKatman },
     { 'Yangın Alanları (EFFIS)': effisPoligonKatman },
-    { position: 'topright', collapsed: false }
+    { position: 'topright', collapsed: mobilEkran }
   ).addTo(map);
 
   let markerLayer = L.layerGroup().addTo(map);
@@ -248,8 +275,19 @@
   const archiveBadgeEl = document.getElementById('archive-badge');
   const countLabelEl = document.getElementById('count-label');
   const sidebarHeaderEl = document.querySelector('#sidebar-header h2');
+  const panelEl = document.getElementById('panel');
+  const panelHeaderEl = document.getElementById('panel-header');
+  const panelSummaryEl = document.getElementById('panel-summary');
 
   sidebarToggle.addEventListener('click', () => sidebarEl.classList.toggle('open'));
+
+  // Durum paneli mobilde varsayılan daraltılmış açılıyor (bkz. CSS —
+  // masaüstünde .collapsed sınıfının görsel bir etkisi yok, sadece mobil
+  // media query içinde anlam kazanıyor). Başlığa dokunmak açıp kapatır.
+  panelHeaderEl.addEventListener('click', () => {
+    if (!window.matchMedia('(max-width: 640px)').matches) return;
+    panelEl.classList.toggle('collapsed');
+  });
 
   // Tarihler her yerde UTC bazlı tutulur — backend (FIRMS acq_date) verileri
   // de UTC gününe göre etiketliyor, yerel saat dilimiyle karışmasın diye.
@@ -400,6 +438,10 @@
       sidebarCount.textContent = '—';
       sidebarList.innerHTML = `<div id="sidebar-empty">${bugunMu ? 'Veri yüklenemedi.' : 'Bu tarih için arşiv verisi bulunamadı.'}</div>`;
     }
+
+    // Panel daraltılmışken (mobil) de son durumun kısa özeti başlıkta
+    // görünsün diye — kullanıcı açmadan tek bakışta durumu görebilir.
+    panelSummaryEl.textContent = `${countEl.textContent} · ${lastScanEl.textContent}`;
 
     refreshBtn.disabled = false;
   }
