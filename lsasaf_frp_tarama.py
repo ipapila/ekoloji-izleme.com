@@ -45,83 +45,65 @@ def auth_get(url, retry_count=0):
         else:
             raise
 
-def list_directory(date_path):
-    """
-    Verilen tarih klasörünün (YYYY/MM/DD) Apache/nginx dizin listesini
-    çeker ve içindeki dosya adlarını döndürür. LSA SAF sunucusu bu
-    klasörlere GET ile gidildiğinde standart bir HTML index sayfası
-    döndürüyor; BeautifulSoup gibi ek bağımlılık gerekmesin diye href'leri
-    basit bir regex ile ayıklıyoruz.
-    """
-    url = f"{BASE_URL}/{date_path}/"
+def dosya_var_mi(url):
+    """Verilen tam dosya URL'sine GET atıp içeriği döndürür, yoksa
+    (401 dışı hata / 404 vb.) None döndürür. Asıl indirme burada DEĞİL,
+    find_latest_file() içindeki asıl download_hdf5() çağrısında yapılır —
+    burada sadece varlık + erişilebilirlik kontrolü."""
     try:
-        resp = auth_get(url)
-    except Exception:
-        return []
-    hrefs = re.findall(r'href="([^"?]+)"', resp.text)
-    # "../" gibi üst dizin linklerini ve alt klasörleri (sonu / ile bitenleri) ele
-    return [h for h in hrefs if h and not h.endswith('/') and h not in ('..',)]
+        return auth_get(url)
+    except Exception as e:
+        return None
 
-# Gerçek piksel verisini içeren dosya adı deseni:
-#   HDF5_LSASAF_MSG_FRP-PIXEL[-ListProduct]_MSG-Disk_YYYYMMDDHHMM (+.bz2 olabilir)
-# NOT: Önceki sürümde "-ListProduct" ekli dosyaların YANLIŞ dosya olduğu
-# varsayılmıştı — bu YANLIŞ çıktı. Kanıt: o dosya başarıyla indi (141 KB,
-# geçerli HDF5) ve sadece içindeki dataset isimleri beklenenle eşleşmedi;
-# yani "ListProduct" muhtemelen bu ürün için TEK/DOĞRU dosya varyantı.
-# Bu yüzden desen artık "-ListProduct" ekini de kabul ediyor — asıl sorun
-# process_hdf5()'teki dataset isim eşleştirmesi (bkz. aşağıdaki --inspect notu).
-FRP_DOSYA_DESENI = re.compile(r'^HDF5_LSASAF_MSG_FRP-PIXEL(?:-\w+)?_MSG-Disk_(\d{12})(?:\.\w+)?$')
+# LSA SAF'ın gerçek dosya adı deseni tam olarak doğrulanamadığından
+# (kimlik doğrulama gerektiren klasöre elle bakılamıyor, dizin listeleme de
+# bu sunucuda desteklenmiyor — bkz. aşağıdaki not), her zaman damgası için
+# BİLİNEN iki varyantı da deniyoruz. "-ListProduct" ekli varyant önce
+# denenir çünkü daha önce GERÇEKTEN bu isimle bir dosya başarıyla indirildi
+# (141 KB, geçerli HDF5) — sadece dataset içeriği ayrı bir sorundu.
+FILENAME_VARYANTLARI = [
+    "HDF5_LSASAF_MSG_FRP-PIXEL-ListProduct_MSG-Disk_{ts}",
+    "HDF5_LSASAF_MSG_FRP-PIXEL_MSG-Disk_{ts}",
+]
 
 def find_latest_file():
-    """Son birkaç saat içindeki klasörleri tarayıp en güncel GERÇEK
-    FRP-PIXEL veri dosyasının URL'sini döndürür (ListProduct dosyaları
-    hariç tutularak)."""
-    now = datetime.utcnow()
-    en_iyi = None  # (timestamp_str, url)
+    """
+    Bugünün en güncel HDF5 dosyasının URL'ini döndürür.
 
-    # Son 4 saatin klasörlerini kontrol et (gün sınırını geçen saatler için
-    # date_path değişebileceğinden, aynı date_path'i tekrar tekrar
-    # sorgulamamak için cache'liyoruz).
-    kontrol_edilen_klasorler = set()
+    NOT — dizin listeleme (autoindex) YAKLAŞIMI TERK EDİLDİ: bu sunucu
+    klasör GET'lerine standart bir Apache/nginx index HTML'i döndürmüyor
+    gibi görünüyor (önceki sürüm sessizce 0 dosya buldu). Bu yüzden
+    orijinal ve KANITLANMIŞ ÇALIŞAN yönteme dönüldü: dosya adını zaman
+    damgasından tahmin edip doğrudan o URL'ye GET atmak.
+    """
+    now = datetime.utcnow()
+    denenen_url_sayisi = 0
+
     for hour_offset in range(0, 4):
         dt = now - timedelta(hours=hour_offset)
         date_path = dt.strftime("%Y/%m/%d")
-        if date_path in kontrol_edilen_klasorler:
-            continue
-        kontrol_edilen_klasorler.add(date_path)
+        minute_base = (dt.minute // 15) * 15
+        dt_rounded = dt.replace(minute=minute_base, second=0, microsecond=0)
 
-        dosyalar = list_directory(date_path)
-        if not dosyalar:
-            continue
-
-        for dosya_adi in dosyalar:
-            eslesme = FRP_DOSYA_DESENI.match(dosya_adi)
-            if not eslesme:
+        for offset_min in [0, -15, -30, -45]:
+            check_dt = dt_rounded + timedelta(minutes=offset_min)
+            if check_dt > now:
                 continue
-            zaman_str = eslesme.group(1)
-            try:
-                dosya_zamani = datetime.strptime(zaman_str, "%Y%m%d%H%M")
-            except ValueError:
-                continue
-            if dosya_zamani > now:
-                continue  # gelecekteki bir zaman damgası olamaz
-            if en_iyi is None or zaman_str > en_iyi[0]:
-                en_iyi = (zaman_str, f"{BASE_URL}/{date_path}/{dosya_adi}")
+            time_str = check_dt.strftime("%Y%m%d%H%M")
 
-        # En güncel saatin klasöründe zaten bir eşleşme bulduysak daha eski
-        # saatlere bakmaya gerek yok.
-        if en_iyi is not None:
-            break
+            for varyant in FILENAME_VARYANTLARI:
+                url = f"{BASE_URL}/{date_path}/{varyant.format(ts=time_str)}"
+                denenen_url_sayisi += 1
+                resp = dosya_var_mi(url)
+                if resp is not None:
+                    print(f"→ Bulunan dosya: {url}")
+                    return url
 
-    if en_iyi is None:
-        raise FileNotFoundError(
-            "Son 4 saat içinde FRP-PIXEL_MSG-Disk desenine uyan bir dosya bulunamadı. "
-            "Sunucudaki dosya adlandırma deseni değişmiş olabilir — bir klasörü elle "
-            "(tarayıcıdan ya da curl ile) kontrol edin."
-        )
-
-    print(f"→ Bulunan dosya: {en_iyi[1]}")
-    return en_iyi[1]
+    raise FileNotFoundError(
+        f"Son 4 saat içinde uygun HDF5 dosyası bulunamadı ({denenen_url_sayisi} URL denendi, "
+        f"her ikisi de -ListProduct'lı ve'siz varyantlarla). Sunucudaki dosya adlandırma deseni "
+        f"değişmiş olabilir ya da erişim/kimlik doğrulama sorunu var olabilir."
+    )
 
 def download_hdf5(url, local_path="temp.h5"):
     """Verilen URL'den HDF5 dosyasını indir. Dosya .bz2 ile sıkıştırılmış
