@@ -63,11 +63,14 @@ def list_directory(date_path):
     return [h for h in hrefs if h and not h.endswith('/') and h not in ('..',)]
 
 # Gerçek piksel verisini içeren dosya adı deseni:
-#   HDF5_LSASAF_MSG_FRP-PIXEL_MSG-Disk_YYYYMMDDHHMM (üzerine .bz2 olabilir)
-# "-ListProduct" ekli varyant AYNI klasörde bulunan FARKLI bir dosya —
-# gerçek FRP/Lat/Lon dataset'lerini içermiyor, bu yüzden EXPLICIT olarak
-# eleniyor. (Bu satır önceki sürümde yanlışlıkla URL'ye sabit yazılmıştı.)
-FRP_DOSYA_DESENI = re.compile(r'^HDF5_LSASAF_MSG_FRP-PIXEL_MSG-Disk_(\d{12})(?:\.\w+)?$')
+#   HDF5_LSASAF_MSG_FRP-PIXEL[-ListProduct]_MSG-Disk_YYYYMMDDHHMM (+.bz2 olabilir)
+# NOT: Önceki sürümde "-ListProduct" ekli dosyaların YANLIŞ dosya olduğu
+# varsayılmıştı — bu YANLIŞ çıktı. Kanıt: o dosya başarıyla indi (141 KB,
+# geçerli HDF5) ve sadece içindeki dataset isimleri beklenenle eşleşmedi;
+# yani "ListProduct" muhtemelen bu ürün için TEK/DOĞRU dosya varyantı.
+# Bu yüzden desen artık "-ListProduct" ekini de kabul ediyor — asıl sorun
+# process_hdf5()'teki dataset isim eşleştirmesi (bkz. aşağıdaki --inspect notu).
+FRP_DOSYA_DESENI = re.compile(r'^HDF5_LSASAF_MSG_FRP-PIXEL(?:-\w+)?_MSG-Disk_(\d{12})(?:\.\w+)?$')
 
 def find_latest_file():
     """Son birkaç saat içindeki klasörleri tarayıp en güncel GERÇEK
@@ -112,7 +115,7 @@ def find_latest_file():
 
     if en_iyi is None:
         raise FileNotFoundError(
-            "Son 4 saat içinde 'ListProduct' olmayan bir FRP-PIXEL veri dosyası bulunamadı. "
+            "Son 4 saat içinde FRP-PIXEL_MSG-Disk desenine uyan bir dosya bulunamadı. "
             "Sunucudaki dosya adlandırma deseni değişmiş olabilir — bir klasörü elle "
             "(tarayıcıdan ya da curl ile) kontrol edin."
         )
@@ -150,6 +153,69 @@ def inspect_hdf5(file_path):
                 print(f"  📁 Group   : {name}")
         f.visititems(print_structure)
 
+def _yapi_dokumu_bas(f):
+    """inspect_hdf5 ile aynı çıktıyı üretir — dataset bulunamadığında
+    --inspect'i ayrıca çalıştırmaya gerek kalmadan aynı bilgiyi log'a basar."""
+    print("  ── HDF5 yapısı ──")
+    def yaz(name, obj):
+        if isinstance(obj, h5py.Dataset):
+            alanlar = f" alanlar: {obj.dtype.names}" if obj.dtype.names else ""
+            print(f"    📊 {name} → shape:{obj.shape} dtype:{obj.dtype}{alanlar}")
+        elif isinstance(obj, h5py.Group):
+            print(f"    📁 {name}")
+    f.visititems(yaz)
+    print("  ── kök öznitelikler (attrs) ──")
+    for k, v in f.attrs.items():
+        print(f"    {k}: {v}")
+
+
+def _tum_datasetleri_topla(f):
+    """Dosyanın TAMAMINI (her derinlikteki grubu) tarayıp yol→dataset eşlemi döndürür."""
+    datasetler = {}
+    def topla(name, obj):
+        if isinstance(obj, h5py.Dataset):
+            datasetler[name] = obj
+    f.visititems(topla)
+    return datasetler
+
+
+def _dataset_bul(datasetler, tam_adaylar, alt_dize_adaylar):
+    """
+    Üç aşamalı arama:
+      1) Herhangi bir derinlikteki dataset'in adı (son path segmenti)
+         tam_adaylar'dan biriyle case-insensitive eşleşiyor mu?
+      2) Compound (structured) dtype'lı bir dataset içinde, alanlardan
+         biri tam_adaylar'dan biriyle eşleşiyor mu? (LSA SAF "List
+         Product" dosyaları FRP/LAT/LON'u ayrı dataset yerine TEK bir
+         tablo dataset'inin alanları olarak tutuyor olabilir.)
+      3) Son çare: dataset adında alt_dize_adaylar'dan biri geçiyor mu?
+    Döndürür: (numpy_array, bulunan_yol_bilgisi) ya da (None, None)
+    """
+    tam_kucuk = [a.lower() for a in tam_adaylar]
+
+    for yol, ds in datasetler.items():
+        basename = yol.rsplit('/', 1)[-1]
+        if basename.lower() in tam_kucuk:
+            return ds[:], yol
+
+    for yol, ds in datasetler.items():
+        if ds.dtype.names:
+            for alan in ds.dtype.names:
+                if alan.lower() in tam_kucuk:
+                    return ds[alan][:], f"{yol}[{alan}]"
+
+    for yol, ds in datasetler.items():
+        basename = yol.rsplit('/', 1)[-1].lower()
+        if any(sub in basename for sub in alt_dize_adaylar):
+            return ds[:], yol
+        if ds.dtype.names:
+            for alan in ds.dtype.names:
+                if any(sub in alan.lower() for sub in alt_dize_adaylar):
+                    return ds[alan][:], f"{yol}[{alan}]"
+
+    return None, None
+
+
 def process_hdf5(file_path):
     """
     HDF5'ten FRP, Lat, Lon, Time verilerini oku, 
@@ -162,92 +228,32 @@ def process_hdf5(file_path):
     }
     
     with h5py.File(file_path, 'r') as f:
-        # LSA SAF FRP-PIXEL içindeki tipik dataset isimleri
-        # Genelde /FRP, /Latitude, /Longitude, /Time (veya /LAT, /LON)
-        possible_frp = ["FRP", "frp", "/FRP", "/frp"]
-        possible_lat = ["Latitude", "Lat", "LAT", "/Latitude"]
-        possible_lon = ["Longitude", "Lon", "LON", "/Longitude"]
-        possible_time = ["Time", "time", "/Time", "/time", "AcqTime"]
+        datasetler = _tum_datasetleri_topla(f)
 
-        frp_data = None
-        lat_data = None
-        lon_data = None
-        time_data = None
-
-        # Dataset'leri bul
-        def find_dataset(possible_names):
-            for name in possible_names:
-                if name in f:
-                    return f[name][:]
-                # Grup içindeki göreceli yolları da dene
-                for key in f.keys():
-                    if isinstance(f[key], h5py.Group):
-                        if name in f[key]:
-                            return f[key][name][:]
-            return None
-
-        # Ana kökten bul
-        for name in possible_frp:
-            if name in f:
-                frp_data = f[name][:]
-                break
-        if frp_data is None:
-            # Grupları tara (örn: /geolocation/Latitude)
-            for group_name in f.keys():
-                if isinstance(f[group_name], h5py.Group):
-                    for ds_name in possible_frp:
-                        if ds_name in f[group_name]:
-                            frp_data = f[group_name][ds_name][:]
-                            break
-                    if frp_data is not None:
-                        break
-
-        for name in possible_lat:
-            if name in f:
-                lat_data = f[name][:]
-                break
-        if lat_data is None:
-            for group_name in f.keys():
-                if isinstance(f[group_name], h5py.Group):
-                    for ds_name in possible_lat:
-                        if ds_name in f[group_name]:
-                            lat_data = f[group_name][ds_name][:]
-                            break
-                    if lat_data is not None:
-                        break
-
-        for name in possible_lon:
-            if name in f:
-                lon_data = f[name][:]
-                break
-        if lon_data is None:
-            for group_name in f.keys():
-                if isinstance(f[group_name], h5py.Group):
-                    for ds_name in possible_lon:
-                        if ds_name in f[group_name]:
-                            lon_data = f[group_name][ds_name][:]
-                            break
-                    if lon_data is not None:
-                        break
-
-        # Zaman verisini al (opsiyonel)
-        for name in possible_time:
-            if name in f:
-                time_data = f[name][:]
-                break
-        if time_data is None:
-            for group_name in f.keys():
-                if isinstance(f[group_name], h5py.Group):
-                    for ds_name in possible_time:
-                        if ds_name in f[group_name]:
-                            time_data = f[group_name][ds_name][:]
-                            break
-                    if time_data is not None:
-                        break
+        frp_data, frp_yol = _dataset_bul(
+            datasetler, ["FRP", "frp", "FRP_MW", "FRP_PIXEL"], ["frp"]
+        )
+        lat_data, lat_yol = _dataset_bul(
+            datasetler, ["Latitude", "LATITUDE", "Lat", "LAT", "PIXEL_LATITUDE"], ["lat"]
+        )
+        lon_data, lon_yol = _dataset_bul(
+            datasetler, ["Longitude", "LONGITUDE", "Lon", "LON", "PIXEL_LONGITUDE"], ["lon", "long"]
+        )
+        time_data, time_yol = _dataset_bul(
+            datasetler,
+            ["Time", "TIME", "AcqTime", "ACQTIME", "ACQUISITION_TIME", "OBSERVATION_TIME"],
+            ["time"]
+        )
 
         if frp_data is None or lat_data is None or lon_data is None:
-            print("✗ Gerekli dataset'ler (FRP, Lat, Lon) bulunamadı! Lütfen --inspect ile kontrol edin.")
+            print("✗ Gerekli dataset'ler (FRP, Lat, Lon) bulunamadı!")
+            print(f"  frp:{'bulundu → ' + frp_yol if frp_data is not None else 'BULUNAMADI'}")
+            print(f"  lat:{'bulundu → ' + lat_yol if lat_data is not None else 'BULUNAMADI'}")
+            print(f"  lon:{'bulundu → ' + lon_yol if lon_data is not None else 'BULUNAMADI'}")
+            _yapi_dokumu_bas(f)
             sys.exit(1)
+
+        print(f"  ✓ frp:{frp_yol}  lat:{lat_yol}  lon:{lon_yol}  time:{time_yol or '(yok)'}")
 
         # Verileri düzleştir (1D olmayabilir)
         frp_flat = frp_data.flatten()
