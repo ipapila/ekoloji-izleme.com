@@ -200,6 +200,36 @@ def _dataset_bul(datasetler, tam_adaylar, alt_dize_adaylar):
     return None, None, None
 
 
+def _fiziksel_deger(ds, ham_dizi):
+    """
+    LSA SAF HDF5 dosyalarında sayısal alanlar (FRP, LATITUDE, LONGITUDE vb.)
+    genelde ÖLÇEKLENMİŞ tam sayı (digital number) olarak saklanır:
+        fiziksel_değer = ham_değer / SCALING_FACTOR + OFFSET
+    Bu fonksiyon uygulanmadan ham değerler doğrudan kullanılırsa (önceki
+    sürümdeki hata buydu) örn. enlem/boylam -90..90 / -180..180 aralığının
+    çok dışında kalır ve process_hdf5() içindeki aralık kontrolü TÜM
+    pikselleri sessizce eler → "0 adet yangın pikseli bulundu" yanılgısı.
+
+    CAL_SLOPE/CAL_OFFSET alanları bu üründe 999.0 sentinel (yani
+    "kullanılmıyor/uygulanamaz") olarak görüldüğü için kasıtlı olarak
+    yok sayılıyor; gerçek ölçek SCALING_FACTOR/OFFSET attrs'ında.
+    MISSING_VALUE ile eşleşen hücreler NaN'a çevrilir.
+    """
+    arr = np.asarray(ham_dizi, dtype=np.float64)
+    attrs = dict(ds.attrs) if ds is not None else {}
+
+    missing = attrs.get("MISSING_VALUE")
+    if missing is not None:
+        arr = np.where(arr == float(missing), np.nan, arr)
+
+    scale = attrs.get("SCALING_FACTOR")
+    offset = attrs.get("OFFSET", 0.0)
+    if scale is not None and float(scale) not in (0.0, 999.0):
+        arr = arr / float(scale) + float(offset)
+
+    return arr
+
+
 def process_hdf5(file_path):
     """
     HDF5'ten FRP, Lat, Lon, Time verilerini oku, 
@@ -217,10 +247,10 @@ def process_hdf5(file_path):
         frp_data, frp_yol, frp_ds = _dataset_bul(
             datasetler, ["FRP", "frp", "FRP_MW", "FRP_PIXEL"], ["frp"]
         )
-        lat_data, lat_yol, _ = _dataset_bul(
+        lat_data, lat_yol, lat_ds = _dataset_bul(
             datasetler, ["Latitude", "LATITUDE", "Lat", "LAT", "PIXEL_LATITUDE"], ["lat"]
         )
-        lon_data, lon_yol, _ = _dataset_bul(
+        lon_data, lon_yol, lon_ds = _dataset_bul(
             datasetler, ["Longitude", "LONGITUDE", "Lon", "LON", "PIXEL_LONGITUDE"], ["lon", "long"]
         )
         time_data, time_yol, _ = _dataset_bul(
@@ -252,8 +282,30 @@ def process_hdf5(file_path):
               f">0 sayısı:{int((gecerli_ham > 0).sum()) if len(gecerli_ham) else 0}")
         if frp_ds is not None and dict(frp_ds.attrs):
             print(f"  ℹ frp attrs: {dict(frp_ds.attrs)}")
+        if lat_ds is not None and dict(lat_ds.attrs):
+            print(f"  ℹ lat attrs: {dict(lat_ds.attrs)}")
+        if lon_ds is not None and dict(lon_ds.attrs):
+            print(f"  ℹ lon attrs: {dict(lon_ds.attrs)}")
         if len(frp_ham):
             print(f"  ℹ frp ilk 10 ham değer: {frp_ham[:10].tolist()}")
+
+        # Ham (dijital) değerleri SCALING_FACTOR/OFFSET attrs'ına göre
+        # fiziksel değere çevir (bkz. _fiziksel_deger dokümantasyonu —
+        # bu adım eksikti ve "0 piksel bulundu" yanılgısına yol açıyordu).
+        frp_data = _fiziksel_deger(frp_ds, frp_data)
+        lat_data = _fiziksel_deger(lat_ds, lat_data)
+        lon_data = _fiziksel_deger(lon_ds, lon_data)
+
+        frp_olcekli = frp_data.flatten()
+        lat_olcekli = lat_data.flatten()
+        lon_olcekli = lon_data.flatten()
+        gecerli_olcekli = frp_olcekli[~np.isnan(frp_olcekli)]
+        print(f"  ℹ [ölçeklendirme sonrası] frp min:{gecerli_olcekli.min() if len(gecerli_olcekli) else '—'}  "
+              f"max:{gecerli_olcekli.max() if len(gecerli_olcekli) else '—'}  "
+              f">0 sayısı:{int((gecerli_olcekli > 0).sum()) if len(gecerli_olcekli) else 0}")
+        if len(lat_olcekli):
+            print(f"  ℹ [ölçeklendirme sonrası] lat ilk 5: {lat_olcekli[:5].tolist()}  "
+                  f"lon ilk 5: {lon_olcekli[:5].tolist()}")
 
         # Verileri düzleştir (1D olmayabilir)
         frp_flat = frp_data.flatten()
