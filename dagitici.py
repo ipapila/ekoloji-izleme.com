@@ -557,7 +557,13 @@ def ihlaller_aylik_buda() -> int:
 
     kalan, budanan, korunan = [], 0, 0
     for h in liste:
-        ay = (h.get("tarih") or "")[:7]
+        # arsiv_yaz() ile TUTARLI olmalı: ihlaller arşive tarama_tarihi
+        # (keşif tarihi) önceliğiyle yazılıyor, budama da aynı önceliği
+        # kullanmalı — aksi halde tarih ile tarama_tarihi farklı aya
+        # düşen kayıtlar yanlış arşiv dosyasında aranıp "doğrulanamadı"
+        # sayılır ve canlıda takılı kalır.
+        ay_kaynagi = h.get("tarama_tarihi") or h.get("tarih") or ""
+        ay = ay_kaynagi[:7]
         if len(ay) == 7 and ay < bu_ay:
             if str(h.get("id")) in _arsiv_idleri(ay):
                 budanan += 1
