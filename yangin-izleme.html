@@ -61,7 +61,12 @@
      istenmiyor; ayrıca normal doküman akışında kaldığından (nav fixed
      olduğu için akıştan çıkıyor) gizli bir scroll boşluğu yaratabiliyor. */
   #navTicker{ display:none !important; }
-  #map { position:absolute; top:var(--nav-h); left:0; right:0; bottom:0; background:#0d1013; }
+  /* Harita + üzerindeki tüm kontroller artık #map-wrap içinde; wrap'ın
+     kendisi normal doküman akışında (nav'ın altına margin-top ile
+     itiliyor), böylece #legend'i wrap'ın ALTINA, akışın parçası olarak
+     koyabiliyoruz — artık haritanın üzerine "yüzen" bir kutu değil. */
+  #map-wrap{ position:relative; width:100%; height:calc(100vh - var(--nav-h)); margin-top:var(--nav-h); overflow:hidden; }
+  #map { position:absolute; top:0; left:0; right:0; bottom:0; background:#0d1013; }
 
   .leaflet-control-attribution { background: rgba(18,22,26,0.7) !important; color: var(--text-dim) !important; font-family: var(--mono); font-size:10px; }
   .leaflet-control-attribution a { color: var(--teal) !important; }
@@ -77,15 +82,9 @@
      olarak kapatıyordu. Leaflet köşelerine daha yüksek bir z-index vererek
      katman seçicinin her zaman görünür/tıklanabilir kalmasını sağlıyoruz. */
   .leaflet-top, .leaflet-bottom{ z-index: 1200 !important; }
-  /* Zoom kontrolü artık en altta (bottomright); #legend kutusu da aynı
-     köşede (bottom:18px right:18px) sabit konumlu olduğundan ikisi üst üste
-     binmesin diye zoom kontrolüne legend'in yaklaşık yüksekliği kadar alt
-     pay veriyoruz. Mobilde legend zaten gizlendiği için (bkz. aşağıdaki
-     medya sorgusu) bu payı orada sıfırlıyoruz. */
-  .leaflet-bottom.leaflet-right{ margin-bottom: 165px; }
 
   #topbar{
-    position:absolute; top:var(--nav-h); left:0; right:0; z-index:1000;
+    position:absolute; top:0; left:0; right:0; z-index:1000;
     display:flex; align-items:baseline; justify-content:space-between;
     padding: 16px 22px 10px;
     background: linear-gradient(180deg, rgba(13,16,19,0.92) 0%, rgba(13,16,19,0) 100%);
@@ -101,7 +100,7 @@
        sağ üstteki katman seçicinin (Karanlık/OSM/EFFIS — açık haldeyken
        ~130-140px) altına düşecek kadar boşluk bırakıyoruz — panel eskisine
        göre çok daha yukarıda. */
-    position:absolute; top:calc(140px + var(--nav-h)); right:18px; z-index:1000; width: 230px;
+    position:absolute; top:140px; right:18px; z-index:1000; width: 230px;
     background: var(--panel); border: 1px solid var(--panel-line); border-radius: 3px;
     padding: 14px; pointer-events:auto;
   }
@@ -111,7 +110,7 @@
   #panel:not(.collapsed) #panel-caret{ transform: rotate(90deg); }
 
   #sidebar{
-    position:absolute; top:var(--nav-h); left:0; bottom:0; z-index:1001; width:300px;
+    position:absolute; top:0; left:0; bottom:0; z-index:1001; width:300px;
     background: var(--panel); border-right:1px solid var(--panel-line);
     display:flex; flex-direction:column; padding-top:64px;
   }
@@ -160,9 +159,9 @@
   .archive-badge{ display:inline-block; font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color: var(--warn); border:1px solid var(--warn); border-radius:2px; padding:1px 5px; margin-left:6px; vertical-align:middle; }
 
   #legend{
-    position:absolute; bottom:18px; right:18px; z-index:1000;
-    background: var(--panel); border:1px solid var(--panel-line); border-radius:3px;
-    padding: 10px 14px; font-family: var(--mono); font-size:10px; color: var(--text-dim); max-width: 320px;
+    position:relative; width:100%;
+    background: var(--panel); border-top:1px solid var(--panel-line);
+    padding: 14px 22px; font-family: var(--mono); font-size:10px; color: var(--text-dim);
   }
   #legend .row{ display:flex; align-items:center; gap:7px; margin:3px 0; }
   #legend .sw{ width:8px; height:8px; border-radius:50%; }
@@ -187,8 +186,7 @@
     #panel.collapsed #panel-summary,
     #panel.collapsed #panel-caret{ display:inline-block; }
     #panel:not(.collapsed) #panel-caret{ display:inline-block; }
-    #legend{ display:none; }
-    .leaflet-bottom.leaflet-right{ margin-bottom: 0; }
+    #legend{ padding:12px 16px; }
     #sidebar{
       width: 84%; max-width:320px; transform: translateX(-100%);
       transition: transform .25s ease; box-shadow: 3px 0 16px rgba(0,0,0,0.45);
@@ -203,6 +201,7 @@
 <div id="nav-root"></div>
 <script src="nav.js"></script>
 
+<div id="map-wrap">
 <div id="map"></div>
 
 <div id="topbar">
@@ -248,6 +247,7 @@
       <span class="status-val" id="konum-status"></span>
     </div>
   </div>
+</div>
 </div>
 
 <div id="legend">
