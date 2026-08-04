@@ -23,7 +23,7 @@ jobs:
           python-version: '3.11'
 
       - name: Bağımlılıkları Yükle
-        run: pip install requests
+        run: pip install requests python-docx
 
       # ── Plesk'ten güncel veri dosyalarını indir ─────────────────
       - name: Güncel Verileri Plesk'ten İndir
@@ -67,6 +67,14 @@ jobs:
             exit 1
           fi
           echo "✓ gunluk-raporlar.json"
+
+      # ── Sosyal Medya Formatı + E-posta Bildirimi ─────────────────
+      - name: Sosyal Medya Formatını Üret ve E-posta Gönder
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          RAPOR_ALICI: ipapila@gmail.com
+        run: python scripts/sosyal_medya_gonder.py
 
       # ── Repo'ya commit et ───────────────────────────────────────
       - name: Değişiklikleri Commit Et
