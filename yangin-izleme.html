@@ -255,7 +255,8 @@
   <div class="row"><span class="sw" style="background:#e0b64d;"></span> Orta güvenilirlikli tespit</div>
   <div class="row"><span class="sw" style="background:#8a9199;"></span> Düşük güvenilirlikli tespit (küçük/başlangıç aşaması olabilir)</div>
   <div class="row"><span class="sw" style="background:#ff6a3d; border-radius:2px;"></span> Yangın alanı sınırı (EFFIS, katmanlardan açılabilir)</div>
-  <div style="margin-top:6px; opacity:0.75;">Veri saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. Sağ üstten "OSM Standart" görünümüne geçerek yerleşim ve yol adlarını daha net görebilirsiniz. Sağ üstteki takvimden geçmiş bir günü seçerek o güne ait arşivlenmiş tespitleri görebilirsiniz.</div>
+  <div class="row"><span class="sw" style="background:transparent; font-size:14px; line-height:10px;">🔥</span> Haberle doğrulanmış aktif yangın</div>
+  <div style="margin-top:6px; opacity:0.75;">Veri saatte bir GitHub Actions üzerinden otomatik güncellenir. Nokta = ısıl anomali tespiti, mutlaka yangın anlamına gelmez. 🔥 işaretli tespitler, haber kaynaklarıyla eşleşerek ayrıca doğrulanmıştır. Sağ üstten "OSM Standart" görünümüne geçerek yerleşim ve yol adlarını daha net görebilirsiniz. Sağ üstteki takvimden geçmiş bir günü seçerek o güne ait arşivlenmiş tespitleri görebilirsiniz.</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -463,17 +464,34 @@
         const lat = k.koordinatlar?.lat, lng = k.koordinatlar?.lng;
         if (typeof lat !== 'number' || typeof lng !== 'number') return;
         const renk = colorFor(k);
-        const marker = L.circleMarker([lat, lng], { radius: 5, color: renk, fillColor: renk, fillOpacity: 0.85, weight: 1 });
+
+        // Haber kaynağıyla doğrulanmış (dogrulanmis:true) tespitler, sıradan
+        // ısı-anomalisi noktasından ayırt edilsin diye alev ikonlu bir
+        // divIcon ile; diğerleri her zamanki gibi renkli daire ile gösterilir.
+        const marker = k.dogrulanmis
+          ? L.marker([lat, lng], {
+              icon: L.divIcon({
+                className: 'fire-confirmed-icon',
+                html: '<span style="font-size:18px; line-height:1; filter:drop-shadow(0 0 2px #000);">🔥</span>',
+                iconSize: [22, 22],
+                iconAnchor: [11, 16],
+              }),
+            })
+          : L.circleMarker([lat, lng], { radius: 5, color: renk, fillColor: renk, fillOpacity: 0.85, weight: 1 });
 
         const konumBasligi = [k.yerlesim, k.ilce, k.il].filter(Boolean).join(' / ') || 'Konum bilgisi yok';
         const risk = effisRiski[k.il];
         const riskSatiri = risk
           ? `<div class="popup-row">Günlük yangın riski (EFFIS): <b style="color:var(--text);">${risk.risk}</b></div>`
           : '';
+        const dogrulamaSatiri = k.dogrulanmis
+          ? `<div class="popup-row" style="color:var(--ember); margin:4px 0;">🔥 Haberle doğrulandı — ${k.dogrulama_kaynagi || 'haber kaynağı'}${k.dogrulama_url ? `: <a href="${k.dogrulama_url}" target="_blank" rel="noopener" style="color:var(--teal);">${(k.dogrulama_baslik || 'habere git').slice(0, 70)}</a>` : ''}</div>`
+          : '';
         marker.bindPopup(`
           <div class="popup-title">🔥 ${konumBasligi}</div>
           <div class="popup-row" style="color:var(--text); margin-bottom:6px;">${k.aciklama || ''}</div>
           <div class="popup-row">Tarih: ${k.eklenme || '—'}</div>
+          ${dogrulamaSatiri}
           ${riskSatiri}
           <div class="popup-row" style="opacity:0.65; font-size:11px; margin-top:4px;">${k.teknik_detay || ''}</div>
         `);
@@ -523,12 +541,18 @@
     sidebarList.innerHTML = sirali.map(k => {
       const konumBasligi = [k.yerlesim, k.ilce, k.il].filter(Boolean).join(' / ') || 'Konum bilgisi yok';
       const renk = colorFor(k);
+      const isaret = k.dogrulanmis
+        ? '<span style="font-size:13px;">🔥</span>'
+        : `<span class="dot" style="background:${renk};"></span>`;
+      const meta = k.dogrulanmis
+        ? `${k.eklenme || '—'} · <span style="color:var(--ember);">doğrulanmış yangın</span>`
+        : `${k.eklenme || '—'} · ${k.guven_seviye || 'bilinmiyor'} güven`;
       return `
         <div class="sidebar-item" data-id="${k.id || ''}">
-          <span class="dot" style="background:${renk};"></span>
+          ${isaret}
           <div class="si-body">
             <div class="si-title">${konumBasligi}</div>
-            <div class="si-meta">${k.eklenme || '—'} · ${k.guven_seviye || 'bilinmiyor'} güven</div>
+            <div class="si-meta">${meta}</div>
           </div>
         </div>
       `;

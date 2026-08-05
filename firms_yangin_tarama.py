@@ -121,6 +121,120 @@ def en_yakin_il(lat, lng):
             en_kucuk_mesafe, en_yakin = mesafe, il
     return en_yakin
 
+# --- Haberle doğrulama ----------------------------------------------------
+# FIRMS tek başına "yangın" demiyor, sadece ısı anomalisi tespit ediyor
+# (bkz. yukarıdaki modül dokümanı). Bir noktanın gerçekten aktif bir
+# orman yangını olduğunu, sitenin zaten scraper'la (tarayici.py) topladığı
+# haber verisiyle eşleştirerek doğruluyoruz: haberin başlığı/özeti "yangın"
+# geçiyor mu ve haberin tarihi + metni, bu FIRMS noktasının tarihi ve
+# çözümlenmiş il/ilçe/yerleşim adıyla örtüşüyor mu?
+#
+# Not: haber verisinde koordinat YOK (bkz. haberler.json şeması), bu yüzden
+# coğrafi mesafeyle değil, yer adı metin eşleşmesiyle doğruluyoruz —
+# FIRMS noktasının Nominatim'den çözdüğü il/ilçe/yerleşim adı, haberin
+# metninde geçiyorsa eşleşme sayılır.
+FIRE_ANAHTAR_KELIMELER = ("yangın", "yangını", "yangınlar", "alevler")
+DOGRULAMA_GUN_TOLERANSI = 2  # haber tarihi ile tespit tarihi arasındaki azami fark
+
+# Türkçe büyük harfleri, standart Unicode str.lower()'ın yanlış sonuç
+# verdiği (İ -> 'i̇' iki karakter, I -> 'i' değil 'ı' olmalı) noktalarda
+# doğru küçük harfe çeviren yardımcı. guven_kod karşılaştırmasında
+# yaşanan aynı Unicode normalizasyon sorununun metin eşleşmesine de
+# sessizce sızmasını önlemek için kullanılıyor.
+_TR_KUCUK_HARF = str.maketrans({"İ": "i", "I": "ı", "Ğ": "ğ", "Ü": "ü", "Ş": "ş", "Ö": "ö", "Ç": "ç"})
+
+
+def tr_kucuk(s):
+    return (s or "").translate(_TR_KUCUK_HARF).lower()
+
+
+def _haber_tarihini_coz(tarih_str):
+    """'2026-08-04T16:30:47+03:00' veya '2026-08-04' formatlarını, saat
+    dilimi bilgisini atarak karşılaştırılabilir bir date'e çevirir."""
+    if not tarih_str:
+        return None
+    try:
+        temiz = tarih_str.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(temiz)
+        return dt.date()
+    except ValueError:
+        try:
+            return datetime.strptime(tarih_str[:10], "%Y-%m-%d").date()
+        except ValueError:
+            return None
+
+
+def _yangin_haberlerini_yukle():
+    """Repo kökündeki mevcut haber/ihlal JSON dosyalarından 'yangın'
+    anahtar kelimesi geçenleri toplar. Ağ isteği yapmaz — dagitici.py
+    tarafından zaten üretilmiş dosyaları okur."""
+    KAYNAK_DOSYALAR = (
+        ("haberler.json", "haberler"),
+        ("haberler-iklim.json", "haberler"),
+        ("haberler-orman.json", "haberler"),
+        ("haberler-direnis.json", "haberler"),
+        ("ihlaller.json", "ihlaller"),
+    )
+    haberler = []
+    gorulen_id = set()
+    for dosya, anahtar in KAYNAK_DOSYALAR:
+        if not os.path.exists(dosya):
+            continue
+        try:
+            with open(dosya, encoding="utf-8") as f:
+                veri = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            continue
+        for h in veri.get(anahtar, []) or []:
+            hid = h.get("id") or h.get("url")
+            if hid and hid in gorulen_id:
+                continue
+            metin = tr_kucuk(f"{h.get('baslik', '')} {h.get('ozet', '')}")
+            if not any(kw in metin for kw in FIRE_ANAHTAR_KELIMELER):
+                continue
+            if hid:
+                gorulen_id.add(hid)
+            haberler.append(h)
+    return haberler
+
+
+def haberle_dogrula(kayitlar):
+    """Her FIRMS kaydı için: yer adı (yerleşim/ilçe/il) haberin
+    başlık+özetinde geçiyor mu ve tarihler DOGRULAMA_GUN_TOLERANSI
+    içinde mi diye bakar; eşleşirse kaydı haber kaynağıyla işaretler."""
+    haberler = _yangin_haberlerini_yukle()
+    if not haberler:
+        return kayitlar
+
+    on_hesap = []
+    for h in haberler:
+        tarih = _haber_tarihini_coz(h.get("tarih", ""))
+        metin = tr_kucuk(f"{h.get('baslik', '')} {h.get('ozet', '')}")
+        on_hesap.append((h, tarih, metin))
+
+    for k in kayitlar:
+        adaylar = [x for x in (k.get("yerlesim"), k.get("ilce"), k.get("il")) if x]
+        if not adaylar:
+            continue
+        tespit_tarihi = _haber_tarihini_coz(k.get("eklenme", ""))
+
+        for h, haber_tarihi, metin in on_hesap:
+            if tespit_tarihi and haber_tarihi:
+                if abs((haber_tarihi - tespit_tarihi).days) > DOGRULAMA_GUN_TOLERANSI:
+                    continue
+            eslesen_yer = next((a for a in adaylar if tr_kucuk(a) in metin), None)
+            if not eslesen_yer:
+                continue
+            k["dogrulanmis"] = True
+            k["dogrulama_kaynagi"] = h.get("kaynak", "")
+            k["dogrulama_baslik"] = h.get("baslik", "")
+            k["dogrulama_url"] = h.get("url", "")
+            k["dogrulama_yer"] = eslesen_yer
+            break
+
+    return kayitlar
+
+
 # --- Ayarlar -----------------------------------------------------------
 
 MAP_KEY = os.environ.get("FIRMS_MAP_KEY", "").strip()
@@ -449,6 +563,10 @@ def main():
     # sadece koordinat ile kaydetmek, sonra ayrı bir toplu geocode
     # adımı çalıştırmak daha pratik olabilir.
     kayitlar = kayitlara_donustur(satirlar, il_ilce_coz=True, bekleme=1.0)
+
+    kayitlar = haberle_dogrula(kayitlar)
+    dogrulanan_sayisi = sum(1 for k in kayitlar if k.get("dogrulanmis"))
+    print(f"{dogrulanan_sayisi} kayıt haber kaynağıyla doğrulandı.")
 
     cikti = {
         "guncelleme": datetime.now(timezone.utc).isoformat(timespec="seconds"),
