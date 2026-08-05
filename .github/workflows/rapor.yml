@@ -31,7 +31,7 @@ jobs:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
-          for dosya in haberler.json ihlaller.json raporlar.json gunluk-raporlar.json; do
+          for dosya in haberler.json ihlaller.json raporlar.json makaleler.json gunluk-raporlar.json; do
             STATUS=$(curl -s -o "${dosya}" -w "%{http_code}" \
               --max-time 30 --retry 2 --retry-delay 5 --retry-all-errors \
               -H "X-Webhook-Secret: ${WEBHOOK_SECRET}" \
