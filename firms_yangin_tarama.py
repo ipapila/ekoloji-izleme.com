@@ -24,6 +24,7 @@ workflow olarak (örn. saatlik) ekleyebiliriz.
 """
 
 import os
+import re
 import socket
 import sys
 import csv
@@ -148,6 +149,28 @@ def tr_kucuk(s):
     return (s or "").translate(_TR_KUCUK_HARF).lower()
 
 
+# ÖNEMLİ: ham "kelime in metin" araması, kısa ilçe adlarını (ör. "Çal")
+# başka kelimelerin İÇİNE gizlenmiş olarak da eşleştiriyordu — "...kontrol
+# altına alınmaya çalışılıyor" cümlesindeki "çal", Denizli'nin Çal ilçesiyle
+# yanlışlıkla eşleşip Muğla/Yatağan yangın haberini Denizli/Çal'a
+# bağlıyordu. Bunun yerine kelime sınırı (\b) kullanan regex ile SADECE
+# bağımsız bir kelime olarak geçen eşleşmeleri kabul ediyoruz. Python'ın
+# \b'si Unicode harfleri (ç, ş, ğ, ı, ö, ü dâhil) doğru tanıyor, bu yüzden
+# ayrıca özel bir Türkçe karakter sınıfı tanımlamaya gerek yok.
+_KELIME_REGEX_ONBELLEK = {}
+
+
+def _tam_kelime_gecer_mi(kelime, metin):
+    kelime_kucuk = tr_kucuk(kelime).strip()
+    if not kelime_kucuk:
+        return False
+    pattern = _KELIME_REGEX_ONBELLEK.get(kelime_kucuk)
+    if pattern is None:
+        pattern = re.compile(r"\b" + re.escape(kelime_kucuk) + r"\b", re.UNICODE)
+        _KELIME_REGEX_ONBELLEK[kelime_kucuk] = pattern
+    return pattern.search(metin) is not None
+
+
 def _haber_tarihini_coz(tarih_str):
     """'2026-08-04T16:30:47+03:00' veya '2026-08-04' formatlarını, saat
     dilimi bilgisini atarak karşılaştırılabilir bir date'e çevirir."""
@@ -190,7 +213,7 @@ def _yangin_haberlerini_yukle():
             if hid and hid in gorulen_id:
                 continue
             metin = tr_kucuk(f"{h.get('baslik', '')} {h.get('ozet', '')}")
-            if not any(kw in metin for kw in FIRE_ANAHTAR_KELIMELER):
+            if not any(_tam_kelime_gecer_mi(kw, metin) for kw in FIRE_ANAHTAR_KELIMELER):
                 continue
             if hid:
                 gorulen_id.add(hid)
@@ -213,16 +236,24 @@ def haberle_dogrula(kayitlar):
         on_hesap.append((h, tarih, metin))
 
     for k in kayitlar:
-        adaylar = [x for x in (k.get("yerlesim"), k.get("ilce"), k.get("il")) if x]
+        yerlesim, ilce, il = k.get("yerlesim"), k.get("ilce"), k.get("il")
+        adaylar = [x for x in (yerlesim, ilce, il) if x]
         if not adaylar:
             continue
+        # Sadece "il" (ör. "Muğla") eldeyse bu, aynı gün aynı ilde birden
+        # fazla ayrı yangın çıkabileceği için zayıf bir sinyal — bu yüzden
+        # ilçe/yerleşim bilgisi yoksa tarih toleransını 2 günden 1 güne
+        # düşürüp, yanlışlıkla başka bir ilçedeki yangınla eşleşme
+        # olasılığını azaltıyoruz.
+        sadece_il_var = not yerlesim and not ilce
+        tolerans = 1 if sadece_il_var else DOGRULAMA_GUN_TOLERANSI
         tespit_tarihi = _haber_tarihini_coz(k.get("eklenme", ""))
 
         for h, haber_tarihi, metin in on_hesap:
             if tespit_tarihi and haber_tarihi:
-                if abs((haber_tarihi - tespit_tarihi).days) > DOGRULAMA_GUN_TOLERANSI:
+                if abs((haber_tarihi - tespit_tarihi).days) > tolerans:
                     continue
-            eslesen_yer = next((a for a in adaylar if tr_kucuk(a) in metin), None)
+            eslesen_yer = next((a for a in adaylar if _tam_kelime_gecer_mi(a, metin)), None)
             if not eslesen_yer:
                 continue
             k["dogrulanmis"] = True
