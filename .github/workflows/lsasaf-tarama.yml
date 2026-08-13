@@ -17,26 +17,28 @@ jobs:
           python-version: '3.11'
 
       - name: Bağımlılıkları Kur
-        run: pip install netCDF4 requests
+        run: pip install h5py numpy requests
 
       - name: LSA SAF Erken Sinyal Taramasını Çalıştır
         env:
-          LSASAF_USER: ${{ secrets.LSASAF_USER }}
-          LSASAF_PASS: ${{ secrets.LSASAF_PASS }}
-        run: python lsasaf_erken_sinyal.py
+          LSA_USER: ${{ secrets.LSASAF_USER }}
+          LSA_PASS: ${{ secrets.LSASAF_PASS }}
+        run: python lsasaf_frp_tarama.py
 
       - name: Sonucu Plesk'e Gönder
         env:
           UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
           SITE_URL: ${{ secrets.SITE_URL }}
         run: |
-          if [ -f "lsasaf_erken_sinyal.json" ]; then
-            HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
-              -X POST "${SITE_URL}/upload.php" \
-              -F "secret=${UPLOAD_SECRET}" \
-              -F "klasor=kok" \
-              -F "dosya=@lsasaf_erken_sinyal.json")
-            echo "HTTP $HTTP_CODE -> lsasaf_erken_sinyal.json -> $(cat /tmp/response.txt)"
-          else
-            echo "uyari: lsasaf_erken_sinyal.json uretilmedi, atlaniyor"
-          fi
+          for dosya in lsasaf_frp.json lsasaf_frp.geojson; do
+            if [ -f "$dosya" ]; then
+              HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+                -X POST "${SITE_URL}/upload.php" \
+                -F "secret=${UPLOAD_SECRET}" \
+                -F "klasor=kok" \
+                -F "dosya=@${dosya}")
+              echo "HTTP $HTTP_CODE -> $dosya -> $(cat /tmp/response.txt)"
+            else
+              echo "uyari: $dosya uretilmedi, atlaniyor"
+            fi
+          done
