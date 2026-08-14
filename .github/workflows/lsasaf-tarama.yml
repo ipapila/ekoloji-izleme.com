@@ -21,8 +21,8 @@ jobs:
 
       - name: LSA SAF Erken Sinyal Taramasını Çalıştır
         env:
-          LSASAF_USER: ${{ secrets.LSASAF_USER }}
-          LSASAF_PASS: ${{ secrets.LSASAF_PASS }}
+          LSASAF_USER: ${{ secrets.LSA_USER }}
+          LSASAF_PASS: ${{ secrets.LSA_PASS }}
         run: python lsasaf_erken_sinyal.py
 
       - name: Sonucu Plesk'e Gönder
