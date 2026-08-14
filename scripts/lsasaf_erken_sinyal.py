@@ -16,6 +16,19 @@ HER 15 DAKİKADA BİR tarar. Buna karşılık:
   - Yanlış pozitif oranı VIIRS/MODIS'ten belirgin şekilde yüksek (güneş
     yansıması, sıcak çıplak toprak, endüstriyel ısı kaynakları vb.)
 
+NOT (gerçek bir örnek ürün dosyası incelenerek doğrulandı — 2026-08-14):
+  - Kullanıcının hesabı MSG-IODC (Indian Ocean Data Coverage) ürününe
+    erişiyor, "standart" 0 derece MSG diskine değil. IODC'nin alt uydu
+    noktası ~45.5E — yani Türkiye'ye 0 derece diskten çok daha yakın bir
+    açı. Bu bir sorun değil, muhtemelen VIIRS/MODIS'e göre bile daha iyi
+    bir piksel görüş açısı (view zenith angle) sağlıyor.
+  - Dosya formatı NetCDF DEĞİL, çıplak HDF5. h5py kullanılıyor.
+  - Tüm sayısal alanlar (LATITUDE, LONGITUDE, FRP, FIRE_CONFIDENCE, ...)
+    ölçekli tam sayı: gerçek_değer = ham/SCALING_FACTOR + OFFSET. Bu
+    dönüşüm atlanırsa değerler 10-100x yanlış çıkar.
+  - Ürün zamanı dosya adından değil, HDF5 root attribute'u
+    IMAGE_ACQUISITION_TIME'dan (YYYYMMDDHHMMSS) okunuyor.
+
 Bu yüzden bu ürünün çıktısı asla "doğrulanmış yangın" olarak sunulmaz.
 Ayrı bir "erken sinyal" katmanı olarak, firms_yangin.json'dan bağımsız
 bir dosyaya (lsasaf_erken_sinyal.json) yazılır ve haritada farklı, açıkça
@@ -31,19 +44,19 @@ KURULUM (yapılması gerekenler — bunlar olmadan script çalışmaz)
    ürününün NRT (near-real-time) veri servisi erişim bilgilerini alın:
    https://lsa-saf.eumetsat.int/en/data/data-access/
    Tercih edilen erişim noktası: https://datalsasaf.lsasvcs.ipma.pt/
-3) ÖNEMLİ / DOĞRULANMASI GEREKEN KISIM:
-   Aşağıdaki BASE_URL ve DOSYA_YOLU_SABLONU değerleri, LSA SAF'ın genel
-   dokümantasyonundan çıkarılmış bir İSKELETTİR — ben bu ortamda
-   eumetsat.int / ipma.pt alan adlarına ağ erişimine sahip değilim,
-   bu yüzden gerçek dizin yapısını / dosya adlandırma kalıbını canlı
-   olarak doğrulayamadım. Hesabınızla https://datalsasaf.lsasvcs.ipma.pt/
-   adresine tarayıcıdan girip MSG FRP-PIXEL ürününün NRT klasöründeki
-   gerçek dosya/URL kalıbını görüp burayı güncellememiz gerekiyor.
-   (Muhtemel biçim: tarih/saat bazlı bir NetCDF dosyası, ör.
-   .../NETCDF/.../S_NWC_MSG.../FRP-PIXEL_...-YYYYMMDDHHMM.nc gibi —
-   ama bunu varsayım olarak koddan çıkarmadım, siz teyit edin.)
+3) DOSYA ADI KALIBI DOĞRULANDI, DİZİN YOLU HALA DOĞRULANMALI:
+   Elimizdeki gerçek örnek dosyanın adı şuydu:
+     HDF5_LSASAF_MSG-IODC_FRP-PIXEL-ListProduct_IODC-Disk_202608141100
+   yani kalıp:
+     HDF5_LSASAF_{UYDU}-{BOLGE}_FRP-PIXEL-ListProduct_{BOLGE}-Disk_{YYYYMMDDHHMM}
+   (uzantısız — .nc/.h5 yok). Bu bir tam URL değil, sadece dosya adı;
+   datalsasaf.lsasvcs.ipma.pt üzerindeki klasör yapısını (tarih bazlı
+   alt klasörler var mı, "IODC" ayrı bir üst klasör mü) hesap panelinden
+   veya tarayıcıdan teyit etmemiz hâlâ gerekiyor. Aşağıdaki BASE_URL/yol
+   bu yüzden hâlâ İSKELET durumda — sadece dosya adı kısmı gerçek kalıba
+   göre güncellendi.
 4) GitHub Actions secrets'a ekleyin: LSASAF_USER, LSASAF_PASS
-5) requirements: pip install netCDF4 requests
+5) requirements: pip install h5py requests
 
 KULLANIM
 --------
@@ -84,14 +97,18 @@ def _en_son_urun_url_adaylari():
     dakika = (simdi.minute // 15) * 15
     taban_zaman = simdi.replace(minute=dakika, second=0, microsecond=0)
 
+    # Dosya adı kalıbı gerçek bir örnek üzerinden doğrulandı:
+    #   HDF5_LSASAF_MSG-IODC_FRP-PIXEL-ListProduct_IODC-Disk_202608141100
+    # TODO: Aşağıdaki dizin yolu (PRODUCTS/MSG-IODC/FRP-PIXEL/...) hâlâ
+    # İSKELET — sadece dosya adı kısmı gerçek kalıba göre. Hesap panelinden
+    # gerçek klasör yapısı teyit edilince burası güncellenmeli.
     adaylar = []
     for geri in range(0, 3):  # son 3 tarama zamanını dene (45 dk'ya kadar)
         zaman = taban_zaman - timedelta(minutes=15 * geri)
         damga = zaman.strftime("%Y%m%d%H%M")
-        # TODO: gerçek yol/dosya adı kalıbı ile değiştirilecek
+        dosya_adi = f"HDF5_LSASAF_MSG-IODC_FRP-PIXEL-ListProduct_IODC-Disk_{damga}"
         adaylar.append(
-            f"{BASE_URL}/PRODUCTS/MSG/FRP-PIXEL/NETCDF/{zaman:%Y}/{zaman:%m}/{zaman:%d}/"
-            f"S_NWC_FRP-PIXEL_MSG_MSG-N-VISIR_{damga}.nc"
+            f"{BASE_URL}/PRODUCTS/MSG-IODC/FRP-PIXEL/{zaman:%Y}/{zaman:%m}/{zaman:%d}/{dosya_adi}"
         )
     return adaylar
 
@@ -104,10 +121,9 @@ TURKIYE_BBOX = (25.5, 35.5, 45.0, 42.5)  # west, south, east, north
 # artırır, üstünü yükseltmek küçük/başlangıç yangınlarını kaçırır.
 FRP_MIN_ESIK = 20
 
-# Bu ürün coğrafi sabit uydudan geldiği için VIIRS/MODIS gibi ayrı
-# "confidence" kodu vermiyor; onun yerine kalite bayrağı (quality flag)
-# kullanılıyor. TODO: gerçek NetCDF değişken adı/değer aralığı, ürün
-# kılavuzuyla (LSA SAF Product User Manual) teyit edilmeli.
+# Bu ürünün kendi güven skoru FIRE_CONFIDENCE alanında (0-1 arası, ölçekli
+# tam sayı olarak saklı) — gerçek örnek dosyada teyit edildi. VIIRS/MODIS'in
+# 0-100 confidence koduyla birebir aynı ölçek değil, karıştırmayın.
 
 
 def uid():
@@ -138,51 +154,90 @@ def urun_indir():
     return None, None
 
 
-def netcdf_ayristir(ham_bytes):
-    """FRP-PIXEL List Product'ı ayrıştırır. TODO: gerçek değişken adları
-    (lat/lon/frp/quality alanlarının tam isimleri) ürün kılavuzundan
-    teyit edilecek — burada yaygın kullanılan isimlendirme varsayıldı."""
+def _olcekli_oku(ds, ad):
+    """LSA SAF HDF5 List Product'larında her alan ham tam sayı olarak
+    saklanır; gerçek değer = ham/SCALING_FACTOR + OFFSET. MISSING_VALUE
+    ile işaretli hücreler NaN'a çevrilir. Gerçek bir örnek dosya üzerinde
+    doğrulandı (LATITUDE/LONGITUDE/FRP/FIRE_CONFIDENCE hepsi bu kalıpta)."""
+    dset = ds[ad]
+    ham = dset[:].astype("float64")
+    sf = float(dset.attrs.get("SCALING_FACTOR", 1.0))
+    off = float(dset.attrs.get("OFFSET", 0.0))
+    eksik = dset.attrs.get("MISSING_VALUE", None)
+    deger = ham / sf + off
+    if eksik is not None:
+        deger[ham == float(eksik)] = float("nan")
+    return deger
+
+
+def hdf5_ayristir(ham_bytes):
+    """FRP-PIXEL List Product'ı (HDF5, NetCDF DEĞİL) ayrıştırır. Değişken
+    adları ve ölçekleme, gerçek bir örnek dosya (MSG-IODC,
+    IMAGE_ACQUISITION_TIME=20260814110000) üzerinde doğrulandı."""
     import io
-    import netCDF4  # pip install netCDF4
+    import h5py  # pip install h5py
 
     noktalar = []
-    with netCDF4.Dataset("memory", memory=ham_bytes) as ds:
-        # TODO: değişken adlarını gerçek dosyada `print(ds.variables.keys())`
-        # ile doğrulayıp burayı güncelleyin.
-        lat = ds.variables.get("FIRE_LATITUDE") or ds.variables.get("latitude")
-        lon = ds.variables.get("FIRE_LONGITUDE") or ds.variables.get("longitude")
-        frp = ds.variables.get("FRP") or ds.variables.get("frp")
-        if lat is None or lon is None or frp is None:
-            print("  ⚠ Beklenen değişkenler bulunamadı — NetCDF şemasını kontrol edin:")
-            print("    Mevcut değişkenler:", list(ds.variables.keys()))
-            return noktalar
+    with h5py.File(io.BytesIO(ham_bytes), "r") as ds:
+        gerekli = ("LATITUDE", "LONGITUDE", "FRP", "FIRE_CONFIDENCE")
+        eksikler = [ad for ad in gerekli if ad not in ds]
+        if eksikler:
+            print(f"  ⚠ Beklenen değişkenler bulunamadı: {eksikler}")
+            print("    Mevcut değişkenler:", list(ds.keys()))
+            return noktalar, None
 
-        lat_v, lon_v, frp_v = lat[:], lon[:], frp[:]
+        lat_v = _olcekli_oku(ds, "LATITUDE")
+        lon_v = _olcekli_oku(ds, "LONGITUDE")
+        frp_v = _olcekli_oku(ds, "FRP")
+        conf_v = _olcekli_oku(ds, "FIRE_CONFIDENCE")
+        acqtime_v = ds["ACQTIME"][:] if "ACQTIME" in ds else None
+
         for i in range(len(lat_v)):
-            try:
-                la, lo, f = float(lat_v[i]), float(lon_v[i]), float(frp_v[i])
-            except (TypeError, ValueError):
+            la, lo, f, c = lat_v[i], lon_v[i], frp_v[i], conf_v[i]
+            if any(math.isnan(x) for x in (la, lo, f, c)):
                 continue
             if f < FRP_MIN_ESIK:
                 continue
             if not _icinde_mi(la, lo, TURKIYE_BBOX):
                 continue
-            noktalar.append({"lat": la, "lng": lo, "frp": f})
-    return noktalar
+            nokta = {"lat": la, "lng": lo, "frp": f, "guven": c}
+            if acqtime_v is not None:
+                # ACQTIME piksel bazlı tarama saati, HHMM tam sayı (ör. 1111 -> 11:11)
+                nokta["acqtime_hhmm"] = f"{int(acqtime_v[i]):04d}"
+            noktalar.append(nokta)
+
+        # Ürün zamanı: root attribute IMAGE_ACQUISITION_TIME'dan (YYYYMMDDHHMMSS)
+        urun_zamani = None
+        ham_zaman = ds.attrs.get("IMAGE_ACQUISITION_TIME")
+        if ham_zaman is not None:
+            if isinstance(ham_zaman, bytes):
+                ham_zaman = ham_zaman.decode()
+            try:
+                urun_zamani = datetime.strptime(ham_zaman, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+            except ValueError:
+                pass
+
+    return noktalar, urun_zamani
 
 
 def kayitlara_donustur(noktalar, urun_zamani):
     kayitlar = []
     for n in noktalar:
+        tespit_saati = urun_zamani.strftime("%H:%M")
+        if n.get("acqtime_hhmm"):
+            # piksel bazlı gerçek tarama saati mevcutsa onu tercih et
+            hhmm = n["acqtime_hhmm"]
+            tespit_saati = f"{hhmm[:2]}:{hhmm[2:]}"
         kayitlar.append({
             "id": uid(),
             "tip": "Erken Sinyal (Doğrulanmadı)",
-            "ad": "Olası Isı Anomalisi (MSG/SEVIRI - erken sinyal)",
+            "ad": "Olası Isı Anomalisi (MSG-IODC/SEVIRI - erken sinyal)",
             "koordinatlar": {"lat": n["lat"], "lng": n["lng"]},
-            "frp": n["frp"],
+            "frp": round(n["frp"], 1),
+            "guven": round(n["guven"], 2),
             "eklenme": urun_zamani.strftime("%Y-%m-%d"),
-            "tespit_saati_utc": urun_zamani.strftime("%H:%M"),
-            "kaynak": "EUMETSAT LSA SAF (Meteosat SEVIRI FRP-PIXEL)",
+            "tespit_saati_utc": tespit_saati,
+            "kaynak": "EUMETSAT LSA SAF (Meteosat SEVIRI FRP-PIXEL, MSG-IODC)",
             "kaynak_link": "https://lsa-saf.eumetsat.int/en/data/products/fire-products/",
             "aciklama": (
                 "Bu, coğrafi sabit uydudan (Meteosat) gelen KABA ÇÖZÜNÜRLÜKLÜ "
@@ -206,8 +261,10 @@ def main():
         print("Son 45 dakikada indirilebilir ürün bulunamadı, boş çıktı yazılıyor.")
         noktalar, urun_zamani = [], datetime.now(timezone.utc)
     else:
-        noktalar = netcdf_ayristir(ham)
-        urun_zamani = datetime.now(timezone.utc)  # TODO: dosya adından gerçek tarama zamanını çıkar
+        noktalar, urun_zamani = hdf5_ayristir(ham)
+        if urun_zamani is None:
+            # header'da IMAGE_ACQUISITION_TIME bulunamadıysa yedek olarak şimdiki zaman
+            urun_zamani = datetime.now(timezone.utc)
 
     kayitlar = kayitlara_donustur(noktalar, urun_zamani)
     print(f"{len(kayitlar)} erken sinyal noktası (Türkiye, FRP>={FRP_MIN_ESIK}MW).")
