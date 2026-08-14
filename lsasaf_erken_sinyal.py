@@ -55,7 +55,7 @@ KURULUM (yapılması gerekenler — bunlar olmadan script çalışmaz)
    veya tarayıcıdan teyit etmemiz hâlâ gerekiyor. Aşağıdaki BASE_URL/yol
    bu yüzden hâlâ İSKELET durumda — sadece dosya adı kısmı gerçek kalıba
    göre güncellendi.
-4) GitHub Actions secrets'a ekleyin: LSASAF_USER, LSASAF_PASS
+4) GitHub Actions secrets'a ekleyin: LSA_USER, LSA_PASS
 5) requirements: pip install h5py requests
 
 KULLANIM
