@@ -21,16 +21,16 @@ jobs:
 
       - name: LSA SAF Erken Sinyal Taramasını Çalıştır
         env:
-          LSA_USER: ${{ secrets.LSA_USER }}
-          LSA_PASS: ${{ secrets.LSA_PASS }}
-        run: python lsasaf_frp_tarama.py
+          LSASAF_USER: ${{ secrets.LSASAF_USER }}
+          LSASAF_PASS: ${{ secrets.LSASAF_PASS }}
+        run: python lsasaf_erken_sinyal.py
 
       - name: Sonucu Plesk'e Gönder
         env:
           UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
           SITE_URL: ${{ secrets.SITE_URL }}
         run: |
-          for dosya in lsasaf_frp.json lsasaf_frp.geojson; do
+          for dosya in lsasaf_erken_sinyal.json; do
             if [ -f "$dosya" ]; then
               HTTP_CODE=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
                 -X POST "${SITE_URL}/upload.php" \
