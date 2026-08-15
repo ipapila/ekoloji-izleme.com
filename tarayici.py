@@ -70,6 +70,12 @@ RSS_KAYNAKLARI = [
      "kaynak": "Google News", "kategori": "Çevre İhlali", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=orman+tahribi+maden+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "Orman / Maden", "genel": False, "hedef": "haberler", "dil": "tr"},
+    # Geniş "orman yangını" sorgusu — satır ~755'teki ekosistem/bitki sorgusu
+    # AND mantığıyla daraltılmış olduğu için spot yangın haberlerini
+    # (DHA, yerel/ulusal basın vb.) kaçırıyordu; bu sorgu ek terim
+    # şartı olmadan doğrudan "orman yangını" ifadesini arar.
+    {"url": "https://news.google.com/rss/search?q=%22orman+yangını%22+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
+     "kaynak": "Google News", "kategori": "Orman Yangını", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=HES+RES+baraj+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
      "kaynak": "Google News", "kategori": "HES / RES / Baraj", "genel": False, "hedef": "haberler", "dil": "tr"},
     {"url": "https://news.google.com/rss/search?q=acele+kamulaştırma+çevre+Türkiye&hl=tr&gl=TR&ceid=TR:tr",
