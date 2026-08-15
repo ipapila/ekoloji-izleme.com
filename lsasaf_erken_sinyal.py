@@ -44,17 +44,17 @@ KURULUM (yapılması gerekenler — bunlar olmadan script çalışmaz)
    ürününün NRT (near-real-time) veri servisi erişim bilgilerini alın:
    https://lsa-saf.eumetsat.int/en/data/data-access/
    Tercih edilen erişim noktası: https://datalsasaf.lsasvcs.ipma.pt/
-3) DOSYA ADI KALIBI DOĞRULANDI, DİZİN YOLU HALA DOĞRULANMALI:
-   Elimizdeki gerçek örnek dosyanın adı şuydu:
-     HDF5_LSASAF_MSG-IODC_FRP-PIXEL-ListProduct_IODC-Disk_202608141100
-   yani kalıp:
-     HDF5_LSASAF_{UYDU}-{BOLGE}_FRP-PIXEL-ListProduct_{BOLGE}-Disk_{YYYYMMDDHHMM}
-   (uzantısız — .nc/.h5 yok). Bu bir tam URL değil, sadece dosya adı;
-   datalsasaf.lsasvcs.ipma.pt üzerindeki klasör yapısını (tarih bazlı
-   alt klasörler var mı, "IODC" ayrı bir üst klasör mü) hesap panelinden
-   veya tarayıcıdan teyit etmemiz hâlâ gerekiyor. Aşağıdaki BASE_URL/yol
-   bu yüzden hâlâ İSKELET durumda — sadece dosya adı kısmı gerçek kalıba
-   göre güncellendi.
+3) DOSYA ADI VE DİZİN YOLU DOĞRULANDI (2026-08-15, açık dizin listelemesi
+   üzerinden — kimlik doğrulama olmadan h5ai index sayfaları görüntülendi):
+     https://datalsasaf.lsasvcs.ipma.pt/PRODUCTS/MSG-IODC/FRP-PIXEL/HDF5/{YYYY}/{MM}/{DD}/{dosya_adi}
+   yani daha önce eksik olan bir "/HDF5/" klasör katmanı var — kalıp:
+     PRODUCTS/{UYDU}-{BOLGE}/FRP-PIXEL/HDF5/{YYYY}/{MM}/{DD}/
+       HDF5_LSASAF_{UYDU}-{BOLGE}_FRP-PIXEL-ListProduct_{BOLGE}-Disk_{YYYYMMDDHHMM}
+   (uzantısız — .nc/.h5 yok). Her iki ürün de (ListProduct VE
+   QualityProduct) aynı klasörde, 15 dakikada bir üretiliyor;
+   ListProduct gerçek piksel/FRP verisini içeriyor. 13 Ağustos 2026
+   yangını sırasındaki (18:00-19:15 yerel saat aralığı) dosyaların hepsi
+   bu dizinde mevcut olduğu doğrulandı.
 4) GitHub Actions secrets'a ekleyin: LSA_USER, LSA_PASS
 5) requirements: pip install h5py requests
 
@@ -97,18 +97,17 @@ def _en_son_urun_url_adaylari():
     dakika = (simdi.minute // 15) * 15
     taban_zaman = simdi.replace(minute=dakika, second=0, microsecond=0)
 
-    # Dosya adı kalıbı gerçek bir örnek üzerinden doğrulandı:
-    #   HDF5_LSASAF_MSG-IODC_FRP-PIXEL-ListProduct_IODC-Disk_202608141100
-    # TODO: Aşağıdaki dizin yolu (PRODUCTS/MSG-IODC/FRP-PIXEL/...) hâlâ
-    # İSKELET — sadece dosya adı kısmı gerçek kalıba göre. Hesap panelinden
-    # gerçek klasör yapısı teyit edilince burası güncellenmeli.
+    # Dosya adı VE dizin yolu açık dizin listelemesi üzerinden doğrulandı
+    # (2026-08-15): .../FRP-PIXEL/HDF5/{YYYY}/{MM}/{DD}/{dosya_adi}
+    # Not: klasör adı büyük harfle "HDF5" — Windows'ta önemsiz ama bu
+    # sunucu case-sensitive olabileceğinden aynen korunuyor.
     adaylar = []
     for geri in range(0, 3):  # son 3 tarama zamanını dene (45 dk'ya kadar)
         zaman = taban_zaman - timedelta(minutes=15 * geri)
         damga = zaman.strftime("%Y%m%d%H%M")
         dosya_adi = f"HDF5_LSASAF_MSG-IODC_FRP-PIXEL-ListProduct_IODC-Disk_{damga}"
         adaylar.append(
-            f"{BASE_URL}/PRODUCTS/MSG-IODC/FRP-PIXEL/{zaman:%Y}/{zaman:%m}/{zaman:%d}/{dosya_adi}"
+            f"{BASE_URL}/PRODUCTS/MSG-IODC/FRP-PIXEL/HDF5/{zaman:%Y}/{zaman:%m}/{zaman:%d}/{dosya_adi}"
         )
     return adaylar
 
