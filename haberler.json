@@ -1,15 +1,199 @@
 {
   "meta": {
-    "guncelleme": "2026-08-21T15:25:09.365195+03:00",
+    "guncelleme": "2026-08-21T21:23:37.980678+03:00",
     "toplam_haber": 2000,
-    "toplam_rapor": 456,
-    "toplam_makale": 884,
-    "toplam_ulus": 936,
-    "toplam_ekosistem": 814,
-    "dagitici_calistirma": "2026-08-21T12:29:42.347499+00:00",
-    "aylik_budama": "2026-08-21T12:29:42.637780+00:00"
+    "toplam_rapor": 457,
+    "toplam_makale": 897,
+    "toplam_ulus": 944,
+    "toplam_ekosistem": 816,
+    "dagitici_calistirma": "2026-08-21T18:28:01.100758+00:00",
+    "aylik_budama": "2026-08-21T18:28:01.394779+00:00"
   },
   "haberler": [
+    {
+      "id": "d12b47d5ed96",
+      "baslik": "Maden ocağında göçük: 1 işçiden kötü haber - Ege'de Sonsöz",
+      "ozet": "Maden ocağında göçük: 1 işçiden kötü haber Ege'de Sonsöz",
+      "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE91NmZQaFBJMG5acTVqWHlIVEtfUmtnMl9Pc1VkOUtxc2xnU0FYM0JsNUxVUDRDbEc4NTRmSWlWSTVMVkRWUmdlRjkwaHBSOU5Eck9DdmhWUlplOFBWeTNpaVgzNFZKLU5QMl9YdTlTMWY4d3cwTndNOU1FU0Jfd9IBgwFBVV95cUxNQTlyaml3dUg2R3JUdlFEaDRLdEV6a3FHV2pzSVlxSmVlTW9MbDgwY0lPbFJrR1N4cEJKVUI5WTQ5cURNOXdqaE5qY3BZVFA0M01iWTBoMzFDVEItYnRJREFPVlBQU2pLTUw5TERGZUowdkVjTTdKUWc5TWp2c3RNUnFjOA?oc=5",
+      "tarih": "2026-08-21T21:11:00+03:00",
+      "kaynak": "Ege'de Sonsöz (İzmir)",
+      "kategori": "Yerel / Ege",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.938348+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "5b6a7fcad24b",
+      "baslik": "Ankara'da maden ocağında göçük: Çok sayıda ölü ve yaralı var",
+      "ozet": "Ankara'da maden ocağında göçük: Çok sayıda ölü ve yaralı var",
+      "url": "https://www.sozcu.com.tr/ankara-maden-ocagi-gocuk-21-agustos-2026-p351548",
+      "tarih": "2026-08-21T21:09:12+03:00",
+      "kaynak": "Sözcü",
+      "kategori": "Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yaban Hayatı İzleme"
+      ],
+      "haber_kategorisi": "Yaban Hayatı",
+      "tarama_tarihi": "2026-08-21T18:23:37.932478+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "3306246d90cc",
+      "baslik": "Ankara'da maden ocağında göçük: Bir işçi öldü, 12 işçi yaralı - Diken",
+      "ozet": "Ankara'da maden ocağında göçük: Bir işçi öldü, 12 işçi yaralı Diken",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRXZ5MG1aVGVDWmY3UkhoQmlORVhBdzNZTnRQaW5LX3QtenVWOFNmUzJNMS04c3EwTkV2VzV4ek1WdXRURXY0NlpyZ25TSDlKWkxMOU9mM0l5QU8zWmU2LXRJMVlPQ3pBWlptUzRPUktUcTkyOUFTdkp6TExqZnk2MGx1SmNKcS1mbC1DbQ?oc=5",
+      "tarih": "2026-08-21T20:30:51+03:00",
+      "kaynak": "Diken",
+      "kategori": "Gündem / Çevre",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Ekolojik İhlal"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.928213+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "e87e1b2346a1",
+      "baslik": "Malatya Çevre Yolu'nda Konteynerler Kaldırılıyor - Haberler",
+      "ozet": "Malatya Çevre Yolu'nda Konteynerler Kaldırılıyor Haberler",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPZVRGTDdjS2liTU45eE1HUXM0bjYtZnRrRlNnTF9tZExUNUJ0T0dreFM4dnhrNkdma2hqekpsdGdZSEg2MzN0SDFqMzJZSWlxUENBSkxVMTM5RkJBYUJTYmhkUmlXN2FHNFRhZVBpV3VPaUN1MDdKMVZURkZvZU5aVHhwZVJOZkNQUDFpaEtDZXlPU1pOTDZCetIBkwFBVV95cUxNeFcwY2tnTU4tTllySnZnMXp3WUt0OWU4QlN1RDFEWUR4Ykt6X001dTl5OEZ0ak9HNWdqVlIyeURkWmJvdjI3dG12TnppbTdEN0xJcDlFXzlRT2FKREEyVnhlUkRjWXozcHpUaEVrRHhrOVpSOUgtcHRZMUxMOVVKdzdQMFNrVVpJV2RaQXA0RFNsQW8?oc=5",
+      "tarih": "2026-08-21T20:27:16+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Doğu Anadolu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.949338+00:00",
+      "_haber_kat": "Kategorisiz"
+    },
+    {
+      "id": "170a4b861167",
+      "baslik": "Ankara'da maden ocağında göçük: 1 işçi öldü, 8 işçi yaralandı - Artı Gerçek",
+      "ozet": "Ankara'da maden ocağında göçük: 1 işçi öldü, 8 işçi yaralandı Artı Gerçek",
+      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQVnBaUGdGRlY1WTczNzFEbnp2N0lyWGR6NF9GV2E5OUR4MUVBdXNzVGpzNktSZ2FvREZmUjBwcUJSbS0yeW1zTEE3YXFCWGdtQUZIeFMyTzlOaWRCN2Q2bE1URjFBVXRkUWNfX3c3bVNGQktjNjFMcE5qZG9HRlFDQmRvRWdXTUdyQklDQS0yRklLeEpZbVVDbTRR?oc=5",
+      "tarih": "2026-08-21T20:08:33+03:00",
+      "kaynak": "Artı Gerçek",
+      "kategori": "Gündem / Ekoloji",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Ekolojik İhlal"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.927469+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "aa3e531c7032",
+      "baslik": "Ankara'da maden ocağında göçük: 1 işçi öldü, 8 işçi yaralandı! - T24",
+      "ozet": "Ankara'da maden ocağında göçük: 1 işçi öldü, 8 işçi yaralandı! T24",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOV1pDVkFqcEhfd3h1LUNoeEZvWlhfUkxteTF2VXdpZHdrNHpfbHdmNGNGTWdNTzE2QXczV1luUVlWRkZjZmtCSVk5aDVKeW5KS1ZfQzVLeERXR0xhMkU3MWJ3NmM3QUVJeDAteURPRFc4dEV0QlYwWldCNjZWWTJPTmpjeTF0TjQtWVlNODlldTF1ME9wMkxn?oc=5",
+      "tarih": "2026-08-21T19:45:00+03:00",
+      "kaynak": "T24",
+      "kategori": "Gündem / Çevre",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Ekolojik İhlal"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.929399+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "869b8f6f73b5",
+      "baslik": "Bağımsız Maden-İş Sendikası Örgütlenme Uzmanı Başaran Aksu'dan basına tepki: Siz nasıl habercilik yapıyorsunuz, haklar ödendi mi, sordunuz mu direnen işçilere? - T24",
+      "ozet": "Bağımsız Maden-İş Sendikası Örgütlenme Uzmanı Başaran Aksu'dan basına tepki: Siz nasıl habercilik yapıyorsunuz, haklar ödendi mi, sordunuz mu direnen işçilere? T24",
+      "url": "https://news.google.com/rss/articles/CBMilwJBVV95cUxNLUdBNXVlUGwxX1JrOVdhVzFjQVdjX1V3TDYtVWVaeTNQaDB6cnczY1o0T2lxTEVrMTRBOVI1QnBFQTVnUERnVERtV2FFeDR0RzVRNEgwUV9kODVGZjV4eGlSZmpncG5kYWo2WmxYdWhXeTJsT0V5VTVuNHdSWXJLYXJfZ2RyZFVEZUVndFVGd1RnVlkzaVFnaGNmTGlsNnVrZTFRWjlvdmtRTUlRWU13Q3hmSnlVUWtJMnJsUkktOUNhSGxWVkdGZlV6UEVucWFPZjI5VUVMVngySlN6eDVHbWl1U2R3THl0d1lHWFp2aUN6T1A4cVpQSHFlNUFYNlZEMjZ0WU03MU1Wc09SNHRzRVNhRnkwLU0?oc=5",
+      "tarih": "2026-08-21T19:11:00+03:00",
+      "kaynak": "T24",
+      "kategori": "Gündem / Çevre",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Ekolojik İhlal"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.929438+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "149236761b31",
+      "baslik": "Quang Ngai, Van Roi Geçidi çevresinde yeni bir çevre yolu açtı ve yeni heyelan bölgelerindeki sorunları çözmeye devam ediyor. - Vietnam.vn",
+      "ozet": "Quang Ngai, Van Roi Geçidi çevresinde yeni bir çevre yolu açtı ve yeni heyelan bölgelerindeki sorunları çözmeye devam ediyor. Vietnam.vn",
+      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNck5tMy1iZGlDTFg5VEttSi1JSi16bS05dnIyeXh6ZGw4SWV2Yk44QzEtM1AzNEN2MDMtNzNVdFhTMmtNRU5oeFVzTk9vaGNMZGRsRGcwTi1kS3llSXhDMWRYZ3J5NHVHZnlOdG9yb1dhcUhkYXVmUFBmcFpjS2NSU2xaa1E1TGE3cHl1dDlITDNqZW4xUnZjc3AwdFB1NEhvNFREVnlWZw?oc=5",
+      "tarih": "2026-08-21T17:11:03+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Doğu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.947360+00:00",
+      "_haber_kat": "Kategorisiz"
+    },
+    {
+      "id": "c6d99dbb0e9d",
+      "baslik": "KKTC’de orman yangını - Cumhuriyet",
+      "ozet": "KKTC’de orman yangını Cumhuriyet",
+      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTFBNSDFwZjBBaS00a0lSYlZrcUFrVV9FbWV6RHYyRDJacG5LeGtfR0lKTXlxWWRJSmNTbkNLMjlUZWJ2eGFSbWdjVG1Cb0ZseHZvdUtTLWxmOVNNNFhlTkpkeFFLaHZBNkd1c1ZuV0pFQklZRDg?oc=5",
+      "tarih": "2026-08-21T15:53:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Orman Yangını",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Bitki Örtüsü & Habitatlar"
+      ],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-08-21T18:23:37.933293+00:00",
+      "_haber_kat": "İklim ve Afet"
+    },
+    {
+      "id": "a7af9a5cbb83",
+      "baslik": "'Çevre dostu' belgesi aldı, sahili çöplüğe çevirdi - Halk TV",
+      "ozet": "'Çevre dostu' belgesi aldı, sahili çöplüğe çevirdi Halk TV",
+      "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSklrd25IVklGZXpjdzBIZXdyaWZJQloybFAwOFJacXhPVW1VYnpCYWRhZFlEM2lkQUtrbTVGQ3NyRm5keW5EZGVBQjJhRy1TWnFNaUprYXZnd0gwM21MQ25qWThoQzZrWTJac2J4MTBxNGJzTUNPcElCTnNfem5KenFPOWxDOEVwZ2RlX0NYTQ?oc=5",
+      "tarih": "2026-08-21T15:24:28+03:00",
+      "kaynak": "Google News",
+      "kategori": "Çevre İhlali",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Ekolojik İhlal"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.930409+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
     {
       "id": "a1367160e961",
       "baslik": "Muğla ve Diyarbakır’da orman yangını! Bir il söndürüldü, bir ilde müdahale sürüyor - Türkiye Gazetesi",
@@ -28,6 +212,74 @@
       "haber_kategorisi": "Orman ve Doğa",
       "tarama_tarihi": "2026-08-21T12:25:09.317715+00:00",
       "_haber_kat": "İklim ve Afet"
+    },
+    {
+      "id": "89e82bb24a55",
+      "baslik": "Beyşehir Gölü için arıtma hamlesi - KONYA OLAY",
+      "ozet": "Beyşehir Gölü için arıtma hamlesi KONYA OLAY",
+      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBacEFORnZXMlpIcFFRNk5qN3hvSXVTWlBGQlNGZ045YlU5MWVOaGVoR0xhWE0xLTltcjMzRE1aVGhsbURQOEItQm9lU1B2aS1yYWt6R19aU05fcktjVE1oRFhtaldoTHI0RUFsLWZGTlVzMURR0gGCAUFVX3lxTE5vYWYxY2VEOEVTZGc0eVQ1dzNnY2thUGNDakpPYlJqRXM4T194cF9sd3drLXhHQXhScTBIU0Z1SWU2MDBDaXRjT3ZidDNZNkNkOHQzTFBmLWxpbXNySVc0NzZzY2pjcmRDd19pSUZaRWlYTW1wUU1Vc1lpMXJIZmxaX0E?oc=5",
+      "tarih": "2026-08-21T14:41:26+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / İç Anadolu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Su ve Kıyı",
+      "tarama_tarihi": "2026-08-21T18:23:37.946109+00:00",
+      "_haber_kat": "Kategorisiz"
+    },
+    {
+      "id": "d5b2482f67ad",
+      "baslik": "Kırklareli Barajı'na 450 Bin Yavru Sazan Bırakıldı - Haberler",
+      "ozet": "Kırklareli Barajı'na 450 Bin Yavru Sazan Bırakıldı Haberler",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOWjY0Yk9BM0xlT1BVLWxzTHc1UkVaNklObTlJT1luU2oyQUxfV1RSZFV0eVJVOXNabnktb2d5M3VfWHQtemN5c05TZmlCN1BjT3JyZkpVdU5OV3BWODkwUmFxRXY0YzdQUUdWVXdyVGFHcFRaWkZSYmFrSGI3Y3YwdUk2Q1VTQU9zdnF2QTl5cHNzYUhrWFdLTFU3M0XSAZwBQVVfeXFMTlo2NGJPQTNMZU9QVS1sc0x3NVJFWjZJTm05SU9ZblNqMkFMX1dUUmRVdHlSVTlzWm55LW9neTN1X1h0LXpjeXNOU2ZpQjdQY09ycmZKVXVOTldwVjg5MFJhcUV2NGM3UFFHVlV3clRhR3BUWlpGUmJha0hiN2N2MHVJNkNVU0FPc3ZxdkE5eXBzc2FIa1hXS0xVNzNF?oc=5",
+      "tarih": "2026-08-21T14:38:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Trakya",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.945660+00:00",
+      "_haber_kat": "Kategorisiz"
+    },
+    {
+      "id": "33d89f5aceeb",
+      "baslik": "Antalya ve Yalova'da Arıtılmamış Atık Su Deşarjına Yaklaşık 8 Milyon Lira Ceza - Başak Gazetesi",
+      "ozet": "Antalya ve Yalova'da Arıtılmamış Atık Su Deşarjına Yaklaşık 8 Milyon Lira Ceza Başak Gazetesi",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPMUxodU5qaGVMdm5sdTNVNEJYWGpEWUxjTTZjdUFpWFVzUlFTNlBJNzZKT3dRWkpOdVl4ekYzVFNWMUtkb2Iya0pKa2ZwcTZmbXQ1bm1lY2toT1d2WlEyQ1h5ZDlLTUJZZE5VaE9FLVpqc2dSNnJOYWQ2T0xOdGpKbmVFRVE2YlZMaEJCNjJmWkFYSER2WURGYTdONzB1RUJBd2NvNXJqeFEtaXFmekEtcm5MZEtHcEHSAbwBQVVfeXFMUGVZWm9CR0NDMzRDODdTanRyeUJPYVAwUDR4aUxCNS1VMHltNGxqN0N4dy00Q2JJYXAxUkp5V3QxNnNOVktSLVA1Mlh6bXFmT2VOU0N4STY3aEFEeVlnaVB2M1BtdXVBeHp1M1hZVDdiVnBjdXBMQ2JXY2lWOGVKcS1ORzZIczVwTENoc0R2UFdUZTg2bVRXQm1qLS1JN1VtVkpERVl5ZXBNc3RfSXhzMmtzV05IcGwxYVBLSU8?oc=5",
+      "tarih": "2026-08-21T14:27:11+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Antalya",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.941799+00:00",
+      "_haber_kat": "Kategorisiz"
+    },
+    {
+      "id": "d34675c946d0",
+      "baslik": "Atık suyu denize deşarj eden belediyelere 7,9 milyon lira ceza - Memurlar.Net",
+      "ozet": "Atık suyu denize deşarj eden belediyelere 7,9 milyon lira ceza Memurlar.Net",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQdnYtNWxud1ZvLXU2RUVCcTJsQzlPZEFrQnJCMmtHbmdsWHpCVTZQN0pNb0dQLUhCcDktSDQ2TElOSVJ2QXk3YWRSa25jdkVlWnZQQ1VPWnBmQk15M0EyaFdCb3V2NTdMUWZNRE5UeXFnLUMxOWN3Q2hsanoxbzViVkR6VkxiMUhWX2NvRm9ITDY5dmJCU0VseThYUmNyeDAwOEZUbEpHMnM3bUlVQmFObzhn0gGyAUFVX3lxTFB2di01bG53Vm8tdTZFRUJxMmxDOU9kQWtCckIya0duZ2xYekJVNlA3Sk1vR1AtSEJwOS1INDZMSU5JUnZBeTdhZFJrbmN2RWVadlBDVU9acGZCTXkzQTJoV0JvdXY1N0xRZk1ETlR5cWctQzE5Y3dDaGxqejFvNWJWRHpWTGIxSFZfY29Gb0hMNjl2YkJTRWx5OFhSY3J4MDA4RlRsSkcyczdtSVVCYU5vOGc?oc=5",
+      "tarih": "2026-08-21T13:58:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Antalya",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Su ve Kıyı",
+      "tarama_tarihi": "2026-08-21T18:23:37.942225+00:00",
+      "_haber_kat": "Kategorisiz"
     },
     {
       "id": "1ffda61e56e7",
@@ -62,6 +314,25 @@
       "haber_kategorisi": "Orman ve Doğa",
       "tarama_tarihi": "2026-08-21T12:25:09.323257+00:00",
       "_haber_kat": "Orman ve Doğa"
+    },
+    {
+      "id": "83a31f55a756",
+      "baslik": "Muğla’da orman yangını kontrol altına alındı - Haberci TV",
+      "ozet": "Muğla’da orman yangını kontrol altına alındı Haberci TV",
+      "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE03ZTNLQWYtTFJkRjNpRGtwZEFQUmZua09ZWXA4RGNObjJSQ3FRMWVtbms0amp2THRKbFJsUVNTM3BzR2tfYzI4T29kejNxd1JfRUY4Wjl2bmU2TXRKamxTX0xEbTJTN0gtRWl2TkhyUk9aUnFYZ0QyTjhrZWXSAYIBQVVfeXFMTndwdGZHdjhzWmNWbmtGS3VyYVdYQlJVdmg5TndGaVJmc3lUS0lQVnNFX3FzWGtPVWZQOTA5NnJwWWV2cGptMlBMUGRwd3Zyai1lWkoybDFQT2JMbF9rdjlfWHJ5aVQ3alM4UEZLWE9RMm1EZ291M3QwbnEtYjdIYVFSUQ?oc=5",
+      "tarih": "2026-08-21T13:34:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Orman Yangını",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Bitki Örtüsü & Habitatlar"
+      ],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-08-21T18:23:37.933322+00:00",
+      "_haber_kat": "İklim ve Afet"
     },
     {
       "id": "e5d84826f7a4",
@@ -122,6 +393,25 @@
       "_haber_kat": "Yaban Hayatı"
     },
     {
+      "id": "cecfc19bc2ef",
+      "baslik": "Muğla Menteşe'deki orman yangını kontrol altında - NTV Haber",
+      "ozet": "Muğla Menteşe'deki orman yangını kontrol altında NTV Haber",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOQkR4cC00ZndwSHFObjBOa3ZWRlZuckRzUG11VjNTMXJKam9PRkV6Z0R3MjJuLVR6M2pJeFhLOVVFa0s5Zi1VUEVxMDR3N0Nyay1TODE0ZEl1X2pQQWdiUVY2LU9oOW9BcDQxbTNYYU1RLUpsX1BfSHozOFJ6Tm5XTXNtbU04Y2YtUDdiVl90aWtwdG1xbVRscdIBngFBVV95cUxNeUlTcEhsS1JUaGZZaDV4MXBHbWJENU9KcmpmX0ZuUjUxSzFrTEc5OENjVnpFWTFYMnhoN1FGWWZtbzJsVnZ4Ui1HS004MnR4bkp3bkJOTDkzazBWLXdfaTJ2LXFCOUxOeTFhbHB5Y2hkZlZOckQ5MTRWQzRfdzdZd0NhSU9jVUJuU1hkZzBwX3Y3VUxsSzF5RndDS2ZJdw?oc=5",
+      "tarih": "2026-08-21T12:53:10+03:00",
+      "kaynak": "Google News",
+      "kategori": "Orman Yangını",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Bitki Örtüsü & Habitatlar"
+      ],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-08-21T18:23:37.933267+00:00",
+      "_haber_kat": "İklim ve Afet"
+    },
+    {
       "id": "394319e4db61",
       "baslik": "Muğla’da 3 Çocuk Babası Maden İşçisi Vardiya Çıkışı Hayatını Kaybetti - Bodrum Olay Gazetesi",
       "ozet": "Muğla’da 3 Çocuk Babası Maden İşçisi Vardiya Çıkışı Hayatını Kaybetti Bodrum Olay Gazetesi",
@@ -137,6 +427,25 @@
       "haber_kategorisi": "Maden ve Enerji",
       "tarama_tarihi": "2026-08-21T12:25:09.326815+00:00",
       "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "ce386b31da17",
+      "baslik": "Menteşe’de çıkan orman yangını kontrol altına alındı - Cumhuriyet",
+      "ozet": "Menteşe’de çıkan orman yangını kontrol altına alındı Cumhuriyet",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOc3B3OEVLYWszSEktSGxkdWY0QndWdXhaRGhHOTFGMFRnUmZLWGlCNWk5Y0pmXzFEaVhjUHd1QVAxWFp4bVhzaU5fQ2ZOdkVPZWZIX2tnR3ZpTzY2blFob0NvRHZQelVaTHFXTHIwdnpSZ1dkMHhoSk5SSzFhdUpsdEdZM01WVi1iUWZ0d1k5XzA0eHZqMWpsTkstQUxmd1U?oc=5",
+      "tarih": "2026-08-21T12:13:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Orman Yangını",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Bitki Örtüsü & Habitatlar"
+      ],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-08-21T18:23:37.933506+00:00",
+      "_haber_kat": "İklim ve Afet"
     },
     {
       "id": "22cbc65a39ba",
@@ -2131,6 +2440,25 @@
       "_haber_kat": "İklim ve Afet"
     },
     {
+      "id": "11f39ddbda7e",
+      "baslik": "Kastamonu Taşköprü'de Meydana Gelen Orman Yangını Kontrol Altına Alındı - Mersin Haber",
+      "ozet": "Kastamonu Taşköprü'de Meydana Gelen Orman Yangını Kontrol Altına Alındı Mersin Haber",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQbUQ0OUJYMDZtT2RQYkdYLWptSXJLbUpuS0NsVEdsS2VwUnZiMThaNl9fYk5XcXBZZy0telkxSTI1cUhZN2E3QzVtTENDalRwRGdGQzNKLTZ3V1VxeG5GRnpYTDZMZXVPbllUNjl5S3ZjbHl0ZUFkeF9RV2tSQ1Q2OHdnNnlERXB6T3R3SHU1dURyOXFDbGxhdGw3ZHFMZ3ljUV9qZU0zNmZ1dXdjSThSZNIBV0FVX3lxTE5WSF9BX0JwV2RLc0k4MmNBazd2VFRDajZtSzVLNjJHX0JIR1VlWmFkeUR2RTlFVFRsQ2hyTXEzaDFFWGVpdjdSN1JaMVNPb1JMTExQOFZuYw?oc=5",
+      "tarih": "2026-08-19T19:43:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Batı Karadeniz",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Bitki Örtüsü & Habitatlar"
+      ],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-08-21T18:23:37.938928+00:00",
+      "_haber_kat": "İklim ve Afet"
+    },
+    {
       "id": "3595b6102ad2",
       "baslik": "Taşköprü'de Orman Yangını Kontrol Altına Alındı - Haberler",
       "ozet": "Taşköprü'de Orman Yangını Kontrol Altına Alındı Haberler",
@@ -2698,6 +3026,23 @@
       "etiketler": [],
       "haber_kategorisi": "Orman ve Doğa",
       "tarama_tarihi": "2026-08-19T12:21:40.497731+00:00",
+      "_haber_kat": "Orman ve Doğa"
+    },
+    {
+      "id": "67b4cad1b227",
+      "baslik": "Sinop Orman Bölge Müdürlüğü, Orman Zararlılarıyla Mücadelede Biyolojik Yöntemler Kullanıyor - Mersin Haber",
+      "ozet": "Sinop Orman Bölge Müdürlüğü, Orman Zararlılarıyla Mücadelede Biyolojik Yöntemler Kullanıyor Mersin Haber",
+      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNdkNReXhfN0tZeHQtZWlWbEhlcXNaRzZxeUNtWmZzMHQycFZpSXQyUER0bU1YRUJvNFZUWENHVWg5RUJGZDc0LWJocXg2SmxCWDN1R19YMDdGV01UbXFIU3ZTWW1ZbnpSdk5mLTg0ajJLU2hWNWpfQUhHVUpfdkJhT1RqLVTSAVdBVV95cUxNZUEyLXR0RkVwY0o2d2MwMXZudXNnbW5zWTN4MFRvdE5BTzBJWktDcmlkYWdUUTVCVUsxV2x5X1QwYkRKSVgwRU5zMTNwWEpIRHQxY0swUkk?oc=5",
+      "tarih": "2026-08-19T12:05:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Batı Karadeniz",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-08-21T18:23:37.938769+00:00",
       "_haber_kat": "Orman ve Doğa"
     },
     {
@@ -16488,6 +16833,23 @@
       "_haber_kat": "İklim ve Afet"
     },
     {
+      "id": "b692ca3b831c",
+      "baslik": "Çevre yolunda trafik kazası! - Açıksöz Gazetesi",
+      "ozet": "Çevre yolunda trafik kazası! Açıksöz Gazetesi",
+      "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9ObGp1N1VHMElZdjk4QnFQSjE5b1BuV0ZWMzFmcE9QaUdEeDFWRkRqTkZRZk1wTlBMQU53NVdOU3ppQndSSHZEYUh4dVNlN1J3aXZTOFZaZ211LTIxd1VlR2szZ1VpRWFWLXV2ZHZzU05rc0pTemMxZdIBfkFVX3lxTE5UdFloRlI5bnJaanc1RTlLRzR0R3ZXTUVnZk5UMUlrRTNUMTBZeUNaTWxGdUJrYmJQRFBQa3RUcFlzNnh0Y3ZRVHFpQUdGbmg5bEdwNW52V0NQbG5TOEpvNEJpWlFDMTBPc0pVS2dvbE4zQkxKa2ZCRVJvSnZFZw?oc=5",
+      "tarih": "2026-08-06T17:51:00+03:00",
+      "kaynak": "Açıksöz (Kastamonu)",
+      "kategori": "Yerel / Karadeniz",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Su ve Kıyı",
+      "tarama_tarihi": "2026-08-21T18:23:37.935973+00:00",
+      "_haber_kat": "Kategorisiz"
+    },
+    {
       "id": "89509e29f61f",
       "baslik": "27 yıl önce silahlı saldırıda hayatın kaybeden madenci başkanı anıldı - T24",
       "ozet": "27 yıl önce silahlı saldırıda hayatın kaybeden madenci başkanı anıldı T24",
@@ -25336,6 +25698,26 @@
       "_haber_kat": "Orman ve Doğa"
     },
     {
+      "id": "de2313c2cc70",
+      "baslik": "Ormanlarımız alev alev: Peki ya bu tablo normal mi? Uzman isim cevapladı - Hürriyet",
+      "ozet": "Ormanlarımız alev alev: Peki ya bu tablo normal mi? Uzman isim cevapladı Hürriyet",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNcVEyRFh3ZmFtS0hnejVuYl9aTlR2SmJpUG5paVN2WGt2NHUwSW5MQ3NKWGlwQU1UaVN0RjUtSTdZTDBxVWFXOUgzWkVKVGYwdVNZYzV2TVdreVJqdGEzR3pVT0E5NE1HeEwyMmNOZlRySG9UWUgzSFh0MmVJSWt4eFhhcFNQcUhpd0Q0X3UzbTRuSTVGZWZubUVSNkZHbndQWS1BajEwQVZnaWN5VTNtUGl1cw?oc=5",
+      "tarih": "2026-07-30T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Orman / Maden",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Orman Alanı",
+        "Maden Ocağı"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.928633+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
       "id": "1cbd4623d59f",
       "baslik": "Orman yangını hangi illerde devam ediyor? Orman yangınları söndürüldü mü son durum nedir? - Cumhuriyet",
       "ozet": "Orman yangını hangi illerde devam ediyor? Orman yangınları söndürüldü mü son durum nedir? Cumhuriyet",
@@ -27179,6 +27561,23 @@
       ],
       "haber_kategorisi": "Hukuki Süreçler",
       "tarama_tarihi": "2026-08-21T00:37:29.505520+00:00",
+      "_haber_kat": "Maden ve Enerji"
+    },
+    {
+      "id": "4cb378ed13a9",
+      "baslik": "İliç maden faciasında Kanadalı şirket yöneticisi dahil 2 sanık tekrar tutuklandı - Kısa Dalga",
+      "ozet": "İliç maden faciasında Kanadalı şirket yöneticisi dahil 2 sanık tekrar tutuklandı Kısa Dalga",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNajdlMHIwRHZzYmR2YnFUQjJxRHZXR0prTTdITlhCT0kxYVpIN2MzM2VWMVhYU0hhWW9yNVpUclBYNTJITjNkVFVZOGNMZjdKcFNHVjR4MjBJSV9VbUsxTTV2NkxtZV9yS3lKVDBGYUxiaUhpLWhpY0U5NUtxSTlRZzd1OHBHeVBoM1NBTUlBeE9TdTBCRDRNWVZnR2h4QXV3TFRsa05LbGQxODJNOFQyN1JpNHVLTGdLbFZPdTJzRdIBxAFBVV95cUxQUTZXZ0dOS3JwbmRJWHdGZVVwT2JWenpMMDVRcHJ0R1RXa2MyY0pwV1BVckY1VTd2M2gxT0FYek8wTzNDc29Gc1R4M2lxQWdVUldZWjB0OS1CbVlWRFNDcGdxWkpJR3RFTmRVeXdkRHZMU1B5dEpBeVZRekx3aG5DQTBuMDdIRkgtNmdpTjRvY01VRUJ2YUYtak9zZzZ3QllIRzVuOTZ5UlFLVzAxZ2ZuM3NwQU5McDJXSjIxcnUyeVp4VjZT?oc=5",
+      "tarih": "2026-07-27T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Yerel / Kuzeydoğu",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.948194+00:00",
       "_haber_kat": "Maden ve Enerji"
     },
     {
@@ -35491,365 +35890,6 @@
       "haber_kategorisi": "Maden ve Enerji",
       "tarama_tarihi": "2026-07-19T19:05:46.835718+00:00",
       "_haber_kat": "İklim ve Afet"
-    },
-    {
-      "id": "09d2a8900752",
-      "baslik": "Çevre örgütleri, Afşin-Elbistan Termik Santrali önünden seslendi: Türkiye, yeni kömürlü santral yapmamalı, kömürün vadesi doldu - Son Dakika Türkiye Haberleri - Cumhuriyet",
-      "ozet": "Çevre örgütleri, Afşin-Elbistan Termik Santrali önünden seslendi: Türkiye, yeni kömürlü santral yapmamalı, kömürün vadesi doldu - Son Dakika Türkiye Haberleri Cumhuriyet",
-      "url": "https://news.google.com/rss/articles/CBMi_gFBVV95cUxQakRYZWFVZ3VSRWNYUFZlUWdnSmVtalRXeW96R2JKMkcxd2d5ZHA2T0w5Y3JhVDlLMV9DNFpRWXZpbUhkaXZEWDZvUS1obVpxZWFDQjJkQTBUMXNVSEpJS2pjcFE4dl8wcE5sSmFOYnltMi1JTHhHNVMtRUxsVHJxaGN4TDlnejZKa05aeXktdHVfUWdGRG5NWmFIOVM3ZUQ5Uy12RHdPbzNkcXM5WGswNEpIOXY3SUZfdDFFMzR0bkZrUmk2eWd4VS1FWkhxMDJiRWY1d3RyVGNsWW01NElJbERNS2tmOGFVbGNwYUlkZlUzTjJiYVc0QkNNMUotdw?oc=5",
-      "tarih": "2026-04-27T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Çevre İhlali",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Ekolojik İhlal"
-      ],
-      "haber_kategorisi": "Maden ve Enerji",
-      "tarama_tarihi": "2026-07-13T09:26:35.305406+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "62c1c99ca7da",
-      "baslik": "İstanbul’daki orman yangınında 14 hektarlık alan zarar gördü - politikahaber.com",
-      "ozet": "İstanbul’daki orman yangınında 14 hektarlık alan zarar gördü politikahaber.com",
-      "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxNXy03V3F1ZnhXVjl6R2RMSm9nVkozeVFiSWFuMWhiaWZJdHpxTWpORnFZZVFXN1MxVF9lNzZSaGh3YVN3R0UxT05nbjhIUWdkLVA0QS1VWjBLVXJMb2t5MFNHekVyWDhDRzRDOWJyNVhzcUNfSEFTc1hmQmlCdHh1VEY4eEY5Z0dfTXNkSjY2Yw?oc=5",
-      "tarih": "2026-04-27T09:31:41+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / İstanbul",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Bitki Örtüsü & Habitatlar"
-      ],
-      "haber_kategorisi": "Orman ve Doğa",
-      "tarama_tarihi": "2026-08-18T00:36:54.111552+00:00",
-      "_haber_kat": "İklim ve Afet"
-    },
-    {
-      "id": "f960f845010a",
-      "baslik": "Resul Emrah Şahan'dan madencilere destek mesajı: Dört duvar arasında olsam da yanınızdayım - Gazete Pencere",
-      "ozet": "Resul Emrah Şahan'dan madencilere destek mesajı: Dört duvar arasında olsam da yanınızdayım Gazete Pencere",
-      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNZFNOelh4WjA3SGZ2YjVrWjJKS1JUNTZNcHZuU3lvVG42TU02bmZPUm1tSTU4LWdRWndsTXRNaThFWExFM0JGNnJGa2p1LW12elpscEpZZUs5bGQ1eHhDWWtfdmlIbFdSRlpVMHFweUpfc2FYNWlrNzVFMENPcFp2OXd1ekJsMkh4V1EzYWdWbXQ3RnBjTV9POUdZMjQ3amt0aEtPOEFTZ0RGMWxXUFkweFhTa2h4bjhiSnJaRmZn?oc=5",
-      "tarih": "2026-04-26T10:00:00+03:00",
-      "kaynak": "Gazete Pencere",
-      "kategori": "Çevre / Gündem",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Ekolojik İhlal",
-        "Yaban Hayatı İzleme"
-      ],
-      "haber_kategorisi": "Yaban Hayatı",
-      "tarama_tarihi": "2026-08-15T12:15:36.577110+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "73ff6c42fa32",
-      "baslik": "Mustafa Ülküdür’den Yatağan Orman İşletmesi’ne Ziyaret - muglagazetesi.com.tr",
-      "ozet": "Mustafa Ülküdür’den Yatağan Orman İşletmesi’ne Ziyaret muglagazetesi.com.tr",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPQXZkV3B3UF9fSFdDTWZRTUpRRjNyWDViemsxYldOZnlnaHFQZHZjbm9VRHpzeFhlTjExZ3Q4R28zM1Q3MDVyQ3NoTFZpSm5oY1JkeURNQkFpVDg4UFp2RUp2VXJacVhzMWZ3eTdyNW0zdDY2S1M3ejFjMFplbkc4M3R4WW9BTDhHZmFmcVFsTGN4ZGFPTlRKcllfQXNFVFI5U2JQY3RxM25tRTF6Xzh2Qg?oc=5",
-      "tarih": "2026-04-26T10:00:00+03:00",
-      "kaynak": "Muğla Gazetesi",
-      "kategori": "Yerel / Muğla",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Orman ve Doğa",
-      "tarama_tarihi": "2026-07-30T14:02:26.613372+00:00",
-      "_haber_kat": "Orman ve Doğa"
-    },
-    {
-      "id": "708b43119e90",
-      "baslik": "Çevre örgütlerinde AB’ye tepki: Aliağa’daki sertifikaları iptal edin! - denizhaber.net",
-      "ozet": "Çevre örgütlerinde AB’ye tepki: Aliağa’daki sertifikaları iptal edin! denizhaber.net",
-      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPWG5OOWg0dDFOckdXRktrVVVELUkycjhYaHV2Y0FsWDBRWmNxWU9kY2FqejFxSU10anBIaHVzVTVxY0xHTXB2cTItNXYydk1LSEtkWk03V2tIdUZjVEZ5OXR4YVVKdG1KSEU2a091TDlOblVUSWpoWXdPTDJQZEZfNC1iZ05nb3N3Rk9EdF9kME8yNXJXSHdqNE4wOUUzdW5ORk5oT1dsVWVnUTd0UkE?oc=5",
-      "tarih": "2026-04-25T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / İzmir",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [],
-      "haber_kategorisi": "Hukuki Süreçler",
-      "tarama_tarihi": "2026-08-10T18:41:30.509931+00:00",
-      "_haber_kat": "Kategorisiz"
-    },
-    {
-      "id": "fda6a00389ae",
-      "baslik": "ÇEVRE ÖRGÜTLERİNDE AB’YE TEPKİ: ALİAĞA’DAKİ SERTİFİKALARI İPTAL EDİN! - denizhaber.net",
-      "ozet": "ÇEVRE ÖRGÜTLERİNDE AB’YE TEPKİ: ALİAĞA’DAKİ SERTİFİKALARI İPTAL EDİN! denizhaber.net",
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBsNk1lLWlRZmh6UnRfMzJRd21ESkNnV1p4VzJ5M3ptT3FQU2Q5aGVmcnRNVnpMMlVWZ0JEZENpUzlxTVhDQzI2ek5yX2lQM0RRTVhELTBfSVdHMk5XRHd4ZVB6UHE2WWhQ?oc=5",
-      "tarih": "2026-04-25T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / İzmir",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Su ve Kıyı",
-      "tarama_tarihi": "2026-08-05T13:42:15.188392+00:00",
-      "_haber_kat": "Kategorisiz"
-    },
-    {
-      "id": "830547b77222",
-      "baslik": "Menteşe’de Madenciler İçin Dayanışma Çağrısı: “Bu Mücadele Onur Mücadelesidir” - Muğla Gazetesi",
-      "ozet": "Menteşe’de Madenciler İçin Dayanışma Çağrısı: “Bu Mücadele Onur Mücadelesidir” Muğla Gazetesi",
-      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNRXBiWC1zNzBNcjZUbE90dTVHVkRZMHRuQzhVdS1PTXRNZ0NjYk9URjNTeTRBaG90M09ya2hrNFFMYkNXb2xndFFOSWtPektmcWxHdHQ4R3F2VWdRT2U0TVEwSmU4OHE4akdxaVg4MzQ0UEhQR0Y4RUd4NVlkSTgzc1hQX3dKc0V5T3IyRUNmU1ZlU3ROcHNYQUlHamh2S0dGZnJiNkJNS21lQUNhRk9hdGtwMW41MnFK?oc=5",
-      "tarih": "2026-04-25T10:00:00+03:00",
-      "kaynak": "Muğla Gazetesi",
-      "kategori": "Yerel / Muğla",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Maden ve Enerji",
-      "tarama_tarihi": "2026-08-02T01:43:32.363607+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "e443be1958b9",
-      "baslik": "EGEÇEP'ten kritik uyarı: Aliağa'daki kirlilik ekosistemde yıkıcı etki yaratacak derecede - izgazete.net",
-      "ozet": "EGEÇEP'ten kritik uyarı: Aliağa'daki kirlilik ekosistemde yıkıcı etki yaratacak derecede izgazete.net",
-      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNejRnQnlzYlNoUUJ6djhUUWxsdFFjbE5KeEYzLWo0MzcxQ2ZKOVpEVE8ybEd0NDl3T3UzYmJ4QXJnUG5DdTUwclJ5czdDWC04NGdJeWpVY2UzZk5xTjdERnlMRGt0MjdNTGh2TndiZEJQVzlLOGhJUm9Vb1VQVVFvRGF1WFhiSHIwd1hwYmlqckx1d3RrMTZkNnEyQ1g0X1c5NXdROHMyMFY0QnFxWDlN?oc=5",
-      "tarih": "2026-04-25T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / İzmir",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Su ve Kıyı",
-      "tarama_tarihi": "2026-07-29T19:15:35.800897+00:00",
-      "_haber_kat": "Su ve Kıyı"
-    },
-    {
-      "id": "0611c83a4e95",
-      "baslik": "Elazığ Maden Gezin Köyü'nde 3.292 m² tarla mahkemeden satılıktır (Çoklu satış) - ilan.gov.tr",
-      "ozet": "Elazığ Maden Gezin Köyü'nde 3.292 m² tarla mahkemeden satılıktır (Çoklu satış) ilan.gov.tr",
-      "url": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxPdEM1emlRNkUzcV96LXFEeXZpT2JJby1fTDlZQk9CNHZtTXB0d3hnYzhzYjdzNEY1Ri1FU3J3b2ktZ0dWX0FQZ04xUXNvYUtvVnoxZGNiOC1VUVByLVFUSTlKYUQ4OGxVRzRlRjR5NnJ6RlJJU3lJWk1FWUJiSHF3YXdLWVBKUUIwQkxra29rdHI4MG4tS2tRVE9RZlB4dHB3QzNYMlUxV2xYVzNUWk90ZjVYTHd0WjJjRm40RExjRUV4aGtIb2dPcjRpcTAyODY0XzZRWjZwN1NDNHdQQzJwR2lZdC1fMHBBNERnWHRtcVY?oc=5",
-      "tarih": "2026-04-24T11:17:56+03:00",
-      "kaynak": "İlan Portalı",
-      "kategori": "İhale / Enerji",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "GES",
-        "RES",
-        "HES",
-        "Çiftçi & Köylü Sorunları"
-      ],
-      "haber_kategorisi": "Maden ve Enerji",
-      "tarama_tarihi": "2026-07-28T08:40:15.324928+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "daf824e099ae",
-      "baslik": "Kastamonu Orman Bölge'de 'yangınla mücadele' eğitimi verildi - Açıksöz Gazetesi",
-      "ozet": "Kastamonu Orman Bölge'de 'yangınla mücadele' eğitimi verildi Açıksöz Gazetesi",
-      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNUXZMMWJJT2VUQ3ZBeHIzeXJNZ1ZqdXFoRU53eTZ5RU1vaXhJY0dyYnZVcF9tOVlCOW5SUTNpcDY2akZXZmNWRUI2U1dpVkdVRy1nZGVjQnQzTmhwdVNYUFNpampUdHVpMlFkSGJZRE5LdGtBbldibi1IOWVleXUtYTNsT2RSN3Jlc3NHR0steEdhUUxRX0pXWjBzYk9paXpP0gGmAUFVX3lxTE84alkwdHY0X1hibFpsSkxwT01HUFlhTTh3eWR1cnpfeFMzSjJybnJZNGt1NXFvc2ptZEZ5ZGV3U1hmSGpoVTQ4ZUFmSi1LY2VJR2pqMC05bmFSZjBVR0RibDgxVzhZUGUtb2M5aU9BWm5UQ0NhMjlYR0xhbHEyRDhRQUl0SUhYVHRSZnc4Z240dnZ3Q3lCZWNPQmhVMmpSSTRibE82Unc?oc=5",
-      "tarih": "2026-04-24T10:00:00+03:00",
-      "kaynak": "Açıksöz (Kastamonu)",
-      "kategori": "Yerel / Karadeniz",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "İklim ve Afet",
-      "tarama_tarihi": "2026-08-18T12:21:53.992571+00:00",
-      "_haber_kat": "İklim ve Afet"
-    },
-    {
-      "id": "64bc6374a60b",
-      "baslik": "“Sistematik çevre ihlali endişe veriyor” - haberekspres.com.tr",
-      "ozet": "“Sistematik çevre ihlali endişe veriyor” haberekspres.com.tr",
-      "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFB0bFpySWdKMUNJcHZMMnoyRkN5aDN4ZXBLaFRaLVVMc3IxV0Z5WklJSWlTZl9uTGt4NXNwZVRxX1V0aExEUnNVSmdxemU0SkUzNG5rLVY2TFZIbVBfR3c0ZGFJVUVsVm5iVzVYUFhZb0xVeXlmd1htV0hn0gF_QVVfeXFMTXp6eUlQNklYRjVTdW84YjFtRDlXU0piVFRnaVNNVktZWVNvQk05XzU0YlV6N2E1SzZMdTBPdVFJZmo3cGhzbUVCTjhuU2hBUGFINFBoVFZqSGUwVi02R2E5MFZLWG5nT2VjQXBUb1dES2ctcjFTWWJJVkZtZmxhQQ?oc=5",
-      "tarih": "2026-04-24T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Çevre İhlali",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "rapor",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Ekolojik İhlal",
-        "Rapor & Analiz"
-      ],
-      "haber_kategorisi": "",
-      "tarama_tarihi": "2026-08-01T08:35:21.431675+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "3c1b4c9d65a6",
-      "baslik": "Giresun Sekü’deki maden direnişi 18. gününde - Bianet",
-      "ozet": "Giresun Sekü’deki maden direnişi 18. gününde Bianet",
-      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE03ekNmSGtEMjBJYnV4SlRvcGJoTFlYTmxMN2NTbWtUY2hKT2d0dHRORVczY21pN2FIRWxSWEFVeXprZjZYTGVMc0d3ZVNha0UzdUtxQ0N6OWxBbFpOc1EzdmZiWXFDVkRIdGJ0NElfd3RhanVuSWo0UXFzVUVZQ1k?oc=5",
-      "tarih": "2026-04-22T10:00:00+03:00",
-      "kaynak": "Bianet Bölgesel",
-      "kategori": "Yerel / Çevre",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": "Direniş & Eylem",
-      "etiketler": [],
-      "haber_kategorisi": "Direniş ve Eylemler",
-      "tarama_tarihi": "2026-08-18T00:36:54.117386+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "51c1667be10c",
-      "baslik": "Trump’tan İran’a suçlama: Ateşkesi defalarca ihlal etti - Cumhuriyet",
-      "ozet": "Trump’tan İran’a suçlama: Ateşkesi defalarca ihlal etti Cumhuriyet",
-      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPQ0pGTURHUk5ld08tWG5WVlVCSnhJOUNMNHVOb0psNzRtVFFVTzllc0ozR3hGMDI0MDlWY3dSUWt3RlBGMEV4LWUzNzF1QURHb1ZtVGRtdUYyTTRGUlJvdnZQVDVUM1N6aVRXTmZKTF9hYkhVZFFUQWVnSDZxTDRHMjhRMEJXMlYySld2RDFCWGZ3MkhqOF91OTVnT2h5MjA?oc=5",
-      "tarih": "2026-04-21T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / Ege",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "",
-      "tarama_tarihi": "2026-08-11T06:45:40.907419+00:00",
-      "_haber_kat": "Kategorisiz"
-    },
-    {
-      "id": "314454a0488c",
-      "baslik": "Kastamonu Orman Bölge'de hüzünlü tören... - aciksoz.com.tr",
-      "ozet": "Kastamonu Orman Bölge'de hüzünlü tören... aciksoz.com.tr",
-      "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQZzlsT2Z4ellEdEdXY2xFUnJKcHAyNGdpMF8tX0hCSmktNFRPOTFCc3l2bHMyODZ1dHRjX2VfZlpZUlg0V2RHVlJzMFUxSEZsWjRCTXA1bUdoa2ZMVGR1cDhmWUdEY2VuY29MOFlmWU93a3hlSXhvd0FERU1zQWQydm9kbjQtUdIBiwFBVV95cUxNVndSLTBsZVcyWU5uV3VGanRxVldxU1d3Y2k3aHlxM2gxem5pVkwyc3hqNWN3amNVS0NZQ0ctdS1pMGkzem1mMnVYTmliajd0Nnl1Mmd1ZTR6TDRvLW5VRmNxb0FBTHF2QXdDdnJNRjFIU2tDZ082emlJeW9XbHVxY1NtVk85Z2ZYNlV3?oc=5",
-      "tarih": "2026-04-21T10:00:00+03:00",
-      "kaynak": "Açıksöz (Kastamonu)",
-      "kategori": "Yerel / Karadeniz",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Orman ve Doğa",
-      "tarama_tarihi": "2026-08-03T01:52:34.343818+00:00",
-      "_haber_kat": "Orman ve Doğa"
-    },
-    {
-      "id": "77bc3bdbbf34",
-      "baslik": "Türkiye’de boru hatlarıyla taşınan ham petrol miktarı martta geriledi - Sabah",
-      "ozet": "Türkiye’de boru hatlarıyla taşınan ham petrol miktarı martta geriledi Sabah",
-      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOUXhpdTZKWlZqN3VlM3YwdFEyVW9CWWRxQWlfRDNmU2hfa0c1bDVxcElsRloxcy1UTEo0cldoZEZUV3R3OEdIaDZDakRBWnJlU3ljemJUb1lqbHZUS0Etbk9mUDlZZ1BoeUNJaGtXSkctWjFVV0VnOE5WN21UU3pnMURDejJpekkwQThubkhoWExEMHZXcDUwa293OU5zeEhGUWl1cHJyMW5nSDNhVmfSAbABQVVfeXFMUHJKc2hGYTFMRkZDb2xVYmM0dk5JVEI5Q3JXaDV6S1gzbWpTR25ZTDF6YUZpYkJ4emlhMG10WTBLZHJQczFwVnA0c0FDTXdfeVliVkwzRlVXSlc0ZkhiWmFkREItZDlBV1A0b0l4ZzZWaHQ3MmdKZVkwYllla2F0RVZLaUNKZWZXaXpSb2RnZW1NTlBzQ2hQanJHUHcwbTRNYjFDNU94WnRIOFpXZmNyRFI?oc=5",
-      "tarih": "2026-04-21T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / Güneydoğu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "",
-      "tarama_tarihi": "2026-07-24T13:44:39.789915+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "b2a96fe74d25",
-      "baslik": "Trabzon Araklı’ya Maden Çıkarması: CHP Heyeti Sahaya İniyor, Bölge Hattı 3 Günde Tamamlanacak - Gunebakış",
-      "ozet": "Trabzon Araklı’ya Maden Çıkarması: CHP Heyeti Sahaya İniyor, Bölge Hattı 3 Günde Tamamlanacak Gunebakış",
-      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQVFFuOHhtQzhyMlJ3TWJxcWV3MDVKa01KM3ZvTUZ3NTY5Mmc0OHFEUnFtMFQ4cURPTDNSU01iaVNfNnFYNUUtenNod1R1anIxZzhxUDB3X0RvWUx4NHdmdFJibXVCdWxGQVp5eUY4QWxSRFVzOEJSMkxlZTFFallWS0s0bXNwdnRDamxYT3hWVGpfc3dqMEpmSmw2bW55bHR5eDFSTnJNZHBBTVpEemR5WmFKakhTSk4ycTB6TVItOW9WajVxMDU00gHMAUFVX3lxTFA5WWduN2RKYnFNMm9tSnBRalpsTjNFblNqTDZ4NGZlTUxTRjNDcnJtZDhPNlFtMEFPVXl1WEdUMVRqbzNtZkJGbjVxMldmTi1SeVBFM25FTDBZUUpVellFTkRWX0NPenNsNmwwOVl1NHhuaXdaTFBNZEliNnY2MWJob3dMbGV6dmVtT2xyczk2ek1UaVR4d082cnZtRFluMkV1ay1BU1hIR0RNd3BxaHJ4cElHYm5uMHVHNEI4eVNMamxHTjh0NVV3SWptYg?oc=5",
-      "tarih": "2026-04-21T10:00:00+03:00",
-      "kaynak": "Günebakış (Trabzon)",
-      "kategori": "Yerel / Karadeniz",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Maden ve Enerji",
-      "tarama_tarihi": "2026-07-21T08:28:08.938053+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "239af9cb9530",
-      "baslik": "Maden için kararı 12 Mayıs’ta bilirkişi heyeti verecek! - gunebakis.com.tr",
-      "ozet": "Maden için kararı 12 Mayıs’ta bilirkişi heyeti verecek! gunebakis.com.tr",
-      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPVGFPT3dtV1djeXRkM3pYdGdidFhQUVU3dlVPenBSTFRya1VLUnNja012WmIxUzlOWVpTOE1HSVZoYWVIWktjY0xLM0pUNkM5NkRtbGpHbFduUnpOYmloVmJlaXpsWEVDN1lrSnlYWFBYU085NWRUVllGSGtEVGtFMWN5UXZQRlNlV1FxZ0JfWDd5b2lIR0HSAZsBQVVfeXFMT2RfSVJpeEh1cU5ZNTFtNWpxeElVblUwVUtIckpvYUE4NTdtQ3NYcldrclJ6eUVGUHNLQTFYRnFuWktpNlBKUHdwRVdrTy05WGw1Zl8tNWkwZ3NrYjNQV3Y4dlZ3V3hLTEIzYUpPanVqVDVheC01TXhCRDZpbE9JN2Y4bDRtUk1wSVNQb0JDX2Q5QndDY2IwV0c2RmM?oc=5",
-      "tarih": "2026-04-20T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / Karadeniz",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "Yaban Hayatı İzleme"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler",
-      "tarama_tarihi": "2026-07-31T02:47:34.264733+00:00",
-      "_haber_kat": "Maden ve Enerji"
-    },
-    {
-      "id": "78db92c29329",
-      "baslik": "Fethiye Orman İşletme Müdürlüğü’nde Görev Değişimi - Muğla Yenigün",
-      "ozet": "Fethiye Orman İşletme Müdürlüğü’nde Görev Değişimi Muğla Yenigün",
-      "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxOTEZENXBnbFhyejlSdTNnZlhNSHhNZFZGb285OXRxR1V2T2d5cURYN3A2MGhnUktUUVNQNkp1d0hYaWZyVXlxc0JuNkUxamZ4WWF6OTlNV21aWmFXbjJ0bmhoNGRoYnJWU3k0WXcwN3RhU1NxX2JLekV1VVFRRnFBdndnUUQydw?oc=5",
-      "tarih": "2026-04-20T10:00:00+03:00",
-      "kaynak": "Muğla Yenigün",
-      "kategori": "Yerel / Muğla",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Orman ve Doğa",
-      "tarama_tarihi": "2026-07-12T08:19:18.168358+00:00",
-      "_haber_kat": "Orman ve Doğa"
-    },
-    {
-      "id": "2170d164956b",
-      "baslik": "Tuz Gölü’ne can suyu - ahaber.com.tr",
-      "ozet": "Tuz Gölü’ne can suyu ahaber.com.tr",
-      "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1wbGxsaDBuM2cyZmY5dURfRWJKX3lSN0ZnM08tNzZJUWN3MGN5eUdSU2cxcFJNZWhONEJ2RC1OYUJtcFNlVlBDMDRJLUNpWFh1R0ptVTlDTU5oa04zNGswZFg5di1TU1NiQ3dYVy0tNURPMFppMGRV?oc=5",
-      "tarih": "2026-04-18T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / İç Anadolu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Su ve Kıyı",
-      "tarama_tarihi": "2026-08-01T12:53:58.481754+00:00",
-      "_haber_kat": "Kategorisiz"
-    },
-    {
-      "id": "33a6aa20df33",
-      "baslik": "Elazığ’da maden işçileri grevde: Ücret ve primler için direniş başladı - Evrensel",
-      "ozet": "Elazığ’da maden işçileri grevde: Ücret ve primler için direniş başladı Evrensel",
-      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOZGVjZWFkRlVZamxqSHBfemhmWTEzSlFQekFqTUhaODNHMWZ2WmE0VE9OTHNzU2w3UXhpQXJNV1hfWlhnWG1nUGFUWVo3NkFET1JOMHgxNUxaZGtKMm9QMHAwY1NGUGxXYXB1M3NPZkxUcnBYbUJtUzBXV0FMbEhQYWFOUFNJVGlGRGJiMl9ETXdnc2hwdUlORDRXeTQwUmUxbFFvZjl2blYwRm5B?oc=5",
-      "tarih": "2026-04-18T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / Doğu Anadolu",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": "Direniş & Eylem",
-      "etiketler": [],
-      "haber_kategorisi": "Direniş ve Eylemler",
-      "tarama_tarihi": "2026-07-12T13:19:10.101235+00:00",
-      "_haber_kat": "İklim ve Afet"
     }
   ],
   "raporlar": [
@@ -40742,6 +40782,26 @@
       "haber_kategorisi": "Hukuki Süreçler"
     },
     {
+      "id": "659af2eb4c63",
+      "baslik": "Erdemir Ağrı GES Projesi ile İlgili ÇED Olumlu Kararı Verildi - TradingView",
+      "ozet": "Erdemir Ağrı GES Projesi ile İlgili ÇED Olumlu Kararı Verildi TradingView",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9rM2RlRDdqWGtHVHE3YlMzTDB1c21rLXdrdHlLTlpFM2NOVjc2SmtaSlFzcDNQNFJYVk5wWU1yWmpBUUlpcGtteXZWQjAxSG9zdzlqVTVSM3lva3pxNWxF?oc=5",
+      "tarih": "2025-02-19T11:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "ÇED Analizi",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": "Hukuk & Dava",
+      "etiketler": [
+        "ÇED Kararları",
+        "Analiz",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "Hukuki Süreçler",
+      "tarama_tarihi": "2026-08-21T18:23:37.955738+00:00"
+    },
+    {
       "id": "3da8aa3e4ea9",
       "baslik": "“Sulak alanlar tehdit altında”| Haberler - Gazete Kadıköy",
       "ozet": "“Sulak alanlar tehdit altında”| Haberler Gazete Kadıköy",
@@ -44723,6 +44783,43 @@
   ],
   "makaleler": [
     {
+      "id": "188d5a360a21",
+      "baslik": "Geçen sene özelleştirilmişti: Çayırhan kömür madeninde yaşanan göçükte 1 işçi öldü 10 işçi yaralandı - Evrensel.net",
+      "ozet": "Geçen sene özelleştirilmişti: Çayırhan kömür madeninde yaşanan göçükte 1 işçi öldü 10 işçi yaralandı Evrensel.net",
+      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNakd3WjU1RDBlWGFlS0NLdXRYREZOTWluajRNRVJRbU5QVkE5VktTNEY3QUlsYWhPWXdSYmNodzdESkVneXJMcVJmbGhoZk1IeDN6REJ5ZGxQTlI4OG9na0R4RENJMEFLWFVDTWNDX2RGM0daYVcyaVc1eV80VEc5VzdyX1J3ZlBoZExGR21ReFlJZTBXNWd6b2VGdkxDS25GSHp0aWZCM3FodV9RVl9rdDRNTjJXQzJVZUROMWI0bF9pVmFMVFZ1VFd3WXNpakN1bFRkTw?oc=5",
+      "tarih": "2026-08-21T20:09:00+03:00",
+      "kaynak": "Özer Akdemir (Evrensel)",
+      "kategori": "Bireysel Yazı",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Yaban Hayatı İzleme",
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.959144+00:00"
+    },
+    {
+      "id": "c3e2aed008de",
+      "baslik": "Yeni Partili Rızvanoğlu'ndan tutuklu Sinem Dedetaş ve komedyen Deniz Göktaş’a ziyaret - Evrensel.net",
+      "ozet": "Yeni Partili Rızvanoğlu'ndan tutuklu Sinem Dedetaş ve komedyen Deniz Göktaş’a ziyaret Evrensel.net",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNNDFzZk1HVUdHZmcxY3lLcFlZdUl1MGZseVNYOFZ0MXF3bEZVU2xmNlRySnNlb2ZmVDk5QktsU29NVkZfbktxWVUxb0dISGR6bzZ0SUszSGphVEhPQlFpTWxuSGlZQ1Rsa3dBNTNVdFNhOEM5dERfQXB5RFlYVGlXb0lrT3RpenF1VGZPN3d4allOY2VkODhkd3Q4TXVERWdHdm5rZGNIcWtORG5PV2RyQjJXbUtWVVUxalNyODN0emxVUQ?oc=5",
+      "tarih": "2026-08-21T15:32:00+03:00",
+      "kaynak": "Özer Akdemir (Evrensel)",
+      "kategori": "Bireysel Yazı",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.959178+00:00"
+    },
+    {
       "id": "2cde4b12b532",
       "baslik": "Ağaç A.Ş. işçilerinin Saraçhane direnişi 114. gününde - Evrensel",
       "ozet": "Ağaç A.Ş. işçilerinin Saraçhane direnişi 114. gününde Evrensel",
@@ -46217,6 +46314,24 @@
       ],
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-08-11T12:38:41.416389+00:00"
+    },
+    {
+      "id": "7a08915bc76d",
+      "baslik": "ÇEVRE ŞEHİRCİLİK VE İKLİM DEĞİŞİKLİĞİ BAKANLIĞI’NIN İLGİLİ BİRİMLERİ PLAJLARDA DÜZENLEME YAPABİLECEK - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "ÇEVRE ŞEHİRCİLİK VE İKLİM DEĞİŞİKLİĞİ BAKANLIĞI’NIN İLGİLİ BİRİMLERİ PLAJLARDA DÜZENLEME YAPABİLECEK T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxPS2FGQVhFWGRrTUZGUjV0dDNSOVlyb21pVGJXaUZLclFCeHFWcmN3WFdHb1JpTWhsams0ZmE3NG5iZUljRk9CN0xaWGV5ZEg3UDhVUHRnLXp1MGNWUnFhb0RpNU1PWFh5QzNQV0o3UFFfaEsxYmVocmg5STZVbnJMLUstVlUtTW55X3RTWGxLbDZaTld0U2YtdXhtY1VVU3dCWDh4WGRrWW9vVXNZVlhPT3k3bmNyXzBRZDd3SUVrUnVERDdrY1hMRi1qeVBsNHVJ?oc=5",
+      "tarih": "2026-08-09T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957663+00:00"
     },
     {
       "id": "6e750ea958a3",
@@ -52359,6 +52474,24 @@
       "tarama_tarihi": "2026-07-05T04:45:43.166688+00:00"
     },
     {
+      "id": "15749805b9db",
+      "baslik": "YARISI BİZDEN İÇİN VATANDAŞLARA ‘RİSKLİ YAPI’ KOLAYLIĞI - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "YARISI BİZDEN İÇİN VATANDAŞLARA ‘RİSKLİ YAPI’ KOLAYLIĞI T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOVk5nTGRxQjlIZHpoak9wMUJSSTVvc0UtN1dDbGNSVXc2dDhRZEZiYXdMZDJ6NkRwRllNTGFiVHV1NEluZGt5THdEbzBPRTIwVmdlUzNSWHp2OWZ2ZXh6eXpUZWFIZVl2UktmdGx1Y01fTE5KUkpOSFNlN1FPMVB3OTZhdzBiS2p0dUNJUEIyYnYxQQ?oc=5",
+      "tarih": "2026-02-27T09:56:01+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957846+00:00"
+    },
+    {
       "id": "cfb4b01e2c62",
       "baslik": "Türkmenistan Büyükelçisi, Belçika üniversitesi temsilcisiyle görüştü - Arzuw news",
       "ozet": "Türkmenistan Büyükelçisi, Belçika üniversitesi temsilcisiyle görüştü Arzuw news",
@@ -52430,6 +52563,24 @@
       ],
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-07-05T19:17:40.473209+00:00"
+    },
+    {
+      "id": "f7e80db35b8d",
+      "baslik": "CUMHURBAŞKANI ERDOĞAN, DEPREM KONUTLARININ ÖDEME PLANINI AÇIKLADI - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "CUMHURBAŞKANI ERDOĞAN, DEPREM KONUTLARININ ÖDEME PLANINI AÇIKLADI T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPTXJGZDZCWng4SmJSeTB0MXpFWTI2VzNSSkVxUFAxbUZxWDBmSUEyOGJOZGowTF9LTnFxX1RxOGI4T0dRS1gtNmVLc205UzdWRncwMVdUamtNNDY3eTNmNjIyUVI1Z05HemNFSnBWT3pCUnAzVU5KREVYWW9zenpqeXQ4LWJHTDFkSGJjTmlSVDNMUk9GWWR0WlZSUkFkZ2h1?oc=5",
+      "tarih": "2026-02-11T15:18:47+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957949+00:00"
     },
     {
       "id": "9b92bbaa0fa4",
@@ -52595,6 +52746,42 @@
       "tarama_tarihi": "2026-07-05T04:45:43.169088+00:00"
     },
     {
+      "id": "4f8586da022d",
+      "baslik": "ÇEVRE, ŞEHİRCİLİK VE İKLİM DEĞİŞİKLİĞİ BAKANLIĞI TARAFINDAN DEPREM BÖLGESİNİN AYAĞA KALDIRILMASI İÇİN ÇALIŞMALAR HIZLA DEVAM EDİYOR - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "ÇEVRE, ŞEHİRCİLİK VE İKLİM DEĞİŞİKLİĞİ BAKANLIĞI TARAFINDAN DEPREM BÖLGESİNİN AYAĞA KALDIRILMASI İÇİN ÇALIŞMALAR HIZLA DEVAM EDİYOR T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxPUi16R0VhSThsM0RTSXBjYUk5TGhfalROVnM1V3ZnSEJCQ0R5Sk9NMDViM3ZtT05wVWJTZ3puV0dqM29jZWI0VGVxbUV2MFpMUWhfZ2d6aHNfUlA5VXFUY1hvX240ZXBWaEJRdDRtdmNXMWVRLTF2TzhXeERFdVVIa3ZaN205VmhFbDJxS0FNRkV2ckMwLVV0X01PakRZZWFFODlXVkRKQjF4UXhEYjZTZl9JX1NYQ2NQMkxoWGpQUzhQQ2xibXRfbDVmcnFUc2J2VmNWZG90UVJ1T0FLdkswbEk2emZBMXRzZG5sRU4wNE5JdEk1SXpHUw?oc=5",
+      "tarih": "2026-01-28T17:26:57+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957776+00:00"
+    },
+    {
+      "id": "ac6d6200c194",
+      "baslik": "MÜZİK YAYINI İZNİ DÜZENLEMESİNE İLİŞKİN USUL VE ESASLAR BELİRLENDİ - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "MÜZİK YAYINI İZNİ DÜZENLEMESİNE İLİŞKİN USUL VE ESASLAR BELİRLENDİ T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQN1JVa21manFYaVQ3M2RYZEFhWVFfVTMtcldHUFFuQ0x6ZF95a2hqZ0hMLXQ2YTBkNTJrcWxlVU5QX190OUI2SWVxb3YxNy1TNGdkeFJLXy1MaTRMaExQcklHRlJLa1QtRlNoQWlHSmJfREE3SEJMdG9sMDBEZHZhSjI0alZWQ2tQN1NGNml3cE5SZ1JYVjZ1aTk0d1hsT1pPU0w0?oc=5",
+      "tarih": "2026-01-28T10:52:48+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957509+00:00"
+    },
+    {
       "id": "5eaaf7426bc7",
       "baslik": "Haberler / Sayfa: 289 - Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
       "ozet": "Haberler / Sayfa: 289 Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
@@ -52683,6 +52870,24 @@
       ],
       "haber_kategorisi": "İklim ve Afet",
       "tarama_tarihi": "2026-08-18T00:36:54.123826+00:00"
+    },
+    {
+      "id": "1e5faf875ca6",
+      "baslik": "15 SORU 15 CEVAPLA “YENİ EVİM” KAMPANYASI - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "15 SORU 15 CEVAPLA “YENİ EVİM” KAMPANYASI T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBfY1MwT04tQ2txSEFFM19pMjZKTjFsUHVBRTFSTmU3Y2FIaDVWX2s3Y0F4V3V3WGpZNFBVMFY5bC1XUFJmUTZDYTFGT3o2MDBYN2p6TkNHdmFTeVE4WWN5WWhuSVhrMG1Ec3JldHRWNUxPTHBHVjlRZ2dXSEFKNHM?oc=5",
+      "tarih": "2026-01-28T05:06:46+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957548+00:00"
     },
     {
       "id": "941487d7c5d3",
@@ -52791,6 +52996,24 @@
       ],
       "haber_kategorisi": "İklim ve Afet",
       "tarama_tarihi": "2026-07-05T04:45:43.166996+00:00"
+    },
+    {
+      "id": "64dd789b9626",
+      "baslik": "Çevre ve Şehircilik Bakanlığı 504 Konutu Satışa Çıkarıyor - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "Çevre ve Şehircilik Bakanlığı 504 Konutu Satışa Çıkarıyor T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQTTlNMEZ4bng5dmJ5dGtPTVdoa2FKejJFMTRJWFhuVno5MHVEdkw3clQwaHYxSnNqVnhKbGJsZFROVHdYY0xjMjNKNHM1QndkdjREMlgwSEt0aHAtY1J2WjUzVFI5SC1sOG5lajZ2VFlHTjJMU0xOUTUtWUJJb1lieEZ4TmtVdjQtWWtlT180d2dqYmNHMV80?oc=5",
+      "tarih": "2026-01-27T19:23:13+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957914+00:00"
     },
     {
       "id": "b87b48adccc9",
@@ -53320,6 +53543,42 @@
       ],
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-07-11T09:56:12.949448+00:00"
+    },
+    {
+      "id": "ce9169284e1e",
+      "baslik": "“İMAR PLANI DEĞİŞİKLİĞİNE DAİR DEĞER ARTIŞ PAYI UYGULAMA YÖNETMELİĞİ” YAYIMLANDI - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "“İMAR PLANI DEĞİŞİKLİĞİNE DAİR DEĞER ARTIŞ PAYI UYGULAMA YÖNETMELİĞİ” YAYIMLANDI T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNM3c0dUhaZjNsMWhNR2d1UGZBS0NOZkp5UUdEMTNTSk9rWGtaZ1VBWjJTOUZBOUFnMjFlNHVRaVNNbXBveFhfbEl3V1RVNWxBeFZNVmJEdzk4MGpRTG9XMGdjYTVzQmxMemY1SGliS01vRXdtUEl1czZKSXU1bUlmdUtOVnVIRUFydlBUVFQ0RTYtYkpGWlk3UEV2TWtHTGd4ZjhuSEQzQlVFRkY3Y3BqMjhCWQ?oc=5",
+      "tarih": "2025-11-22T11:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957622+00:00"
+    },
+    {
+      "id": "9f915f349e6f",
+      "baslik": "COP31’İN DÖNEM BAŞKANI DA EV SAHİBİ DE TÜRKİYE OLDU - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "COP31’İN DÖNEM BAŞKANI DA EV SAHİBİ DE TÜRKİYE OLDU T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPZ0dRaGQzdlRDT2UyNDA0RGRuWUtIaURNc1YzUkZ1cHJWR2Vlc1JBX29XVV9CcHEwTDZCRkR3b3kxUXlGamRtNjhUMjMtZGw5TzRxdUxlZnlNLTJlZGs1aEM2aWFHQ1NQM2p4a2NjSFVCNEJlQ29CSXlWSHhwMEk2UEdhUzNTSU5UdHphYmQ2Zw?oc=5",
+      "tarih": "2025-11-22T11:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957733+00:00"
     },
     {
       "id": "f6f4fe7f6be5",
@@ -54251,6 +54510,24 @@
       ],
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-07-12T02:44:40.103328+00:00"
+    },
+    {
+      "id": "aa79b0399fab",
+      "baslik": "YARISI BİZDEN’DE MERAK EDİLEN SORULAR VE YANITLARI - T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "ozet": "YARISI BİZDEN’DE MERAK EDİLEN SORULAR VE YANITLARI T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOUHVzYmJEQVhuQnJkR3RweDhTTUlpMk5tTllaQVNFMXRldm5weEpMcm8yLUxFdWY1TDlVMGFHT2pZNzhmZW1RUktyR0ZIY2ZXVUdUdmRWMFJ2T1RTSFdIQWRpN0p1OGRDMnFEeC1sYnRlMXNEVVJyQjgxZjA5R190WHBwY3Z1VlZibWtib3Vn?oc=5",
+      "tarih": "2025-05-04T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Resmi Açıklama",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.957811+00:00"
     },
     {
       "id": "34443792484c",
@@ -56229,6 +56506,24 @@
       ],
       "haber_kategorisi": "İklim ve Afet",
       "tarama_tarihi": "2026-08-15T18:15:29.080325+00:00"
+    },
+    {
+      "id": "1c0ffdcf34df",
+      "baslik": "Habertürk, anasayfadaki \"yazarlar\" bölümünü kaldırdı: Yeni temalar arasında politika ve öne çıkan bazı isimler yok - T24",
+      "ozet": "Habertürk, anasayfadaki \"yazarlar\" bölümünü kaldırdı: Yeni temalar arasında politika ve öne çıkan bazı isimler yok T24",
+      "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQYjlNMTB2NTBpX2xETnRGX1VMMjlSQ2JHdVd1RFpFY0RlYXFYdGlHOWVGVTlVcjQ1TmVSdWtjYXJVOGFtaTRIZXJDRENpUmNySVdfUkxwa2sxN0xHN2xNX0l3dkpHMDFWZEpWLXZpbUVfVzhhZmF2ODZfY3N1SjR4bUZEX0NyTVkybkJMT01vM2cwdXB4a1A4U2dLTTZKTUl1VThUdnQzdDBaVjJJWTRGSjZ4ZzZteWpmbWRLVXRJSUZsZFJQNGZueHFWYS1feGxVaWRDOU5GMGNvRENw?oc=5",
+      "tarih": "2023-06-06T10:00:00+03:00",
+      "kaynak": "T24",
+      "kategori": "Köşe Yazısı",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.960429+00:00"
     },
     {
       "id": "354597d602c6",
@@ -60897,6 +61192,151 @@
     }
   ],
   "uluslararasi": [
+    {
+      "id": "75d06948d6a4",
+      "baslik": "Move over bears. Fat Marmot Week puts a spotlight on the alpine rodents",
+      "ozet": "GOTHIC, Colo. (AP) — Fat Marmot Week is coming soon. Last winter was tough for the groundhog-like rodents living in the Colorado mountains. Researchers say there wasn’t enough snow to keep marmots’ burrows warm while they hibernated, causing many of the animals to freeze to death. The marmots that s",
+      "url": "https://news.mongabay.com/short-article/2026/08/move-over-bears-fat-marmot-week-puts-a-spotlight-on-the-alpine-rodents/",
+      "tarih": "2026-08-21T20:33:16+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.963928+00:00"
+    },
+    {
+      "id": "9e79f124d7fa",
+      "baslik": "Angola’s peatlands highly underestimated, new study suggests",
+      "ozet": "The Southwestern African nation of Angola has much more peatland than previously thought, new research suggests. In a study published on August 20 in Philosophical Transactions of the Royal Society, researchers mapped out peatlands in the Angolan Highlands Water Tower (AHWT). This vast landscape sto",
+      "url": "https://news.mongabay.com/2026/08/angolas-peatlands-highly-underestimated-new-study-suggests/",
+      "tarih": "2026-08-21T20:28:45+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "Su ve Kıyı",
+      "tarama_tarihi": "2026-08-21T18:23:37.963951+00:00"
+    },
+    {
+      "id": "7d2e4e330cf4",
+      "baslik": "How ‘gentle power’ can preserve traditional biodiversity in Tokyo",
+      "ozet": "The Zushi-Onoji Historical and Environmental Conservation Area nestles among Tokyo’s sprawling western suburbs. The area provides habitat for endangered species and a space to pass on traditional ecological knowledge of satoyama, Japanese rural landscapes that have been shaped by centuries of human ",
+      "url": "https://news.mongabay.com/2026/08/how-gentle-power-can-preserve-traditional-biodiversity-in-tokyo/",
+      "tarih": "2026-08-21T18:58:20+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-08-21T18:23:37.963975+00:00"
+    },
+    {
+      "id": "6a960ab66fed",
+      "baslik": "Southeast Asia is a hotspot for oak trees, many under ‘dire threat’",
+      "ozet": "Southeast and East Asia may be famous for towering dipterocarps or massive conifers, but a new report highlights that the region is also home to more threatened oak species than anywhere else in the world. “While it may not be the region that first comes to mind when we think of oaks, it’s a really ",
+      "url": "https://news.mongabay.com/2026/08/southeast-asia-is-a-hotspot-for-oak-trees-many-under-dire-threat/",
+      "tarih": "2026-08-21T18:40:59+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.964015+00:00"
+    },
+    {
+      "id": "6548ff80a98a",
+      "baslik": "Spain proposes 23 new marine protected areas in the Canary Islands and Mediterranean",
+      "ozet": "The Spanish government has launched a consultation process to establish 23 new marine protected areas (MPAs) in Canary Islands waters and the Mediterranean Sea as part of efforts to meet a national commitment to protect 30% of its waters by 2030. The proposal, put forward by Spain’s Ministry for the",
+      "url": "https://news.mongabay.com/2026/08/spain-proposes-23-new-marine-protected-areas-in-the-canary-islands-and-mediterranean/",
+      "tarih": "2026-08-21T17:28:46+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.964044+00:00"
+    },
+    {
+      "id": "41c6e9989547",
+      "baslik": "Hands On Solutions",
+      "ozet": "Communities across the globe are responding to environmental pressures like climate change, biodiversity loss and pollution with local knowledge and practical action. This Mongabay multimedia Special Issue documents what communities are doing to adapt through hands-on activities—showcasing applied w",
+      "url": "https://news.mongabay.com/specials/2026/08/hands-on-solutions/",
+      "tarih": "2026-08-21T16:59:47+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.964065+00:00"
+    },
+    {
+      "id": "da3d90d7db0a",
+      "baslik": "Reconnecting the skies: Linking flyways for migratory seabirds across continents",
+      "ozet": "Arctic terns make the longest migration of any creature on Earth, with some Sterna paradisaea clocking more than 80,000 kilometers (49,709 miles) a year, flying from the Southern Ocean to their breeding grounds in the Arctic — and back. For a tiny bird, weighing less than an iPhone, it’s an astoundi",
+      "url": "https://news.mongabay.com/2026/08/reconnecting-the-skies-linking-flyways-for-migratory-seabirds-across-continents/",
+      "tarih": "2026-08-21T16:22:21+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-08-21T18:23:37.964093+00:00"
+    },
+    {
+      "id": "b8e6ecd0fde3",
+      "baslik": "Rising CO2 Speeds the Growth of Grasses on the African Savanna",
+      "ozet": "On the arid African savanna, grasses are growing faster than they were a generation ago, boosted by rising levels of carbon dioxide from the burning of fossil fuels. That is the finding of a new study that warns that faster growth could fuel larger wildfires and alter the distribution of wildlife. R",
+      "url": "https://e360.yale.edu/digest/africa-savanna-grasses-carbon-dioxide",
+      "tarih": "2026-08-21T15:58:00+03:00",
+      "kaynak": "Yale Environment 360",
+      "kategori": "Uluslararası Analiz",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası",
+        "Analiz"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-08-21T18:23:37.963378+00:00"
+    },
     {
       "id": "542a6c5df233",
       "baslik": "How safeguarding land protects our future",
@@ -79360,6 +79800,25 @@
       "haber_kategorisi": "İklim ve Afet"
     },
     {
+      "id": "c53b58c10af6",
+      "baslik": "Savaş, iklim ve yoksulluk: Dünyada dış göç dalgası büyüyor - İlke Haber Ajansı",
+      "ozet": "Savaş, iklim ve yoksulluk: Dünyada dış göç dalgası büyüyor İlke Haber Ajansı",
+      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNTjZPMmZZc1dvR2F3UVVPcG0zd1A2aFBFelJkVEE3d1dUT2tlY0dxb21LSnAyX2xtenZlbmdMU3ViakJXMzB3cnJ6ZkNNZXNtY0JsSld5UllYekNWVE96S2g1aU1HSUhKMHY3aHlsRFE0VDJELTNTVU51ZXVqVVFnbWJXM2V5c1o0SHZ2T244VDA?oc=5",
+      "tarih": "2026-05-15T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "İklim Göçü",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "İklim Göçü & Yerinden Edilme"
+      ],
+      "bolum": "goc",
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.973620+00:00"
+    },
+    {
       "id": "ee7377735fc4",
       "baslik": "Orman yangınları için alarm! Çanakkale’de dev panel düzenlenecek - Çanakkale Olay",
       "ozet": "Orman yangınları için alarm! Çanakkale’de dev panel düzenlenecek Çanakkale Olay",
@@ -87869,6 +88328,23 @@
       "bolum": "esitsizlik",
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-07-08T04:19:37.389841+00:00"
+    },
+    {
+      "id": "5caba81f3f06",
+      "baslik": "LGBTİ+ örgütleri iklim adaleti için mücadeleye hazır! - Kaos GL",
+      "ozet": "LGBTİ+ örgütleri iklim adaleti için mücadeleye hazır! Kaos GL",
+      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPTmY0SElhYVFYb0FpVWpONVJiaW9JNTNReTlmR19zYkx6eVFNZDdfRmt0eWdldXdvWW9tN01sWDFVb0JiV3lkc3lRdHRnSDlMZFV5Q1ZqcFlZWTRTanJpLTZlV3JfVGgtMklXdEdTNGVQZUcyUVhqa3Y2TG9LbWxxX1RR?oc=5",
+      "tarih": "2022-01-31T12:17:20+03:00",
+      "kaynak": "Kaos GL",
+      "kategori": "LGBTİ+ & Çevre",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [],
+      "bolum": "lgbti",
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-08-21T18:23:37.966653+00:00"
     },
     {
       "id": "1273d553a5e4",
