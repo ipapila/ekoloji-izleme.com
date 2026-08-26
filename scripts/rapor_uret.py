@@ -215,6 +215,10 @@ def rapor_uret(haberler, ihlaller):
                 print(f"Claude API {r.status_code} (gecici) — {deneme}. deneme basarisiz, {bekleme}sn sonra tekrar denenecek")
                 time.sleep(bekleme)
                 continue
+            if r.status_code >= 400:
+                # raise_for_status() sadece durum kodunu iceren kisa bir mesaj uretir;
+                # asil hata nedeni (invalid_request_error mesaji vb.) govdede yer alir.
+                print(f"Claude API {r.status_code} yanit govdesi: {r.text[:2000]}")
             r.raise_for_status()
             metin = r.json()["content"][0]["text"].strip()
             if metin.startswith("```"):
