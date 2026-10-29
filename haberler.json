@@ -1,13 +1,13 @@
 {
   "meta": {
-    "guncelleme": "2026-10-29T00:59:11.708584+03:00",
+    "guncelleme": "2026-10-29T06:18:38.061059+03:00",
     "toplam_haber": 2000,
-    "toplam_rapor": 650,
+    "toplam_rapor": 651,
     "toplam_makale": 1000,
     "toplam_ulus": 1000,
     "toplam_ekosistem": 1000,
-    "dagitici_calistirma": "2026-10-28T22:01:44.098793+00:00",
-    "aylik_budama": "2026-10-28T22:01:44.474463+00:00"
+    "dagitici_calistirma": "2026-10-29T03:21:08.305911+00:00",
+    "aylik_budama": "2026-10-29T03:21:08.660813+00:00"
   },
   "haberler": [
     {
@@ -315,6 +315,25 @@
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-10-28T17:34:16.414035+00:00",
       "_haber_kat": "Kategorisiz"
+    },
+    {
+      "id": "d7de27f66286",
+      "baslik": "Güney Kore’den Google ve Apple’a uygulama mağazası ihlalleri için 47,5 milyon dolar ceza - dikGAZETE.com",
+      "ozet": "Güney Kore’den Google ve Apple’a uygulama mağazası ihlalleri için 47,5 milyon dolar ceza dikGAZETE.com",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNeEhIancxVE10aF9iMkMtMU1oajItMXd3SEh3NnBWNzJQaXhEbUdsc2pPcmw5ekVQLXR2cl9qMW80a254SkpRc1N0UnlrNm03VEpTQ1FXVnFkWkFmRjVrUHlDNW45UExIb1RRVklsSnlvRWJ0eldSVHFBSWdCYXdlaGE2ZlRNcnRidVlqakJXdkJfMFN5SWVmWEFiaUZrMHBfVmVvbndmSE1tVDMtUXkwTHJFbm5QNUp4UFVKOEtHeHJWNkk1NkkySll2VjRSdw?oc=5",
+      "tarih": "2026-10-28T15:06:34+03:00",
+      "kaynak": "Google News",
+      "kategori": "Çevre İhlali",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Ekolojik İhlal"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-10-29T03:18:38.010223+00:00",
+      "_haber_kat": "Maden ve Enerji"
     },
     {
       "id": "9a89fce4ff3c",
@@ -3504,6 +3523,25 @@
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-10-25T10:19:59.126336+00:00",
       "_haber_kat": "Kategorisiz"
+    },
+    {
+      "id": "a29131862008",
+      "baslik": "Tunceli’de tartışmalı HES projesi: İnşaat bitti, ÇED süreci yeniden başladı - https://www.babaocagi.com/",
+      "ozet": "Tunceli’de tartışmalı HES projesi: İnşaat bitti, ÇED süreci yeniden başladı https://www.babaocagi.com/",
+      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPeHEzeS15Snd6U09OWGVWRTdVVGVSVWxQLS1sNXAxcE1yZUhNYzhzUHJTODB4eG9VTDBzNmNnQXZyU3lpTDdTUHdrSjlXM0xoRHNKRE5QREtybVE0RTNGekVLUlRZbEVod3hMbC11X3doX0lDalRzeU9LblFtcE1rM1AxcWZ4Unp2M0RWaGZncENabDVwRVlQcjMxaDVQaERfZ3R3?oc=5",
+      "tarih": "2026-10-25T10:24:00+03:00",
+      "kaynak": "Google News Bölgesel (Dersim-Botan-Hevsel)",
+      "kategori": "Bölgesel",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-10-29T03:18:38.033692+00:00",
+      "_haber_kat": "İklim ve Afet"
     },
     {
       "id": "81c4032f8a74",
@@ -35460,42 +35498,6 @@
       "haber_kategorisi": "Orman ve Doğa",
       "tarama_tarihi": "2026-09-02T15:31:49.418141+00:00",
       "_haber_kat": "İklim ve Afet"
-    },
-    {
-      "id": "c8950ccd1adc",
-      "baslik": "Antalya Manavgat’ta orman yangını! Müdahale sürüyor - turkiyegazetesi.com.tr",
-      "ozet": "Antalya Manavgat’ta orman yangını! Müdahale sürüyor turkiyegazetesi.com.tr",
-      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQc2xqZzluUUxSRE96eEhRcElvUVRieEtYdmw5d0x1QzNxUGRld2N0XzFWVkxhUHlkMHg5bURHWXJfdXJsVWxyVkplcWNiS2tIQWFOZ1VHeXZPcTdjYXFITkJERTRaZzZsZjhQSjNjOHZWNkktcXlUWEIxeEU5d09CTGhGMmFKQUFpVF9YTlR3TG1sOGgtcE8yNXNzeWdBbjZW?oc=5",
-      "tarih": "2026-08-30T14:57:15+03:00",
-      "kaynak": "Google News",
-      "kategori": "Orman Yangını",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Bitki Örtüsü & Habitatlar"
-      ],
-      "haber_kategorisi": "Orman ve Doğa",
-      "tarama_tarihi": "2026-09-01T02:27:41.592098+00:00",
-      "_haber_kat": "İklim ve Afet"
-    },
-    {
-      "id": "a8b4d9b29c5e",
-      "baslik": "Silifke’de dikkat çeken çevre tepkisi: “Neden pissin?” - mersinportal.com",
-      "ozet": "Silifke’de dikkat çeken çevre tepkisi: “Neden pissin?” mersinportal.com",
-      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPMmJSckZVeW9uMUgzanBLZl9zMXlXZXhzYjhzcmd0UE9mc0U4elhFejY1X0NERjZzNGtWUVNSSlNuNlpyYUtMZUpXV0RKNHd0OXBlbHN1UG80Y1d0N2lWaklpUzJYcjhKWDV3cE45ai1BcnhkNFJfUDU2alZyUzd6cHdnYmY?oc=5",
-      "tarih": "2026-08-30T14:35:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Yerel / Akdeniz",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [],
-      "haber_kategorisi": "Su ve Kıyı",
-      "tarama_tarihi": "2026-09-01T10:41:59.775178+00:00",
-      "_haber_kat": "Kategorisiz"
     }
   ],
   "raporlar": [
@@ -41931,6 +41933,26 @@
       ],
       "haber_kategorisi": "İklim ve Afet",
       "tarama_tarihi": "2026-09-14T17:11:38.106175+00:00"
+    },
+    {
+      "id": "b06aa2f4ecce",
+      "baslik": "Rapor “Türkiye'de Bankaların İKLİM Taahhütleri …” - Enerji Ekonomisi",
+      "ozet": "Rapor “Türkiye'de Bankaların İKLİM Taahhütleri …” Enerji Ekonomisi",
+      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxONFVPQ1M5RmdvQmRldlF1dnJyUzJjb3paN0Q3ZW5rUDdlc2plX0lNOVFfR1pNOUU1MWFMYXFuQllIMzV3ODFtSDhYNE4xVGlsOEIyREJ4X2JPWVVNY1dzV25abV9PRkVlY2lsUmh1VkZCNHFVR2I5YnBZQ0phZ3dPbG1DQ1ZyeGpXSUE?oc=5",
+      "tarih": "2025-10-22T10:00:00+03:00",
+      "kaynak": "SEFiA",
+      "kategori": "Enerji Politikası",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "rapor",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Analiz",
+        "Enerji",
+        "Rapor & Analiz"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-10-29T03:18:38.035151+00:00"
     },
     {
       "id": "9381a016cebc",
@@ -65798,6 +65820,24 @@
       "tarama_tarihi": "2026-07-29T02:42:01.061463+00:00"
     },
     {
+      "id": "261bca7d507c",
+      "baslik": "Çevre, İnsan ve Etik Çerçevesinde Çevre Sorunlarına ve Çözümlerine Yönelik Yaklaşımlar - DergiPark",
+      "ozet": "Çevre, İnsan ve Etik Çerçevesinde Çevre Sorunlarına ve Çözümlerine Yönelik Yaklaşımlar DergiPark",
+      "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE56cllyXzZWdkd4aHlPS21XMDV2dk1CdkVSN0prTnBmaERRWE9NN1l0amJlNzFYUmstSU1wcF9WUlcyV0Zpclhtb3l2LVlWd3p3bXZXRkNMdHhKNkt0TzRGYkFicw?oc=5",
+      "tarih": "2026-01-02T16:13:44+03:00",
+      "kaynak": "DergiPark",
+      "kategori": "Akademik Makale",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "kose",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Köşe & Yorum"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-10-29T03:18:38.040995+00:00"
+    },
+    {
       "id": "e1b04b122be8",
       "baslik": "2025’te Basında En Çok Konuşulan Başlık Orman Yangınları Oldu - İklim Haber",
       "ozet": "2025’te Basında En Çok Konuşulan Başlık Orman Yangınları Oldu İklim Haber",
@@ -66470,27 +66510,81 @@
         "Köşe & Yorum"
       ],
       "haber_kategorisi": "STK & Kampanyalar"
-    },
-    {
-      "id": "d51e0f865d7d",
-      "baslik": "Atama kararları Resmi Gazete’de: Türkiye’nin Suriye Büyükelçisi Nuh Yılmaz oldu - Takvim",
-      "ozet": "Atama kararları Resmi Gazete’de: Türkiye’nin Suriye Büyükelçisi Nuh Yılmaz oldu Takvim",
-      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNbnEwd3ZZajhJRVI3NEFiRGdEQXZiSFBxTGp3Y1NCNTVZZVZoaGRfWjVrbF81NUd5QjhWQjRKTkVNNVZ0dlBJY2RWdEdsdHI5dk16TzBydG1UZWM1dUpudzVkVVRaTVFRbk1TUlRTWTNlak1tdDd3UWpTa3FZSDlKN3BkVnRaaTZTcUZuazFhalRiZnl0RUFabXRwaWwtZlByN3pVRGJRajhuQ1RMUWROZXl6dlFXeHNqV1JsZg?oc=5",
-      "tarih": "2025-11-19T11:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Resmi Açıklama",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "kose",
-      "dil": "tr",
-      "eylem": "Hukuk & Dava",
-      "etiketler": [
-        "Köşe & Yorum"
-      ],
-      "haber_kategorisi": "Hukuki Süreçler",
-      "tarama_tarihi": "2026-09-03T15:25:20.241324+00:00"
     }
   ],
   "uluslararasi": [
+    {
+      "id": "20d7fad094b3",
+      "baslik": "‘Action on the ground’ in Laos is needed to recover large mammals, protect more species",
+      "ozet": "Less than half a century ago, the thickly forested landscapes of Laos rumbled with herds of Asian elephants as well as two species of rhinoceros — the Javan rhino and Sumatran rhino. Wild water buffalo and the now-globally-extinct kouprey cattle wallowed in more open habitats that were also stalked ",
+      "url": "https://news.mongabay.com/2026/10/action-on-the-ground-in-laos-is-needed-to-recover-large-mammals-protect-more-species/",
+      "tarih": "2026-10-29T05:05:55+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-10-29T03:18:38.043763+00:00"
+    },
+    {
+      "id": "b42bb5771560",
+      "baslik": "‘Historic win’: Australian state approves national koala park despite controversial funding",
+      "ozet": "SYDNEY — After more than a decade of campaigning, Australian conservation and community groups celebrated a historic win on Oct. 23 after legislation was passed to create the Great Koala National Park in New South Wales (NSW). The campaigners’ success came 10 days after NSW Premier and Labor politic",
+      "url": "https://news.mongabay.com/2026/10/historic-win-australian-state-approves-national-koala-park-despite-controversial-funding/",
+      "tarih": "2026-10-29T04:28:15+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "",
+      "tarama_tarihi": "2026-10-29T03:18:38.043806+00:00"
+    },
+    {
+      "id": "ade2a9efcdd4",
+      "baslik": "Netherlands pledges $500 million to help conserve tropical forests",
+      "ozet": "The Tropical Forest Forever Facility (TFFF), which was created to fund long-term conservation of tropical forests, recently received a $500-million pledge, over 10 years, from the Netherlands, a significant boost for forest conservation. The Netherlands announced the pledge in an Oct 26 press releas",
+      "url": "https://news.mongabay.com/short-article/2026/10/netherlands-pledges-500-million-to-help-conserve-tropical-forests/",
+      "tarih": "2026-10-29T01:47:09+03:00",
+      "kaynak": "Mongabay",
+      "kategori": "Uluslararası Haber",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "Maden ve Enerji",
+      "tarama_tarihi": "2026-10-29T03:18:38.043841+00:00"
+    },
+    {
+      "id": "877e300b800e",
+      "baslik": "Powerful Interests Aim to Weaken California’s Landmark Environmental Law",
+      "ozet": "Political action committees funded by technology companies, the state’s major utilities and other corporate interests have spent nearly twice as much to pass a ballot measure that would greenlight major development projects with minimal environmental or public review as public interest and labor gro",
+      "url": "https://insideclimatenews.org/news/28102026/california-prop-45-aims-to-weaken-environmental-law/",
+      "tarih": "2026-10-29T01:40:31+03:00",
+      "kaynak": "Inside Climate News",
+      "kategori": "Uluslararası İklim Haberi",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "uluslararasi",
+      "dil": "en",
+      "eylem": null,
+      "etiketler": [
+        "Uluslararası"
+      ],
+      "haber_kategorisi": "İklim ve Afet",
+      "tarama_tarihi": "2026-10-29T03:18:38.044438+00:00"
+    },
     {
       "id": "a37025cb76a8",
       "baslik": "‘Worldwide legacy’: almost $20m raised to protect majestic tract of land in far north Queensland",
@@ -84499,79 +84593,6 @@
       ],
       "haber_kategorisi": "",
       "tarama_tarihi": "2026-08-26T19:31:01.798337+00:00"
-    },
-    {
-      "id": "473a0f670c95",
-      "baslik": "Nigeria can build the new coastal highway and also protect natural areas (commentary)",
-      "ozet": "Nigeria needs road infrastructure for improved living conditions. Anyone who has watched trucks crawl out of Lagos, farmers and fishermen struggle to reach markets, or small coastal businesses lose value to poor logistics, knows that road infrastructure in Nigeria is not a luxury. The proposed Lagos",
-      "url": "https://news.mongabay.com/2026/08/nigeria-can-build-the-new-coastal-highway-and-also-protect-natural-areas-commentary/",
-      "tarih": "2026-08-26T19:03:21+03:00",
-      "kaynak": "Mongabay",
-      "kategori": "Uluslararası Haber",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "uluslararasi",
-      "dil": "en",
-      "eylem": null,
-      "etiketler": [
-        "Uluslararası"
-      ],
-      "haber_kategorisi": "",
-      "tarama_tarihi": "2026-08-26T19:31:01.796538+00:00"
-    },
-    {
-      "id": "8095f4c36c9a",
-      "baslik": "At least 75 killed and hundreds missing after flash floods in Nepal and China",
-      "ozet": "UDIN DHUNGA, Nepal (AP) — Flash floods in a border area of Nepal and China have killed at least 75 people and left hundreds missing. On Wednesday, officials in Nepal reported 403 people missing, including 341 foreign nationals. Many were said to be on a pilgrimage to Mount Kailash in China’s autonom",
-      "url": "https://news.mongabay.com/short-article/2026/08/at-least-75-killed-and-hundreds-missing-after-flash-floods-in-nepal-and-china/",
-      "tarih": "2026-08-26T18:18:26+03:00",
-      "kaynak": "Mongabay",
-      "kategori": "Uluslararası Haber",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "uluslararasi",
-      "dil": "en",
-      "eylem": null,
-      "etiketler": [
-        "Uluslararası"
-      ],
-      "haber_kategorisi": "",
-      "tarama_tarihi": "2026-08-26T19:31:01.796567+00:00"
-    },
-    {
-      "id": "18bb59928357",
-      "baslik": "Blast fishing destroys reefs. Underwater microphones can help detect it",
-      "ozet": "When he went for a dive between the tiny islands off the coast of South Sulawesi, Indonesia, marine biologist and AI researcher Ben Williams could often hear as many as three fish bombs detonate. “But the thing is, because sounds travel so far underwater, the bombing is often happening quite far awa",
-      "url": "https://news.mongabay.com/2026/08/blast-fishing-destroys-reefs-underwater-microphones-can-help-detect-it/",
-      "tarih": "2026-08-26T17:22:37+03:00",
-      "kaynak": "Mongabay",
-      "kategori": "Uluslararası Haber",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "uluslararasi",
-      "dil": "en",
-      "eylem": null,
-      "etiketler": [
-        "Uluslararası"
-      ],
-      "haber_kategorisi": "",
-      "tarama_tarihi": "2026-08-26T19:31:01.796591+00:00"
-    },
-    {
-      "id": "4a8c268fbf6b",
-      "baslik": "Access to Urban Woodlands Linked With Lower Use of Antidepressants",
-      "ozet": "A study from Scotland found that living near an accessible urban woodland significantly lowered the likelihood of being prescribed antidepressants. Read more on E360 →",
-      "url": "https://e360.yale.edu/digest/scotland-woodlands-antidepressants",
-      "tarih": "2026-08-26T15:43:00+03:00",
-      "kaynak": "Yale Environment 360",
-      "kategori": "Uluslararası Analiz",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "uluslararasi",
-      "dil": "en",
-      "eylem": null,
-      "etiketler": [
-        "Uluslararası",
-        "Analiz"
-      ],
-      "haber_kategorisi": "",
-      "tarama_tarihi": "2026-08-26T19:31:01.796897+00:00"
     }
   ],
   "ekosistem": [
@@ -92381,6 +92402,25 @@
       ],
       "bolum": "bitki",
       "haber_kategorisi": "Orman ve Doğa"
+    },
+    {
+      "id": "f9056f432fa2",
+      "baslik": "TMMOB Şehir Plancıları Odası'ndan yangınlar ile ilgili açıklama - Başka Gazete",
+      "ozet": "TMMOB Şehir Plancıları Odası'ndan yangınlar ile ilgili açıklama Başka Gazete",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPNnJIYlNza0NVQkNGNHQ3YlkxYmVBOUZoMHRjeHY4SnA0YUZyNkJIb0NKSkF4YmRkZjdnTEk3WWc3YkZkQURST0NzOGViNkxpRGVLTUZ6UzE2WW5sOVcxRVFTa2xsak1RTkhQMjdnUXRWcWtKYWJ1QkVwRm9zX0pMMHUtTFNuc0NfdlFoNUM2U1Z1OXpRSGNFN3pGLWdaZnQwR0ZJZEtfWnZ0QlM2R2fSAbABQVVfeXFMUG9DN2ZrTTN5MnpOTHRqcDVGYlZ2VEhFelJtS3dsWjBYZHNRY2Y5SkZNTXQ2dnprUVF5blhkY0xzWU1vcHJfdGNham8xS0JKUGxHa1pJUGtrNFV0T1hiMXZNS2xaSUI1bURNT1RzRlNISjNXdDFidllTMG9vRV9ldGh0UUVNSGZrOXEtRnhpLXFFNFhSaVFBZnJ3cmh3UjRIVUxRcjY1YnpGZEx3QTc5eHk?oc=5",
+      "tarih": "2025-07-30T10:00:00+03:00",
+      "kaynak": "Google News",
+      "kategori": "Bitki & Habitat",
+      "kaynak_turu": "rss",
+      "icerik_tipi": "haber",
+      "dil": "tr",
+      "eylem": null,
+      "etiketler": [
+        "Bitki Örtüsü & Habitatlar"
+      ],
+      "bolum": "bitki",
+      "haber_kategorisi": "Orman ve Doğa",
+      "tarama_tarihi": "2026-10-29T03:18:38.050144+00:00"
     },
     {
       "id": "ed17f29346f6",
@@ -103145,25 +103185,6 @@
       ],
       "bolum": "yaban",
       "haber_kategorisi": "Yaban Hayatı"
-    },
-    {
-      "id": "fa26ad6f42ef",
-      "baslik": "Deniz altındaki ölüm tuzağı: Dalgıçlar yarım ton 'hayalet ağ' çıkardı - AKŞAM",
-      "ozet": "Deniz altındaki ölüm tuzağı: Dalgıçlar yarım ton 'hayalet ağ' çıkardı AKŞAM",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOZU54OVc0ZXIxZVVieFF3bTNaSnlfZ3FkY05fTkVld1pUZmViSWhQZEtRaXc1eVRpUUJLT1dBalMtcXZIU2toSmhoUUxaV2pyazNWR3hfeXk3VF9kbGlCRFNKQnpvRTlTN0xfMGJOYmhQcHlOVDlfMUNacFQ1MGVDSV8yMGpTYUJnMWVCbkdzRUtVRzV4Mi1mUmV6TGVVOFVRQXlfS2QyY0w1azRaLWlOU9IBswFBVV95cUxNVTNNbDFfT0ZWTUdaa29HVl93S29lRUpSanUzd3h1WDBKV2hRc0o5eG1TWmZxb3VnOFJHckxoNGozd051Z2RhR2V0LU9WVGRYYXJUVTQ1R3MtbWVhMlQwVEVGNEtfckZFOC1MZTg0Z1FaVE4xVDBIdVhTcE4zbkNoQ2RRSjBPd0hmMkVtazVBcTBoaFNwVjNkMWQ5TTRXd25JblZVQ0lGcy1XVUZsdEd0b3BPNA?oc=5",
-      "tarih": "2020-08-03T10:00:00+03:00",
-      "kaynak": "Google News",
-      "kategori": "Su Canlıları",
-      "kaynak_turu": "rss",
-      "icerik_tipi": "haber",
-      "dil": "tr",
-      "eylem": null,
-      "etiketler": [
-        "Su Canlıları"
-      ],
-      "bolum": "su-canlilari",
-      "haber_kategorisi": "Su ve Kıyı",
-      "tarama_tarihi": "2026-09-11T15:27:19.324002+00:00"
     }
   ]
 }
